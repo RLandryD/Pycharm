@@ -1,0 +1,23 @@
+# Streamlit configuration for cpi_migrator.
+#
+# Raises upload + message size limits to 10 GB so full SAP GitHub repo
+# dumps (e.g. apibusinesshub-integration-recipes at ~600 MB), large
+# multi-package archives, and tar.gz bundles can all be uploaded without
+# Streamlit's default 200 MB cap rejecting them.
+#
+# Both maxUploadSize and maxMessageSize must be raised together — large
+# uploads pass through the message buffer, so a 10 GB upload through a
+# 200 MB buffer fails identically to a small buffer through a small cap.
+#
+# Memory consideration: Streamlit holds the uploaded file in RAM during
+# processing. A 10 GB upload will consume ~10 GB of memory on the host
+# running the workbench. Tested clients should make sure they're running
+# on a machine with enough memory before pushing a full landscape dump
+# through. For the typical 1-3 GB case there's no concern.
+
+[server]
+maxUploadSize = 10240   # 10 GB, in MB
+maxMessageSize = 10240  # 10 GB, in MB
+
+[browser]
+gatherUsageStats = false

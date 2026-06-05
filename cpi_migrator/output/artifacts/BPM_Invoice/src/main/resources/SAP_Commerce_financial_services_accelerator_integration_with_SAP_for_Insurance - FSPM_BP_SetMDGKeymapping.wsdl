@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="urn:sap-com:document:sap:rfc:functions" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="urn:sap-com:document:sap:rfc:functions" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+ <wsdl:documentation>
+  <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+ </wsdl:documentation>
+ <wsp:UsingPolicy wsdl:required="true"/>
+ <wsp:Policy wsu:Id="IF_IF__-PM0_-UKM_E_ADD">
+  <sapsession:Session xmlns:sapsession="http://www.sap.com/webas/630/soap/features/session/">
+   <sapsession:enableSession>false</sapsession:enableSession>
+  </sapsession:Session>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_UKM_E_ADD">
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsdl:types>
+  <xsd:schema attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:rfc:functions">
+   <xsd:simpleType name="char1">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char10">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="10"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char120">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="120"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char15">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="15"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char20">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="20"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char220">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="220"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char3">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char30">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="30"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char32">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="32"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char50">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="50"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char60">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="60"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric3">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric6">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="6"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="UKM_S_MAPPING_EASY">
+    <xsd:sequence>
+     <xsd:element name="MAIN_CONTEXT_ID" type="tns:char32"/>
+     <xsd:element name="SOURCE" type="tns:UKM_S_KEY_EASY"/>
+     <xsd:element name="TARGET" type="tns:UKM_S_KEY_EASY"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="UKM_S_KEY_EASY">
+    <xsd:sequence>
+     <xsd:element name="CLIENT_DEFAULT" type="tns:char1"/>
+     <xsd:element name="SCHEME_ID" type="tns:char60"/>
+     <xsd:element name="SCHEME_VERSION_ID" type="tns:char15"/>
+     <xsd:element name="SCHEME_AGENCY_ID" type="tns:char60"/>
+     <xsd:element name="SCHEME_AGENCY_SCHEME_ID" type="tns:char60"/>
+     <xsd:element name="SCHEME_AGENCY_SCHEME_AGENCY_ID" type="tns:char3"/>
+     <xsd:element name="VALUE" type="tns:char120"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="UKM_S_MESSAGES">
+    <xsd:sequence>
+     <xsd:element name="GENERAL_MESSAGE" type="tns:UKM_S_MESSAGE"/>
+     <xsd:element name="SPECIFIC_MESSAGE" type="tns:UKM_T_MESSAGES"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="UKM_S_MESSAGE">
+    <xsd:sequence>
+     <xsd:element name="MESSAGE_TYPE_INDICATOR" type="tns:UKM_S_MESSAGE_TYPE"/>
+     <xsd:element name="MESSAGES" type="tns:BAPIRETTAB"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="BAPIRET2">
+    <xsd:sequence>
+     <xsd:element name="TYPE" type="tns:char1"/>
+     <xsd:element name="ID" type="tns:char20"/>
+     <xsd:element name="NUMBER" type="tns:numeric3"/>
+     <xsd:element name="MESSAGE" type="tns:char220"/>
+     <xsd:element name="LOG_NO" type="tns:char20"/>
+     <xsd:element name="LOG_MSG_NO" type="tns:numeric6"/>
+     <xsd:element name="MESSAGE_V1" type="tns:char50"/>
+     <xsd:element name="MESSAGE_V2" type="tns:char50"/>
+     <xsd:element name="MESSAGE_V3" type="tns:char50"/>
+     <xsd:element name="MESSAGE_V4" type="tns:char50"/>
+     <xsd:element name="PARAMETER" type="tns:char32"/>
+     <xsd:element name="ROW" type="xsd:int"/>
+     <xsd:element name="FIELD" type="tns:char30"/>
+     <xsd:element name="SYSTEM" type="tns:char10"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="UKM_S_MESSAGE_TYPE">
+    <xsd:sequence>
+     <xsd:element name="TYPE_ABORT" type="tns:char1"/>
+     <xsd:element name="TYPE_ERROR" type="tns:char1"/>
+     <xsd:element name="TYPE_WARNING" type="tns:char1"/>
+     <xsd:element name="TYPE_SUCCESS" type="tns:char1"/>
+     <xsd:element name="TYPE_INFO" type="tns:char1"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="UKM_T_MAPPINGS_EASY">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:UKM_S_MAPPING_EASY" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="UKM_T_MESSAGES">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:UKM_S_MESSAGE" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="BAPIRETTAB">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:BAPIRET2" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="UKM_E_ADD">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="IT_KEY_MAPPING" type="tns:UKM_T_MAPPINGS_EASY"/>
+      <xsd:element name="IV_DISPLACED_VERSION" type="tns:char1" minOccurs="0"/>
+      <xsd:element name="IV_RUNTIME_GENERATED_CONTEXT" type="tns:char1" minOccurs="0"/>
+      <xsd:element name="IV_SAVE" type="tns:char1" minOccurs="0"/>
+      <xsd:element name="IV_SAVE_AND_COMMIT" type="tns:char1" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="UKM_E_ADDResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="ES_MESSAGES" type="tns:UKM_S_MESSAGES"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="UKM_E_ADD">
+  <wsdl:part name="parameters" element="tns:UKM_E_ADD"/>
+ </wsdl:message>
+ <wsdl:message name="UKM_E_ADDResponse">
+  <wsdl:part name="parameter" element="tns:UKM_E_ADDResponse"/>
+ </wsdl:message>
+ <wsdl:portType name="_-PM0_-UKM_E_ADD">
+  <wsdl:documentation>
+   <sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+    <sapdoc:docitem docURL="http://ldai1emo.wdf.sap.corp:50000/sap/bc/esdt/docu/sd_text?sap-client=700&amp;sd_name=%2fPM0%2fUKM_E_ADD"/>
+    <sapdoc:docitem applicationComponent="FS-PM"/>
+   </sapdoc:sapdoc>
+  </wsdl:documentation>
+  <wsp:Policy>
+   <wsp:PolicyReference URI="#IF_IF__-PM0_-UKM_E_ADD"/>
+  </wsp:Policy>
+  <wsdl:operation name="UKM_E_ADD">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_UKM_E_ADD"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:UKM_E_ADD"/>
+   <wsdl:output message="tns:UKM_E_ADDResponse"/>
+  </wsdl:operation>
+ </wsdl:portType>
+</wsdl:definitions>

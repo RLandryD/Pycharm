@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SendOrder_Async"
+    targetNamespace="http://cpi.sap.com/demo" xmlns:p2="http://cpi.sap.com/demo"
+    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:documentation />
+    <wsp:UsingPolicy wsdl:required="true" />
+    <wsp:Policy wsu:Id="OP_SendOrder_Async" />
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://cpi.sap.com/demo"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://cpi.sap.com/demo">
+            <xsd:element name="Order_MT" type="Order_DT" />
+            <xsd:complexType name="Order_DT">
+                <xsd:sequence>
+                    <xsd:element name="orderNumber" type="xsd:string" />
+                    <xsd:element name="supplierName" type="xsd:string" />
+                    <xsd:element name="productName" type="xsd:string" />
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="Order_MT">
+        <wsdl:documentation />
+        <wsdl:part name="Order_MT" element="p2:Order_MT" />
+    </wsdl:message>
+    <wsdl:portType name="SendOrder_Async">
+        <wsdl:documentation />
+        <wsdl:operation name="SendOrder_Async">
+            <wsdl:documentation />
+            <wsp:Policy>
+                <wsp:PolicyReference URI="#OP_SendOrder_Async" />
+            </wsp:Policy>
+            <wsdl:input message="p2:Order_MT" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="SendOrder_AsyncBinding" type="p2:SendOrder_Async">
+        <soap:binding style="document"
+            transport="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+        <wsdl:operation name="SendOrder_Async">
+            <soap:operation soapAction="http://sap.com/xi/WebService/soap1.1"
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+            <wsdl:input>
+                <soap:body use="literal" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+</wsdl:definitions>

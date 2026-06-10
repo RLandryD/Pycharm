@@ -1,0 +1,235 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="MessageHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="ID"/>
+        <xs:element type="xs:string" name="UUID"/>
+        <xs:element type="xs:dateTime" name="CreationDateTime"/>
+        <xs:element name="SenderParty">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="InternalID">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:short" name="schemeAgencyID"/>
+                      <xs:attribute type="xs:string" name="schemeID"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="RecipientParty">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="InternalID">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:short" name="schemeAgencyID"/>
+                      <xs:attribute type="xs:string" name="schemeID"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CustomerOrderRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="CustomerOrderRequest">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:int" name="ID"/>
+              <xs:element type="xs:long" name="SenderSequenceNumberValue"/>
+              <xs:element type="xs:string" name="ProcessingTypeCode"/>
+              <xs:element type="xs:string" name="Name"/>
+              <xs:element type="xs:int" name="BuyerID"/>
+              <xs:element name="BuyerParty">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="RoleCode"/>
+                    <xs:element name="OtherID">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:short" name="ID"/>
+                          <xs:element type="xs:short" name="IDType"/>
+                          <xs:element type="xs:string" name="LogicalSystemID"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="BillToParty">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="RoleCode"/>
+                    <xs:element name="OtherID">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:short" name="ID"/>
+                          <xs:element type="xs:short" name="IDType"/>
+                          <xs:element type="xs:string" name="LogicalSystemID"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ProductRecepient">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="RoleCode"/>
+                    <xs:element name="OtherID">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:short" name="ID"/>
+                          <xs:element type="xs:short" name="IDType"/>
+                          <xs:element type="xs:string" name="LogicalSystemID"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="SalesBusinessArea">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="SalesOrganisationID"/>
+                    <xs:element type="xs:byte" name="DistributionChannelCode"/>
+                    <xs:element type="xs:byte" name="DivisionCode"/>
+                    <xs:element name="SalesOrganisationOtherID">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:short" name="ID"/>
+                          <xs:element type="xs:short" name="IDType"/>
+                          <xs:element type="xs:string" name="LogicalSystemID"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="PricingTerms">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="CurrencyCode"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              
+              <xs:element name="SalesTerms">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:byte" name="CancellationReasonCode"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              
+              <xs:element name="TextCollection" nillable="true">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Text" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="TypeCode">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:short">
+                                  <xs:attribute type="xs:string" name="listID" use="optional"/>
+                                  <xs:attribute type="xs:string" name="listVersionID" use="optional"/>
+                                  <xs:attribute type="xs:string" name="listAgencyID" use="optional"/>
+                                  <xs:attribute type="xs:string" name="listAgencySchemeID" use="optional"/>
+                                  <xs:attribute type="xs:string" name="listAgencySchemeAgencyID" use="optional"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="ContentText">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute type="xs:string" name="languageCode" use="optional"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:attribute type="xs:byte" name="actionCode" use="optional"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute type="xs:string" name="textListCompleteTransmissionIndicator"/>
+                </xs:complexType>
+    </xs:element>
+    
+              
+    <xs:element name="Items">
+         <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="1" maxOccurs="unbounded" name="Item">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:byte" name="ID"/>
+                    <xs:element type="xs:string" name="Description"/>
+                    <xs:element name="ItemProduct">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="ProductOtherID">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element type="xs:string" name="ID"/>
+                                <xs:element type="xs:string" name="LogicalSystemID"/>
+                                <xs:element type="xs:string" name="IDType"/>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="ScheduleLine">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:byte" name="ScheduleLineID"/>
+                          <xs:element type="xs:byte" name="TypeCode"/>
+                          <xs:element name="Quantity">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:byte">
+                                  <xs:attribute type="xs:string" name="unitCode"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute type="xs:string" name="ItemCustomDefinedPartyListCompleteTransmissionIndicator"/>
+                  <xs:attribute type="xs:byte" name="actionCode"/>
+                  <xs:attribute type="xs:string" name="scheduleLineCompleteTransmissionIndicator"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="PredecessorIndicator"/>
+            <xs:attribute type="xs:string" name="SalesEmployeePartyListCompleteTransmissionIndicator"/>
+            <xs:attribute type="xs:byte" name="actionCode"/>
+            <xs:attribute type="xs:string" name="businessTransactionDocumentReferenceCompleteTransmissionIndicator"/>
+            <xs:attribute type="xs:string" name="itemCompleteTransmissionIndicator"/>
+            <xs:attribute type="xs:string" name="otherPartyListCompleteTransmissionIndicator"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

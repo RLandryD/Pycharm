@@ -1,0 +1,47 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="root">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="submissionId"/>
+         <xs:element name="acceptedDocuments">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="uuid"/>
+              <xs:element type="xs:string" name="longId"/>
+              <xs:element type="xs:string" name="internalId"/>
+              <xs:element type="xs:string" name="hashKey"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="rejectedDocuments">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="internalId"/>
+              <xs:element name="error">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:byte" name="code"/>
+                    <xs:element type="xs:string" name="message"/>
+                    <xs:element type="xs:string" name="target"/>
+                    <xs:element type="xs:string" name="propertyPath"/>
+                    <xs:element name="details" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="code"/>
+                          <xs:element type="xs:string" name="message"/>
+                          <xs:element type="xs:string" name="target"/>
+                          <xs:element type="xs:string" name="propertyPath"/>
+                          <xs:element type="xs:string" name="details"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

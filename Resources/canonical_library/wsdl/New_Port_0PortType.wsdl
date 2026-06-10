@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="urn:RAC:CTM:LoadPeople_UsersSync-WS" xmlns:s0="urn:RAC:CTM:LoadPeople_UsersSync-WS" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><wsdl:types><xsd:schema elementFormDefault="qualified" targetNamespace="urn:RAC:CTM:LoadPeople_UsersSync-WS"><xsd:element name="New_Create_Operation_0" type="s0:InputMapping1"/><xsd:complexType name="InputMapping1"><xsd:sequence><xsd:element name="FName" type="xsd:string"/><xsd:element name="LName" type="xsd:string"/><xsd:element minOccurs="0" name="EmpID" type="xsd:string"/><xsd:element minOccurs="0" name="LoginID" type="xsd:string"/><xsd:element minOccurs="0" name="Email" type="xsd:string"/><xsd:element minOccurs="0" name="JobTitle" type="xsd:string"/><xsd:element minOccurs="0" name="PhoneNumber" type="xsd:string"/><xsd:element minOccurs="0" name="ManagerLoginID" type="xsd:string"/><xsd:element minOccurs="0" name="ManagerName" type="xsd:string"/><xsd:element minOccurs="0" name="z1DAction" nillable="true" type="xsd:string"/></xsd:sequence></xsd:complexType><xsd:element name="New_Create_Operation_0Response" type="s0:OutputMapping1"/><xsd:complexType name="OutputMapping1"><xsd:sequence><xsd:element name="LoadPeopleID" type="xsd:string"/></xsd:sequence></xsd:complexType><xsd:element name="AuthenticationInfo" type="s0:AuthenticationInfo"/><xsd:complexType name="AuthenticationInfo"><xsd:sequence><xsd:element name="userName" type="xsd:string"/><xsd:element name="password" type="xsd:string"/><xsd:element minOccurs="0" name="authentication" type="xsd:string"/><xsd:element minOccurs="0" name="locale" type="xsd:string"/><xsd:element minOccurs="0" name="timeZone" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:schema></wsdl:types>
+  <wsdl:message name="New_Create_Operation_0SoapIn">
+    <wsdl:part element="s0:New_Create_Operation_0" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="New_Create_Operation_0SoapOut">
+    <wsdl:part element="s0:New_Create_Operation_0Response" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ARAuthenticate">
+    <wsdl:part element="s0:AuthenticationInfo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="New_Port_0PortType">
+    <wsdl:operation name="New_Create_Operation_0">
+      <wsdl:input message="s0:New_Create_Operation_0SoapIn">
+    </wsdl:input>
+      <wsdl:output message="s0:New_Create_Operation_0SoapOut">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="New_Port_0SoapBinding" type="s0:New_Port_0PortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="New_Create_Operation_0">
+      <soap:operation soapAction="urn:RAC:CTM:LoadPeople_UsersSync-WS/New_Create_Operation_0" style="document"/>
+      <wsdl:input>
+        <soap:header message="s0:ARAuthenticate" part="parameters" use="literal">
+        </soap:header>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RAC_CTM_LoadPeople_UsersSync-WSService">
+    <wsdl:port binding="s0:New_Port_0SoapBinding" name="New_Port_0Soap">
+      <soap:address location="https://rac-dev.onbmc.com/arsys/services/ARService?server=onbmc-s&amp;webService=RAC:CTM:LoadPeople_UsersSync-WS"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

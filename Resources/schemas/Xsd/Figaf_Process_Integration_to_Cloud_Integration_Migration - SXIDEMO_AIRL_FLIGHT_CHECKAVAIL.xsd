@@ -1,0 +1,163 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:sap-com:document:sap:rfc:functions" targetNamespace="urn:sap-com:document:sap:rfc:functions">
+    <xsd:element name="SXIDEMO_AIRL_FLIGHT_CHECKAVAIL">
+        <xsd:complexType>
+            <xsd:all>
+                <xsd:element name="FLIGHT_KEY" type="BAPISFLKEY"/>
+            </xsd:all>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="SXIDEMO_AIRL_FLIGHT_CHECKAVAIL.Exception">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="Name">
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:enumeration value="FLIGHT_NOT_FOUND"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="Text" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="Message" minOccurs="0">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="ID">
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:maxLength value="20"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="Number">
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:pattern value="d+"/>
+                                        <xsd:maxLength value="3"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="Attributes" minOccurs="0">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="V1" minOccurs="0">
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:maxLength value="50"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="V2" minOccurs="0">
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:maxLength value="50"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="V3" minOccurs="0">
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:maxLength value="50"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="V4" minOccurs="0">
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:maxLength value="50"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="SXIDEMO_AIRL_FLIGHT_CHECKAVAIL.Response">
+        <xsd:complexType>
+            <xsd:all>
+                <xsd:element name="FLIGHT_AVAILABILITY" type="BAPISFLAVA" minOccurs="0"/>
+            </xsd:all>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:simpleType name="genericDate">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="....-..-.."/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="date">
+        <xsd:union memberTypes=" xsd:date genericDate"/>
+    </xsd:simpleType>
+    <xsd:complexType name="BAPISFLAVA">
+        <xsd:annotation>
+            <xsd:documentation>BAPI Structure for Flight Business Object - Availability</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="ECONOMAX" type="xsd:integer" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Maximum capacity in economy class</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ECONOFREE" type="xsd:integer" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Free seats in category</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="BUSINMAX" type="xsd:integer" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Maximum capacity in business class</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="BUSINFREE" type="xsd:integer" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Free seats in category</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="FIRSTMAX" type="xsd:integer" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Maximum capacity in first class</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="FIRSTFREE" type="xsd:integer" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Free seats in category</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="BAPISFLKEY">
+        <xsd:annotation>
+            <xsd:documentation>BAPI Structure for Flight Business Object - Keys</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="AIRLINEID" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Airline Code</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="3"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="CONNECTID" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Flight Connection Number</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="4"/>
+                        <xsd:pattern value="\d+"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="FLIGHTDATE" type="date" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Flight date</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

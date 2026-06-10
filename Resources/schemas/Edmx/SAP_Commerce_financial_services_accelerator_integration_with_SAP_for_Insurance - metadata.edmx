@@ -1,0 +1,182 @@
+<edmx:Edmx
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+    <edmx:DataServices
+        xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+        <Schema
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="S1">
+            <EntityContainer Name="EC1" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="C_InsurClm1stNotifTPTypeSet" EntityType="S1.C_InsurClm1stNotifTPType"></EntitySet>
+                <EntitySet Name="String2StringMapTypeSet" EntityType="S1.String2StringMapType"></EntitySet>
+                <EntitySet Name="DocumentSet" EntityType="S1.Document"></EntitySet>
+                <EntitySet Name="LocationSet" EntityType="S1.Location"></EntitySet>
+                <EntitySet Name="DamagedObjectSet" EntityType="S1.DamagedObject"></EntitySet>
+                <EntitySet Name="Items" EntityType="S1.Item"></EntitySet>
+                <AssociationSet Name="ClaimToString2StringMapTypeSet" Association="S1.ClaimToString2StringMapType" sap:creatable="false" sap:updatable="false" sap:deletable="false">
+                    <End EntitySet="C_InsurClm1stNotifTPTypeSet" Role="FromRole_ClaimToString2StringMapType"/>
+                    <End EntitySet="String2StringMapTypeSet" Role="ToRole_ClaimToString2StringMapType"/>
+                </AssociationSet>
+                <AssociationSet Name="ClaimToDamagedObjectSet" Association="S1.ClaimToDamagedObject" sap:creatable="false" sap:updatable="false" sap:deletable="false">
+                    <End EntitySet="C_InsurClm1stNotifTPTypeSet" Role="FromRole_ClaimToDamagedObject"/>
+                    <End EntitySet="DamagedObjectSet" Role="ToRole_ClaimToDamagedObject"/>
+                </AssociationSet>
+                <AssociationSet Name="ClaimToDocumentSet" Association="S1.ClaimToDocument" sap:creatable="false" sap:updatable="false" sap:deletable="false">
+                    <End EntitySet="C_InsurClm1stNotifTPTypeSet" Role="FromRole_ClaimToDocument"/>
+                    <End EntitySet="DocumentSet" Role="ToRole_ClaimToDocument"/>
+                </AssociationSet>
+                <AssociationSet Name="ClaimToLossLocationSet" Association="S1.ClaimToLossLocation" sap:creatable="false" sap:updatable="false" sap:deletable="false">
+                    <End EntitySet="C_InsurClm1stNotifTPTypeSet" Role="FromRole_ClaimToLossLocation"/>
+                    <End EntitySet="LocationSet" Role="ToRole_ClaimToLossLocation"/>
+                </AssociationSet>
+                <AssociationSet Name="ClaimToDamagedObjectPropertySet" Association="S1.ClaimToDamagedObjectProperty" sap:creatable="false" sap:updatable="false" sap:deletable="false">
+                    <End EntitySet="DamagedObjectSet" Role="FromRole_ClaimToDamagedObjectProperty"/>
+                    <End EntitySet="Items" Role="ToRole_ClaimToDamagedObjectProperty"/>
+                </AssociationSet>
+            </EntityContainer>
+            <EntityType Name="C_InsurClm1stNotifTPType">
+                <Documentation/>
+                <Key>
+                    <PropertyRef Name="claimNumber"></PropertyRef>
+                </Key>
+                <Property Name="claimNumber" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="requestId" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="contractId" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="incidentType" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="productCode" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="dateOfLoss" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="timeOfLoss" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="causeOfLoss" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="claimHandler" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="claimHandlerFirstName" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="claimHandlerLastName" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="claimHandlerPhone" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="claimHandlerEmail" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="witnessFlag" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="policeInformedFlag" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="claimStatus" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="messageStatus" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="returnMessage" Type="Edm.String" Nullable="true"></Property>
+                <Property Name="errorMessage" Type="Edm.String" Nullable="true"></Property>
+                <NavigationProperty Name="lossLocation" Relationship="S1.ClaimToLossLocation" FromRole="FromRole_ClaimToLossLocation" ToRole="ToRole_ClaimToLossLocation"/>
+                <NavigationProperty Name="questionList" Relationship="S1.ClaimToString2StringMapType" FromRole="FromRole_ClaimToString2StringMapType" ToRole="ToRole_ClaimToString2StringMapType"/>
+                <NavigationProperty Name="documents" Relationship="S1.ClaimToDocument" FromRole="FromRole_ClaimToDocument" ToRole="ToRole_ClaimToDocument"/>
+                <NavigationProperty Name="damagedObjects" Relationship="S1.ClaimToDamagedObject" FromRole="FromRole_ClaimToDamagedObject" ToRole="ToRole_ClaimToDamagedObject"/>
+            </EntityType>
+            <EntityType Name="Location">
+                <Key>
+                    <PropertyRef Name="code"/>
+                    <PropertyRef Name="claimNumber"/>
+                </Key>
+                <Property Name="claimNumber" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="code" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="address" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="city" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="region" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="postalCode" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="countryCode" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="detail" Type="Edm.String" Nullable="false"></Property>
+            </EntityType>
+            <EntityType Name="String2StringMapType">
+                <Key>
+                    <PropertyRef Name="key"/>
+                    <PropertyRef Name="claimNumber"/>
+                </Key>
+                <Property Name="key" Nullable="false" Type="Edm.String"></Property>
+                <Property Name="value" Nullable="true" Type="Edm.String"></Property>
+                <Property Name="claimNumber" Type="Edm.String" Nullable="false"></Property>
+            </EntityType>
+            <EntityType Name="Document">
+                <Key>
+                    <PropertyRef Name="documentId"/>
+                    <PropertyRef Name="claimNumber"/>
+                </Key>
+                <Property Name="documentId" Nullable="false" Type="Edm.String"/>
+                <Property Name="claimNumber" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="documentContentType" Nullable="false" Type="Edm.String"/>
+                <Property Name="documentName" Nullable="true" Type="Edm.String"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="DamagedObject">
+                <Key>
+                    <PropertyRef Name="damagedObjectId"/>
+                    <PropertyRef Name="claimNumber"/>
+                </Key>
+                <Property Name="claimNumber" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="name" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="damagedObjectId" Type="Edm.String" Nullable="false"></Property>
+                <NavigationProperty Name="damagedObjectItems" Relationship="S1.ClaimToDamagedObjectProperty" FromRole="FromRole_ClaimToDamagedObjectProperty" ToRole="ToRole_ClaimToDamagedObjectProperty"/>
+            </EntityType>
+            <EntityType Name="Item">
+                <Key>
+                    <PropertyRef Name="key"/>
+                </Key>
+                <Property Name="claimNumber" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="damagedObjectId" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="key" Type="Edm.String" Nullable="false"></Property>
+                <Property Name="value" Type="Edm.String" Nullable="false"></Property>
+            </EntityType>
+            <Association Name="ClaimToLossLocation">
+                <End Type="S1.C_InsurClm1stNotifTPType" Multiplicity="1" Role="FromRole_ClaimToLossLocation"/>
+                <End Type="S1.Location" Multiplicity="1" Role="ToRole_ClaimToLossLocation"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_ClaimToLossLocation">
+                        <PropertyRef Name="claimNumber"/>
+                    </Principal>
+                    <Dependent Role="ToRole_ClaimToLossLocation">
+                        <PropertyRef Name="claimNumber"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="ClaimToString2StringMapType">
+                <End Type="S1.C_InsurClm1stNotifTPType" Multiplicity="0..1" Role="FromRole_ClaimToString2StringMapType"/>
+                <End Type="S1.String2StringMapType" Multiplicity="0..1" Role="ToRole_ClaimToString2StringMapType"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_ClaimToString2StringMapType">
+                        <PropertyRef Name="claimNumber"/>
+                    </Principal>
+                    <Dependent Role="ToRole_ClaimToString2StringMapType">
+                        <PropertyRef Name="claimNumber"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="ClaimToDocument">
+                <End Type="S1.C_InsurClm1stNotifTPType" Multiplicity="0..1" Role="FromRole_ClaimToDocument"/>
+                <End Type="S1.Document" Multiplicity="0..1" Role="ToRole_ClaimToDocument"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_ClaimToDocument">
+                        <PropertyRef Name="claimNumber"/>
+                    </Principal>
+                    <Dependent Role="ToRole_ClaimToDocument">
+                        <PropertyRef Name="claimNumber"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="ClaimToDamagedObject">
+                <End Type="S1.C_InsurClm1stNotifTPType" Multiplicity="0..1" Role="FromRole_ClaimToDamagedObject"/>
+                <End Type="S1.DamagedObject" Multiplicity="0..1" Role="ToRole_ClaimToDamagedObject"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_ClaimToDamagedObject">
+                        <PropertyRef Name="claimNumber"/>
+                    </Principal>
+                    <Dependent Role="ToRole_ClaimToDamagedObject">
+                        <PropertyRef Name="claimNumber"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="ClaimToDamagedObjectProperty">
+                <End Type="S1.DamagedObject" Multiplicity="0..1" Role="FromRole_ClaimToDamagedObjectProperty"/>
+                <End Type="S1.Item" Multiplicity="*" Role="ToRole_ClaimToDamagedObjectProperty"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_ClaimToDamagedObjectProperty">
+                        <PropertyRef Name="claimNumber"/>
+                        <PropertyRef Name="damagedObjectId"/>
+                    </Principal>
+                    <Dependent Role="ToRole_ClaimToDamagedObjectProperty">
+                        <PropertyRef Name="claimNumber"/>
+                        <PropertyRef Name="damagedObjectId"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

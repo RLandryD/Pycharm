@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices m:DataServiceVersion="1.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+        <Schema Namespace="HybrisCommerceOData" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="SAPCpiOutboundOrderCancellation">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="orderId" Type="Edm.String" IsUnique="true" Nullable="false"/>
+                <Property Name="rejectionReason" Type="Edm.String" Nullable="true"/>
+                <Property Name="responseStatus" Type="Edm.String" IsUnique="true" Nullable="false"/>
+                <Property Name="responseMessage" Type="Edm.String" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" Alias="SAPCpiOutboundOrderCancellation_orderId|SAPCpiOutboundOrderCancellation_responseStatus"/>
+                <NavigationProperty Name="sapCpiConfig" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundOrderCancellation_SAPCpiOutboundConfig" FromRole="SAPCpiOutboundOrderCancellation" ToRole="SAPCpiOutboundConfig" Nullable="true"/>
+                <NavigationProperty Name="sapCpiOutboundOrderItems" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundOrderCancellation_SAPCpiOutboundOrderItem" FromRole="SAPCpiOutboundOrderCancellation" ToRole="SAPCpiOutboundOrderItem" Nullable="true" IsPartOf="true"/>
+            </EntityType>
+            <EntityType Name="SAPCpiOutboundConfig">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="url" Type="Edm.String" IsUnique="true" Nullable="false"/>
+                <Property Name="username" Type="Edm.String" IsUnique="true" Nullable="false"/>
+                <Property Name="client" Type="Edm.String" Nullable="true"/>
+                <Property Name="receiverPort" Type="Edm.String" Nullable="true"/>
+                <Property Name="receiverName" Type="Edm.String" Nullable="true"/>
+                <Property Name="senderName" Type="Edm.String" Nullable="true"/>
+                <Property Name="senderPort" Type="Edm.String" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" Alias="SAPCpiOutboundConfig_url|SAPCpiOutboundConfig_username"/>
+            </EntityType>
+            <EntityType Name="SAPCpiOutboundOrderItem">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="entryNumber" Type="Edm.String" IsUnique="true" Nullable="false"/>
+                <Property Name="productCode" Type="Edm.String" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" Alias="SAPCpiOutboundOrderItem_entryNumber"/>
+            </EntityType>
+            <Association Name="FK_SAPCpiOutboundOrderCancellation_SAPCpiOutboundConfig">
+                <End Type="HybrisCommerceOData.SAPCpiOutboundOrderCancellation" Multiplicity="0..1" Role="SAPCpiOutboundOrderCancellation"/>
+                <End Type="HybrisCommerceOData.SAPCpiOutboundConfig" Multiplicity="0..1" Role="SAPCpiOutboundConfig"/>
+            </Association>
+            <Association Name="FK_SAPCpiOutboundOrderCancellation_SAPCpiOutboundOrderItem">
+                <End Type="HybrisCommerceOData.SAPCpiOutboundOrderCancellation" Multiplicity="0..1" Role="SAPCpiOutboundOrderCancellation"/>
+                <End Type="HybrisCommerceOData.SAPCpiOutboundOrderItem" Multiplicity="*" Role="SAPCpiOutboundOrderItem"/>
+            </Association>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="SAPCpiOutboundOrderCancellations" EntityType="HybrisCommerceOData.SAPCpiOutboundOrderCancellation"/>
+                <EntitySet Name="SAPCpiOutboundConfigs" EntityType="HybrisCommerceOData.SAPCpiOutboundConfig"/>
+                <EntitySet Name="SAPCpiOutboundOrderItems" EntityType="HybrisCommerceOData.SAPCpiOutboundOrderItem"/>
+                <AssociationSet Name="SAPCpiOutboundOrderCancellation_SAPCpiOutboundConfigs" Association="HybrisCommerceOData.FK_SAPCpiOutboundOrderCancellation_SAPCpiOutboundConfig">
+                    <End EntitySet="SAPCpiOutboundOrderCancellations" Role="SAPCpiOutboundOrderCancellation"/>
+                    <End EntitySet="SAPCpiOutboundConfigs" Role="SAPCpiOutboundConfig"/>
+                </AssociationSet>
+                <AssociationSet Name="SAPCpiOutboundOrderCancellation_SAPCpiOutboundOrderItems" Association="HybrisCommerceOData.FK_SAPCpiOutboundOrderCancellation_SAPCpiOutboundOrderItem">
+                    <End EntitySet="SAPCpiOutboundOrderCancellations" Role="SAPCpiOutboundOrderCancellation"/>
+                    <End EntitySet="SAPCpiOutboundOrderItems" Role="SAPCpiOutboundOrderItem"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

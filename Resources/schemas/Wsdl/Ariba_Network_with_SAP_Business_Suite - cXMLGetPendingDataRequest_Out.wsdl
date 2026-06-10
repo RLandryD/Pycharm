@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="cXMLGetPendingDataRequest_Out"
+	targetNamespace="http://sap.com/xi/ARBFND1" xmlns:p1="http://sap.com/xi/ARBFND1"
+	xmlns:p2="http://sap.com/xi/Ariba/Interfaces" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<wsdl:documentation>
+		<sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl" />
+	</wsdl:documentation>
+	<wsp:UsingPolicy wsdl:required="true" />
+	<wsp:Policy wsu:Id="OP_cXMLGetPendingDataRequest_Out">
+		<wsp:ExactlyOne xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+			xmlns:sapsp="http://www.sap.com/webas/630/soap/features/security/policy"
+			xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702"
+			xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:wsu="http://schemas.xmlsoap.org/ws/2002/07/utility">
+			<wsp:All>
+				<sp:TransportBinding>
+					<wsp:Policy>
+						<sp:TransportToken>
+							<wsp:Policy>
+								<sp:HttpsToken>
+									<wsp:Policy>
+										<!-- <sp:HttpBasicAuthentication /> -->
+										
+									</wsp:Policy>
+								</sp:HttpsToken>
+							</wsp:Policy>
+						</sp:TransportToken>
+						<sp:AlgorithmSuite>
+							<wsp:Policy>
+								<sp:TripleDesRsa15 />
+							</wsp:Policy>
+						</sp:AlgorithmSuite>
+						<sp:Layout>
+							<wsp:Policy>
+								<sp:Strict />
+							</wsp:Policy>
+						</sp:Layout>
+					</wsp:Policy>
+				</sp:TransportBinding>
+			</wsp:All>
+		</wsp:ExactlyOne>
+	</wsp:Policy>
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://sap.com/xi/Ariba/Interfaces"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://sap.com/xi/Ariba/Interfaces">
+			<xsd:element name="StandardMessageFault">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="standard" type="ExchangeFaultData" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="cXMLMessage">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="cXMLMessageContent" type="cXMLMessageContentType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="cXMLGetPendingDataResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Status" type="StatusType"
+							minOccurs="0" />
+						<xsd:element name="cXMLMessageContent" type="cXMLMessageContentType"
+							minOccurs="0" maxOccurs="unbounded" />
+					</xsd:sequence>
+					<xsd:attribute name="version" type="xsd:string" />
+					<xsd:attribute name="payloadID" type="xsd:string"
+						use="required" />
+					<xsd:attribute name="timestamp" type="xsd:string"
+						use="required" />
+					<xsd:attribute name="signatureVersion">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="1.0" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+					<xsd:attribute ref="xml:lang" />
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:simpleType name="AttachmentContentType">
+				<xsd:restriction base="xsd:base64Binary" />
+			</xsd:simpleType>
+			<xsd:complexType name="StatusType">
+				<xsd:simpleContent>
+					<xsd:extension base="xsd:string">
+						<xsd:attribute name="code" type="xsd:string" use="required" />
+						<xsd:attribute name="text" type="xsd:string" use="required" />
+						<xsd:attribute ref="xml:lang" />
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:complexType name="cXMLMessageContentType">
+				<xsd:sequence>
+					<xsd:element name="cXML" type="xsd:anyType" minOccurs="0" />
+					<xsd:element name="AttachmentFolder" type="AttachmentFolderType"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+				<xsd:attribute name="messageType" type="xsd:string" />
+			</xsd:complexType>
+			<xsd:complexType name="ExchangeLogData">
+				<xsd:sequence>
+					<xsd:element name="severity" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="text" type="xsd:string" />
+					<xsd:element name="url" type="xsd:string" minOccurs="0" />
+					<xsd:element name="id" type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ExchangeFaultData">
+				<xsd:sequence>
+					<xsd:element name="faultText" type="xsd:string" />
+					<xsd:element name="faultUrl" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="faultDetail" type="ExchangeLogData"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="AttachmentFolderType">
+				<xsd:sequence>
+					<xsd:element name="Content" type="AttachmentContentType" />
+				</xsd:sequence>
+				<xsd:attribute name="contentID" type="xsd:string" use="required" />
+				<xsd:attribute name="contentType" type="xsd:string"
+					use="required" />
+				<xsd:attribute name="fileName" type="xsd:string" use="required" />
+				<xsd:attribute name="charset" type="xsd:string" />
+				<xsd:attribute name="contentLength" type="xsd:integer"
+					use="required" />
+			</xsd:complexType>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="p2.cXMLMessage">
+		<wsdl:documentation />
+		<wsdl:part name="cXMLMessage" element="p2:cXMLMessage" />
+	</wsdl:message>
+	<wsdl:message name="p2.cXMLGetPendingDataResponse">
+		<wsdl:documentation />
+		<wsdl:part name="cXMLGetPendingDataResponse" element="p2:cXMLGetPendingDataResponse" />
+	</wsdl:message>
+	<wsdl:message name="p2.StandardMessageFault">
+		<wsdl:documentation />
+		<wsdl:part name="StandardMessageFault" element="p2:StandardMessageFault" />
+	</wsdl:message>
+	<wsdl:portType name="cXMLGetPendingDataRequest_Out">
+		<wsdl:operation name="cXMLGetPendingDataRequest_Out">
+			<wsdl:input message="p1:p2.cXMLMessage" />
+			<wsdl:output message="p1:p2.cXMLGetPendingDataResponse" />
+			<wsdl:fault name="p2.StandardMessageFault" message="p1:p2.StandardMessageFault" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="cXMLGetPendingDataRequest_OutBinding"
+		type="p1:cXMLGetPendingDataRequest_Out">
+		<wsp:Policy>
+			<wsp:PolicyReference URI="#OP_cXMLGetPendingDataRequest_Out" />
+		</wsp:Policy>
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="cXMLGetPendingDataRequest_Out">
+			<soap:operation soapAction="http://sap.com/xi/WebService/soap1.1" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="p2.StandardMessageFault">
+				<soap:fault use="literal" name="p2.StandardMessageFault" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="cXMLGetPendingDataRequest_OutService">
+		<wsdl:port name="cXMLGetPendingDataRequest_OutPort" binding="p1:cXMLGetPendingDataRequest_OutBinding">
+			<soap:address
+				location="https://iflkaimerc5wn2avatarmercury-merc5wn2.bsn.neo.ondemand.com/cxf/pull" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

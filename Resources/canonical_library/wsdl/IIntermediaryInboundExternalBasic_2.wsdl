@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" name="IntermediaryInboundBasicSF" targetNamespace="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10">
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/2009/10">
+      <xsd:element name="Test">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="TestResponse">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://www.altinn.no/services/common/fault/2009/10" elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/common/fault/2009/10">
+      <xsd:complexType name="AltinnFault">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="AltinnErrorMessage" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AltinnExtendedErrorMessage" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AltinnLocalizedErrorMessage" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ErrorGuid" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ErrorID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="UserGuid" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="UserId" nillable="true" type="xsd:string">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="AltinnFault" nillable="true" type="tns:AltinnFault"/>
+    </xsd:schema>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/">
+      <xs:element name="anyType" nillable="true" type="xs:anyType"/>
+      <xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
+      <xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
+      <xs:element name="boolean" nillable="true" type="xs:boolean"/>
+      <xs:element name="byte" nillable="true" type="xs:byte"/>
+      <xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+      <xs:element name="decimal" nillable="true" type="xs:decimal"/>
+      <xs:element name="double" nillable="true" type="xs:double"/>
+      <xs:element name="float" nillable="true" type="xs:float"/>
+      <xs:element name="int" nillable="true" type="xs:int"/>
+      <xs:element name="long" nillable="true" type="xs:long"/>
+      <xs:element name="QName" nillable="true" type="xs:QName"/>
+      <xs:element name="short" nillable="true" type="xs:short"/>
+      <xs:element name="string" nillable="true" type="xs:string"/>
+      <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
+      <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
+      <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
+      <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
+      <xs:element name="char" nillable="true" type="tns:char"/>
+      <xs:simpleType name="char">
+        <xs:restriction base="xs:int"/>
+      </xs:simpleType>
+      <xs:element name="duration" nillable="true" type="tns:duration"/>
+      <xs:simpleType name="duration">
+        <xs:restriction base="xs:duration">
+          <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
+          <xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
+          <xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="guid" nillable="true" type="tns:guid"/>
+      <xs:simpleType name="guid">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:attribute name="FactoryType" type="xs:QName"/>
+      <xs:attribute name="Id" type="xs:ID"/>
+      <xs:attribute name="Ref" type="xs:IDREF"/>
+    </xs:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10">
+      <xsd:element name="GetAltinnSubmissionStatusBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetAltinnSubmissionStatusBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="GetAltinnSubmissionStatusBasicResult" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SubmitFormTaskBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="systemUserName" type="xsd:string"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="systemPassword" type="xsd:string"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="userSSN" type="xsd:string"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="userPassword" type="xsd:string"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="userPinCode" type="xsd:string"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="authMethod" type="xsd:string"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="formTaskShipment" type="tns:FormTaskShipmentBE"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="FormTaskShipmentBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Reportee" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ExternalShipmentReference" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="FormTasks" type="tns:FormTask"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Attachments" type="tns:ArrayOfAttachment"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Signatures" type="tns:Signature"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="IsUserDelegationLocked" type="xsd:boolean"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="UserDefinedNumberOfSignaturesRequired" type="xsd:int"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Users" type="tns:ArrayOfDelegatedUserBE"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EncryptedKey" type="tns:EncryptedKeyBE"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="CaseID" nillable="true" type="xsd:int"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="FormTask">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ServiceCode" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ServiceEdition" type="xsd:int"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Forms" type="tns:ArrayOfForm"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfForm">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Form" nillable="true" type="tns:Form"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Form">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Completed" type="xsd:boolean"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="DataFormatId" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="DataFormatVersion" type="xsd:int"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EndUserSystemReference" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ParentReference" type="xsd:int"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="FormData" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfAttachment">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Attachment" nillable="true" type="tns:Attachment"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Attachment">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Name" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EndUserSystemReference" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ParentReference" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="FileName" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Encrypted" type="xsd:boolean"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="AttachementData" type="xsd:base64Binary"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="AttachmentTypeName" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Checksum" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Signature">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EndUserSystemReference" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EndUserSystemUserId" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EndUserSystemLoginDateTime" type="xsd:dateTime"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EndUserSystemSignatureDateTime" type="xsd:dateTime"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EndUserSystemVersion" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="EndUserSystemSignatureLogId" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfDelegatedUserBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="DelegatedUserBE" nillable="true" type="tns:DelegatedUserBE"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="DelegatedUserBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="SSN" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Name" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="NumberOfSignaturesAllowed" type="xsd:unsignedInt"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="EncryptedKeyBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ReporteeSymmetricKey" type="tns:ReporteeSymmetricKeyBE"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ServiceOwnerSymmetricKeys" type="tns:ArrayOfServiceOwnerSymmetricKeyBE"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReporteeSymmetricKeyBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Key" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ReporteeId" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfServiceOwnerSymmetricKeyBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ServiceOwnerSymmetricKeyBE" nillable="true" type="tns:ServiceOwnerSymmetricKeyBE"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ServiceOwnerSymmetricKeyBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ServiceOwnerCode" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="CertificateId" type="xsd:int"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Key" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="SubmitFormTaskBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="SubmitFormTaskBasicResult" type="tns:ReceiptExternalBE"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="ReceiptExternalBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ReceiptId" type="xsd:int"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ReceiptText" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ReceiptHistory" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="LastChanged" type="xsd:dateTime"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ReceiptTypeName" type="tns:ReceiptType"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ReceiptStatusCode" type="tns:ReceiptStatus"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ParentReceiptId" type="xsd:int"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="References" type="tns:ArrayOfReferenceBE"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="SubReceipts" type="tns:ArrayOfReceiptExternalBE"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="ReceiptType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NotSet"/>
+          <xsd:enumeration value="FormTask"/>
+          <xsd:enumeration value="Correspondence"/>
+          <xsd:enumeration value="PINCODE"/>
+          <xsd:enumeration value="Subscription"/>
+          <xsd:enumeration value="Outbound"/>
+          <xsd:enumeration value="PreFill"/>
+          <xsd:enumeration value="RegisterDLS"/>
+          <xsd:enumeration value="RegisterDSF"/>
+          <xsd:enumeration value="RegisterER"/>
+          <xsd:enumeration value="RegisterDSFProperty"/>
+          <xsd:enumeration value="RegisterDSFStreet"/>
+          <xsd:enumeration value="RegisterDSFCountry"/>
+          <xsd:enumeration value="RegisterDSFUser"/>
+          <xsd:enumeration value="LookUp"/>
+          <xsd:enumeration value="RegisterDSFStreetAdd"/>
+          <xsd:enumeration value="RegisterDSFPropertyAdd"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="ReceiptStatus">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NotSet"/>
+          <xsd:enumeration value="OK"/>
+          <xsd:enumeration value="UnExpectedError"/>
+          <xsd:enumeration value="ValidationFailed"/>
+          <xsd:enumeration value="Rejected"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ArrayOfReferenceBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ReferenceBE" nillable="true" type="tns:ReferenceBE"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReferenceBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ReferenceValue" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ReferenceTypeName" type="tns:ReferenceType"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ReporteeID" type="xsd:int"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="ReferenceType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NotSet"/>
+          <xsd:enumeration value="ExternalShipmentReference"/>
+          <xsd:enumeration value="EndUserSystemReference"/>
+          <xsd:enumeration value="ParentReference"/>
+          <xsd:enumeration value="SendersReference"/>
+          <xsd:enumeration value="WorkFlowReference"/>
+          <xsd:enumeration value="BatchReference"/>
+          <xsd:enumeration value="OutboundShipmentReference"/>
+          <xsd:enumeration value="ReceiversReference"/>
+          <xsd:enumeration value="Altinn1Reference"/>
+          <xsd:enumeration value="OwnerPartyReference"/>
+          <xsd:enumeration value="PartyReference"/>
+          <xsd:enumeration value="ArchiveReference"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ArrayOfReceiptExternalBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ReceiptExternalBE" nillable="true" type="tns:ReceiptExternalBE"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="CompleteAndSignShipmentBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="systemUserName" type="xsd:string"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="systemPassword" type="xsd:string"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="userSSN" type="xsd:string"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="userPassword" type="xsd:string"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="userPinCode" type="xsd:string"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="authMethod" type="xsd:string"/>
+            <xsd:element minOccurs="1" maxOccurs="1" name="reporteeElementId" type="xsd:int"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="signatures" type="tns:ArrayOfSignature"/>
+            <xsd:element minOccurs="1" maxOccurs="1" name="languageId" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="ArrayOfSignature">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Signature" nillable="true" type="tns:Signature"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="CompleteAndSignShipmentBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="CompleteAndSignShipmentBasicResult" type="tns:ReceiptExternalBE"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IIntermediaryInboundExternalBasic_Test_InputMessage">
+    <wsdl:part xmlns:q1="http://www.altinn.no/services/2009/10" name="parameters" element="q1:Test"/>
+  </wsdl:message>
+  <wsdl:message name="IIntermediaryInboundExternalBasic_Test_OutputMessage">
+    <wsdl:part xmlns:q2="http://www.altinn.no/services/2009/10" name="parameters" element="q2:TestResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IIntermediaryInboundExternalBasic_Test_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q3="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q3:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IIntermediaryInboundExternalBasic_GetAltinnSubmissionStatusBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAltinnSubmissionStatusBasic"/>
+  </wsdl:message>
+  <wsdl:message name="IIntermediaryInboundExternalBasic_GetAltinnSubmissionStatusBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAltinnSubmissionStatusBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IIntermediaryInboundExternalBasic_GetAltinnSubmissionStatusBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q4="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q4:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IIntermediaryInboundExternalBasic_SubmitFormTaskBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:SubmitFormTaskBasic"/>
+  </wsdl:message>
+  <wsdl:message name="IIntermediaryInboundExternalBasic_SubmitFormTaskBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SubmitFormTaskBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IIntermediaryInboundExternalBasic_SubmitFormTaskBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q5="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q5:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IIntermediaryInboundExternalBasic_CompleteAndSignShipmentBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:CompleteAndSignShipmentBasic"/>
+  </wsdl:message>
+  <wsdl:message name="IIntermediaryInboundExternalBasic_CompleteAndSignShipmentBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CompleteAndSignShipmentBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IIntermediaryInboundExternalBasic_CompleteAndSignShipmentBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q6="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q6:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:portType name="IIntermediaryInboundExternalBasic">
+    <wsdl:documentation>&lt;summary&gt;&#13;
+            Service Contract of Intermediary Inbound&#13;
+            &lt;/summary&gt;&#13;
+            &lt;remarks&gt;&#13;
+             The two services that are as the part of this contract is&#13;
+             &lt;list&gt;&#13;
+             SubmitFormTask-Will allow EndUserSystem to submit Formtask and a receipt is generated&#13;
+             GetAltinnSubmissionStatus-Retrieve the estimated time for the processing of the submitted &#13;
+             form task.&#13;
+             &lt;/list&gt; &#13;
+            &lt;/remarks&gt;</wsdl:documentation>
+    <wsdl:operation name="Test">
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test" message="tns:IIntermediaryInboundExternalBasic_Test_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestResponse" message="tns:IIntermediaryInboundExternalBasic_Test_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestAltinnFaultFault" name="AltinnFaultFault" message="tns:IIntermediaryInboundExternalBasic_Test_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetAltinnSubmissionStatusBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            Service Operation to provide the estimated processing time to the EndUserSystem.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;returns&gt;Returns the estimated processing time in minutes&lt;/returns&gt;&#13;
+            &lt;remarks&gt;&#13;
+            This operation will look into the asynchronous queues handling FormTask submissions&#13;
+            The QueueDepth and the configurable factor returns an estimated average leadtime &#13;
+            in minutes.&#13;
+            The response of this operation will help EndUserSystems give &#13;
+            their users a help in determining how long they must expect to wait &#13;
+            after the formtask submission&#13;
+            &lt;/remarks&gt;&#13;
+            &lt;param name="systemUserName"&gt;System user name is the system identifikator for the end user system as registered in Altinn - mandatory parameter&lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;System password is the password for the registered end user system - mandatory parameter&lt;/param&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10/IIntermediaryInboundExternalBasic/GetAltinnSubmissionStatusBasic" message="tns:IIntermediaryInboundExternalBasic_GetAltinnSubmissionStatusBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10/IIntermediaryInboundExternalBasic/GetAltinnSubmissionStatusBasicResponse" message="tns:IIntermediaryInboundExternalBasic_GetAltinnSubmissionStatusBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10/IIntermediaryInboundExternalBasic/GetAltinnSubmissionStatusBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IIntermediaryInboundExternalBasic_GetAltinnSubmissionStatusBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitFormTaskBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            This Service Operation to SubmitFormTask lets EndUserSystem to Submit a &#13;
+            formtask to Altinn&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="systemUserName"&gt;System user name is the system identifikator for the end user system as registered in Altinn - mandatory parameter&lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;System password is the password for the registered end user system - mandatory parameter&lt;/param&gt;&#13;
+            &lt;param name="userSSN"&gt;User SSN is the end user's social security number - mandatory paremeter&lt;/param&gt;&#13;
+            &lt;param name="userPassword"&gt;User password is the end user's own password for authentication as set in the profile - mandatory paremeter&lt;/param&gt;&#13;
+            &lt;param name="userPinCode"&gt;User Pin Code is the requested authentication challenge token requested by Altinn - mandatory paremeter&lt;/param&gt;&#13;
+            &lt;param name="authMethod"&gt;AuthMethod is the selected authentication method for the authentication challenge (AltinnPin, TaxPin, SMSPin) - mandatory paremeter&lt;/param&gt;&#13;
+            &lt;param name="formTaskShipment"&gt;&#13;
+            Will contain all the data for submitting a FormTask to Altinn from the EndUserSystem- mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;returns&gt; Returns ReceiptBE&lt;/returns&gt;&#13;
+            &lt;remarks&gt;&#13;
+            This operation will handle binary attachments to the FormTask and will be able to send &#13;
+            the signing information with the Formtask&#13;
+            The form task can be send in many ways like complete or not,&#13;
+            with or without subformtask,with or without attachments, with or with signature&#13;
+            &lt;/remarks&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10/IIntermediaryInboundExternalBasic/SubmitFormTaskBasic" message="tns:IIntermediaryInboundExternalBasic_SubmitFormTaskBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10/IIntermediaryInboundExternalBasic/SubmitFormTaskBasicResponse" message="tns:IIntermediaryInboundExternalBasic_SubmitFormTaskBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10/IIntermediaryInboundExternalBasic/SubmitFormTaskBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IIntermediaryInboundExternalBasic_SubmitFormTaskBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="CompleteAndSignShipmentBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            Service Operation to complete and sign formtasks from endusersystems after uploads.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;returns&gt;Returns a receipt describing the processing&lt;/returns&gt;&#13;
+            &lt;remarks&gt;&#13;
+            &lt;/remarks&gt;&#13;
+            &lt;param name="systemUserName"&gt;contains the System User Name&lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;contains the System Password&lt;/param&gt;&#13;
+            &lt;param name="userSSN"&gt;contains the user SSN&lt;/param&gt;&#13;
+            &lt;param name="userPassword"&gt;contains the user Password&lt;/param&gt;&#13;
+            &lt;param name="userPinCode"&gt;contains the Pincode&lt;/param&gt;&#13;
+            &lt;param name="authMethod"&gt;contains the Authenticated Method&lt;/param&gt;&#13;
+            &lt;param name="reporteeElementId"&gt;ReporteeElementId (workflow reference) to be set to completed and signed&lt;/param&gt;&#13;
+            &lt;param name="signatureList"&gt;List of signatures to be used for signing&lt;/param&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10/IIntermediaryInboundExternalBasic/CompleteAndSignShipmentBasic" message="tns:IIntermediaryInboundExternalBasic_CompleteAndSignShipmentBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10/IIntermediaryInboundExternalBasic/CompleteAndSignShipmentBasicResponse" message="tns:IIntermediaryInboundExternalBasic_CompleteAndSignShipmentBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10/IIntermediaryInboundExternalBasic/CompleteAndSignShipmentBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IIntermediaryInboundExternalBasic_CompleteAndSignShipmentBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IIntermediaryInboundExternalBasic" type="tns:IIntermediaryInboundExternalBasic">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Test">
+      <soap:operation soapAction="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetAltinnSubmissionStatusBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10/IIntermediaryInboundExternalBasic/GetAltinnSubmissionStatusBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitFormTaskBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10/IIntermediaryInboundExternalBasic/SubmitFormTaskBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="CompleteAndSignShipmentBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Shipment/IntermediaryInbound/2009/10/IIntermediaryInboundExternalBasic/CompleteAndSignShipmentBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="IntermediaryInboundBasicSF">
+    <wsdl:port name="BasicHttpBinding_IIntermediaryInboundExternalBasic" binding="tns:BasicHttpBinding_IIntermediaryInboundExternalBasic">
+      <soap:address location="http://tt02.altinn.basefarm.net/IntermediaryExternal/IntermediaryInboundBasic.svc"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

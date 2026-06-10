@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SCENARIO iFlow: Update Amazon Order for Fulfillment
+  Display Name : OUT_Process_Direct_PostExit_Update_Amazon_Order_
+  Package      : 1_Process_Direct_PostExit_Finance
+  Strategy     : GREENFIELD: Clean cloud-native rebuild. No legacy mapping reuse.
+  Complexity   : HIGH (score: 161)
+  Effort       : 48.8 day(s)
+  Sender       : Process_Direct (ProcessDirect)
+  Receiver     : Post-Exit (ProcessDirect)
+  Batch        : No
+-->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+             id="Update_Amazon_Order_"
+             name="OUT_Process_Direct_PostExit_Update_Amazon_Order_">
+  <process id="Update_Amazon_Order__process" ifl:type="IntegrationFlow">
+
+    <startEvent id="Start_SC" name="From Interface Separation">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Update_Amazon_Order_</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </startEvent>
+
+
+
+    <!-- PROCESSDIRECT: Forward to Outbound Delivery -->
+    <serviceTask id="CallOutbound_1" name="→ Outbound Delivery" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/outbound/1_Process_Direct_Pos</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+
+    <endEvent id="End_SC"/>
+    <sequenceFlow sourceRef="Start_SC" targetRef="CallOutbound_1"/>
+    
+    
+    <sequenceFlow sourceRef="CallOutbound_1" targetRef="End_SC"/>
+  </process>
+</definitions>

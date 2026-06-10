@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="https://webservice.face.gob.es"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" name="SSPPWebServiceProxy"
+	targetNamespace="https://webservice.face.gob.es">
+	<types>
+		<xsd:schema targetNamespace="https://webservice.face.gob.es">
+			<xsd:complexType name="SSPPFicheroFactura">
+				<xsd:all>
+					<xsd:element name="factura" type="xsd:string" nillable="true" />
+					<xsd:element name="nombre" type="xsd:string" nillable="true" />
+					<xsd:element name="mime" type="xsd:string" nillable="true" />
+				</xsd:all>
+			</xsd:complexType>
+			<xsd:complexType name="SSPPFicheroAnexo">
+				<xsd:all>
+					<xsd:element name="anexo" type="xsd:string" nillable="true" />
+					<xsd:element name="nombre" type="xsd:string" nillable="true" />
+					<xsd:element name="mime" type="xsd:string" nillable="true" />
+				</xsd:all>
+			</xsd:complexType>
+			<xsd:complexType name="ArrayOfSSPPFicheroAnexo">
+				<xsd:complexContent>
+					<xsd:restriction base="soap-enc:Array">
+						<xsd:attribute ref="soap-enc:arrayType"
+							wsdl:arrayType="tns:SSPPFicheroAnexo[]" />
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="SSPPFactura">
+				<xsd:all>
+					<xsd:element name="correo" type="xsd:string" nillable="true" />
+					<xsd:element name="fichero_factura" type="tns:SSPPFicheroFactura"
+						nillable="true" />
+					<xsd:element name="ficheros_anexos" type="tns:ArrayOfSSPPFicheroAnexo"
+						nillable="true" />
+				</xsd:all>
+			</xsd:complexType>
+			<xsd:complexType name="SSPPResultadoEnviarFactura">
+				<xsd:all>
+					<xsd:element name="codigo_registro" type="xsd:string"
+						nillable="true" />
+					<xsd:element name="organo_gestor" type="xsd:string"
+						nillable="true" />
+					<xsd:element name="unidad_tramitadora" type="xsd:string"
+						nillable="true" />
+					<xsd:element name="oficina_contable" type="xsd:string"
+						nillable="true" />
+					<xsd:element name="identificador_emisor" type="xsd:string"
+						nillable="true" />
+					<xsd:element name="numero_factura" type="xsd:string"
+						nillable="true" />
+					<xsd:element name="serie_factura" type="xsd:string"
+						nillable="true" />
+					<xsd:element name="fecha_recepcion" type="xsd:string"
+						nillable="true" />
+				</xsd:all>
+			</xsd:complexType>
+			<xsd:complexType name="SSPPResultadoConsultarFacturaEstado">
+				<xsd:all>
+					<xsd:element name="codigo_estado" type="xsd:string"
+						nillable="true" />
+					<xsd:element name="descripcion_estado" type="xsd:string"
+						nillable="true" />
+					<xsd:element name="motivo_estado" type="xsd:string"
+						nillable="true" />
+				</xsd:all>
+			</xsd:complexType>
+			<xsd:complexType name="SSPPResultadoConsultarFactura">
+				<xsd:all>
+					<xsd:element name="numero_registro" type="xsd:string"
+						nillable="true" />
+					<xsd:element name="tramitacion"
+						type="tns:SSPPResultadoConsultarFacturaEstado" nillable="true" />
+					<xsd:element name="anulacion"
+						type="tns:SSPPResultadoConsultarFacturaEstado" nillable="true" />
+				</xsd:all>
+			</xsd:complexType>
+			<xsd:complexType name="SSPPResultadoAnularFactura">
+				<xsd:all>
+					<xsd:element name="numero_registro" type="xsd:string"
+						nillable="true" />
+					<xsd:element name="mensaje" type="xsd:string" nillable="true" />
+				</xsd:all>
+			</xsd:complexType>
+			<xsd:complexType name="SSPPEstado">
+				<xsd:all>
+					<xsd:element name="nombre" type="xsd:string" nillable="true" />
+					<xsd:element name="codigo" type="xsd:string" nillable="true" />
+					<xsd:element name="descripcion" type="xsd:string"
+						nillable="true" />
+				</xsd:all>
+			</xsd:complexType>
+			<xsd:complexType name="ArrayOfSSPPEstado">
+				<xsd:complexContent>
+					<xsd:restriction base="soap-enc:Array">
+						<xsd:attribute ref="soap-enc:arrayType"
+							wsdl:arrayType="tns:SSPPEstado[]" />
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="SSPPEstados">
+				<xsd:all>
+					<xsd:element name="estados" type="tns:ArrayOfSSPPEstado" />
+				</xsd:all>
+			</xsd:complexType>
+			<xsd:complexType name="SSPPUnidadDir">
+				<xsd:all>
+					<xsd:element name="codigo_dir" type="xsd:string"
+						nillable="true" />
+					<xsd:element name="nombre" type="xsd:string" nillable="true" />
+				</xsd:all>
+			</xsd:complexType>
+			<xsd:complexType name="SSPPOrganoGestorUnidadTramitadora">
+				<xsd:all>
+					<xsd:element name="organo_gestor" type="tns:SSPPUnidadDir"
+						nillable="true" />
+					<xsd:element name="unidad_tramitadora" type="tns:SSPPUnidadDir"
+						nillable="true" />
+					<xsd:element name="oficina_contable" type="tns:SSPPUnidadDir"
+						nillable="true" />
+				</xsd:all>
+			</xsd:complexType>
+			<xsd:complexType name="ArrayOfSSPPOrganoGestorUnidadTramitadora">
+				<xsd:complexContent>
+					<xsd:restriction base="soap-enc:Array">
+						<xsd:attribute ref="soap-enc:arrayType"
+							wsdl:arrayType="tns:SSPPOrganoGestorUnidadTramitadora[]" />
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="SSPPResultadoConsultarUnidades">
+				<xsd:all>
+					<xsd:element name="unidades"
+						type="tns:ArrayOfSSPPOrganoGestorUnidadTramitadora" nillable="true" />
+				</xsd:all>
+			</xsd:complexType>
+			<xsd:complexType name="ArrayOfSSPPUnidadDir">
+				<xsd:complexContent>
+					<xsd:restriction base="soap-enc:Array">
+						<xsd:attribute ref="soap-enc:arrayType"
+							wsdl:arrayType="tns:SSPPUnidadDir[]" />
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="ArrayOfSSPPResultadoConsultarFactura">
+				<xsd:complexContent>
+					<xsd:restriction base="soap-enc:Array">
+						<xsd:attribute ref="soap-enc:arrayType"
+							wsdl:arrayType="tns:SSPPResultadoConsultarFactura[]" />
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+		</xsd:schema>
+	</types>
+	<portType name="SSPPWebServiceProxyPort">
+		<operation name="enviarFactura">
+			<documentation>enviarFactura</documentation>
+			<input message="tns:enviarFacturaIn" />
+			<output message="tns:enviarFacturaOut" />
+		</operation>
+		<operation name="consultarFactura">
+			<documentation>consultarFactura</documentation>
+			<input message="tns:consultarFacturaIn" />
+			<output message="tns:consultarFacturaOut" />
+		</operation>
+		<operation name="anularFactura">
+			<documentation>anularFactura</documentation>
+			<input message="tns:anularFacturaIn" />
+			<output message="tns:anularFacturaOut" />
+		</operation>
+		<operation name="consultarEstados">
+			<documentation>Consultar los estados publicos de una factura
+			</documentation>
+			<input message="tns:consultarEstadosIn" />
+			<output message="tns:consultarEstadosOut" />
+		</operation>
+		<operation name="consultarUnidades">
+			<documentation>Consultar las unidades tramitadoras y organos gestores
+				existentes en el sistema.
+			</documentation>
+			<input message="tns:consultarUnidadesIn" />
+			<output message="tns:consultarUnidadesOut" />
+		</operation>
+		<operation name="consultarAdministraciones">
+			<documentation>Retorna un listado de unidades dir padres de primer
+				nivel
+			</documentation>
+			<input message="tns:consultarAdministracionesIn" />
+			<output message="tns:consultarAdministracionesOut" />
+		</operation>
+		<operation name="consultarUnidadesPorAdministracion">
+			<documentation>Retorna un listado de UT relacionadas con OG activas y
+				visibles por Administracion
+			</documentation>
+			<input message="tns:consultarUnidadesPorAdministracionIn" />
+			<output message="tns:consultarUnidadesPorAdministracionOut" />
+		</operation>
+		<operation name="consultarListadoFacturas">
+			<documentation>Consulta el estado de un listado de facturas entregada
+				al RCF
+			</documentation>
+			<input message="tns:consultarListadoFacturasIn" />
+			<output message="tns:consultarListadoFacturasOut" />
+		</operation>
+	</portType>
+	<binding name="SSPPWebServiceProxyBinding" type="tns:SSPPWebServiceProxyPort">
+		<soap:binding style="rpc"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsp:Policy xmlns:wsp="http://www.w3.org/ns/ws-policy">
+			<wsp:PolicyReference URI="#BN__binding" />
+		</wsp:Policy>
+		<operation name="enviarFactura">
+			<soap:operation soapAction="https://webservice.face.gob.es#enviarFactura" />
+			<input>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</input>
+			<output>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</output>
+		</operation>
+		<operation name="consultarFactura">
+			<soap:operation soapAction="https://webservice.face.gob.es#consultarFactura" />
+			<input>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</input>
+			<output>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</output>
+		</operation>
+		<operation name="anularFactura">
+			<soap:operation soapAction="https://webservice.face.gob.es#anularFactura" />
+			<input>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</input>
+			<output>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</output>
+		</operation>
+		<operation name="consultarEstados">
+			<soap:operation soapAction="https://webservice.face.gob.es#consultarEstados" />
+			<input>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</input>
+			<output>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</output>
+		</operation>
+		<operation name="consultarUnidades">
+			<soap:operation soapAction="https://webservice.face.gob.es#consultarUnidades" />
+			<input>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</input>
+			<output>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</output>
+		</operation>
+		<operation name="consultarAdministraciones">
+			<soap:operation
+				soapAction="https://webservice.face.gob.es#consultarAdministraciones" />
+			<input>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</input>
+			<output>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</output>
+		</operation>
+		<operation name="consultarUnidadesPorAdministracion">
+			<soap:operation
+				soapAction="https://webservice.face.gob.es#consultarUnidadesPorAdministracion" />
+			<input>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</input>
+			<output>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</output>
+		</operation>
+		<operation name="consultarListadoFacturas">
+			<soap:operation
+				soapAction="https://webservice.face.gob.es#consultarListadoFacturas" />
+			<input>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</input>
+			<output>
+				<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="https://webservice.face.gob.es" />
+			</output>
+		</operation>
+	</binding>
+	<service name="SSPPWebServiceProxyService">
+		<port name="SSPPWebServiceProxyPort" binding="tns:SSPPWebServiceProxyBinding">
+			<soap:address location="https://se-face-webservice.redsara.es/sspp" />
+		</port>
+	</service>
+	<message name="enviarFacturaIn">
+		<part name="facturaWS" type="tns:SSPPFactura" />
+	</message>
+	<message name="enviarFacturaOut">
+		<part name="return" type="tns:SSPPResultadoEnviarFactura" />
+	</message>
+	<message name="consultarFacturaIn">
+		<part name="numeroRegistro" type="xsd:string" />
+	</message>
+	<message name="consultarFacturaOut">
+		<part name="return" type="tns:SSPPResultadoConsultarFactura" />
+	</message>
+	<message name="anularFacturaIn">
+		<part name="numeroRegistro" type="xsd:string" />
+		<part name="motivo" type="xsd:string" />
+	</message>
+	<message name="anularFacturaOut">
+		<part name="return" type="tns:SSPPResultadoAnularFactura" />
+	</message>
+	<message name="consultarEstadosIn" />
+	<message name="consultarEstadosOut">
+		<part name="return" type="tns:SSPPEstados" />
+	</message>
+	<message name="consultarUnidadesIn" />
+	<message name="consultarUnidadesOut">
+		<part name="return" type="tns:SSPPResultadoConsultarUnidades" />
+	</message>
+	<message name="consultarAdministracionesIn" />
+	<message name="consultarAdministracionesOut">
+		<part name="return" type="tns:ArrayOfSSPPUnidadDir" />
+	</message>
+	<message name="consultarUnidadesPorAdministracionIn">
+		<part name="codigoDir" type="xsd:string" />
+	</message>
+	<message name="consultarUnidadesPorAdministracionOut">
+		<part name="return" type="tns:SSPPResultadoConsultarUnidades" />
+	</message>
+	<message name="consultarListadoFacturasIn">
+		<part name="listadoFacturas" type="soap-enc:Array" />
+	</message>
+	<message name="consultarListadoFacturasOut">
+		<part name="return" type="tns:ArrayOfSSPPResultadoConsultarFactura" />
+	</message>
+	<wsp:UsingPolicy required="true"
+		xmlns:wsp="http://www.w3.org/ns/ws-policy" />
+	<wsp:Policy wsu:Id="BN__binding" xmlns:wsp="http://www.w3.org/ns/ws-policy"
+		xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+		<wsp:ExactlyOne>
+			<wsp:All>
+				<wsp:Policy>
+					<wsp:ExactlyOne>
+						<wsp:All>
+							<sp:AsymmetricBinding
+								xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702">
+								<wsp:Policy>
+									<sp:InitiatorToken>
+										<wsp:Policy>
+											<sp:X509Token
+												sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
+												<wsp:Policy>
+													<sp:WssX509V3Token10 />
+												</wsp:Policy>
+											</sp:X509Token>
+										</wsp:Policy>
+									</sp:InitiatorToken>
+									<sp:RecipientToken>
+										<wsp:Policy>
+											<sp:X509Token
+												sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/Never">
+												<wsp:Policy>
+													<sp:WssX509V3Token10 />
+												</wsp:Policy>
+											</sp:X509Token>
+										</wsp:Policy>
+									</sp:RecipientToken>
+									<sp:Layout>
+										<wsp:Policy>
+											<sp:Lax />
+										</wsp:Policy>
+									</sp:Layout>
+									<sp:IncludeTimestamp />
+									<sp:OnlySignEntireHeadersAndBody />
+									<sp:AlgorithmSuite>
+										<wsp:Policy>
+											<sp:Basic128Rsa15 />
+										</wsp:Policy>
+									</sp:AlgorithmSuite>
+								</wsp:Policy>
+							</sp:AsymmetricBinding>
+							<sp:Wss10
+								xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702">
+								<wsp:Policy>
+									<sp:MustSupportRefKeyIdentifier />
+									<sp:MustSupportRefIssuerSerial />
+								</wsp:Policy>
+							</sp:Wss10>
+							<sp:SignedParts
+								xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702">
+								<sp:Body />
+								<sp:Header Name="Timestamp"
+									Namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" />
+							</sp:SignedParts>
+						</wsp:All>
+					</wsp:ExactlyOne>
+				</wsp:Policy>
+			</wsp:All>
+		</wsp:ExactlyOne>
+	</wsp:Policy>
+</definitions>

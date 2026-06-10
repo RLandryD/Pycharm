@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="API_CLFN_CHARACTERISTIC_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="A_ClfnCharacteristicForKeyDateType" sap:label="Characteristic Header Data" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="CharcInternalID"/>
+                </Key>
+                <Property Name="CharcInternalID" Type="Edm.String" Nullable="false" MaxLength="50" sap:display-format="NonNegative" sap:label="Characteristic Internal ID"/>
+                <Property Name="Characteristic" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Characteristic Name"/>
+                <Property Name="CharcStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Status" sap:quickinfo="Status of a characteristic"/>
+                <Property Name="CharcStatusName" Type="Edm.String" MaxLength="20" sap:label="Char. Status" sap:quickinfo="Characteristic Status" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="CharcDataType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Format" sap:quickinfo="Data type of characteristic"/>
+                <Property Name="CharcLength" Type="Edm.Int16" sap:label="Number of Characters"/>
+                <Property Name="CharcDecimals" Type="Edm.Int16" sap:label="Decimal Places" sap:quickinfo="Number of Decimal Places"/>
+                <Property Name="CharcTemplate" Type="Edm.String" MaxLength="70" sap:label="Template" sap:quickinfo="Value with template"/>
+                <Property Name="ValueIsCaseSensitive" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Case Sensitive"/>
+                <Property Name="CharcGroup" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Characteristic Group"/>
+                <Property Name="CharcGroupName" Type="Edm.String" MaxLength="40" sap:label="Char. Group" sap:quickinfo="Characteristics Group Description" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="EntryIsRequired" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Checkbox" sap:heading=""/>
+                <Property Name="MultipleValuesAreAllowed" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Checkbox" sap:heading=""/>
+                <Property Name="CharcValueUnit" Type="Edm.String" MaxLength="3" sap:label="Internal UoM" sap:quickinfo="Unit of Measurement" sap:semantics="unit-of-measure"/>
+                <Property Name="UnitOfMeasureISOCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="ISO code" sap:quickinfo="ISO code for unit of measurement"/>
+                <Property Name="Currency" Type="Edm.String" MaxLength="5" sap:label="Currency" sap:quickinfo="Currency Key" sap:semantics="currency-code"/>
+                <Property Name="CurrencyISOCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="ISO Code" sap:quickinfo="ISO Currency Code"/>
+                <Property Name="CharcExponentValue" Type="Edm.Int16" sap:label="Exponent" sap:quickinfo="Exponent display"/>
+                <Property Name="ValueIntervalIsAllowed" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Checkbox" sap:heading=""/>
+                <Property Name="AdditionalValueIsAllowed" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Checkbox" sap:heading=""/>
+                <Property Name="NegativeValueIsAllowed" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="+/- Sign" sap:quickinfo="Value with Plus or Minus Sign"/>
+                <Property Name="ValidityStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid From" sap:quickinfo="Valid-From Date"/>
+                <Property Name="ValidityEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid to" sap:quickinfo="Valid-to date"/>
+                <Property Name="ChangeNumber" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Change Number"/>
+                <Property Name="DocumentType" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Document Type"/>
+                <Property Name="DocNumber" Type="Edm.String" MaxLength="25" sap:display-format="UpperCase" sap:label="Document" sap:quickinfo="Document number"/>
+                <Property Name="DocumentVersion" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Document Version"/>
+                <Property Name="DocumentPart" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Document Part"/>
+                <Property Name="CharcMaintAuthGrp" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Authorization Group" sap:quickinfo="Authorization Group for Characteristics Maintenance"/>
+                <Property Name="CharcIsReadOnly" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Checkbox" sap:heading=""/>
+                <Property Name="CharcIsHidden" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Checkbox" sap:heading=""/>
+                <Property Name="CharcIsRestrictable" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Restrictable" sap:quickinfo="Indicator: restrictable characteristic"/>
+                <Property Name="CharcExponentFormat" Type="Edm.String" MaxLength="1" sap:display-format="NonNegative" sap:label="Exponent Display" sap:quickinfo="Exponent Display Format"/>
+                <Property Name="CharcEntryIsNotFormatCtrld" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Checkbox" sap:heading=""/>
+                <Property Name="CharcTemplateIsDisplayed" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Checkbox" sap:heading=""/>
+                <Property Name="CreationDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Created On" sap:quickinfo="Date on Which Record Was Created" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="LastChangeDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Changed On" sap:quickinfo="Date of Last Change" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="CharcLastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="KeyDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:creatable="false" sap:updatable="false"/>
+                <NavigationProperty Name="to_CharacteristicDesc" Relationship="API_CLFN_CHARACTERISTIC_SRV.assoc_0015984CE7FB76BBBB26D78D7ADC6358" FromRole="FromRole_assoc_0015984CE7FB76BBBB26D78D7ADC6358" ToRole="ToRole_assoc_0015984CE7FB76BBBB26D78D7ADC6358"/>
+                <NavigationProperty Name="to_CharacteristicReference" Relationship="API_CLFN_CHARACTERISTIC_SRV.assoc_DA82A103ADA0455D91980F9AC863A6C0" FromRole="FromRole_assoc_DA82A103ADA0455D91980F9AC863A6C0" ToRole="ToRole_assoc_DA82A103ADA0455D91980F9AC863A6C0"/>
+                <NavigationProperty Name="to_CharacteristicRestriction" Relationship="API_CLFN_CHARACTERISTIC_SRV.assoc_A38D19900B1A9331E4A68FEE79A94409" FromRole="FromRole_assoc_A38D19900B1A9331E4A68FEE79A94409" ToRole="ToRole_assoc_A38D19900B1A9331E4A68FEE79A94409"/>
+                <NavigationProperty Name="to_CharacteristicValue" Relationship="API_CLFN_CHARACTERISTIC_SRV.assoc_BB90C521DA33A68BD4D3C72421D79884" FromRole="FromRole_assoc_BB90C521DA33A68BD4D3C72421D79884" ToRole="ToRole_assoc_BB90C521DA33A68BD4D3C72421D79884"/>
+            </EntityType>
+            <EntityType Name="A_ClfnCharcDescForKeyDateType" sap:label="Characteristic Descriptions" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="CharcInternalID"/>
+                    <PropertyRef Name="Language"/>
+                </Key>
+                <Property Name="CharcInternalID" Type="Edm.String" Nullable="false" MaxLength="50" sap:display-format="NonNegative" sap:label="Characteristic Internal ID"/>
+                <Property Name="Language" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key"/>
+                <Property Name="CharcDescription" Type="Edm.String" MaxLength="30" sap:label="Characteristic Description"/>
+                <Property Name="ChangeNumber" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Change Number"/>
+                <Property Name="ValidityStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid From" sap:quickinfo="Valid-From Date" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="ValidityEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid to" sap:quickinfo="Valid-to date" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="KeyDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="CharcLastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)" sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="A_ClfnCharcRefForKeyDateType" sap:label="Characteristic References" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="CharcInternalID"/>
+                    <PropertyRef Name="CharcReferenceTable"/>
+                    <PropertyRef Name="CharcReferenceTableField"/>
+                </Key>
+                <Property Name="CharcInternalID" Type="Edm.String" Nullable="false" MaxLength="50" sap:display-format="NonNegative" sap:label="Characteristic Internal ID"/>
+                <Property Name="CharcReferenceTable" Type="Edm.String" Nullable="false" MaxLength="30" sap:display-format="UpperCase" sap:label="Table Name"/>
+                <Property Name="CharcReferenceTableField" Type="Edm.String" Nullable="false" MaxLength="30" sap:display-format="UpperCase" sap:label="Field Name"/>
+                <Property Name="KeyDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="CharcLastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)" sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="A_ClfnCharcRstrcnForKeyDateType" sap:label="Characteristic Restrictions" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="CharcInternalID"/>
+                    <PropertyRef Name="ClassType"/>
+                </Key>
+                <Property Name="CharcInternalID" Type="Edm.String" Nullable="false" MaxLength="50" sap:display-format="NonNegative" sap:label="Characteristic Internal ID"/>
+                <Property Name="ClassType" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="UpperCase" sap:label="Class Type"/>
+                <Property Name="KeyDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="CharcLastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)" sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="A_ClfnCharcValueDescForKeyDateType" sap:label="Characteristic Value Descriptions" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="CharcInternalID"/>
+                    <PropertyRef Name="CharcValuePositionNumber"/>
+                    <PropertyRef Name="Language"/>
+                </Key>
+                <Property Name="CharcInternalID" Type="Edm.String" Nullable="false" MaxLength="50" sap:display-format="NonNegative" sap:label="Characteristic Internal ID"/>
+                <Property Name="CharcValuePositionNumber" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="NonNegative" sap:label="Int counter values" sap:quickinfo="Int counter"/>
+                <Property Name="Language" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key"/>
+                <Property Name="CharcValueDescription" Type="Edm.String" MaxLength="70" sap:label="Value description" sap:quickinfo="Characteristic value description"/>
+                <Property Name="ChangeNumber" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Change Number"/>
+                <Property Name="ValidityStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid From" sap:quickinfo="Valid-From Date" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="ValidityEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid to" sap:quickinfo="Valid-to date" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="KeyDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="CharcLastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)" sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="A_ClfnCharcValueForKeyDateType" sap:label="Characteristic Values" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="CharcInternalID"/>
+                    <PropertyRef Name="CharcValuePositionNumber"/>
+                </Key>
+                <Property Name="CharcInternalID" Type="Edm.String" Nullable="false" MaxLength="50" sap:display-format="NonNegative" sap:label="Characteristic Internal ID"/>
+                <Property Name="CharcValuePositionNumber" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="NonNegative" sap:label="Int counter values" sap:quickinfo="Int counter"/>
+                <Property Name="CharcValueDependency" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Code" sap:quickinfo="Code for value dependency"/>
+                <Property Name="CharcValue" Type="Edm.String" MaxLength="70" sap:label="Characteristic Value"/>
+                <Property Name="CharcFromNumericValue" Type="Edm.Double" sap:label="Value from" sap:quickinfo="Internal floating point from"/>
+                <Property Name="CharcToNumericValue" Type="Edm.Double" sap:label="Value to" sap:quickinfo="Internal floating point value to"/>
+                <Property Name="IsDefaultValue" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Default Value" sap:quickinfo="Default value"/>
+                <Property Name="CharcFromNumericValueUnit" Type="Edm.String" MaxLength="3" sap:label="Internal UoM" sap:quickinfo="Unit of Measurement" sap:semantics="unit-of-measure"/>
+                <Property Name="CharcToNumericValueUnit" Type="Edm.String" MaxLength="3" sap:label="Internal UoM" sap:quickinfo="Unit of Measurement" sap:semantics="unit-of-measure"/>
+                <Property Name="LongTextID" Type="Edm.String" MaxLength="4" sap:display-format="NonNegative" sap:label="Text number" sap:quickinfo="Number of Related Text"/>
+                <Property Name="ChangeNumber" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Change Number"/>
+                <Property Name="DocumentType" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Document Type"/>
+                <Property Name="DocNumber" Type="Edm.String" MaxLength="25" sap:display-format="UpperCase" sap:label="Document" sap:quickinfo="Document number"/>
+                <Property Name="DocumentPart" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Document Part"/>
+                <Property Name="DocumentVersion" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Document Version"/>
+                <Property Name="ValidityStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid From" sap:quickinfo="Valid-From Date" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="ValidityEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid to" sap:quickinfo="Valid-to date" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="KeyDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="CharcLastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)" sap:creatable="false" sap:updatable="false"/>
+                <NavigationProperty Name="to_CharcValueDesc" Relationship="API_CLFN_CHARACTERISTIC_SRV.assoc_E25161C35F122675993A4D2ADC31DEC2" FromRole="FromRole_assoc_E25161C35F122675993A4D2ADC31DEC2" ToRole="ToRole_assoc_E25161C35F122675993A4D2ADC31DEC2"/>
+            </EntityType>
+            <Association Name="assoc_E25161C35F122675993A4D2ADC31DEC2" sap:content-version="1">
+                <End Type="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharcValueForKeyDateType" Multiplicity="1" Role="FromRole_assoc_E25161C35F122675993A4D2ADC31DEC2">
+                    <OnDelete Action="Cascade"/>
+                </End>
+                <End Type="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharcValueDescForKeyDateType" Multiplicity="*" Role="ToRole_assoc_E25161C35F122675993A4D2ADC31DEC2"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_assoc_E25161C35F122675993A4D2ADC31DEC2">
+                        <PropertyRef Name="CharcValuePositionNumber"/>
+                        <PropertyRef Name="CharcInternalID"/>
+                    </Principal>
+                    <Dependent Role="ToRole_assoc_E25161C35F122675993A4D2ADC31DEC2">
+                        <PropertyRef Name="CharcValuePositionNumber"/>
+                        <PropertyRef Name="CharcInternalID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_DA82A103ADA0455D91980F9AC863A6C0" sap:content-version="1">
+                <End Type="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharacteristicForKeyDateType" Multiplicity="1" Role="FromRole_assoc_DA82A103ADA0455D91980F9AC863A6C0">
+                    <OnDelete Action="Cascade"/>
+                </End>
+                <End Type="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharcRefForKeyDateType" Multiplicity="*" Role="ToRole_assoc_DA82A103ADA0455D91980F9AC863A6C0"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_assoc_DA82A103ADA0455D91980F9AC863A6C0">
+                        <PropertyRef Name="CharcInternalID"/>
+                    </Principal>
+                    <Dependent Role="ToRole_assoc_DA82A103ADA0455D91980F9AC863A6C0">
+                        <PropertyRef Name="CharcInternalID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_A38D19900B1A9331E4A68FEE79A94409" sap:content-version="1">
+                <End Type="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharacteristicForKeyDateType" Multiplicity="1" Role="FromRole_assoc_A38D19900B1A9331E4A68FEE79A94409">
+                    <OnDelete Action="Cascade"/>
+                </End>
+                <End Type="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharcRstrcnForKeyDateType" Multiplicity="*" Role="ToRole_assoc_A38D19900B1A9331E4A68FEE79A94409"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_assoc_A38D19900B1A9331E4A68FEE79A94409">
+                        <PropertyRef Name="CharcInternalID"/>
+                    </Principal>
+                    <Dependent Role="ToRole_assoc_A38D19900B1A9331E4A68FEE79A94409">
+                        <PropertyRef Name="CharcInternalID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_BB90C521DA33A68BD4D3C72421D79884" sap:content-version="1">
+                <End Type="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharacteristicForKeyDateType" Multiplicity="1" Role="FromRole_assoc_BB90C521DA33A68BD4D3C72421D79884">
+                    <OnDelete Action="Cascade"/>
+                </End>
+                <End Type="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharcValueForKeyDateType" Multiplicity="*" Role="ToRole_assoc_BB90C521DA33A68BD4D3C72421D79884"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_assoc_BB90C521DA33A68BD4D3C72421D79884">
+                        <PropertyRef Name="CharcInternalID"/>
+                    </Principal>
+                    <Dependent Role="ToRole_assoc_BB90C521DA33A68BD4D3C72421D79884">
+                        <PropertyRef Name="CharcInternalID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="assoc_0015984CE7FB76BBBB26D78D7ADC6358" sap:content-version="1">
+                <End Type="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharacteristicForKeyDateType" Multiplicity="1" Role="FromRole_assoc_0015984CE7FB76BBBB26D78D7ADC6358">
+                    <OnDelete Action="Cascade"/>
+                </End>
+                <End Type="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharcDescForKeyDateType" Multiplicity="*" Role="ToRole_assoc_0015984CE7FB76BBBB26D78D7ADC6358"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_assoc_0015984CE7FB76BBBB26D78D7ADC6358">
+                        <PropertyRef Name="CharcInternalID"/>
+                    </Principal>
+                    <Dependent Role="ToRole_assoc_0015984CE7FB76BBBB26D78D7ADC6358">
+                        <PropertyRef Name="CharcInternalID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <EntityContainer Name="API_CLFN_CHARACTERISTIC_SRV_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="A_ClfnCharacteristicForKeyDate" EntityType="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharacteristicForKeyDateType" sap:content-version="1"/>
+                <EntitySet Name="A_ClfnCharcDescForKeyDate" EntityType="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharcDescForKeyDateType" sap:content-version="1"/>
+                <EntitySet Name="A_ClfnCharcRefForKeyDate" EntityType="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharcRefForKeyDateType" sap:updatable="false" sap:content-version="1"/>
+                <EntitySet Name="A_ClfnCharcRstrcnForKeyDate" EntityType="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharcRstrcnForKeyDateType" sap:updatable="false" sap:content-version="1"/>
+                <EntitySet Name="A_ClfnCharcValueDescForKeyDate" EntityType="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharcValueDescForKeyDateType" sap:content-version="1"/>
+                <EntitySet Name="A_ClfnCharcValueForKeyDate" EntityType="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharcValueForKeyDateType" sap:content-version="1"/>
+                <AssociationSet Name="assoc_BB90C521DA33A68BD4D3C72421D79884" Association="API_CLFN_CHARACTERISTIC_SRV.assoc_BB90C521DA33A68BD4D3C72421D79884" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="A_ClfnCharacteristicForKeyDate" Role="FromRole_assoc_BB90C521DA33A68BD4D3C72421D79884"/>
+                    <End EntitySet="A_ClfnCharcValueForKeyDate" Role="ToRole_assoc_BB90C521DA33A68BD4D3C72421D79884"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_0015984CE7FB76BBBB26D78D7ADC6358" Association="API_CLFN_CHARACTERISTIC_SRV.assoc_0015984CE7FB76BBBB26D78D7ADC6358" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="A_ClfnCharacteristicForKeyDate" Role="FromRole_assoc_0015984CE7FB76BBBB26D78D7ADC6358"/>
+                    <End EntitySet="A_ClfnCharcDescForKeyDate" Role="ToRole_assoc_0015984CE7FB76BBBB26D78D7ADC6358"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_E25161C35F122675993A4D2ADC31DEC2" Association="API_CLFN_CHARACTERISTIC_SRV.assoc_E25161C35F122675993A4D2ADC31DEC2" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="A_ClfnCharcValueForKeyDate" Role="FromRole_assoc_E25161C35F122675993A4D2ADC31DEC2"/>
+                    <End EntitySet="A_ClfnCharcValueDescForKeyDate" Role="ToRole_assoc_E25161C35F122675993A4D2ADC31DEC2"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_DA82A103ADA0455D91980F9AC863A6C0" Association="API_CLFN_CHARACTERISTIC_SRV.assoc_DA82A103ADA0455D91980F9AC863A6C0" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="A_ClfnCharacteristicForKeyDate" Role="FromRole_assoc_DA82A103ADA0455D91980F9AC863A6C0"/>
+                    <End EntitySet="A_ClfnCharcRefForKeyDate" Role="ToRole_assoc_DA82A103ADA0455D91980F9AC863A6C0"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_A38D19900B1A9331E4A68FEE79A94409" Association="API_CLFN_CHARACTERISTIC_SRV.assoc_A38D19900B1A9331E4A68FEE79A94409" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="A_ClfnCharacteristicForKeyDate" Role="FromRole_assoc_A38D19900B1A9331E4A68FEE79A94409"/>
+                    <End EntitySet="A_ClfnCharcRstrcnForKeyDate" Role="ToRole_assoc_A38D19900B1A9331E4A68FEE79A94409"/>
+                </AssociationSet>
+            </EntityContainer>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.API_CLFN_CHARACTERISTIC_SRV_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+                <Annotation Term="Aggregation.ApplySupported">
+                    <Record>
+                        <PropertyValue Property="Transformations">
+                            <Collection>
+                                <String>aggregate</String>
+                                <String>groupby</String>
+                                <String>filter</String>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Rollup" EnumMember="None"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.A_ClfnCharacteristicForKeyDateType/MultipleValuesAreAllowed" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+            </Annotations>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.API_CLFN_CHARACTERISTIC_SRV_Entities/A_ClfnCharacteristicForKeyDate" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.FilterRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonFilterableProperties">
+                            <Collection>
+                                <PropertyPath>P_KeyDate</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.SortRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonSortableProperties">
+                            <Collection>
+                                <PropertyPath>P_KeyDate</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.API_CLFN_CHARACTERISTIC_SRV_Entities/A_ClfnCharcDescForKeyDate" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.FilterRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonFilterableProperties">
+                            <Collection>
+                                <PropertyPath>P_KeyDate</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.SortRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonSortableProperties">
+                            <Collection>
+                                <PropertyPath>P_KeyDate</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.API_CLFN_CHARACTERISTIC_SRV_Entities/A_ClfnCharcRefForKeyDate" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.FilterRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonFilterableProperties">
+                            <Collection>
+                                <PropertyPath>P_KeyDate</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.SortRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonSortableProperties">
+                            <Collection>
+                                <PropertyPath>P_KeyDate</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.API_CLFN_CHARACTERISTIC_SRV_Entities/A_ClfnCharcRstrcnForKeyDate" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.FilterRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonFilterableProperties">
+                            <Collection>
+                                <PropertyPath>P_KeyDate</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.SortRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonSortableProperties">
+                            <Collection>
+                                <PropertyPath>P_KeyDate</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.API_CLFN_CHARACTERISTIC_SRV_Entities/A_ClfnCharcValueDescForKeyDate" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.FilterRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonFilterableProperties">
+                            <Collection>
+                                <PropertyPath>P_KeyDate</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.SortRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonSortableProperties">
+                            <Collection>
+                                <PropertyPath>P_KeyDate</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.API_CLFN_CHARACTERISTIC_SRV_Entities/A_ClfnCharcValueForKeyDate" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.FilterRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonFilterableProperties">
+                            <Collection>
+                                <PropertyPath>P_KeyDate</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.SortRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonSortableProperties">
+                            <Collection>
+                                <PropertyPath>P_KeyDate</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.API_CLFN_CHARACTERISTIC_SRV_Entities/A_ClfnCharacteristicForKeyDate" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.ReadRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="List of characteristic header data."/>
+                        <PropertyValue Property="LongDescription" String="Reads all characteristic header data."/>
+                        <PropertyValue Property="ReadByKeyRestrictions">
+                            <Record>
+                                <PropertyValue Property="Description" String="Characteristic header data for a given key."/>
+                                <PropertyValue Property="LongDescription" String="Reads a characteristic header data by the internal ID."/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Creates a characteristic header data."/>
+                        <PropertyValue Property="LongDescription" String="Creates a characteristic header data using characteristic name. Providing data type, status and a description in the same request is mandatory. Other fields might also be required depending on the selected data type."/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Updates a characteristic header data."/>
+                        <PropertyValue Property="LongDescription" String="Updates the header data of a characteristic selected by the internal ID."/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Deletes a characteristic."/>
+                        <PropertyValue Property="LongDescription" String="Deletes a characteristic by the internal ID."/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.NavigationRestrictions">
+                    <Record>
+                        <PropertyValue Property="RestrictedProperties">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_CharacteristicDesc"/>
+                                    <PropertyValue Property="ReadRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Description" String="Reads the descriptions of a characteristic."/>
+                                            <PropertyValue Property="LongDescription" String="Reads the description of the selected characteristic in each language."/>
+                                        </Record>
+                                    </PropertyValue>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Description" String="Creates a description for a characteristic."/>
+                                            <PropertyValue Property="LongDescription" String="Creates a new description for the selected characteristic."/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_CharacteristicReference"/>
+                                    <PropertyValue Property="ReadRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Description" String="Reads the references defined for a characteristic."/>
+                                            <PropertyValue Property="LongDescription" String="Reads all references of the selected characteristic."/>
+                                        </Record>
+                                    </PropertyValue>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Description" String="Creates a reference for a characteristic."/>
+                                            <PropertyValue Property="LongDescription" String="Creates a new reference for the selected characteristic."/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_CharacteristicRestriction"/>
+                                    <PropertyValue Property="ReadRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Description" String="Reads the restrictions defined for a characteristic."/>
+                                            <PropertyValue Property="LongDescription" String="Reads all restrictions of the selected characteristic."/>
+                                        </Record>
+                                    </PropertyValue>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Description" String="Creates a restriction for a characteristic."/>
+                                            <PropertyValue Property="LongDescription" String="Creates a new restriction for the selected characteristic."/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_CharacteristicValue"/>
+                                    <PropertyValue Property="ReadRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Description" String="Reads the values defined for a characteristic."/>
+                                            <PropertyValue Property="LongDescription" String="Reads all values of the selected characteristic."/>
+                                        </Record>
+                                    </PropertyValue>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Description" String="Creates a value for a characteristic."/>
+                                            <PropertyValue Property="LongDescription" String="Creates a new value for the selected characteristic."/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.API_CLFN_CHARACTERISTIC_SRV_Entities/A_ClfnCharcDescForKeyDate" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.ReadRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="List of characteristic descriptions."/>
+                        <PropertyValue Property="LongDescription" String="Reads all characteristic descriptions. You can also get descriptions for a selected characteristic or language."/>
+                        <PropertyValue Property="ReadByKeyRestrictions">
+                            <Record>
+                                <PropertyValue Property="Description" String="Characteristic description for a given key."/>
+                                <PropertyValue Property="LongDescription" String="Reads the description of a characteristic in a selected language."/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Creates a characteristic description."/>
+                        <PropertyValue Property="LongDescription" String="Creates a characteristic description using the internal ID of the characteristic and a language. In case the language is not provided, the logon language is used."/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Updates a characteristic description."/>
+                        <PropertyValue Property="LongDescription" String="Updates the description of a characteristic defined by the internal ID and the language."/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Deletes a characteristic description."/>
+                        <PropertyValue Property="LongDescription" String="Deletes the description of a characteristic defined by the internal ID and the language."/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.API_CLFN_CHARACTERISTIC_SRV_Entities/A_ClfnCharcRefForKeyDate" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.ReadRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="List of characteristic references."/>
+                        <PropertyValue Property="LongDescription" String="Reads all characteristic references. You can also get references for a selected characteristic."/>
+                        <PropertyValue Property="ReadByKeyRestrictions">
+                            <Record>
+                                <PropertyValue Property="Description" String="Characteristic reference for a given key."/>
+                                <PropertyValue Property="LongDescription" String="Reads a characteristic reference using the internal ID of the characteristic, a reference table and a reference field."/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Creates a characteristic reference."/>
+                        <PropertyValue Property="LongDescription" String="Creates a characteristic reference using the internal ID of the characteristic, a reference table and a reference field."/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Deletes a characteristic reference."/>
+                        <PropertyValue Property="LongDescription" String="Deletes a characteristic reference defined using the internal ID of the characteristic, a reference table and a reference field."/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.API_CLFN_CHARACTERISTIC_SRV_Entities/A_ClfnCharcRstrcnForKeyDate" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.ReadRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="List of characteristic restrictions."/>
+                        <PropertyValue Property="LongDescription" String="Reads all characteristic restrictions. You can also get restrictions for a selected characteristic."/>
+                        <PropertyValue Property="ReadByKeyRestrictions">
+                            <Record>
+                                <PropertyValue Property="Description" String="Characteristic restriction for a given key."/>
+                                <PropertyValue Property="LongDescription" String="Reads a characteristic restriction using the internal ID of the characteristic and a class type."/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Creates a characteristic restriction."/>
+                        <PropertyValue Property="LongDescription" String="Creates a characteristic restriction using the internal ID of the characteristic and a class type."/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Deletes a characteristic restriction."/>
+                        <PropertyValue Property="LongDescription" String="Deletes a characteristic restriction using the internal ID of the characteristic and a class type."/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.API_CLFN_CHARACTERISTIC_SRV_Entities/A_ClfnCharcValueForKeyDate" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.ReadRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="List of characteristic values."/>
+                        <PropertyValue Property="LongDescription" String="Reads all characteristic values. You can also get values for a selected characteristic."/>
+                        <PropertyValue Property="ReadByKeyRestrictions">
+                            <Record>
+                                <PropertyValue Property="Description" String="Characteristic value for a given key."/>
+                                <PropertyValue Property="LongDescription" String="Reads a characteristic value using a position number and the internal ID of the characteristic."/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Creates a characteristic value."/>
+                        <PropertyValue Property="LongDescription" String="Creates a characteristic value using the internal ID of the characteristic. Fields to be filled depend on the data type of the characteristic."/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Updates a characteristic value."/>
+                        <PropertyValue Property="LongDescription" String="Updates a characteristic value using a position number and the internal ID of the characteristic."/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Deletes a characteristic value."/>
+                        <PropertyValue Property="LongDescription" String="Deletes a characteristic value using a position number and the internal ID of the characteristic."/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.NavigationRestrictions">
+                    <Record>
+                        <PropertyValue Property="RestrictedProperties">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_CharcValueDesc"/>
+                                    <PropertyValue Property="ReadRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Description" String="Reads the descriptions of a characteristic value."/>
+                                            <PropertyValue Property="LongDescription" String="Reads the description of the selected characteristic value in each language. Used in case of character type characteristics."/>
+                                        </Record>
+                                    </PropertyValue>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Description" String="Creates a description for a characteristic value."/>
+                                            <PropertyValue Property="LongDescription" String="Creates a new description for the selected characteristic value."/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.API_CLFN_CHARACTERISTIC_SRV_Entities/A_ClfnCharcValueDescForKeyDate" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.ReadRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="List of characteristic value descriptions."/>
+                        <PropertyValue Property="LongDescription" String="Reads all characteristic value descriptions. You can also get value descriptions for a selected characteristic or characteristic value."/>
+                        <PropertyValue Property="ReadByKeyRestrictions">
+                            <Record>
+                                <PropertyValue Property="Description" String="Characteristic value description for a given key."/>
+                                <PropertyValue Property="LongDescription" String="Reads a characteristic value description on a selected language using the position number of the value and the internal ID of the characteristic."/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Creates a characteristic value description."/>
+                        <PropertyValue Property="LongDescription" String="Creates a characteristic value description using a language, the position number of the value and the internal ID of the characteristic. In case the language is not provided, the logon language is used."/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Updates a characteristic value description."/>
+                        <PropertyValue Property="LongDescription" String="Updates a characteristic value description using a language, the position number of the value and the internal ID of the characteristic."/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Description" String="Deletes a characteristic value description."/>
+                        <PropertyValue Property="LongDescription" String="Deletes a characteristic value description using a language, the position number of the value and the internal ID of the characteristic."/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="API_CLFN_CHARACTERISTIC_SRV.API_CLFN_CHARACTERISTIC_SRV_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Org.OData.Capabilities.V1.BatchSupport">
+                    <Record Type="Org.OData.Capabilities.V1.BatchSupportType">
+                        <PropertyValue Property="ReferencesAcrossChangeSetsSupported" Bool="true"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <atom:link rel="self" href="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/sap/API_CLFN_CHARACTERISTIC_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/sap/API_CLFN_CHARACTERISTIC_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

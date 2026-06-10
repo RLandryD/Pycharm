@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+   <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="1.0">
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:s="http://schemas.sap.com/commerce" Namespace="HybrisCommerceOData" s:schema-version="1">
+         <EntityType Name="CpqSubscriptionDetail">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="contractStartDate" Type="Edm.DateTime" Nullable="true" />
+            <Property Name="contractEndDate" Type="Edm.DateTime" Nullable="true" />
+            <Property Name="minimumContractEndDate" Type="Edm.DateTime" Nullable="true" />
+            <Property Name="effectiveDate" Type="Edm.DateTime" Nullable="true" />
+            <Property Name="subscriptionPricePlanId" Type="Edm.String" Nullable="true" />
+            <Property Name="itemId" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="ratePlanId" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="contractLength" Type="Edm.String" Nullable="true" />
+            <Property Name="minimumContractLength" Type="Edm.String" Nullable="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="CpqSubscriptionDetail_itemId|CpqSubscriptionDetail_ratePlanId" />
+            <NavigationProperty Name="pricingParameters" Relationship="HybrisCommerceOData.FK_CpqSubscriptionDetail_pricingParameters" FromRole="CpqSubscriptionDetail" ToRole="CpqPricingParameter" Nullable="true" s:IsPartOf="true" s:IsAutoCreate="true" />
+         </EntityType>
+         <EntityType Name="SAPCpiOutboundOrder">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="creationDate" Type="Edm.String" Nullable="true" />
+            <Property Name="responseMessage" Type="Edm.String" Nullable="true" />
+            <Property Name="transactionType" Type="Edm.String" Nullable="true" />
+            <Property Name="salesOrganization" Type="Edm.String" Nullable="true" />
+            <Property Name="division" Type="Edm.String" Nullable="true" />
+            <Property Name="paymentMode" Type="Edm.String" Nullable="true" />
+            <Property Name="orderId" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="revenueCloudOrderId" Type="Edm.String" Nullable="true" />
+            <Property Name="channel" Type="Edm.String" Nullable="true" />
+            <Property Name="shippingCondition" Type="Edm.String" Nullable="true" />
+            <Property Name="distributionChannel" Type="Edm.String" Nullable="true" />
+            <Property Name="responseStatus" Type="Edm.String" Nullable="true" />
+            <Property Name="purchaseOrderNumber" Type="Edm.String" Nullable="true" />
+            <Property Name="currencyIsoCode" Type="Edm.String" Nullable="true" />
+            <Property Name="baseStoreUid" Type="Edm.String" Nullable="true" />
+            <Property Name="deliveryMode" Type="Edm.String" Nullable="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="SAPCpiOutboundOrder_orderId" />
+            <NavigationProperty Name="sapCpiOutboundPriceComponents" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundOrder_sapCpiOutboundPriceComponents" FromRole="SAPCpiOutboundOrder" ToRole="SAPCpiOutboundPriceComponent" Nullable="true" s:IsPartOf="true" s:IsAutoCreate="true" />
+            <NavigationProperty Name="sapCpiOutboundOrderItems" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundOrder_sapCpiOutboundOrderItems" FromRole="SAPCpiOutboundOrder" ToRole="SAPCpiOutboundOrderItem" Nullable="true" s:IsPartOf="true" s:IsAutoCreate="true" />
+            <NavigationProperty Name="sapCpiConfig" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundOrder_sapCpiConfig" FromRole="SAPCpiOutboundOrder" ToRole="SAPCpiOutboundConfig" Nullable="true" />
+            <NavigationProperty Name="sapCpiOutboundAddresses" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundOrder_sapCpiOutboundAddresses" FromRole="SAPCpiOutboundOrder" ToRole="SAPCpiOutboundAddress" Nullable="true" s:IsPartOf="true" s:IsAutoCreate="true" />
+            <NavigationProperty Name="sapCpiOutboundPartnerRoles" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundOrder_sapCpiOutboundPartnerRoles" FromRole="SAPCpiOutboundOrder" ToRole="SAPCpiOutboundPartnerRole" Nullable="true" s:IsPartOf="true" s:IsAutoCreate="true" />
+            <NavigationProperty Name="sapCpiOutboundCardPayments" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundOrder_sapCpiOutboundCardPayments" FromRole="SAPCpiOutboundOrder" ToRole="SAPCpiOutboundCardPayment" Nullable="true" s:IsPartOf="true" s:IsAutoCreate="true" />
+         </EntityType>
+         <EntityType Name="SAPCpiOutboundOrderItem">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="subscriptionValidFrom" Type="Edm.String" Nullable="true" />
+            <Property Name="itemCategory" Type="Edm.String" Nullable="true" />
+            <Property Name="entryNumber" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="orderId" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="subscriptionValidTill" Type="Edm.String" Nullable="true" />
+            <Property Name="plant" Type="Edm.String" Nullable="true" />
+            <Property Name="subscriptionValidTerm" Nullable="true" Type="Edm.String"/>
+            <Property Name="namedDeliveryDate" Type="Edm.String" Nullable="true" />
+            <Property Name="pricePlanId" Type="Edm.String" Nullable="true" />
+            <Property Name="cpqQuoteId" Nullable="true" Type="Edm.String"/>
+            <Property Name="productName" Type="Edm.String" Nullable="true" />
+            <Property Name="productCode" Type="Edm.String" Nullable="true" />
+            <Property Name="currencyIsoCode" Type="Edm.String" Nullable="true" />
+            <Property Name="unit" Type="Edm.String" Nullable="true" />
+            <Property Name="overwriteContractTerm" Type="Edm.String" Nullable="true" />
+            <Property Name="quantity" Type="Edm.String" Nullable="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="SAPCpiOutboundOrderItem_entryNumber|SAPCpiOutboundOrderItem_orderId" />
+            <NavigationProperty Name="cpqSubscriptionDetails" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundOrderItem_cpqSubscriptionDetails" FromRole="SAPCpiOutboundOrderItem" ToRole="CpqSubscriptionDetail" Nullable="true" s:IsPartOf="true" s:IsAutoCreate="true" />
+         </EntityType>
+         <EntityType Name="SAPCpiOutboundAddress">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="documentAddressId" Type="Edm.String" Nullable="true" />
+            <Property Name="middleName" Type="Edm.String" Nullable="true" />
+            <Property Name="lastName" Type="Edm.String" Nullable="true" />
+            <Property Name="languageIsoCode" Type="Edm.String" Nullable="true" />
+            <Property Name="countryIsoCode" Type="Edm.String" Nullable="true" />
+            <Property Name="orderId" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="faxNumber" Type="Edm.String" Nullable="true" />
+            <Property Name="telNumber" Type="Edm.String" Nullable="true" />
+            <Property Name="street" Type="Edm.String" Nullable="true" />
+            <Property Name="city" Type="Edm.String" Nullable="true" />
+            <Property Name="regionIsoCode" Type="Edm.String" Nullable="true" />
+            <Property Name="apartment" Type="Edm.String" Nullable="true" />
+            <Property Name="email" Type="Edm.String" Nullable="true" />
+            <Property Name="district" Type="Edm.String" Nullable="true" />
+            <Property Name="postalCode" Type="Edm.String" Nullable="true" />
+            <Property Name="middleName2" Type="Edm.String" Nullable="true" />
+            <Property Name="firstName" Type="Edm.String" Nullable="true" />
+            <Property Name="titleCode" Type="Edm.String" Nullable="true" />
+            <Property Name="pobox" Type="Edm.String" Nullable="true" />
+            <Property Name="houseNumber" Type="Edm.String" Nullable="true" />
+            <Property Name="building" Type="Edm.String" Nullable="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="SAPCpiOutboundAddress_orderId" />
+         </EntityType>
+         <EntityType Name="SAPCpiOutboundCardPayment">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="requestId" Type="Edm.String" Nullable="true" />
+            <Property Name="orderId" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="validToYear" Type="Edm.String" Nullable="true" />
+            <Property Name="paymentProvider" Type="Edm.String" Nullable="true" />
+            <Property Name="subscriptionId" Type="Edm.String" Nullable="true" />
+            <Property Name="validToMonth" Type="Edm.String" Nullable="true" />
+            <Property Name="ccOwner" Type="Edm.String" Nullable="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="SAPCpiOutboundCardPayment_orderId" />
+         </EntityType>
+         <EntityType Name="SAPCpiOutboundConfig">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="senderName" Type="Edm.String" Nullable="true" />
+            <Property Name="senderPort" Type="Edm.String" Nullable="true" />
+            <Property Name="url" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="username" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="client" Type="Edm.String" Nullable="true" />
+            <Property Name="receiverPort" Type="Edm.String" Nullable="true" />
+            <Property Name="receiverName" Type="Edm.String" Nullable="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="SAPCpiOutboundConfig_url|SAPCpiOutboundConfig_username" />
+         </EntityType>
+         <EntityType Name="CpqPricingParameter">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="code" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="value" Type="Edm.String" Nullable="true" />
+            <Property Name="itemId" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="CpqPricingParameter_code|CpqPricingParameter_itemId" />
+         </EntityType>
+         <EntityType Name="SAPCpiOutboundPartnerRole">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="entryNumber" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="partnerId" Type="Edm.String" Nullable="true" />
+            <Property Name="email" Type="Edm.String" Nullable="true" />
+            <Property Name="revenueCloudCustomerId" Type="Edm.String" Nullable="true" />
+            <Property Name="documentAddressId" Type="Edm.String" Nullable="true" />
+            <Property Name="partnerRoleCode" Type="Edm.String" Nullable="true" />
+            <Property Name="orderId" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="SAPCpiOutboundPartnerRole_entryNumber|SAPCpiOutboundPartnerRole_orderId" />
+         </EntityType>
+         <EntityType Name="SAPCpiOutboundPriceComponent">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="unit" Type="Edm.String" Nullable="true" />
+            <Property Name="orderId" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="priceQuantity" Type="Edm.String" Nullable="true" />
+            <Property Name="conditionCounter" Type="Edm.String" Nullable="true" />
+            <Property Name="value" Type="Edm.String" Nullable="true" />
+            <Property Name="absolute" Type="Edm.String" Nullable="true" />
+            <Property Name="conditionCode" Type="Edm.String" Nullable="true" />
+            <Property Name="entryNumber" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="currencyIsoCode" Type="Edm.String" Nullable="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="SAPCpiOutboundPriceComponent_entryNumber|SAPCpiOutboundPriceComponent_orderId" />
+         </EntityType>
+         <Association Name="FK_SAPCpiOutboundOrderItem_cpqSubscriptionDetails">
+            <End Type="HybrisCommerceOData.SAPCpiOutboundOrderItem" Multiplicity="0..1" Role="SAPCpiOutboundOrderItem" />
+            <End Type="HybrisCommerceOData.CpqSubscriptionDetail" Multiplicity="*" Role="CpqSubscriptionDetail" />
+         </Association>
+         <Association Name="FK_SAPCpiOutboundOrder_sapCpiOutboundPriceComponents">
+            <End Type="HybrisCommerceOData.SAPCpiOutboundOrder" Multiplicity="0..1" Role="SAPCpiOutboundOrder" />
+            <End Type="HybrisCommerceOData.SAPCpiOutboundPriceComponent" Multiplicity="*" Role="SAPCpiOutboundPriceComponent" />
+         </Association>
+         <Association Name="FK_SAPCpiOutboundOrder_sapCpiOutboundOrderItems">
+            <End Type="HybrisCommerceOData.SAPCpiOutboundOrder" Multiplicity="0..1" Role="SAPCpiOutboundOrder" />
+            <End Type="HybrisCommerceOData.SAPCpiOutboundOrderItem" Multiplicity="*" Role="SAPCpiOutboundOrderItem" />
+         </Association>
+         <Association Name="FK_SAPCpiOutboundOrder_sapCpiConfig">
+            <End Type="HybrisCommerceOData.SAPCpiOutboundOrder" Multiplicity="0..1" Role="SAPCpiOutboundOrder" />
+            <End Type="HybrisCommerceOData.SAPCpiOutboundConfig" Multiplicity="0..1" Role="SAPCpiOutboundConfig" />
+         </Association>
+         <Association Name="FK_SAPCpiOutboundOrder_sapCpiOutboundAddresses">
+            <End Type="HybrisCommerceOData.SAPCpiOutboundOrder" Multiplicity="0..1" Role="SAPCpiOutboundOrder" />
+            <End Type="HybrisCommerceOData.SAPCpiOutboundAddress" Multiplicity="*" Role="SAPCpiOutboundAddress" />
+         </Association>
+         <Association Name="FK_SAPCpiOutboundOrder_sapCpiOutboundPartnerRoles">
+            <End Type="HybrisCommerceOData.SAPCpiOutboundOrder" Multiplicity="0..1" Role="SAPCpiOutboundOrder" />
+            <End Type="HybrisCommerceOData.SAPCpiOutboundPartnerRole" Multiplicity="*" Role="SAPCpiOutboundPartnerRole" />
+         </Association>
+         <Association Name="FK_SAPCpiOutboundOrder_sapCpiOutboundCardPayments">
+            <End Type="HybrisCommerceOData.SAPCpiOutboundOrder" Multiplicity="0..1" Role="SAPCpiOutboundOrder" />
+            <End Type="HybrisCommerceOData.SAPCpiOutboundCardPayment" Multiplicity="*" Role="SAPCpiOutboundCardPayment" />
+         </Association>
+         <Association Name="FK_CpqSubscriptionDetail_pricingParameters">
+            <End Type="HybrisCommerceOData.CpqSubscriptionDetail" Multiplicity="0..1" Role="CpqSubscriptionDetail" />
+            <End Type="HybrisCommerceOData.CpqPricingParameter" Multiplicity="*" Role="CpqPricingParameter" />
+         </Association>
+         <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+            <EntitySet Name="CpqSubscriptionDetails" EntityType="HybrisCommerceOData.CpqSubscriptionDetail" />
+            <EntitySet Name="SAPCpiOutboundOrders" EntityType="HybrisCommerceOData.SAPCpiOutboundOrder" />
+            <EntitySet Name="SAPCpiOutboundOrderItems" EntityType="HybrisCommerceOData.SAPCpiOutboundOrderItem" />
+            <EntitySet Name="SAPCpiOutboundAddresses" EntityType="HybrisCommerceOData.SAPCpiOutboundAddress" />
+            <EntitySet Name="SAPCpiOutboundCardPayments" EntityType="HybrisCommerceOData.SAPCpiOutboundCardPayment" />
+            <EntitySet Name="SAPCpiOutboundConfigs" EntityType="HybrisCommerceOData.SAPCpiOutboundConfig" />
+            <EntitySet Name="CpqPricingParameters" EntityType="HybrisCommerceOData.CpqPricingParameter" />
+            <EntitySet Name="SAPCpiOutboundPartnerRoles" EntityType="HybrisCommerceOData.SAPCpiOutboundPartnerRole" />
+            <EntitySet Name="SAPCpiOutboundPriceComponents" EntityType="HybrisCommerceOData.SAPCpiOutboundPriceComponent" />
+            <AssociationSet Name="SAPCpiOutboundOrderItem_CpqSubscriptionDetails" Association="HybrisCommerceOData.FK_SAPCpiOutboundOrderItem_cpqSubscriptionDetails">
+               <End EntitySet="SAPCpiOutboundOrderItems" Role="SAPCpiOutboundOrderItem" />
+               <End EntitySet="CpqSubscriptionDetails" Role="CpqSubscriptionDetail" />
+            </AssociationSet>
+            <AssociationSet Name="SAPCpiOutboundOrder_SAPCpiOutboundPriceComponents" Association="HybrisCommerceOData.FK_SAPCpiOutboundOrder_sapCpiOutboundPriceComponents">
+               <End EntitySet="SAPCpiOutboundOrders" Role="SAPCpiOutboundOrder" />
+               <End EntitySet="SAPCpiOutboundPriceComponents" Role="SAPCpiOutboundPriceComponent" />
+            </AssociationSet>
+            <AssociationSet Name="SAPCpiOutboundOrder_SAPCpiOutboundOrderItems" Association="HybrisCommerceOData.FK_SAPCpiOutboundOrder_sapCpiOutboundOrderItems">
+               <End EntitySet="SAPCpiOutboundOrders" Role="SAPCpiOutboundOrder" />
+               <End EntitySet="SAPCpiOutboundOrderItems" Role="SAPCpiOutboundOrderItem" />
+            </AssociationSet>
+            <AssociationSet Name="SAPCpiOutboundOrder_SAPCpiOutboundConfigs" Association="HybrisCommerceOData.FK_SAPCpiOutboundOrder_sapCpiConfig">
+               <End EntitySet="SAPCpiOutboundOrders" Role="SAPCpiOutboundOrder" />
+               <End EntitySet="SAPCpiOutboundConfigs" Role="SAPCpiOutboundConfig" />
+            </AssociationSet>
+            <AssociationSet Name="SAPCpiOutboundOrder_SAPCpiOutboundAddresses" Association="HybrisCommerceOData.FK_SAPCpiOutboundOrder_sapCpiOutboundAddresses">
+               <End EntitySet="SAPCpiOutboundOrders" Role="SAPCpiOutboundOrder" />
+               <End EntitySet="SAPCpiOutboundAddresses" Role="SAPCpiOutboundAddress" />
+            </AssociationSet>
+            <AssociationSet Name="SAPCpiOutboundOrder_SAPCpiOutboundPartnerRoles" Association="HybrisCommerceOData.FK_SAPCpiOutboundOrder_sapCpiOutboundPartnerRoles">
+               <End EntitySet="SAPCpiOutboundOrders" Role="SAPCpiOutboundOrder" />
+               <End EntitySet="SAPCpiOutboundPartnerRoles" Role="SAPCpiOutboundPartnerRole" />
+            </AssociationSet>
+            <AssociationSet Name="SAPCpiOutboundOrder_SAPCpiOutboundCardPayments" Association="HybrisCommerceOData.FK_SAPCpiOutboundOrder_sapCpiOutboundCardPayments">
+               <End EntitySet="SAPCpiOutboundOrders" Role="SAPCpiOutboundOrder" />
+               <End EntitySet="SAPCpiOutboundCardPayments" Role="SAPCpiOutboundCardPayment" />
+            </AssociationSet>
+            <AssociationSet Name="CpqSubscriptionDetail_CpqPricingParameters" Association="HybrisCommerceOData.FK_CpqSubscriptionDetail_pricingParameters">
+               <End EntitySet="CpqSubscriptionDetails" Role="CpqSubscriptionDetail" />
+               <End EntitySet="CpqPricingParameters" Role="CpqPricingParameter" />
+            </AssociationSet>
+         </EntityContainer>
+      </Schema>
+   </edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,164 @@
+		<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:element name="BAPI_REQUISITION_DELETE_RESPONSE">
+				<xsd:complexType>
+					<xsd:all>
+						<xsd:element name="REQUISITION_ITEMS_TO_DELETE">
+							<xsd:annotation>
+								<xsd:documentation>Items to be Deleted/Closed</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="item" type="BAPIEBAND" minOccurs="0" maxOccurs="unbounded"/>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="RETURN" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>Return Messages</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="item" type="BAPIRETURN" minOccurs="0" maxOccurs="unbounded"/>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:all>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="BAPIEBAND">
+				<xsd:annotation>
+					<xsd:documentation>Transfer Structure: Delete/Close Requisition</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="PREQ_ITEM" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Item Number of Purchase Requisition</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="5"/>
+								<xsd:pattern value="\d+"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="DELETE_IND" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Deletion Indicator in Purchasing Document</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="1"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="CLOSED" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Purchase Requisition Closed</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="1"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="BAPIRETURN">
+				<xsd:annotation>
+					<xsd:documentation>Return Parameter</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="TYPE" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Message type: S Success, E Error, W Warning, I Info, A Abort</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="1"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="CODE" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Message code</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="5"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="MESSAGE" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Message Text</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="220"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="LOG_NO" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Application Log: Log Number</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="20"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="LOG_MSG_NO" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Application log: Internal message serial number</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="6"/>
+								<xsd:pattern value="\d+"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="MESSAGE_V1" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Message Variable</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="50"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="MESSAGE_V2" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Message Variable</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="50"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="MESSAGE_V3" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Message Variable</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="50"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="MESSAGE_V4" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Message Variable</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="50"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>

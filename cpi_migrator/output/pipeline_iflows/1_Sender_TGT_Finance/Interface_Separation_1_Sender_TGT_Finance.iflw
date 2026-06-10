@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PIPELINE STEP 3: Interface Separation iFlow
+  Package  : 1_Sender_TGT_Finance
+  Purpose  : Routes to the correct scenario-specific iFlow
+             based on SAP_InterfaceName header set by Receiver Determination.
+  Internal : ProcessDirect address /pd/InterfaceSeparation_1_Sender_TGT_Finance
+-->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+             id="Interface_Separation_1_Sender_TGT_Finance"
+             name="Interface_Separation_1_Sender_TGT_Finance">
+  <process id="IfaceSep_1_Sender_TGT_Finance_process" ifl:type="IntegrationFlow">
+
+    <startEvent id="Start_IS" name="From Receiver Determination">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/pd/InterfaceSeparation_1_Sender_TGT_Finance</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </startEvent>
+
+    <!-- ROUTER: Branch to scenario-specific iFlow -->
+    <exclusiveGateway id="Router_1" name="Route by Interface Name"/>
+
+    <sequenceFlow id="route_0" sourceRef="Router_1"
+      targetRef="Call_Read_OAuth_token_in__1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Read OAuth token in Cloud Integration' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Read_OAuth_token_in__1"
+      name="→ Read OAuth token in Cloud Integration" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Read_OAuth_token_in_</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_1" sourceRef="Router_1"
+      targetRef="Call_Chile_Sign_Delivery__1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Chile Sign Delivery Note Ledger' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Chile_Sign_Delivery__1"
+      name="→ Chile Sign Delivery Note Ledger" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Chile_Sign_Delivery_</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_2" sourceRef="Router_1"
+      targetRef="Call_Chile_Sign_Sales_and_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Chile Sign Sales and Purchase Ledger' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Chile_Sign_Sales_and_1"
+      name="→ Chile Sign Sales and Purchase Ledger" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Chile_Sign_Sales_and</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_3" sourceRef="Router_1"
+      targetRef="Call_Chile_Sign_DTE_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Chile Sign DTE' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Chile_Sign_DTE_1"
+      name="→ Chile Sign DTE" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Chile_Sign_DTE</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_4" sourceRef="Router_1"
+      targetRef="Call_Chile_Sign_Monthly_B_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Chile Sign Monthly Boleta Summary' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Chile_Sign_Monthly_B_1"
+      name="→ Chile Sign Monthly Boleta Summary" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Chile_Sign_Monthly_B</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_5" sourceRef="Router_1"
+      targetRef="Call_Chile_Sign_Receipt_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Chile Sign Receipt' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Chile_Sign_Receipt_1"
+      name="→ Chile Sign Receipt" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Chile_Sign_Receipt</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_6" sourceRef="Router_1"
+      targetRef="Call_Chile_Pull_SII_Email_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Chile Pull SII Emails' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Chile_Pull_SII_Email_1"
+      name="→ Chile Pull SII Emails" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Chile_Pull_SII_Email</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_7" sourceRef="Router_1"
+      targetRef="Call_Chile_Sign_Daily_Bol_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Chile Sign Daily Boleta Summary' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Chile_Sign_Daily_Bol_1"
+      name="→ Chile Sign Daily Boleta Summary" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Chile_Sign_Daily_Bol</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_8" sourceRef="Router_1"
+      targetRef="Call_Remittance_Book_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Remittance Book' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Remittance_Book_1"
+      name="→ Remittance Book" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Remittance_Book</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_9" sourceRef="Router_1"
+      targetRef="Call_Mandatory_Remittance_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Mandatory Remittance' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Mandatory_Remittance_1"
+      name="→ Mandatory Remittance" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Mandatory_Remittance</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+
+    <endEvent id="End_IS"/>
+    <sequenceFlow sourceRef="Start_IS" targetRef="Router_1"/>
+  </process>
+</definitions>

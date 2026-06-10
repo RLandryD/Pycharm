@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:n1="urn:sap-com:document:sap:rfc:functions">
+ <wsdl:documentation>
+  <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+ </wsdl:documentation>
+ <wsp:UsingPolicy wsdl:required="true"/>
+ <wsp:Policy wsu:Id="IF_IF_ISU_C4C_V2_DISCONN_DOC">
+  <sapsession:Session xmlns:sapsession="http://www.sap.com/webas/630/soap/features/session/">
+   <sapsession:enableSession>false</sapsession:enableSession>
+  </sapsession:Session>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_IsuC4cV2DisconnDocGet">
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsdl:types>
+  <xsd:schema attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:rfc:functions" xmlns:tns="urn:sap-com:document:sap:rfc:functions">
+   <xsd:simpleType name="char1">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char10">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="10"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char1000">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1000"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char12">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="12"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char132">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="132"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char2">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="2"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char20">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="20"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char220">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="220"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char30">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="30"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char32">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="32"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char4">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="4"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char40">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="40"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char50">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="50"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char60">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="60"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char75">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="75"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric3">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric4">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="4"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric6">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="6"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+  </xsd:schema>
+  <xsd:schema attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:n0="urn:sap-com:document:sap:rfc:functions">
+   <xsd:import namespace="urn:sap-com:document:sap:rfc:functions"/>
+   <xsd:simpleType name="char1">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char12">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="12"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char2">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="2"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char32">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="32"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char40">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="40"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric2">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="2"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="IsuC4cV2SFilter">
+    <xsd:sequence>
+     <xsd:element name="FieldName" type="n0:char30"/>
+     <xsd:element name="FieldValue" type="n0:char1000"/>
+     <xsd:element name="Sign" type="n0:char1"/>
+     <xsd:element name="Option" type="n0:char2"/>
+     <xsd:element name="Low" type="n0:char132"/>
+     <xsd:element name="High" type="n0:char132"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="Bapiret2">
+    <xsd:sequence>
+     <xsd:element name="Type" type="n0:char1"/>
+     <xsd:element name="Id" type="n0:char20"/>
+     <xsd:element name="Number" type="n0:numeric3"/>
+     <xsd:element name="Message" type="n0:char220"/>
+     <xsd:element name="LogNo" type="n0:char20"/>
+     <xsd:element name="LogMsgNo" type="n0:numeric6"/>
+     <xsd:element name="MessageV1" type="n0:char50"/>
+     <xsd:element name="MessageV2" type="n0:char50"/>
+     <xsd:element name="MessageV3" type="n0:char50"/>
+     <xsd:element name="MessageV4" type="n0:char50"/>
+     <xsd:element name="Parameter" type="n0:char32"/>
+     <xsd:element name="Row" type="xsd:int"/>
+     <xsd:element name="Field" type="n0:char30"/>
+     <xsd:element name="System" type="n0:char10"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2SDisconnDoc">
+    <xsd:sequence>
+     <xsd:element name="DocumentNumber" type="n0:char12"/>
+     <xsd:element name="DisconnectionDocumentStatus" type="tns:numeric2"/>
+     <xsd:element name="DisconnectionDocumentStatust" type="n0:char60"/>
+     <xsd:element name="DisconnectionReason" type="n0:char2"/>
+     <xsd:element name="DisconnectionReasonText" type="n0:char60"/>
+     <xsd:element name="ProcessingVariant" type="n0:char4"/>
+     <xsd:element name="ProcessingVariantText" type="tns:char40"/>
+     <xsd:element name="OrderStatus" type="tns:numeric2"/>
+     <xsd:element name="OrderStatusDesc" type="n0:char40"/>
+     <xsd:element name="LatestDisconnectionActivity" type="tns:char2"/>
+     <xsd:element name="LatestDisconnectionActivityt" type="n0:char60"/>
+     <xsd:element name="LatestDisconnActivityDate" type="n0:char10"/>
+     <xsd:element name="DisconnectionActivities" type="tns:IsuC4cV2TDisconnAct"/>
+     <xsd:element name="DisconnectionObjects" type="tns:IsuC4cV2TDisconnObj"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2SDisconnAct">
+    <xsd:sequence>
+     <xsd:element name="Status" type="tns:char1"/>
+     <xsd:element name="StatusText" type="n0:char60"/>
+     <xsd:element name="DisconnectionActivityDate" type="n0:char10"/>
+     <xsd:element name="DisconnectionActivityNumber" type="n0:numeric4"/>
+     <xsd:element name="AgreedDate" type="n0:char10"/>
+     <xsd:element name="DisconnectionActivityCatgr" type="tns:char2"/>
+     <xsd:element name="DisconnectionActivityCatgrt" type="n0:char60"/>
+     <xsd:element name="DisconnectionActivityStatus" type="tns:numeric2"/>
+     <xsd:element name="DisconnectionActivityStatust" type="n0:char60"/>
+     <xsd:element name="ServiceOrder" type="tns:char12"/>
+     <xsd:element name="NotifWorkItemIndicator" type="tns:char32"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2SDisconnObj">
+    <xsd:sequence>
+     <xsd:element name="Category" type="tns:char2"/>
+     <xsd:element name="CategoryDesc" type="n0:char75"/>
+     <xsd:element name="Status" type="tns:char2"/>
+     <xsd:element name="StatusDesc" type="n0:char75"/>
+     <xsd:element name="DisconnectionKey" type="n0:char75"/>
+     <xsd:element name="Description" type="n0:char75"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2TFilter">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:IsuC4cV2SFilter" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="Bapirettab">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:Bapiret2" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2TDisconnDoc">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:IsuC4cV2SDisconnDoc" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2TDisconnAct">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:IsuC4cV2SDisconnAct" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2TDisconnObj">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:IsuC4cV2SDisconnObj" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="IsuC4cV2DisconnDocGet">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="ItAdditionalFilter" type="tns:IsuC4cV2TFilter" minOccurs="0"/>
+      <xsd:element name="IvLanguage" type="tns:char2" minOccurs="0"/>
+      <xsd:element name="IvMaxCount" type="xsd:int" minOccurs="0"/>
+      <xsd:element name="IvPremise" type="n0:char10" minOccurs="0"/>
+      <xsd:element name="IvSearchValue" type="n0:char60" minOccurs="0"/>
+      <xsd:element name="IvSkip" type="xsd:int" minOccurs="0"/>
+      <xsd:element name="IvSortField" type="n0:char30" minOccurs="0"/>
+      <xsd:element name="IvSortType" type="n0:char4" minOccurs="0"/>
+      <xsd:element name="IvTop" type="xsd:int" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="IsuC4cV2DisconnDocGetResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="EtDisconnectionDetails" type="tns:IsuC4cV2TDisconnDoc"/>
+      <xsd:element name="EtMessages" type="tns:Bapirettab"/>
+      <xsd:element name="EvTotalRecords" type="xsd:int"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="IsuC4cV2DisconnDocGet">
+  <wsdl:part name="parameters" element="tns:IsuC4cV2DisconnDocGet"/>
+ </wsdl:message>
+ <wsdl:message name="IsuC4cV2DisconnDocGetResponse">
+  <wsdl:part name="parameter" element="tns:IsuC4cV2DisconnDocGetResponse"/>
+ </wsdl:message>
+ <wsdl:portType name="ISU_C4C_V2_DISCONN_DOC">
+  <wsdl:documentation>
+   <sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+    <sapdoc:docitem docURL="http://ldciemt.wdf.sap.corp:50022/sap/bc/esdt/docu/sd_text?sap-client=350&amp;sd_name=ISU_C4C_V2_DISCONN_DOC"/>
+    <sapdoc:docitem applicationComponent="IS-U-CS-C4C"/>
+   </sapdoc:sapdoc>
+  </wsdl:documentation>
+  <wsp:Policy>
+   <wsp:PolicyReference URI="#IF_IF_ISU_C4C_V2_DISCONN_DOC"/>
+  </wsp:Policy>
+  <wsdl:operation name="IsuC4cV2DisconnDocGet">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_IsuC4cV2DisconnDocGet"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:IsuC4cV2DisconnDocGet"/>
+   <wsdl:output message="tns:IsuC4cV2DisconnDocGetResponse"/>
+  </wsdl:operation>
+ </wsdl:portType>
+</wsdl:definitions>

@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.altinn.no/services/Intermediary/Receipt/2009/10" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" name="ReceiptExternalBasicSF" targetNamespace="http://www.altinn.no/services/Intermediary/Receipt/2009/10">
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/2009/10">
+      <xsd:element name="Test">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="TestResponse">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://www.altinn.no/services/common/fault/2009/10" elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/common/fault/2009/10">
+      <xsd:complexType name="AltinnFault">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="AltinnErrorMessage" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AltinnExtendedErrorMessage" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AltinnLocalizedErrorMessage" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ErrorGuid" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ErrorID" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="UserGuid" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="UserId" nillable="true" type="xsd:string">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="AltinnFault" nillable="true" type="tns:AltinnFault"/>
+    </xsd:schema>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/">
+      <xs:element name="anyType" nillable="true" type="xs:anyType"/>
+      <xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
+      <xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
+      <xs:element name="boolean" nillable="true" type="xs:boolean"/>
+      <xs:element name="byte" nillable="true" type="xs:byte"/>
+      <xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+      <xs:element name="decimal" nillable="true" type="xs:decimal"/>
+      <xs:element name="double" nillable="true" type="xs:double"/>
+      <xs:element name="float" nillable="true" type="xs:float"/>
+      <xs:element name="int" nillable="true" type="xs:int"/>
+      <xs:element name="long" nillable="true" type="xs:long"/>
+      <xs:element name="QName" nillable="true" type="xs:QName"/>
+      <xs:element name="short" nillable="true" type="xs:short"/>
+      <xs:element name="string" nillable="true" type="xs:string"/>
+      <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
+      <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
+      <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
+      <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
+      <xs:element name="char" nillable="true" type="tns:char"/>
+      <xs:simpleType name="char">
+        <xs:restriction base="xs:int"/>
+      </xs:simpleType>
+      <xs:element name="duration" nillable="true" type="tns:duration"/>
+      <xs:simpleType name="duration">
+        <xs:restriction base="xs:duration">
+          <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
+          <xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
+          <xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="guid" nillable="true" type="tns:guid"/>
+      <xs:simpleType name="guid">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:attribute name="FactoryType" type="xs:QName"/>
+      <xs:attribute name="Id" type="xs:ID"/>
+      <xs:attribute name="Ref" type="xs:IDREF"/>
+    </xs:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/Intermediary/Receipt/2009/10">
+      <xsd:import namespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"/>
+      <xsd:element name="GetReceiptBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
+            <xsd:element xmlns:q1="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10" minOccurs="0" name="receipt" nillable="true" type="q1:ReceiptSearchExternal"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetReceiptBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element xmlns:q2="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10" minOccurs="0" name="GetReceiptBasicResult" nillable="true" type="q2:ReceiptExternal"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetReceiptBasicV2">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="systemUserName" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="systemPassword" type="xsd:string"/>
+            <xsd:element xmlns:q3="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06" minOccurs="1" name="receipt" type="q3:ReceiptSearch"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetReceiptBasicV2Response">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element xmlns:q4="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06" minOccurs="0" name="GetReceiptBasicV2Result" nillable="true" type="q4:Receipt"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetReceiptListBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
+            <xsd:element xmlns:q5="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10" minOccurs="0" name="receiptTypeName" type="q5:ReceiptTypeEnum"/>
+            <xsd:element minOccurs="0" name="dateFrom" type="xsd:dateTime"/>
+            <xsd:element minOccurs="0" name="dateTo" type="xsd:dateTime"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetReceiptListBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element xmlns:q6="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10" minOccurs="0" name="GetReceiptListBasicResult" nillable="true" type="q6:ReceiptExternalList"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetReceiptListBasicV2">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="systemUserName" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="systemPassword" type="xsd:string"/>
+            <xsd:element xmlns:q7="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06" minOccurs="1" name="receiptTypeName" type="q7:ReceiptType"/>
+            <xsd:element minOccurs="0" name="dateFrom" type="xsd:dateTime"/>
+            <xsd:element minOccurs="0" name="dateTo" type="xsd:dateTime"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetReceiptListBasicV2Response">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element xmlns:q8="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06" minOccurs="0" name="GetReceiptListBasicV2Result" nillable="true" type="q8:ReceiptList"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SaveReceiptBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
+            <xsd:element xmlns:q9="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10" minOccurs="0" name="receipt" nillable="true" type="q9:ReceiptSaveExternal"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SaveReceiptBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element xmlns:q10="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10" minOccurs="0" name="SaveReceiptBasicResult" nillable="true" type="q10:ReceiptExternal"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="UpdateReceiptBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="systemUserName" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="systemPassword" type="xsd:string"/>
+            <xsd:element xmlns:q11="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06" minOccurs="1" name="receipt" type="q11:ReceiptSave"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="UpdateReceiptBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element xmlns:q12="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06" minOccurs="0" name="UpdateReceiptBasicResult" nillable="true" type="q12:Receipt"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10">
+      <xsd:import namespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10"/>
+      <xsd:complexType name="ReceiptSearchExternal">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="ReceiptId" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReceiptSearchExternal" nillable="true" type="tns:ReceiptSearchExternal"/>
+      <xsd:complexType name="ReferenceList">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Reference" nillable="true" type="tns:Reference"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReferenceList" nillable="true" type="tns:ReferenceList"/>
+      <xsd:complexType name="Reference">
+         <xsd:sequence>
+          <xsd:element xmlns:q13="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10" minOccurs="0" name="ReferenceTypeName" type="q13:ReferenceType">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ReferenceValue" nillable="true" type="xsd:string">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="Reference" nillable="true" type="tns:Reference"/>
+      <xsd:complexType name="ReceiptExternal">
+         <xsd:sequence>
+          <xsd:element minOccurs="0" name="LastChanged" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ParentReceiptId" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptHistory" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptId" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptStatusCode" type="tns:ReceiptStatusEnum">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptText" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptTypeName" type="tns:ReceiptTypeEnum">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptExternalList">
+           </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReceiptExternal" nillable="true" type="tns:ReceiptExternal"/>
+      <xsd:simpleType name="ReceiptStatusEnum">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NotSet"/>
+          <xsd:enumeration value="OK"/>
+          <xsd:enumeration value="UnExpectedError"/>
+          <xsd:enumeration value="ValidationFailed"/>
+          <xsd:enumeration value="Rejected"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ReceiptStatusEnum" nillable="true" type="tns:ReceiptStatusEnum"/>
+      <xsd:simpleType name="ReceiptTypeEnum">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NotSet"/>
+          <xsd:enumeration value="FormTask"/>
+          <xsd:enumeration value="Correspondence"/>
+          <xsd:enumeration value="PINCODE"/>
+          <xsd:enumeration value="Subscription"/>
+          <xsd:enumeration value="Outbound"/>
+          <xsd:enumeration value="PreFill"/>
+          <xsd:enumeration value="RegisterDLS"/>
+          <xsd:enumeration value="RegisterDSF"/>
+          <xsd:enumeration value="RegisterER"/>
+          <xsd:enumeration value="RegisterDSFProperty"/>
+          <xsd:enumeration value="RegisterDSFStreet"/>
+          <xsd:enumeration value="RegisterDSFCountry"/>
+          <xsd:enumeration value="RegisterDSFUser"/>
+          <xsd:enumeration value="LookUp"/>
+          <xsd:enumeration value="RegisterDSFStreetAdd"/>
+          <xsd:enumeration value="RegisterDSFPropertyAdd"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ReceiptTypeEnum" nillable="true" type="tns:ReceiptTypeEnum"/>
+      <xsd:complexType name="ReceiptExternalList">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ReceiptExternal" nillable="true" type="tns:ReceiptExternal"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReceiptExternalList" nillable="true" type="tns:ReceiptExternalList"/>
+      <xsd:complexType name="ReceiptSaveExternal">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="ArchiveReference" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptId" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptStatusCode" type="tns:ReceiptStatusEnum">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptText" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptSaveExternalList">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReceiptSaveExternal" nillable="true" type="tns:ReceiptSaveExternal"/>
+      <xsd:complexType name="ReceiptSaveExternalList">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ReceiptSaveExternal" nillable="true" type="tns:ReceiptSaveExternal"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReceiptSaveExternalList" nillable="true" type="tns:ReceiptSaveExternalList"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10">
+      <xsd:simpleType name="ReferenceType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NotSet"/>
+          <xsd:enumeration value="ExternalShipmentReference"/>
+          <xsd:enumeration value="EndUserSystemReference"/>
+          <xsd:enumeration value="ParentReference"/>
+          <xsd:enumeration value="SendersReference"/>
+          <xsd:enumeration value="WorkFlowReference"/>
+          <xsd:enumeration value="BatchReference"/>
+          <xsd:enumeration value="OutboundShipmentReference"/>
+          <xsd:enumeration value="ReceiversReference"/>
+          <xsd:enumeration value="Altinn1Reference"/>
+          <xsd:enumeration value="OwnerPartyReference"/>
+          <xsd:enumeration value="PartyReference"/>
+          <xsd:enumeration value="ArchiveReference"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ReferenceType" nillable="true" type="tns:ReferenceType"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06">
+      <xsd:import namespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
+      <xsd:complexType name="ReceiptSearch">
+         <xsd:sequence>
+          <xsd:element minOccurs="0" name="ReceiptId" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReceiptSearch" nillable="true" type="tns:ReceiptSearch"/>
+      <xsd:complexType name="ReferenceList">
+         <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Reference" nillable="true" type="tns:Reference"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReferenceList" nillable="true" type="tns:ReferenceList"/>
+      <xsd:complexType name="Reference">
+        <xsd:sequence>
+          <xsd:element xmlns:q13="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10" minOccurs="0" name="ReferenceTypeName" type="q13:ReferenceType">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReferenceValue" nillable="true" type="xsd:string">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="Reference" nillable="true" type="tns:Reference"/>
+      <xsd:complexType name="Receipt">
+         <xsd:sequence>
+          <xsd:element minOccurs="0" name="LastChanged" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ParentReceiptId" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptHistory" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptId" type="xsd:int">
+           </xsd:element>
+          <xsd:element xmlns:q15="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10" minOccurs="0" name="ReceiptStatus" type="q15:ReceiptStatusEnum">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptTemplate" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptText" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptType" type="tns:ReceiptType">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptList">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="Receipt" nillable="true" type="tns:Receipt"/>
+      <xsd:simpleType name="ReceiptType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NotSet"/>
+          <xsd:enumeration value="FormTask"/>
+          <xsd:enumeration value="Correspondence"/>
+          <xsd:enumeration value="PINCODE"/>
+          <xsd:enumeration value="Subscription"/>
+          <xsd:enumeration value="Outbound"/>
+          <xsd:enumeration value="PreFill"/>
+          <xsd:enumeration value="RegisterDLS"/>
+          <xsd:enumeration value="RegisterDSF"/>
+          <xsd:enumeration value="RegisterER"/>
+          <xsd:enumeration value="RegisterDSFProperty"/>
+          <xsd:enumeration value="RegisterDSFStreet"/>
+          <xsd:enumeration value="RegisterDSFCountry"/>
+          <xsd:enumeration value="RegisterDSFUser"/>
+          <xsd:enumeration value="LookUp"/>
+          <xsd:enumeration value="RegisterDSFStreetAdd"/>
+          <xsd:enumeration value="RegisterDSFPropertyAdd"/>
+          <xsd:enumeration value="BrokerService"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ReceiptType" nillable="true" type="tns:ReceiptType"/>
+      <xsd:complexType name="ReceiptList">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Receipt" nillable="true" type="tns:Receipt"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReceiptList" nillable="true" type="tns:ReceiptList"/>
+      <xsd:complexType name="ReceiptSave">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="ArchiveReference" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptId" type="xsd:int">
+          </xsd:element>
+          <xsd:element xmlns:q16="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10" name="ReceiptStatus" type="q16:ReceiptStatusEnum">
+          </xsd:element>
+          <xsd:element name="ReceiptText" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptSaveList">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReceiptSave" nillable="true" type="tns:ReceiptSave"/>
+      <xsd:complexType name="ReceiptSaveList">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ReceiptSave" nillable="true" type="tns:ReceiptSave"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReceiptSaveList" nillable="true" type="tns:ReceiptSaveList"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IReceiptExternalBasic_Test_InputMessage">
+    <wsdl:part xmlns:q17="http://www.altinn.no/services/2009/10" name="parameters" element="q17:Test"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_Test_OutputMessage">
+    <wsdl:part xmlns:q18="http://www.altinn.no/services/2009/10" name="parameters" element="q18:TestResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_Test_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q19="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q19:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_GetReceiptBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetReceiptBasic"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_GetReceiptBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetReceiptBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_GetReceiptBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q20="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q20:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_GetReceiptBasicV2_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetReceiptBasicV2"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_GetReceiptBasicV2_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetReceiptBasicV2Response"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_GetReceiptBasicV2_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q21="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q21:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_GetReceiptListBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetReceiptListBasic"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_GetReceiptListBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetReceiptListBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_GetReceiptListBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q22="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q22:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_GetReceiptListBasicV2_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetReceiptListBasicV2"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_GetReceiptListBasicV2_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetReceiptListBasicV2Response"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_GetReceiptListBasicV2_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q23="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q23:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_SaveReceiptBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:SaveReceiptBasic"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_SaveReceiptBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SaveReceiptBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_SaveReceiptBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q24="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q24:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_UpdateReceiptBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateReceiptBasic"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_UpdateReceiptBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateReceiptBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IReceiptExternalBasic_UpdateReceiptBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q25="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q25:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:portType name="IReceiptExternalBasic">
+    <wsdl:documentation>&lt;summary&gt;&#13;
+            Service contract for the receipt service exposed external with Basic HTTP binding.&#13;
+            Contains GetReceiptBasic, GetReceiptListBasic and SaveReceiptBasic methods.&#13;
+            &lt;/summary&gt;</wsdl:documentation>
+    <wsdl:operation name="Test">
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test" message="tns:IReceiptExternalBasic_Test_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestResponse" message="tns:IReceiptExternalBasic_Test_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestAltinnFaultFault" name="AltinnFaultFault" message="tns:IReceiptExternalBasic_Test_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetReceiptBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            This method has been deprecated, use GetReceiptBasicV2 instead.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="systemUserName"&gt;System user name is the relevant agency system name that is registered in Altinn - mandatory parameter.&lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;System password is the password for the corresponding registered agency system - mandatory parameter.&lt;/param&gt;&#13;
+            &lt;param name="receipt"&gt;Receipt search criteria.&lt;/param&gt;&#13;
+            &lt;returns&gt;The identified receipt.&lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptBasic" message="tns:IReceiptExternalBasic_GetReceiptBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptBasicResponse" message="tns:IReceiptExternalBasic_GetReceiptBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IReceiptExternalBasic_GetReceiptBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetReceiptBasicV2">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            This operations enables the retrieval of a receipt based on a number of different inputs. Input values have the following&#13;
+            priority: ReceiptId, WorkFlowReference, any other reference.&#13;
+            If the receipt is a child receipt, then the parent receipt is also retrieved. If the given party have access to the parent, then&#13;
+            the parent receipt will be returned with the original receipt as one of the sub receipts.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;remarks&gt;&#13;
+            The operation will throw an exception if no receipt is found.&#13;
+            &lt;/remarks&gt;&#13;
+            &lt;param name="systemUserName"&gt;System user name is the relevant agency system name that is registered in Altinn - mandatory parameter.&lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;System password is the password for the corresponding registered agency system - mandatory parameter.&lt;/param&gt;&#13;
+            &lt;param name="receipt"&gt;Receipt search criteria.&lt;/param&gt;&#13;
+            &lt;returns&gt;The identified receipt.&lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptBasicV2" message="tns:IReceiptExternalBasic_GetReceiptBasicV2_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptBasicV2Response" message="tns:IReceiptExternalBasic_GetReceiptBasicV2_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptBasicV2AltinnFaultFault" name="AltinnFaultFault" message="tns:IReceiptExternalBasic_GetReceiptBasicV2_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetReceiptListBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            This method has been deprecated, use GetReceiptListBasicV2 instead.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="systemUserName"&gt;System user name is the relevant agency system name that is registered in Altinn.&lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;System password is the password for the corresponding registered agency system.&lt;/param&gt;&#13;
+            &lt;param name="receiptTypeName"&gt;Type of the Receipt - mandatory parameter.&lt;/param&gt;&#13;
+            &lt;param name="dateFrom"&gt;From which date onwards - mandatory parameter.&lt;/param&gt;&#13;
+            &lt;param name="dateTo"&gt;To which date - mandatory parameter.&lt;/param&gt;&#13;
+            &lt;returns&gt;List of receipts.&lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptListBasic" message="tns:IReceiptExternalBasic_GetReceiptListBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptListBasicResponse" message="tns:IReceiptExternalBasic_GetReceiptListBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptListBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IReceiptExternalBasic_GetReceiptListBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetReceiptListBasicV2">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            This operation enables the search for a list of receipts based on a given receipt type and a date and time span for when&#13;
+            the receipt was changed.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="systemUserName"&gt;System user name is the relevant agency system name that is registered in Altinn.&lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;System password is the password for the corresponding registered agency system.&lt;/param&gt;&#13;
+            &lt;param name="receiptTypeName"&gt;Type of the Receipt - mandatory parameter.&lt;/param&gt;&#13;
+            &lt;param name="dateFrom"&gt;From which date onwards - mandatory parameter.&lt;/param&gt;&#13;
+            &lt;param name="dateTo"&gt;To which date - mandatory parameter.&lt;/param&gt;&#13;
+            &lt;returns&gt;List of receipts.&lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptListBasicV2" message="tns:IReceiptExternalBasic_GetReceiptListBasicV2_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptListBasicV2Response" message="tns:IReceiptExternalBasic_GetReceiptListBasicV2_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptListBasicV2AltinnFaultFault" name="AltinnFaultFault" message="tns:IReceiptExternalBasic_GetReceiptListBasicV2_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="SaveReceiptBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            This method has been deprecated, use UpdateReceiptBasic instead.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="systemUserName"&gt;System user name is the relevant agency system name that is registered in Altinn.&lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;System password is the password for the corresponding registered agency system.&lt;/param&gt;&#13;
+            &lt;param name="receipt"&gt;The search criteria and new receipt details to be stored.&lt;/param&gt;&#13;
+            &lt;returns&gt;The updated receipt with references and sub receipts.&lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/SaveReceiptBasic" message="tns:IReceiptExternalBasic_SaveReceiptBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/SaveReceiptBasicResponse" message="tns:IReceiptExternalBasic_SaveReceiptBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/SaveReceiptBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IReceiptExternalBasic_SaveReceiptBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateReceiptBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            This operation enables updating of an existing receipt. Receipt can be identified with receipt id or an archive reference.&#13;
+            The logic will update receipt status and text, add new references, and update sub receipts with references. Sub receipts must&#13;
+            be identified with their ids and must already exist as child receipts for the main receipt.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="systemUserName"&gt;System user name is the relevant agency system name that is registered in Altinn.&lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;System password is the password for the corresponding registered agency system.&lt;/param&gt;&#13;
+            &lt;param name="receipt"&gt;The search criteria and new receipt details to be stored.&lt;/param&gt;&#13;
+            &lt;returns&gt;The updated receipt with references and sub receipts.&lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/UpdateReceiptBasic" message="tns:IReceiptExternalBasic_UpdateReceiptBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/UpdateReceiptBasicResponse" message="tns:IReceiptExternalBasic_UpdateReceiptBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/UpdateReceiptBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IReceiptExternalBasic_UpdateReceiptBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IReceiptExternalBasic" type="tns:IReceiptExternalBasic">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Test">
+      <soap:operation soapAction="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetReceiptBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetReceiptBasicV2">
+      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptBasicV2" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetReceiptListBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptListBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetReceiptListBasicV2">
+      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/GetReceiptListBasicV2" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SaveReceiptBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/SaveReceiptBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateReceiptBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptExternalBasic/UpdateReceiptBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ReceiptExternalBasicSF">
+    <wsdl:port name="BasicHttpBinding_IReceiptExternalBasic" binding="tns:BasicHttpBinding_IReceiptExternalBasic">
+      <soap:address location="http://tt02.altinn.basefarm.net/IntermediaryExternal/ReceiptExternalBasic.svc"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

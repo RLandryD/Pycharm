@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="root">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="settlementId" type="xs:unsignedShort" />
+        <xs:element name="settlementUUID" type="xs:string" />
+        <xs:element name="settlementType" type="xs:string" />
+        <xs:element name="claimID" type="xs:unsignedLong" />
+        <xs:element name="claimType" type="xs:string" />
+        <xs:element name="planningAccount" type="xs:unsignedInt" />
+        <xs:element name="payer" type="xs:string"/> 
+        <xs:element name="payee" type="xs:unsignedInt" />
+        <xs:element name="companyCode" type="xs:unsignedByte" />
+        <xs:element name="currency" type="xs:string"/>
+        <xs:element name="salesOrganization" type="xs:unsignedShort" />
+        <xs:element name="distributionChannel" type="xs:unsignedByte" />
+        <xs:element name="division" type="xs:unsignedByte" />
+        <xs:element name="salesOffice" type="xs:string"/>
+        <xs:element name="salesGroup" type="xs:string" />
+        <xs:element name="status" type="xs:string" />
+        <xs:element name="postingDate" type="xs:string"/>
+        <xs:element name="documentDate" type="xs:string"/>
+        <xs:element name="cancellationOn" type="xs:string"/>
+        <xs:element name="references" type="xs:string"/>
+        <xs:element name="postingStatus" type="xs:string"/>
+        <xs:element name="paymentMethod" type="xs:string"/>         
+        <xs:element name="paymentTerms" type="xs:string"/>
+        <xs:element name="VATRegistrationNumber" type="xs:string"/>
+        <xs:element name="grossAmount">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="amount">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:unsignedByte">
+                      <xs:attribute name="number" type="xs:boolean"  />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="currency" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="netAmount">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="amount">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:unsignedByte">
+                      <xs:attribute name="number" type="xs:boolean"  />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="currency" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="taxAmount">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="amount">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:unsignedByte">
+                      <xs:attribute name="number" type="xs:boolean"  />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="currency" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="followOnDocument">
+          <xs:complexType>
+            <xs:attribute name="null" type="xs:boolean"  />
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="action" type="xs:string" />
+        <xs:element maxOccurs="unbounded" name="items">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:choice maxOccurs="unbounded">
+                <xs:element name="itemType" type="xs:string" />
+                <xs:element name="itemNumber" type="xs:string"/>
+                <xs:element name="claimItemNumber" type="xs:unsignedShort" />
+                <xs:element name="recipient" type="xs:string"/>
+                <xs:element name="netAmount" type="xs:float"/>
+                <xs:element name="taxAmount" type="xs:float"/>    
+                 <xs:element name="grossAmount" type="xs:float"/>            
+                <xs:element name="netPrice" type="xs:float"/>
+                <xs:element name="priceUnit" type="xs:string"/>              
+                <xs:element name="product" type="xs:string" />
+                  <xs:element name="productHierarchyId" type="xs:string" />
+                <xs:element name="quantity" type="xs:string"/>
+                <xs:element name="supplierMaterialNumber" type="xs:string"/>
+                 <xs:element name="shortText" type="xs:string"/>
+                <xs:element name="sourceDoc" type="xs:string"/>
+                <xs:element name="sourceDocItemNumber" type="xs:string"/>              
+                <xs:element name="serviceRenderedDate" type="xs:string"/>                 
+                <xs:element name="reference" type="xs:string"/>                
+                <xs:element name="generalLedgerAccountAspect"/>
+                <xs:element name="externalReference" type="xs:string"/>
+                <xs:element name="taxes" type="xs:string" />
+              </xs:choice>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="residualItemRef">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="accountingDocument" type="xs:unsignedInt" />
+              <xs:element name="accountingDocumentItem" type="xs:unsignedByte" />
+              <xs:element name="fiscalYear" type="xs:unsignedShort" />
+              <xs:element name="companyCode" type="xs:unsignedByte" />
+              <xs:element name="amountInTransactionCurrency">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:unsignedByte">
+                      <xs:attribute name="number" type="xs:boolean"  />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="additionalText">
+          <xs:complexType>
+            <xs:attribute name="null" type="xs:boolean"  />
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="activityReason">
+          <xs:complexType>
+            <xs:attribute name="null" type="xs:boolean"  />
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="createdOn" type="xs:dateTime" />
+        <xs:element name="changedOn" type="xs:dateTime" />
+        <xs:element name="createdBy" type="xs:string"/>
+        <xs:element name="changedBy" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

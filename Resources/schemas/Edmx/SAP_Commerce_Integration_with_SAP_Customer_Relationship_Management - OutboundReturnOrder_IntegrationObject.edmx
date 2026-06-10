@@ -1,0 +1,93 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="HybrisCommerceOData">
+            <EntityType Name="SAPCpiOutboundReturnOrderEntry">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="productDescription" Nullable="true" Type="Edm.String"/>
+                <Property Name="itemNumber" Nullable="true" Type="Edm.String"/>
+                <Property IsUnique="true" Name="productId" Nullable="false" Type="Edm.String"/>
+                <Property Name="rejectionReason" Nullable="true" Type="Edm.String"/>
+                <Property Name="orderedProduct" Nullable="true" Type="Edm.String"/>
+                <Property Name="processQtyInitIso" Nullable="true" Type="Edm.String"/>
+                <Property Name="defectQuantity" Nullable="true" Type="Edm.String"/>
+                <Property Alias="SAPCpiOutboundReturnOrderEntry_productId" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+                <NavigationProperty FromRole="SAPCpiOutboundReturnOrderEntry" IsPartOf="true" Name="sapCpiOutboundReturnOrderEntryConditions" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundReturnOrderEntry_sapCpiOutboundReturnOrderEntryConditions" ToRole="SAPCpiOutboundReturnOrderEntryCondition"/>
+            </EntityType>
+            <EntityType Name="SAPCpiOutboundReturnOrderEntryCondition">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property IsUnique="true" Name="conditionCode" Nullable="false" Type="Edm.String"/>
+                <Property Name="conditionValue" Nullable="true" Type="Edm.String"/>
+                <Property Name="conditionCurrencyIsoCode" Nullable="true" Type="Edm.String"/>
+                <Property Alias="SAPCpiOutboundReturnOrderEntryCondition_conditionCode" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="SAPCpiOutboundReturnOrderConfig">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="distributionChannel" Nullable="true" Type="Edm.String"/>
+                <Property IsUnique="true" Name="salesOrg" Nullable="false" Type="Edm.String"/>
+                <Property Name="userName" Nullable="true" Type="Edm.String"/>
+                <Property Name="senderName" Nullable="true" Type="Edm.String"/>
+                <Property Name="senderPort" Nullable="true" Type="Edm.String"/>
+                <Property Name="serviceOrg" Nullable="true" Type="Edm.String"/>
+                <Property Name="receiverName" Nullable="true" Type="Edm.String"/>
+                <Property Name="serviceOrgResp" Nullable="true" Type="Edm.String"/>
+                <Property Name="servOrgShort" Nullable="true" Type="Edm.String"/>
+                <Property Name="url" Nullable="true" Type="Edm.String"/>
+                <Property Name="client" Nullable="true" Type="Edm.String"/>
+                <Property IsUnique="true" Name="salesOrgResp" Nullable="false" Type="Edm.String"/>
+                <Property Name="processType" Nullable="true" Type="Edm.String"/>
+                <Property Name="receiverPort" Nullable="true" Type="Edm.String"/>
+                <Property Alias="SAPCpiOutboundReturnOrderConfig_salesOrg|SAPCpiOutboundReturnOrderConfig_salesOrgResp" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="SAPCpiOutboundReturnOrder">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="responseStatus" Nullable="true" Type="Edm.String"/>
+                <Property Name="responseMessage" Nullable="true" Type="Edm.String"/>
+                <Property Name="orderId" Nullable="true" Type="Edm.String"/>
+                <Property IsUnique="true" Name="precedingDocumentId" Nullable="false" Type="Edm.String"/>
+                <Property Name="b2bUnit" Nullable="true" Type="Edm.String"/>
+                <Property Name="customerId" Nullable="true" Type="Edm.String"/>
+                <Property Alias="SAPCpiOutboundReturnOrder_precedingDocumentId" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+                <NavigationProperty FromRole="SAPCpiOutboundReturnOrder" IsPartOf="true" Name="sapCpiOutboundReturnOrderEntries" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundReturnOrder_sapCpiOutboundReturnOrderEntries" ToRole="SAPCpiOutboundReturnOrderEntry"/>
+                <NavigationProperty FromRole="SAPCpiOutboundReturnOrder" Name="sapCpiConfig" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundReturnOrder_sapCpiConfig" ToRole="SAPCpiOutboundReturnOrderConfig"/>
+            </EntityType>
+            <Association Name="FK_SAPCpiOutboundReturnOrderEntry_sapCpiOutboundReturnOrderEntryConditions">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundReturnOrderEntry" Type="HybrisCommerceOData.SAPCpiOutboundReturnOrderEntry"/>
+                <End Multiplicity="*" Role="SAPCpiOutboundReturnOrderEntryCondition" Type="HybrisCommerceOData.SAPCpiOutboundReturnOrderEntryCondition"/>
+            </Association>
+            <Association Name="FK_SAPCpiOutboundReturnOrder_sapCpiOutboundReturnOrderEntries">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundReturnOrder" Type="HybrisCommerceOData.SAPCpiOutboundReturnOrder"/>
+                <End Multiplicity="*" Role="SAPCpiOutboundReturnOrderEntry" Type="HybrisCommerceOData.SAPCpiOutboundReturnOrderEntry"/>
+            </Association>
+            <Association Name="FK_SAPCpiOutboundReturnOrder_sapCpiConfig">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundReturnOrder" Type="HybrisCommerceOData.SAPCpiOutboundReturnOrder"/>
+                <End Multiplicity="0..1" Role="SAPCpiOutboundReturnOrderConfig" Type="HybrisCommerceOData.SAPCpiOutboundReturnOrderConfig"/>
+            </Association>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundReturnOrderEntry" Name="SAPCpiOutboundReturnOrderEntries"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundReturnOrderEntryCondition" Name="SAPCpiOutboundReturnOrderEntryConditions"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundReturnOrderConfig" Name="SAPCpiOutboundReturnOrderConfigs"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundReturnOrder" Name="SAPCpiOutboundReturnOrders"/>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundReturnOrderEntry_sapCpiOutboundReturnOrderEntryConditions" Name="SAPCpiOutboundReturnOrderEntry_SAPCpiOutboundReturnOrderEntryConditions">
+                    <End EntitySet="SAPCpiOutboundReturnOrderEntries" Role="SAPCpiOutboundReturnOrderEntry"/>
+                    <End EntitySet="SAPCpiOutboundReturnOrderEntryConditions" Role="SAPCpiOutboundReturnOrderEntryCondition"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundReturnOrder_sapCpiOutboundReturnOrderEntries" Name="SAPCpiOutboundReturnOrder_SAPCpiOutboundReturnOrderEntries">
+                    <End EntitySet="SAPCpiOutboundReturnOrders" Role="SAPCpiOutboundReturnOrder"/>
+                    <End EntitySet="SAPCpiOutboundReturnOrderEntries" Role="SAPCpiOutboundReturnOrderEntry"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundReturnOrder_sapCpiConfig" Name="SAPCpiOutboundReturnOrder_SAPCpiOutboundReturnOrderConfigs">
+                    <End EntitySet="SAPCpiOutboundReturnOrders" Role="SAPCpiOutboundReturnOrder"/>
+                    <End EntitySet="SAPCpiOutboundReturnOrderConfigs" Role="SAPCpiOutboundReturnOrderConfig"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

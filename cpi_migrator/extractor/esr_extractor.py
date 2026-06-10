@@ -36,6 +36,8 @@ class ESRObject:
     content_url: str = ""    # URL to fetch full content/XSD/WSDL
     mapping_type: str = ""   # Java / Graphical / XSLT (for MessageMapping)
     operations: list[str] = field(default_factory=list)
+    content: str = ""        # FULL file text (XSD/WSDL/EDMX) — bundled verbatim
+    content_sha: str = ""    # sha1 of content, for dedupe
     raw: dict = field(default_factory=dict, repr=False)
 
 
@@ -173,32 +175,66 @@ class ESRFileParser:
         self,
         files: dict[str, bytes],
     ) -> list[ESRObject]:
-        """Parse uploaded ESR export files."""
+        """Parse uploaded ESR export files. XSD/WSDL/EDMX are retained in FULL
+        (stored verbatim in obj.content) so they can be bundled into a generated
+        iFlow as-is; identical files are de-duplicated by content hash."""
         objects = []
+        seen_sha = set()
         for filename, content in files.items():
             ext = filename.lower().split(".")[-1]
             if ext == "xsd":
                 obj = self._parse_xsd(filename, content)
-            elif ext in ("wsdl", "xml"):
+            elif ext in ("wsdl",):
                 obj = self._parse_wsdl(filename, content)
+            elif ext in ("edmx", "xml"):
+                # .xml may be a WSDL or an EDMX; sniff the root
+                head = (content[:400].decode("utf-8", "ignore")
+                        if isinstance(content, (bytes, bytearray)) else str(content[:400]))
+                if "Edmx" in head or "edmx" in head:
+                    obj = self._parse_edmx(filename, content)
+                else:
+                    obj = self._parse_wsdl(filename, content)
             elif ext in ("mmap", "xim"):
                 obj = self._parse_mmap(filename, content)
             else:
                 continue
-            if obj:
-                objects.append(obj)
+            if not obj:
+                continue
+            # de-dupe identical schema files (same bytes → keep first)
+            if obj.content_sha and obj.content_sha in seen_sha:
+                logger.info("Deduped identical %s (%s)", obj.obj_type, filename)
+                continue
+            if obj.content_sha:
+                seen_sha.add(obj.content_sha)
+            objects.append(obj)
         return objects
+
+    @staticmethod
+    def _full_text(content) -> tuple[str, str]:
+        """Return (full_text, sha1) for a file's raw bytes/str — no truncation."""
+        import hashlib
+        if isinstance(content, (bytes, bytearray)):
+            text = bytes(content).decode("utf-8", "replace")
+        else:
+            text = str(content)
+        sha = hashlib.sha1(text.encode("utf-8", "replace")).hexdigest()
+        return text, sha
 
     def _parse_xsd(self, filename: str, content: bytes) -> Optional[ESRObject]:
         try:
             import xml.etree.ElementTree as ET
-            root = ET.fromstring(content)
-            ns   = root.get("targetNamespace", "")
-            name = filename.replace(".xsd", "")
+            text, sha = self._full_text(content)
+            ns = ""
+            try:
+                ns = ET.fromstring(text).get("targetNamespace", "")
+            except Exception:
+                pass  # keep the full file even if it doesn't parse cleanly
+            name = filename.rsplit("/", 1)[-1].replace(".xsd", "")
             return ESRObject(
                 id=name, name=name, namespace=ns,
                 software_component="", obj_type="DataType",
                 description=f"XSD data type from {filename}",
+                content=text, content_sha=sha,
             )
         except Exception:
             return None
@@ -206,18 +242,33 @@ class ESRFileParser:
     def _parse_wsdl(self, filename: str, content: bytes) -> Optional[ESRObject]:
         try:
             import xml.etree.ElementTree as ET
-            root = ET.fromstring(content)
-            name = filename.replace(".wsdl", "").replace(".xml", "")
-            ops  = [
-                el.get("name", "")
-                for el in root.iter()
-                if "operation" in el.tag.lower()
-            ]
+            text, sha = self._full_text(content)
+            ops = []
+            try:
+                ops = [el.get("name", "") for el in ET.fromstring(text).iter()
+                       if "operation" in el.tag.lower()]
+            except Exception:
+                pass
+            name = filename.rsplit("/", 1)[-1].replace(".wsdl", "").replace(".xml", "")
             return ESRObject(
                 id=name, name=name, namespace="",
                 software_component="", obj_type="ServiceInterface",
                 description=f"WSDL service interface from {filename}",
-                operations=list(set(ops))[:10],
+                operations=list(dict.fromkeys(o for o in ops if o)),
+                content=text, content_sha=sha,
+            )
+        except Exception:
+            return None
+
+    def _parse_edmx(self, filename: str, content: bytes) -> Optional[ESRObject]:
+        try:
+            text, sha = self._full_text(content)
+            name = filename.rsplit("/", 1)[-1].replace(".edmx", "").replace(".xml", "")
+            return ESRObject(
+                id=name, name=name, namespace="",
+                software_component="", obj_type="EDMX",
+                description=f"OData EDMX metadata from {filename}",
+                content=text, content_sha=sha,
             )
         except Exception:
             return None

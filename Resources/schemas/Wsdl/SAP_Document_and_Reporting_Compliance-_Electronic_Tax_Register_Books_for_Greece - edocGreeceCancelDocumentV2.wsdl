@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="edocGreeceCancelDocumentV2" 
+targetNamespace="http://www.example.org/edocGreeceCancelDocumentV2/"
+ xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:tns="http://www.example.org/edocGreeceCancelDocumentV2/"
+   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <wsdl:types><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/edocGreeceCancelDocumentV2/">
+	
+	
+	<xs:element name="CancelInvoiceRequest"
+		type="tns:CancelInvoiceRequestType">
+	</xs:element>
+
+	<xs:element name="ResponseDoc" type="tns:ResponseEnvType">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="ResponseEnvType">
+			<xs:sequence>
+				<xs:element name="response" type="tns:ResponseType" maxOccurs="unbounded" minOccurs="1"/>
+			</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ResponseType">
+		<xs:sequence>
+			<xs:element name="index" type="xs:int" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>ΑΑ γραμμής οντότητας</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:sequence>
+					<xs:element name="invoiceUid" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Αναγνωριστικό οντότητας</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="invoiceMark" type="xs:long" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Μοναδικός Αριθμός Καταχώρησης παραστατικού</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="classificationMark" type="xs:long" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Μοναδικός Αριθμός Παραλαβής Χαρακτηρισμού</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="cancellationMark" type="xs:long" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Μοναδικός Αριθμός Ακύρωσης</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:element name="errors" maxOccurs="unbounded" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Λίστα Σφαλμάτων</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="error" type="tns:ErrorType" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="statusCode" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Κωδικός αποτελέσματος</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ErrorType">
+		<xs:sequence>
+			<xs:element name="message" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Μήνυμα Σφάλματος</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="code" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>Κωδικός Σφάλαματος</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	
+	<xs:simpleType name="CancelInvoiceRequestType">
+		<xs:restriction base="xs:string"></xs:restriction>
+	</xs:simpleType>
+</xs:schema>
+	</wsdl:types>
+    <wsdl:message name="CancelInvoiceRequest">
+		<wsdl:part name="CancelInvoiceRequestParameter" element="tns:CancelInvoiceRequest"></wsdl:part>
+	</wsdl:message>
+    <wsdl:message name="CancelInvoiceResponse">
+    	<wsdl:part name="CancelInvoiceResponseParameter" element="tns:ResponseDoc"></wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="edocGreeceCancelInvoice">
+    	<wsdl:operation name="CancelInvoice">
+    		<wsdl:input message="tns:CancelInvoiceRequest"></wsdl:input>
+    		<wsdl:output message="tns:CancelInvoiceResponse"></wsdl:output>
+    	</wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="NewBinding"
+    	type="tns:edocGreeceCancelInvoice">
+    	<soap:binding style="document"
+    		transport="http://schemas.xmlsoap.org/soap/http" />
+    	<wsdl:operation name="CancelInvoice">
+    		<soap:operation
+    			soapAction="http://www.example.org/edocGreeceCancelDocumentV2/CancelInvoice" />
+    		<wsdl:input>
+    			<soap:body use="literal" />
+    		</wsdl:input>
+    		<wsdl:output>
+    			<soap:body use="literal" />
+    		</wsdl:output>
+    	</wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="edocGreeceCancelInvoice">
+    	<wsdl:port name="edocGreeceCancelInvoice" binding="tns:NewBinding">
+    		<soap:address location="http://www.example.org/" />
+    	</wsdl:port>
+    </wsdl:service></wsdl:definitions>

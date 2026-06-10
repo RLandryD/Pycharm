@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://camel.apache.org/cxf/jaxws/provider" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:tns="http://camel.apache.org/cxf/jaxws/provider" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:ns1="http://cxf.component.camel.apache.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://cxf.component.camel.apache.org/" xmlns="http://cxf.component.camel.apache.org/" xmlns:tns="http://camel.apache.org/cxf/jaxws/provider" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:element name="invoke" nillable="true" type="xsd:anyType"/>
+            <xsd:element name="invokeResponse" nillable="true" type="xsd:anyType"/>
+        </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="invokeResponse">
+    <wsdl:part name="invokeResponse" element="ns1:invokeResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="invoke">
+    <wsdl:part name="invoke" element="ns1:invoke">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DefaultPayloadProviderSEI">
+    <wsdl:operation name="invoke">
+      <wsdl:input name="invoke" message="tns:invoke">
+    </wsdl:input>
+      <wsdl:output name="invokeResponse" message="tns:invokeResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DefaultPayloadProviderSEIServiceSoapBinding" type="tns:DefaultPayloadProviderSEI">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="invoke">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="invoke">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="invokeResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DefaultPayloadProviderSEIServiceSoap12Binding" type="tns:DefaultPayloadProviderSEI">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="invoke">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="invoke">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="invokeResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="service">
+    <wsdl:port name="port" binding="tns:DefaultPayloadProviderSEIServiceSoapBinding">
+      <soap:address location="https://d100083-iflmap.hcisbt.eu1.hana.ondemand.com:443/cxf/tp/soap/receiver"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

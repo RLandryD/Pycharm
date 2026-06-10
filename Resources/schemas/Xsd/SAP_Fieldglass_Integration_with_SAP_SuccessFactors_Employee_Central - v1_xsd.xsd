@@ -1,0 +1,302 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="insite:soapws:connectorn:v1" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="insite:soapws:connectorn:v1">
+<xs:annotation>
+<xs:documentation>Elements fgTransactionId and clientReferenceId are 24 characters long.
+            Allowed characters are 0-9, a-z, A-Z, _ and -.</xs:documentation>
+</xs:annotation>
+<xs:element name="dataTransferRequestType">
+<xs:annotation>
+<xs:documentation>Parent element for data transfer requests. Connector and connector
+                arguments are required, consult Fieldglass Connector document. Clients may associate
+                their own transaction id with this transaction using clientReferenceId element.
+                Client reference identifier is 24 characters long and is
+                optional.</xs:documentation>
+</xs:annotation>
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" ref="login"/>
+<xs:element name="connector" type="xs:string"/>
+<xs:element minOccurs="0" name="connectorArguments" type="parameters"/>
+<xs:element minOccurs="0" ref="clientReferenceId"/>
+<xs:element minOccurs="0" name="systemId" type="xs:string"/>
+<xs:choice>
+<xs:element ref="upload"/>
+<xs:element ref="download"/>
+</xs:choice>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="dataTransferResponseType">
+<xs:annotation>
+<xs:documentation>Parent element for data transfer response. Data is returned in
+                ""data"" element.</xs:documentation>
+</xs:annotation>
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" ref="fgTransactionId"/>
+<xs:element minOccurs="0" ref="requestStatus"/>
+<xs:element minOccurs="0" ref="data"/>
+</xs:sequence>
+<xs:attributeGroup ref="dataAttributes"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="acknowledgementType">
+<xs:annotation>
+<xs:documentation>Acknowledgement message data</xs:documentation>
+</xs:annotation>
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" ref="login"/>
+<xs:element ref="transactionIdentifier"/>
+<xs:element name="receivedStatus">
+<xs:simpleType>
+<xs:restriction base="xs:string">
+<xs:enumeration value="success"/>
+<xs:enumeration value="fail"/>
+</xs:restriction>
+</xs:simpleType>
+</xs:element>
+<xs:element minOccurs="0" ref="data"/>
+</xs:sequence>
+<xs:attributeGroup ref="dataAttributes"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="upload">
+<xs:annotation>
+<xs:documentation>This element is used to specify data parameter for data
+                upload.</xs:documentation>
+</xs:annotation>
+<xs:complexType>
+<xs:sequence>
+<xs:element ref="data"/>
+</xs:sequence>
+<xs:attributeGroup ref="dataAttributes"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="download">
+<xs:annotation>
+<xs:documentation>This element is used to specify parameters for data download. Format
+                and encoding styles of downloaded data are set using dataEncoding and dataFormat
+                attributes. Not all encoding styles and formats are supported. Consult Fieldglass
+                Connector document for supported data formats and encoding
+                styles.</xs:documentation>
+</xs:annotation>
+<xs:complexType>
+<xs:sequence minOccurs="0">
+<xs:element ref="dataMarker"/>
+</xs:sequence>
+<xs:attributeGroup ref="dataAttributes"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getDataByTransactionIdType">
+<xs:annotation>
+<xs:documentation>Retrieve past data using transaction identifier. Either client
+                reference id or Fieldglass transaction id can be used to retrieve data. Client
+                reference id must be associated with the transaction in
+                dataTransferRequest.</xs:documentation>
+</xs:annotation>
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" ref="login"/>
+<xs:element ref="transactionIdentifier"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="dataTransferStatusRequestType">
+<xs:annotation>
+<xs:documentation>Get the status of data transfer request.Either client reference id or
+                Fieldglass transaction id can be used to retrieve data. Client reference id must be
+                associated with the transaction in dataTransferRequest. Status can be checked for
+                dataTransferRequest. Status cannot be checked for
+                dataTransferByTransactionId.</xs:documentation>
+</xs:annotation>
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" ref="login"/>
+<xs:element ref="transactionIdentifier"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="dataTransferStatusResponseType">
+<xs:complexType>
+<xs:sequence>
+<xs:element ref="requestStatus"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="dataTransferStatusDetailsRequestType">
+<xs:annotation>
+<xs:documentation>Get the status of data transfer request.Either client reference id or
+                Fieldglass transaction id can be used to retrieve data. Client reference id must be
+                associated with the transaction in dataTransferRequest. Status can be checked for
+                dataTransferRequest. Status cannot be checked for
+                dataTransferByTransactionId.</xs:documentation>
+</xs:annotation>
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" ref="login"/>
+<xs:element ref="transactionIdentifier"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="dataTransferStatusDetailsResponseType">
+<xs:complexType>
+<xs:sequence>
+<xs:element ref="requestStatusDetails"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:complexType name="parameters">
+<xs:sequence minOccurs="0">
+<xs:element maxOccurs="unbounded" minOccurs="0" name="parameter" type="parameter"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="parameter">
+<xs:sequence>
+<xs:element minOccurs="0" name="parameterName" type="xs:string"/>
+<xs:element name="parameterValue" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="requestStatus">
+<xs:complexType>
+<xs:all>
+<xs:element name="statusCode" type="xs:string"/>
+<xs:element name="statusMessage" type="xs:string"/>
+<xs:element name="retry" type="xs:boolean"/>
+</xs:all>
+</xs:complexType>
+</xs:element>
+<xs:element name="requestStatusDetails">
+<xs:complexType>
+<xs:all>
+<xs:element name="statusMessage" type="xs:string"/>
+<xs:element name="data" type="xs:string"/>
+</xs:all>
+</xs:complexType>
+</xs:element>
+<xs:element name="transactionIdentifier">
+<xs:annotation>
+<xs:documentation>Transaction identifier for the request. Clients may associate their
+                own transaction id with a transaction using clientReferenceId element. Fieldglass
+                transaction id is used when known. Fieldglass transaction id is returned in response
+                to initial submit of data transfer request.</xs:documentation>
+</xs:annotation>
+<xs:complexType>
+<xs:choice>
+<xs:element ref="fgTransactionId"/>
+<xs:element ref="clientReferenceId"/>
+</xs:choice>
+</xs:complexType>
+</xs:element>
+<xs:element name="fgTransactionId" type="xs:string"/>
+<xs:element name="clientReferenceId" type="xs:string"/>
+<xs:element name="data">
+<xs:annotation>
+<xs:documentation>This element contains upload data or download data. This element is
+                used in data upload request and data download response. Data encoding style is
+                specified by dataEncoding attribute. Default data encoding is UTF-8. Not all
+                encoding styles are supported. Consult the Fieldglass Connector document for
+                encoding styles supported for each connector. Data in ""data"" element is in one of
+                the formats - text data, xml data or cxml data. Text data is further categorized as
+                plain text, comma separated csv file and pipe separated csv file.</xs:documentation>
+</xs:annotation>
+<xs:complexType>
+<xs:sequence>
+<xs:choice>
+<xs:element minOccurs="0" name="dataCxml" type="SAPcXMLMessage"/>
+<xs:element minOccurs="0" name="dataText" type="xs:string"/>
+<xs:element minOccurs="0" name="dataXml" type="xs:anyType"/>
+</xs:choice>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:attributeGroup name="dataAttributes">
+<xs:attribute default="csvCommaSeparated" ref="dataFormat"/>
+<xs:attribute default="none" ref="dataEncoding"/>
+</xs:attributeGroup>
+<xs:element name="dataMarker">
+<xs:annotation>
+<xs:documentation>Data marker is used in download request to apply limiter on number of
+                records returned. Three types of data marker are avaialable - Last record date, last
+                record id and record count.</xs:documentation>
+</xs:annotation>
+<xs:complexType>
+<xs:choice>
+<xs:element name="date.marker" type="xs:dateTime"/>
+<xs:element name="id.marker" type="xs:string"/>
+<xs:element name="count.marker" type="xs:int"/>
+</xs:choice>
+</xs:complexType>
+</xs:element>
+<xs:element name="echoMsg" type="xs:string"/>
+<xs:attribute name="dataFormat">
+<xs:simpleType>
+<xs:restriction base="xs:string">
+<xs:enumeration value="plainText"/>
+<xs:enumeration value="csvCommaSeparated"/>
+<xs:enumeration value="csvPipeSeparated"/>
+<xs:enumeration value="json"/>
+<xs:enumeration value="cxml"/>
+<xs:enumeration value="anyXml"/>
+</xs:restriction>
+</xs:simpleType>
+</xs:attribute>
+<xs:attribute name="dataEncoding">
+<xs:simpleType>
+<xs:restriction base="xs:string">
+<xs:enumeration value="none"/>
+<xs:enumeration value="UTF-8"/>
+<xs:enumeration value="Base64"/>
+<xs:enumeration value="UTF-8-in-Base64-wrapper"/>
+</xs:restriction>
+</xs:simpleType>
+</xs:attribute>
+<xs:element name="insiteFaultType">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="explanation" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="returnCode" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="login">
+<xs:complexType>
+<xs:sequence minOccurs="0">
+<xs:element name="username" type="xs:string"/>
+<xs:element name="password" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:complexType name="SAPcXMLMessage">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="cXMLMessageContent" type="cXMLMessageContentType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="cXMLMessageContentType">
+<xs:sequence>
+<xs:element minOccurs="0" name="cXML" type="xs:anyType"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="cXMLFolder" type="cXMLFolderType"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="AttachmentFolder" type="AttachmentFolderType"/>
+</xs:sequence>
+<xs:attribute name="messageType" type="xs:string" use="optional"/>
+</xs:complexType>
+<xs:complexType name="AttachmentFolderType">
+<xs:sequence>
+<xs:element name="Content" type="AttachmentContentType"/>
+</xs:sequence>
+<xs:attribute name="contentID" type="xs:string" use="required"/>
+<xs:attribute name="contentType" type="xs:string" use="required"/>
+<xs:attribute name="fileName" type="xs:string" use="required"/>
+<xs:attribute name="charset" type="xs:string" use="optional"/>
+<xs:attribute name="contentLength" type="xs:integer" use="required"/>
+</xs:complexType>
+<xs:complexType name="cXMLFolderType">
+<xs:sequence>
+<xs:element name="cXML" type="xs:anyType"/>
+</xs:sequence>
+<xs:attribute name="contentID" type="xs:string" use="required"/>
+<xs:attribute name="charset" type="xs:string" use="optional"/>
+</xs:complexType>
+<xs:simpleType name="AttachmentContentType">
+<xs:restriction base="xs:base64Binary"/>
+</xs:simpleType>
+</xs:schema>

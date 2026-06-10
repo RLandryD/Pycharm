@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2011 rel. 3 sp1 (x64) (http://www.altova.com) by XMLSpy 2011 Professional Ed. Release 2, Installed for 10 users (with SMP from 2011-03-30 to 2012-03-30) (Intercambio Electrónico de Datos y Comunicaciones S.L.) -->
+<xs:schema targetNamespace="http://www.sap.com/eDocument/Mexico/CFDI/v4.0" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://www.sap.com/eDocument/Mexico/CFDI/v4.0">
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig.xsd" />
+				<xs:element name="eDocFolioRequest">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Folios" maxOccurs="10000">
+							   <xs:complexType>
+								<xs:sequence>
+								 <xs:element name="Folio">
+								  <xs:complexType>
+								   <xs:attribute name="UUID" use="required">
+									<xs:simpleType>
+									 <xs:restriction base="xs:string">
+									  <xs:pattern value="[a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{12}"/>
+									 </xs:restriction>
+									</xs:simpleType>
+								   </xs:attribute>
+								   <xs:attribute name="Motivo" use="required">
+									<xs:simpleType>
+									 <xs:restriction base="xs:string">
+									  <xs:enumeration value="01"/>
+									  <xs:enumeration value="02"/>
+									  <xs:enumeration value="03"/>
+									  <xs:enumeration value="04"/>
+									 </xs:restriction>
+									</xs:simpleType>
+								   </xs:attribute>
+								   <xs:attribute name="FolioSustitucion">
+									<xs:simpleType>
+									 <xs:restriction base="xs:string">
+									  <xs:pattern value="[a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{12}"/>
+									 </xs:restriction>
+									</xs:simpleType>
+								   </xs:attribute>
+								   <xs:attribute name="RfcReceptor" type="xs:string"/>
+								  </xs:complexType>
+								 </xs:element>
+								</xs:sequence>
+							   </xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="RfcEmisor" type="xs:string" />
+						<xs:attribute name="Fecha" type="xs:dateTime" use="required" />
+					</xs:complexType>
+				</xs:element>
+
+	<xs:element name="eDocFolioResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="eDocFolioResult" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Folios" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="UUID" type="xs:string" minOccurs="1" maxOccurs="1" />
+										<xs:element name="ResultStatus" type="xs:double" minOccurs="1" maxOccurs="1" />
+
+										<xs:element name="ErrorCode" type="xs:double" maxOccurs="1" minOccurs="0">
+
+										</xs:element>
+										<xs:element name="ErrorDescription" type="xs:string" maxOccurs="1" minOccurs="0">
+										</xs:element>
+										<xs:element name="DocData" type="xs:base64Binary" maxOccurs="1" minOccurs="0">
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+
+						</xs:sequence>
+						<xs:attribute name="CodEstatus" type="xs:string" />
+						<xs:attribute name="Fecha" type="xs:dateTime" use="required" />
+						<xs:attribute name="RfcEmisor" type="xs:string" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SCENARIO iFlow: Sync Return Updates from Amazon
+  Display Name : OUT_Sender_S4HANA_Delivered_Sync_Return_Updates_
+  Package      : 1_Sender_S4HANA_Delivered_Integration
+  Strategy     : GREENFIELD: Clean cloud-native rebuild. No legacy mapping reuse.
+  Complexity   : HIGH (score: 281)
+  Effort       : 84.8 day(s)
+  Sender       : Sender (ProcessDirect)
+  Receiver     : S4HANA_Delivered (HCIOData)
+  Batch        : No
+-->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+             id="Sync_Return_Updates_"
+             name="OUT_Sender_S4HANA_Delivered_Sync_Return_Updates_">
+  <process id="Sync_Return_Updates__process" ifl:type="IntegrationFlow">
+
+    <startEvent id="Start_SC" name="From Interface Separation">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Sync_Return_Updates_</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </startEvent>
+
+
+
+    <!-- PROCESSDIRECT: Forward to Outbound Delivery -->
+    <serviceTask id="CallOutbound_1" name="→ Outbound Delivery" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/outbound/1_Sender_S4HANA_Deli</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+
+    <endEvent id="End_SC"/>
+    <sequenceFlow sourceRef="Start_SC" targetRef="CallOutbound_1"/>
+    
+    
+    <sequenceFlow sourceRef="CallOutbound_1" targetRef="End_SC"/>
+  </process>
+</definitions>

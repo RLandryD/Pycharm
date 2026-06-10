@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="root">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="inboundDelivery" type="xs:string" />
+				<xs:element name="goodsReceiptDateTime" type="xs:dateTime" />
+				<xs:element name="creationDateTime" type="xs:dateTime" />
+				<xs:element name="recepientBusinessSystem" type="xs:string" minOccurs="0" />
+				<xs:element name="items" minOccurs="1" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="itemNumber" type="xs:string" />
+							<xs:element name="material" type="xs:string" minOccurs="0"/>
+							<xs:element name="batch" type="BatchID" minOccurs="0"/>
+							<xs:element name="actualDeliveryQuantity" type="Quantity.Content" />
+							<xs:element name="actualDeliveryQuantityUnitCode" type="MeasureUnitCode" />
+							<xs:element name="actualDeliveredQtyInBaseUnitOfMeasure" type="Quantity.Content" />
+							<xs:element name="baseUnitOfMeasure" type="MeasureUnitCode" />
+							<xs:element name="deliveryToBaseQuantityDnmntr" type="xs:integer" />
+							<xs:element name="deliveryToBaseQuantityNmrtr" type="xs:integer" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="Quantity.Content">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="31" />
+			<xs:fractionDigits value="14" />
+			<xs:maxInclusive value="99999999999999999.99999999999999" />
+			<xs:minInclusive value="-99999999999999999.99999999999999" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Measure.Content">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="31" />
+			<xs:fractionDigits value="14" />
+			<xs:maxInclusive value="99999999999999999.99999999999999" />
+			<xs:minInclusive value="-99999999999999999.99999999999999" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MeasureUnitCode">
+		<xs:annotation>
+			<xs:documentation xml:lang="EN">
+				<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="3" />
+			<xs:minLength value="1" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="BatchID">
+            <xs:annotation>
+               <xs:documentation xml:lang="EN">
+                  <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+               </xs:documentation>
+            </xs:annotation>
+            <xs:restriction base="xs:token">
+               <xs:maxLength value="20" />
+               <xs:minLength value="1" />
+            </xs:restriction>
+         </xs:simpleType>
+</xs:schema>

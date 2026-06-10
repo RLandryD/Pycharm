@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SCENARIO iFlow: Chile Boleta
+  Display Name : OUT_Sender_Receiver_Chile_Boleta
+  Package      : 1_Sender_Receiver_Hr
+  Strategy     : BROWNFIELD: Lift-and-shift. Mapping '' ported directly.
+  Complexity   : MEDIUM (score: 16)
+  Effort       : 3 day(s)
+  Sender       : Sender (SOAP)
+  Receiver     : Receiver (ProcessDirect)
+  Batch        : No
+-->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+             id="Chile_Boleta"
+             name="OUT_Sender_Receiver_Chile_Boleta">
+  <process id="Chile_Boleta_process" ifl:type="IntegrationFlow">
+
+    <startEvent id="Start_SC" name="From Interface Separation">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Chile_Boleta</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </startEvent>
+
+
+
+    <!-- PROCESSDIRECT: Forward to Outbound Delivery -->
+    <serviceTask id="CallOutbound_1" name="→ Outbound Delivery" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/outbound/1_Sender_Receiver_Hr</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+
+    <endEvent id="End_SC"/>
+    <sequenceFlow sourceRef="Start_SC" targetRef="CallOutbound_1"/>
+    
+    
+    <sequenceFlow sourceRef="CallOutbound_1" targetRef="End_SC"/>
+  </process>
+</definitions>

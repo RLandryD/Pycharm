@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SFSFSessionHandlingLoginQueryResult_In"
+	targetNamespace="http://sap.com/xi/SFIHCM01" xmlns:p2="urn:server.sfapi.successfactors.com"
+	xmlns:p1="http://sap.com/xi/SFIHCM01" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:ens="urn:sfobject.sfapi.successfactors.com"
+	xmlns:fns="urn:fault.sfapi.successfactors.com">
+	<wsdl:documentation />
+	<wsp:UsingPolicy wsdl:required="true" />
+	<wsp:Policy wsu:Id="OP_SFSFSessionHandlingLoginQueryResult_In" />
+	<wsdl:types>
+		<xsd:schema targetNamespace="urn:fault.sfapi.successfactors.com"
+			xmlns="urn:fault.sfapi.successfactors.com" >
+			<xsd:element name="SFWebServiceFault" type="SFWebServiceFaultException" />
+			<xsd:complexType name="SFWebServiceFaultException">
+				<xsd:sequence>
+					<xsd:element name="errorCode" type="xsd:string" form="qualified" />
+					<xsd:element name="errorMessage" type="xsd:string"
+						form="qualified" />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+		<xsd:schema targetNamespace="urn:sfobject.sfapi.successfactors.com"
+			xmlns="urn:sfobject.sfapi.successfactors.com">
+			<xsd:element name="loginResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="result" type="LoginResult" form="qualified" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="login">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="credential" type="SFCredential"
+							form="qualified" />
+						<xsd:element name="param" type="SFParameter"
+							minOccurs="0" maxOccurs="unbounded" form="qualified" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="LoginResult">
+				<xsd:sequence>
+					<xsd:element name="sessionId" type="xsd:string" form="qualified"
+						nillable="true" />
+					<xsd:element name="msUntilPwdExpiration" type="xsd:long"
+						form="qualified" nillable="true" />
+					<xsd:element name="error" type="Error" minOccurs="0"
+						maxOccurs="unbounded" form="qualified" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="SFParameter">
+				<xsd:sequence>
+					<xsd:element name="name" type="xsd:string" form="qualified" />
+					<xsd:element name="value" type="xsd:string" form="qualified" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="SFCredential">
+				<xsd:sequence>
+					<xsd:element name="companyId" type="xsd:string" form="qualified" />
+					<xsd:element name="username" type="xsd:string" form="qualified" />
+					<xsd:element name="password" type="xsd:string" form="qualified" />
+					<xsd:element name="developerKey" type="xsd:string"
+						minOccurs="0" form="qualified" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="Error">
+				<xsd:sequence>
+					<xsd:element name="errorCode" type="xsd:string" form="qualified" />
+					<xsd:element name="errorMessage" type="xsd:string"
+						form="qualified" />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="p2.loginRequest">
+		<wsdl:documentation />
+		<wsdl:part name="parameters" element="ens:login"
+			 />
+	</wsdl:message>
+	<wsdl:message name="p2.loginResponse">
+		<wsdl:documentation />
+		<wsdl:part name="parameters" element="ens:loginResponse"
+			/>
+	</wsdl:message>
+	<wsdl:message name="p2.SFWebServiceFaultException">
+		<wsdl:documentation />
+		<wsdl:part name="SFWebServiceFault" element="fns:SFWebServiceFault"
+			 />
+	</wsdl:message>
+	<wsdl:portType name="SFSFSessionHandlingLoginQueryResult_In">
+		<wsdl:documentation />
+		<wsdl:operation name="SFSFSessionHandlingLoginQueryResult_In">
+			<wsdl:documentation />
+			<wsp:Policy>
+				<wsp:PolicyReference URI="#OP_SFSFSessionHandlingLoginQueryResult_In" />
+			</wsp:Policy>
+			<wsdl:input message="p1:p2.loginRequest" />
+			<wsdl:output message="p1:p2.loginResponse" />
+			<wsdl:fault name="p2.SFWebServiceFaultException" message="p1:p2.SFWebServiceFaultException" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SFSFSessionHandlingLoginQueryResult_InBinding"
+		type="p1:SFSFSessionHandlingLoginQueryResult_In">
+		<wsdlsoap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="SFSFSessionHandlingLoginQueryResult_In">
+			<wsdlsoap:operation soapAction="http://sap.com/xi/WebService/soap1.1"
+				 />
+			<wsdl:input>
+				<wsdlsoap:body use="literal"
+					 />
+			</wsdl:input>
+			<wsdl:output>
+				<wsdlsoap:body use="literal"
+					 />
+			</wsdl:output>
+			<wsdl:fault name="p2.SFWebServiceFaultException">
+				<wsdlsoap:fault use="literal" name="p2.SFWebServiceFaultException"
+					 />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SFSFSessionHandlingLoginQueryResult_In">
+		<wsdl:port name="SFSFSessionHandlingLoginQueryResult_In"
+			binding="p1:SFSFSessionHandlingLoginQueryResult_InBinding">
+			<wsdlsoap:address location="http://www.example.org/"
+				 />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

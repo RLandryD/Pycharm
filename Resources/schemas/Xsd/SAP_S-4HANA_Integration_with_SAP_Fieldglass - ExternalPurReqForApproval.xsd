@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="urn:Ariba:Buyer:vrealm_1" xmlns:typens="urn:Ariba:Buyer:vrealm_1">
+
+            <xsd:element name="Headers">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element maxOccurs="1" minOccurs="0" name="variant" type="xsd:string"/>
+                        <xsd:element maxOccurs="1" minOccurs="0" name="partition" type="xsd:string"/>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ExternalReqForApprovalImportRequest">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element minOccurs="0" name="ExternalReqForApprovalInput_Item">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element maxOccurs="1" minOccurs="0" name="item" type="typens:ExternalReqForApprovalInput"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:all>
+                    <xsd:attribute name="partition" type="xsd:string"/>
+                    <xsd:attribute name="variant" type="xsd:string"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ExternalReqForApprovalImportReply">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element minOccurs="0" name="ExternalReqForApprovalOutput_Item">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element maxOccurs="1" minOccurs="0" name="item" type="typens:ExternalReqForApprovalOutput"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:all>
+                    <xsd:attribute name="partition" type="xsd:string"/>
+                    <xsd:attribute name="variant" type="xsd:string"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:complexType name="ExternalReqForApprovalInput">
+                <xsd:all>
+                    <xsd:element name="ExternalReqId" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>Unique Id of the Requisition in the originating system</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="ExternalReqLineItems">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element maxOccurs="unbounded" name="item" type="typens:ExternalReqLineItem">
+                                    <xsd:annotation>
+                                        <xsd:documentation>list of LineItems</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="ExternalReqUrl" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>URL to the external req</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="HeaderComments" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>Header Level Comment</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="HeaderExtrinsics" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>Header Level Extrinsics</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="Name" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>Requisition Title</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="Operation" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>Set the type of operation performed New or Update or Delete</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="PreparerUniqueName" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>UniqueName of the preparer</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="RequesterUniqueName" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>UniqueName of the requester</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="ExternalReqForApprovalOutput">
+                <xsd:all>
+                    <xsd:element name="ExternalReqId" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>The reference Id of Requisition in originating system</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="Message" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>The error message</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="ReferenceUrl" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>URL of the Requisition</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="StatusString" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>Status of the Requisition</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="UniqueName" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>UniqueName of the Requisition</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="ExternalReqLineItem">
+                <xsd:all>
+                    <xsd:element name="CommodityCodeUniqueName" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>The UniqueName for the Commodity Code</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="Currency" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>The UniqueName of the currency</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="ExternalLineNumber" type="xsd:integer">
+                        <xsd:annotation>
+                            <xsd:documentation>the line number in the source system</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="ItemComments" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>Line Item level comments</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="ItemDescription" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>The Line Item Description</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="LineExtrinsics" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>line Level Extrinsics</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="Quantity" type="xsd:decimal">
+                        <xsd:annotation>
+                            <xsd:documentation>The quantity for lineItems</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    
+					<xsd:element name="SplitAccounting" type="typens:PurReqSplitAccDistr"/>
+                      
+                    <xsd:element name="SupplierANId" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>AN Id of the supplier</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="UnitOfMeasure" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>The Unit of Measure</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="UnitPrice" type="xsd:decimal">
+                        <xsd:annotation>
+                            <xsd:documentation>The Line Item Unit Price</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="UpdateAction" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>The update action on the line</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:all>
+            </xsd:complexType>
+			
+			<xsd:complexType name="PurReqSplitAccDistr">
+				<xsd:sequence>
+					<xsd:element name="SplitAccount" maxOccurs="unbounded">
+						<xsd:complexType>
+						<xsd:attribute name="Percentage" type="xsd:string"/>
+						<xsd:attribute name="Amount" type="xsd:string"/>
+						<xsd:attribute name="CostCenterOriginalCode" type="xsd:string"/>
+						<xsd:attribute name="CompanyCode" type="xsd:string"/>
+						<xsd:attribute name="ControllingArea" type="xsd:string"/>
+						<xsd:attribute name="GLAccount" type="xsd:string"/>
+						<xsd:attribute name="WBSElement" type="xsd:string"/>
+						<xsd:attribute name="InternalOrder" type="xsd:string"/>
+						<xsd:attribute name="SalesOrder" type="xsd:string" />
+						<xsd:attribute name="AccountCategory" type="xsd:string"/>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>		
+        </xsd:schema>

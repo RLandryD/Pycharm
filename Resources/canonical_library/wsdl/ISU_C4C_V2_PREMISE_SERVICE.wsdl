@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:n1="urn:sap-com:document:sap:rfc:functions">
+ <wsdl:documentation>
+  <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+ </wsdl:documentation>
+ <wsp:UsingPolicy wsdl:required="true"/>
+ <wsp:Policy wsu:Id="IF_IF_ISU_C4C_V2_PREMISE_SERVICE">
+  <sapsession:Session xmlns:sapsession="http://www.sap.com/webas/630/soap/features/session/">
+   <sapsession:enableSession>false</sapsession:enableSession>
+  </sapsession:Session>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_IsuC4cV2PremiseServiceGet">
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsdl:types>
+  <xsd:schema attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:n0="urn:sap-com:document:sap:rfc:functions">
+   <xsd:import namespace="urn:sap-com:document:sap:rfc:functions"/>
+   <xsd:simpleType name="char1">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char30">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="30"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char4">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="4"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char45">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="45"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="unit3">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="IsuC4cV2SPremiseServices">
+    <xsd:sequence>
+     <xsd:element name="Division" type="n0:char2" minOccurs="0"/>
+     <xsd:element name="DivisionText" type="n0:char20" minOccurs="0"/>
+     <xsd:element name="DivisionCategory" type="n0:numeric2" minOccurs="0"/>
+     <xsd:element name="Installation" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="RateCategory" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="RateCategoryText" type="n0:char40" minOccurs="0"/>
+     <xsd:element name="Pointofdelivery" type="n0:char50" minOccurs="0"/>
+     <xsd:element name="Devices" type="tns:IsuC4cV2TDevice" minOccurs="0"/>
+     <xsd:element name="PeriodLength" type="n0:decimal2.0" minOccurs="0"/>
+     <xsd:element name="PeriodCreatedOn" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="PeriodChangedOn" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="NextReadDate" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="Nodisconnect" type="n0:char4" minOccurs="0"/>
+     <xsd:element name="NodisconnectText" type="n0:char30" minOccurs="0"/>
+     <xsd:element name="InstallationStatus" type="n0:char2" minOccurs="0"/>
+     <xsd:element name="InstallationStatusText" type="n0:char60" minOccurs="0"/>
+     <xsd:element name="Premise" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="ContractAccount" type="n0:char12" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2SDevice">
+    <xsd:sequence>
+     <xsd:element name="Device" type="n0:char18" minOccurs="0"/>
+     <xsd:element name="Register" type="tns:IsuC4cV2TRegister" minOccurs="0"/>
+     <xsd:element name="Material" type="n0:char40" minOccurs="0"/>
+     <xsd:element name="Equipment" type="n0:char18" minOccurs="0"/>
+     <xsd:element name="DeviceType" type="n0:char30" minOccurs="0"/>
+     <xsd:element name="DeviceStartDate" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="DeviceEndDate" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="NextReadDate" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="AmiMeter" type="n0:char1" minOccurs="0"/>
+     <xsd:element name="AmiStatus" type="n0:char1" minOccurs="0"/>
+     <xsd:element name="ReconnectAllowed" type="n0:char1" minOccurs="0"/>
+     <xsd:element name="ReconnectFlag" type="n0:char1" minOccurs="0"/>
+     <xsd:element name="ImplausibleCount" type="xsd:int" minOccurs="0"/>
+     <xsd:element name="DeviceLocationData" type="tns:IsuC4cV2SDeviceLocation" minOccurs="0"/>
+     <xsd:element name="DeviceStatus" type="tns:char1" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2SRegister">
+    <xsd:sequence>
+     <xsd:element name="Register" type="n0:numeric3" minOccurs="0"/>
+     <xsd:element name="ValidFrom" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="ValidTo" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="RegisterType" type="n0:char2" minOccurs="0"/>
+     <xsd:element name="RegisterTypeText" type="n0:char30" minOccurs="0"/>
+     <xsd:element name="UnitOfMeasurement" type="n0:unit3" minOccurs="0"/>
+     <xsd:element name="ExpectedConsumption" type="n0:char36" minOccurs="0"/>
+     <xsd:element name="BillingUnitOfMeasure" type="tns:unit3" minOccurs="0"/>
+     <xsd:element name="NonBillingRelevant" type="tns:char1" minOccurs="0"/>
+     <xsd:element name="DoNotRead" type="tns:char1" minOccurs="0"/>
+     <xsd:element name="NonMetering" type="tns:char1" minOccurs="0"/>
+     <xsd:element name="NoMrCreate" type="tns:char1" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2SDeviceLocation">
+    <xsd:sequence>
+     <xsd:element name="DeviceLocationId" type="n0:char30" minOccurs="0"/>
+     <xsd:element name="DeviceLocationText" type="n0:char40" minOccurs="0"/>
+     <xsd:element name="Location" type="n0:char40" minOccurs="0"/>
+     <xsd:element name="AdditionalLocation" type="n0:char30" minOccurs="0"/>
+     <xsd:element name="DeviceLocationAddress" type="n0:char250" minOccurs="0"/>
+     <xsd:element name="SystemStatus" type="n0:char40" minOccurs="0"/>
+     <xsd:element name="SystemStatusText" type="n0:char250" minOccurs="0"/>
+     <xsd:element name="Notes" type="tns:IsuC4cV2TDeviceLocNotes" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2SDeviceLocNotes">
+    <xsd:sequence>
+     <xsd:element name="SequenceNumber" type="n0:char2" minOccurs="0"/>
+     <xsd:element name="NoteId" type="n0:char2" minOccurs="0"/>
+     <xsd:element name="NoteText" type="n0:char50" minOccurs="0"/>
+     <xsd:element name="Priority" type="n0:numeric1" minOccurs="0"/>
+     <xsd:element name="Addtxt1" type="n0:char50" minOccurs="0"/>
+     <xsd:element name="Addtxt2" type="n0:char50" minOccurs="0"/>
+     <xsd:element name="Addtxt3" type="n0:char50" minOccurs="0"/>
+     <xsd:element name="Addtxt4" type="n0:char50" minOccurs="0"/>
+     <xsd:element name="Addtxt5" type="n0:char50" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="Bapiret2">
+    <xsd:sequence>
+     <xsd:element name="Type" type="n0:char1" minOccurs="0"/>
+     <xsd:element name="Id" type="n0:char20" minOccurs="0"/>
+     <xsd:element name="Number" type="n0:numeric3" minOccurs="0"/>
+     <xsd:element name="Message" type="n0:char220" minOccurs="0"/>
+     <xsd:element name="LogNo" type="n0:char20" minOccurs="0"/>
+     <xsd:element name="LogMsgNo" type="n0:numeric6" minOccurs="0"/>
+     <xsd:element name="MessageV1" type="n0:char50" minOccurs="0"/>
+     <xsd:element name="MessageV2" type="n0:char50" minOccurs="0"/>
+     <xsd:element name="MessageV3" type="n0:char50" minOccurs="0"/>
+     <xsd:element name="MessageV4" type="n0:char50" minOccurs="0"/>
+     <xsd:element name="Parameter" type="n0:char32" minOccurs="0"/>
+     <xsd:element name="Row" type="xsd:int" minOccurs="0"/>
+     <xsd:element name="Field" type="n0:char30" minOccurs="0"/>
+     <xsd:element name="System" type="n0:char10" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2TPremiseServices">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:IsuC4cV2SPremiseServices" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2TDevice">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:IsuC4cV2SDevice" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2TRegister">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:IsuC4cV2SRegister" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2TDeviceLocNotes">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:IsuC4cV2SDeviceLocNotes" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="Bapiret2T">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:Bapiret2" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="IsuC4cV2PremiseServiceGet">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="IvActiveDevices" type="n0:char1" minOccurs="0"/>
+      <xsd:element name="IvContractAccount" type="n0:char12" minOccurs="0"/>
+      <xsd:element name="IvKeydate" type="n0:char10" minOccurs="0"/>
+      <xsd:element name="IvLanguage" type="n0:char2" minOccurs="0"/>
+      <xsd:element name="IvPremise" type="n0:char10" minOccurs="0"/>
+      <xsd:element name="IvSearchValue" type="tns:char45" minOccurs="0"/>
+      <xsd:element name="IvServicesWithMr" type="n0:char1" minOccurs="0"/>
+      <xsd:element name="IvSkip" type="xsd:int" minOccurs="0"/>
+      <xsd:element name="IvSortField" type="tns:char30" minOccurs="0"/>
+      <xsd:element name="IvSortType" type="tns:char4" minOccurs="0"/>
+      <xsd:element name="IvTop" type="xsd:int" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="IsuC4cV2PremiseServiceGetResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="EtMessage" type="tns:Bapiret2T" minOccurs="0"/>
+      <xsd:element name="EtServices" type="tns:IsuC4cV2TPremiseServices" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+  <xsd:schema attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:rfc:functions" xmlns:tns="urn:sap-com:document:sap:rfc:functions">
+   <xsd:simpleType name="char1">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char10">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="10"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char12">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="12"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char18">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="18"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char2">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="2"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char20">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="20"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char220">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="220"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char250">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="250"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char30">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="30"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char32">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="32"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char36">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="36"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char4">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="4"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char40">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="40"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char50">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="50"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char60">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="60"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="decimal2.0">
+    <xsd:restriction base="xsd:decimal">
+     <xsd:totalDigits value="2"/>
+     <xsd:fractionDigits value="0"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric1">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric2">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="2"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric3">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric6">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="6"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="unit3">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+  </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="IsuC4cV2PremiseServiceGet">
+  <wsdl:part name="parameters" element="tns:IsuC4cV2PremiseServiceGet"/>
+ </wsdl:message>
+ <wsdl:message name="IsuC4cV2PremiseServiceGetResponse">
+  <wsdl:part name="parameter" element="tns:IsuC4cV2PremiseServiceGetResponse"/>
+ </wsdl:message>
+ <wsdl:portType name="ISU_C4C_V2_PREMISE_SERVICE">
+  <wsdl:documentation>
+   <sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+    <sapdoc:docitem docURL="http://ldai1emo.wdf.sap.corp:50000/sap/bc/esdt/docu/sd_text?sap-client=300&amp;sd_name=ISU_C4C_V2_PREMISE_SERVICE"/>
+    <sapdoc:docitem applicationComponent="IS-U-CS-C4C"/>
+   </sapdoc:sapdoc>
+  </wsdl:documentation>
+  <wsp:Policy>
+   <wsp:PolicyReference URI="#IF_IF_ISU_C4C_V2_PREMISE_SERVICE"/>
+  </wsp:Policy>
+  <wsdl:operation name="IsuC4cV2PremiseServiceGet">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_IsuC4cV2PremiseServiceGet"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:IsuC4cV2PremiseServiceGet"/>
+   <wsdl:output message="tns:IsuC4cV2PremiseServiceGetResponse"/>
+  </wsdl:operation>
+ </wsdl:portType>
+</wsdl:definitions>

@@ -1,0 +1,796 @@
+<wsdl:definitions 
+xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:tns="http://sap.com/xi/ME" 
+targetNamespace="http://sap.com/xi/ME">
+<wsdl:types>
+<xs:schema xmlns:tns="http://sap.com/xi/SAPGlobal/GDT" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://sap.com/xi/SAPGlobal/GDT" version="1.0">
+<xs:complexType name="BasicBusinessDocumentMessageHeader">
+<xs:sequence>
+<xs:element minOccurs="0" name="ID" type="tns:BusinessDocumentMessageID"/>
+<xs:element minOccurs="0" name="UUID" type="xs:string"/>
+<xs:element minOccurs="0" name="ReferenceID" type="tns:BusinessDocumentMessageID"/>
+<xs:element minOccurs="0" name="ReferenceUUID" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="BusinessDocumentMessageID">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="schemeID" type="xs:string"/>
+<xs:attribute name="schemeAgencyID" type="xs:string"/>
+<xs:attribute name="schemeAgencySchemeAgencyID" type="xs:string"/>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+<xs:complexType name="LEN40Name">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="languageCode" type="xs:string"/>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+<xs:complexType name="LEN20Name">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="languageCode" type="xs:string"/>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+<xs:complexType name="EXTENDEDName">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="languageCode" type="xs:string"/>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+<xs:complexType name="DateTime">
+<xs:simpleContent>
+<xs:extension base="xs:anySimpleType">
+<xs:attribute name="timeZoneCode" type="xs:string"/>
+<xs:attribute name="daylightSavingTimeIndicator" type="xs:boolean"/>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+<xs:complexType name="INTEGERQuantity">
+<xs:simpleContent>
+<xs:extension base="xs:decimal">
+<xs:attribute name="unitCode" type="xs:string"/>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+<xs:complexType name="Text">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="languageCode" type="xs:string"/>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+<xs:complexType name="LEN60Name">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="languageCode" type="xs:string"/>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+<xs:complexType name="LEN30Name">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="languageCode" type="xs:string"/>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+</xs:schema>
+<xs:schema xmlns:ns1="http://sap.com/xi/SAPGlobal/GDT" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://sap.com/xi/ME" version="1.0">
+<xs:import namespace="http://sap.com/xi/SAPGlobal/GDT"/>
+<xs:element name="StandardMessageFault" type="tns:BusinessException"/>
+<xs:complexType name="ItemCreateRequestMessage_sync">
+<xs:sequence>
+<xs:element minOccurs="0" name="MessageHeader" type="ns1:BasicBusinessDocumentMessageHeader"/>
+<xs:element name="Item" type="tns:ItemIn"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemIn">
+<xs:all>
+<xs:element name="Item" type="xs:string"/>
+<xs:element minOccurs="0" name="Revision" type="xs:string"/>
+<xs:element name="SiteRef" type="tns:SiteRef"/>
+<xs:element name="ItemType" type="tns:ItemType"/>
+<xs:element minOccurs="0" name="IncrementBatchNumber" type="tns:IncrementBatchNumber"/>
+<xs:element name="LotSize" type="xs:decimal"/>
+<xs:element minOccurs="0" name="StatusRef" type="tns:StatusRef"/>
+<xs:element default="R" minOccurs="0" name="EffectivityControl" type="tns:EffectivityControl"/>
+<xs:element minOccurs="0" name="Description" type="tns:Description"/>
+<xs:element minOccurs="0" name="UnitOfMeasure" type="ns1:LEN40Name"/>
+<xs:element default="false" minOccurs="0" name="AssignSerialAtRelease" type="xs:boolean"/>
+<xs:element minOccurs="0" name="AssyDataTypeRef" type="tns:AssyDataTypeRef"/>
+<xs:element minOccurs="0" name="InventoryAssyDataTypeRef" type="tns:AssyDataTypeRef"/>
+<xs:element minOccurs="0" name="RemovalAssyDataTypeRef" type="tns:AssyDataTypeRef"/>
+<xs:element minOccurs="0" name="CreateTrackableSFC" type="tns:CreateTrackableSFC"/>
+<xs:element minOccurs="0" name="BomRef" type="tns:BOMRef"/>
+<xs:element minOccurs="0" name="RouterRef" type="tns:RouterRef"/>
+<xs:element default="true" minOccurs="0" name="CurrentRevision" type="xs:boolean"/>
+<xs:element minOccurs="0" name="DrawingName" type="ns1:EXTENDEDName"/>
+<xs:element minOccurs="0" name="EffectiveEndDate" type="ns1:DateTime"/>
+<xs:element minOccurs="0" name="EffectiveEndSequence" type="ns1:INTEGERQuantity"/>
+<xs:element minOccurs="0" name="EffectiveStartDate" type="ns1:DateTime"/>
+<xs:element minOccurs="0" name="EffectiveStartSequence" type="ns1:INTEGERQuantity"/>
+<xs:element minOccurs="0" name="ItemGroupRef" type="tns:ItemGroupRef"/>
+<xs:element minOccurs="0" name="MaskGroupRef" type="tns:MaskGroupRef"/>
+<xs:element minOccurs="0" name="StorageLocationRef" type="tns:StorageLocationRef"/>
+<xs:element minOccurs="0" name="ErpPutawayStorageLocation" type="xs:string"/>
+<xs:element minOccurs="0" name="ErpGTIN" type="xs:string"/>
+<xs:element minOccurs="0" name="MaximumUsage" type="ns1:INTEGERQuantity"/>
+<xs:element minOccurs="0" name="Panel" type="xs:boolean"/>
+<xs:element minOccurs="0" name="PreAssembled" type="xs:boolean"/>
+<xs:element minOccurs="0" name="QuantityMultiplier" type="xs:decimal"/>
+<xs:element minOccurs="0" name="QuantityRestriction" type="tns:QuantityRestriction"/>
+<xs:element minOccurs="0" name="SelectorActivityRef" type="tns:ActivityRef"/>
+<xs:element minOccurs="0" name="SelectorNote" type="ns1:LEN40Name"/>
+<xs:element minOccurs="0" name="TransferItemGroupRef" type="tns:ItemGroupRef"/>
+<xs:element minOccurs="0" name="UseCompFromDrawing" type="xs:boolean"/>
+<xs:element minOccurs="0" name="IsCollector" type="xs:boolean"/>
+<xs:element minOccurs="0" name="UseOrderIdFirstRelease" type="xs:boolean"/>
+<xs:element minOccurs="0" name="CollectParentSerial" type="xs:boolean"/>
+<xs:element minOccurs="0" name="RequiresSerialNumberChange" type="xs:boolean"/>
+<xs:element minOccurs="0" name="TimeSensitive" type="xs:boolean"/>
+<xs:element minOccurs="0" name="MaxShelfLife" type="ns1:INTEGERQuantity"/>
+<xs:element minOccurs="0" name="MaxShelfLifeUnits" type="tns:TsmLifeUnit"/>
+<xs:element minOccurs="0" name="MaxFloorLife" type="ns1:INTEGERQuantity"/>
+<xs:element minOccurs="0" name="MaxFloorLifeUnits" type="tns:TsmLifeUnit"/>
+<xs:element minOccurs="0" name="Notes" type="ns1:Text"/>
+<xs:element minOccurs="0" name="DocumentLinkList" type="tns:DocumentLinkList"/>
+<xs:element minOccurs="0" name="ItemLocationList" type="tns:ItemLocationList"/>
+<xs:element minOccurs="0" name="ItemAlternateList" type="tns:ItemAlternateList"/>
+<xs:element minOccurs="0" name="ItemDPMOList" type="tns:ItemDPMOList"/>
+<xs:element minOccurs="0" name="TransferDataList" type="tns:TransferDataList"/>
+<xs:element minOccurs="0" name="ItemShopOrderTypeList" type="tns:ItemShopOrderTypeList"/>
+<xs:element minOccurs="0" name="CustomFieldList" type="tns:CustomFieldList"/>
+<xs:element minOccurs="0" name="ItemCharacteristicList" type="tns:ItemCharacteristicList"/>
+<xs:element minOccurs="0" name="ModifiedDateTime" type="ns1:DateTime"/>
+<xs:element minOccurs="0" name="ErpBackflushing" type="xs:boolean"/>
+<xs:element minOccurs="0" name="TimeBasedComponentType" type="tns:TimeBasedComponentType"/>
+<xs:element minOccurs="0" name="ConsumptionTolerance" type="ns1:INTEGERQuantity"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="SiteRef">
+<xs:sequence>
+<xs:element name="Site" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="StatusRef">
+<xs:all>
+<xs:element name="Status" type="tns:SHORTName"/>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="SHORTName">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="languageCode" type="xs:string"/>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+<xs:complexType name="Description">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="languageCode" type="xs:string"/>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+<xs:complexType name="AssyDataTypeRef">
+<xs:all>
+<xs:element name="AssyDataType" type="ns1:LEN20Name"/>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="BOMRef">
+<xs:all>
+<xs:element name="Bom" type="xs:string"/>
+<xs:element minOccurs="0" name="Revision" type="xs:string"/>
+<xs:element minOccurs="0" name="BomType" type="tns:BOMType"/>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="RouterRef">
+<xs:all>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+<xs:element name="Router" type="xs:string"/>
+<xs:element minOccurs="0" name="Revision" type="xs:string"/>
+<xs:element minOccurs="0" name="RouterType" type="tns:RouterType"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="ItemGroupRef">
+<xs:all>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+<xs:element name="ItemGroup" type="tns:SHORTName"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="MaskGroupRef">
+<xs:all>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+<xs:element name="MaskGroup" type="ns1:LEN20Name"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="StorageLocationRef">
+<xs:all>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+<xs:element name="StorageLocation" type="xs:string"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="ActivityRef">
+<xs:sequence>
+<xs:element minOccurs="0" name="Activity" type="ns1:LEN20Name"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="DocumentLinkList">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="DocumentLink" type="tns:DocumentLink"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="DocumentLink">
+<xs:sequence>
+<xs:element name="DocumentRef" type="tns:DocumentRef"/>
+<xs:element minOccurs="0" name="DocumentContext" type="tns:DocumentContext"/>
+<xs:element name="Sequence" type="ns1:INTEGERQuantity"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="DocumentRef">
+<xs:all>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+<xs:element name="Document" type="xs:string"/>
+<xs:element minOccurs="0" name="ModifiedDateTime" type="ns1:DateTime"/>
+<xs:element name="Revision" type="xs:string"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="DocumentContext">
+<xs:sequence>
+<xs:element minOccurs="0" name="ItemRef" type="tns:ItemRef"/>
+<xs:element minOccurs="0" name="RouterRef" type="tns:RouterRef"/>
+<xs:element minOccurs="0" name="OperationRef" type="xs:string"/>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemRef">
+<xs:all>
+<xs:element name="Item" type="xs:string"/>
+<xs:element minOccurs="0" name="Revision" type="xs:string"/>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="ItemLocationList">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="ItemLocation" type="tns:ItemLocation"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemLocation">
+<xs:all>
+<xs:element name="Location" type="ns1:LEN20Name"/>
+<xs:element minOccurs="0" name="Description" type="tns:Description"/>
+<xs:element minOccurs="0" name="Sequence" type="ns1:INTEGERQuantity"/>
+<xs:element minOccurs="0" name="ItemRef" type="tns:ItemRef"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="ItemAlternateList">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="ItemAlternate" type="tns:ItemAlternate"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemAlternate">
+<xs:all>
+<xs:element name="AlternateItemRef" type="tns:ItemRef"/>
+<xs:element minOccurs="0" name="Sequence" type="ns1:INTEGERQuantity"/>
+<xs:element minOccurs="0" name="Substitute" type="xs:boolean"/>
+<xs:element minOccurs="0" name="ItemRef" type="tns:ItemRef"/>
+<xs:element minOccurs="0" name="ItemGroupRef" type="tns:ItemGroupRef"/>
+<xs:element minOccurs="0" name="RequiredSubstitute" type="xs:boolean"/>
+<xs:element minOccurs="0" name="ValidAssembly" type="ns1:EXTENDEDName"/>
+<xs:element minOccurs="0" name="ValidEnd" type="ns1:DateTime"/>
+<xs:element minOccurs="0" name="ValidRevision" type="xs:string"/>
+<xs:element minOccurs="0" name="ValidStart" type="ns1:DateTime"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="ItemDPMOList">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="ItemDPMO" type="tns:ItemDPMO"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemDPMO">
+<xs:all>
+<xs:element name="Opportunities" type="ns1:INTEGERQuantity"/>
+<xs:element minOccurs="0" name="OperationRef" type="tns:OperationRef"/>
+<xs:element minOccurs="0" name="ForAllOperations" type="xs:boolean"/>
+<xs:element minOccurs="0" name="ForAllDpmoCategories" type="xs:boolean"/>
+<xs:element minOccurs="0" name="DpmoCategoryRef" type="tns:DPMOCategoryRef"/>
+<xs:element minOccurs="0" name="ItemRef" type="tns:ItemRef"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="OperationRef">
+<xs:all>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+<xs:element name="Operation" type="xs:string"/>
+<xs:element name="Revision" type="xs:string"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="DPMOCategoryRef">
+<xs:all>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+<xs:element name="DpmoCategory" type="tns:DPMOCategoryName"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="TransferDataList">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="TransferData" type="tns:TransferData"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="TransferData">
+<xs:sequence>
+<xs:element minOccurs="0" name="ExportTemplateRef" type="tns:ExportTemplateRef"/>
+<xs:element minOccurs="0" name="ReceiveReq" type="xs:boolean"/>
+<xs:element minOccurs="0" name="MessageTypeRef" type="tns:MessageTypeRef"/>
+<xs:element minOccurs="0" name="TransferSite" type="xs:string"/>
+<xs:element minOccurs="0" name="TransferType" type="tns:TransferType"/>
+<xs:element minOccurs="0" name="TransferParentContext" type="tns:TransferParent"/>
+<xs:element minOccurs="0" name="DefChoice" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ExportTemplateRef">
+<xs:all>
+<xs:element name="TransferDataType" type="tns:TransferDataType"/>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+<xs:element name="TemplateName" type="xs:string"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="MessageTypeRef">
+<xs:all>
+<xs:element name="MessageType" type="xs:string"/>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="TransferParent">
+<xs:sequence>
+<xs:element minOccurs="0" name="ShopOrderRef" type="tns:ShopOrderRef"/>
+<xs:element minOccurs="0" name="ItemGroupRef" type="tns:ItemGroupRef"/>
+<xs:element minOccurs="0" name="ItemRef" type="tns:ItemRef"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ShopOrderRef">
+<xs:all>
+<xs:element name="ShopOrder" type="xs:string"/>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="ItemShopOrderTypeList">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="ItemShopOrderType" type="tns:ItemShopOrderType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemShopOrderType">
+<xs:all>
+<xs:element minOccurs="0" name="ShopOrderTypeRef" type="tns:ShopOrderTypeRef"/>
+<xs:element minOccurs="0" name="RouterRef" type="tns:RouterRef"/>
+<xs:element minOccurs="0" name="ItemRef" type="tns:ItemRef"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="ShopOrderTypeRef">
+<xs:all>
+<xs:element minOccurs="0" name="SiteRef" type="tns:SiteRef"/>
+<xs:element name="OrderType" type="xs:string"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="CustomFieldList">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="CustomField" type="tns:CustomField"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="CustomField">
+<xs:sequence>
+<xs:element name="Attribute" type="ns1:LEN60Name"/>
+<xs:element name="Value" type="ns1:Text"/>
+<xs:element minOccurs="0" name="Description" type="tns:Description"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemCharacteristicList">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="ItemCharacteristic" type="tns:ItemCharacteristic"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemCharacteristic">
+<xs:sequence>
+<xs:element name="CharacteristicName" type="ns1:LEN30Name"/>
+<xs:element name="CharacteristicValue" type="ns1:Text"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemCreateConfirmationMessage_sync">
+<xs:sequence>
+<xs:element minOccurs="0" name="MessageHeader" type="ns1:BasicBusinessDocumentMessageHeader"/>
+<xs:element name="ItemServiceResponseList" type="tns:ItemServiceResponseList"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemServiceResponseList">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="ItemServiceResponse" type="tns:ItemServiceResponse"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemServiceResponse">
+<xs:sequence>
+<xs:element name="Action" type="ns1:Text"/>
+<xs:element name="ResponseObject" type="tns:ItemRef"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemChangeRequestMessage_sync">
+<xs:sequence>
+<xs:element minOccurs="0" name="MessageHeader" type="ns1:BasicBusinessDocumentMessageHeader"/>
+<xs:element name="Item" type="tns:ItemIn"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemChangeConfirmationMessage_sync">
+<xs:sequence>
+<xs:element minOccurs="0" name="MessageHeader" type="ns1:BasicBusinessDocumentMessageHeader"/>
+<xs:element name="ItemServiceResponseList" type="tns:ItemServiceResponseList"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemUpdateRequestMessage_sync">
+<xs:sequence>
+<xs:element minOccurs="0" name="MessageHeader" type="ns1:BasicBusinessDocumentMessageHeader"/>
+<xs:element name="Item" type="tns:ItemIn"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemUpdateConfirmationMessage_sync">
+<xs:sequence>
+<xs:element minOccurs="0" name="MessageHeader" type="ns1:BasicBusinessDocumentMessageHeader"/>
+<xs:element name="ItemServiceResponseList" type="tns:ItemServiceResponseList"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemDeleteRequestMessage_sync">
+<xs:sequence>
+<xs:element minOccurs="0" name="MessageHeader" type="ns1:BasicBusinessDocumentMessageHeader"/>
+<xs:element name="ItemRef" type="tns:ItemRef"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemDeleteConfirmationMessage_sync">
+<xs:sequence>
+<xs:element minOccurs="0" name="MessageHeader" type="ns1:BasicBusinessDocumentMessageHeader"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemByBasicDataQueryMessage_sync">
+<xs:sequence>
+<xs:element name="ItemByBasicDataQuery" type="tns:ItemRef"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ItemByBasicDataResponseMessage_sync">
+<xs:sequence>
+<xs:element minOccurs="0" name="MessageHeader" type="ns1:BasicBusinessDocumentMessageHeader"/>
+<xs:element name="Item" type="tns:Item"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="Item">
+<xs:all>
+<xs:element name="Item" type="xs:string"/>
+<xs:element minOccurs="0" name="Revision" type="xs:string"/>
+<xs:element name="SiteRef" type="tns:SiteRef"/>
+<xs:element minOccurs="0" name="ItemType" type="tns:ItemType"/>
+<xs:element minOccurs="0" name="IncrementBatchNumber" type="tns:IncrementBatchNumber"/>
+<xs:element minOccurs="0" name="LotSize" type="xs:decimal"/>
+<xs:element minOccurs="0" name="StatusRef" type="tns:StatusRef"/>
+<xs:element default="R" minOccurs="0" name="EffectivityControl" type="tns:EffectivityControl"/>
+<xs:element minOccurs="0" name="Description" type="tns:Description"/>
+<xs:element minOccurs="0" name="UnitOfMeasure" type="ns1:LEN40Name"/>
+<xs:element default="false" minOccurs="0" name="AssignSerialAtRelease" type="xs:boolean"/>
+<xs:element minOccurs="0" name="AssyDataTypeRef" type="tns:AssyDataTypeRef"/>
+<xs:element minOccurs="0" name="InventoryAssyDataTypeRef" type="tns:AssyDataTypeRef"/>
+<xs:element minOccurs="0" name="RemovalAssyDataTypeRef" type="tns:AssyDataTypeRef"/>
+<xs:element minOccurs="0" name="CreateTrackableSFC" type="tns:CreateTrackableSFC"/>
+<xs:element minOccurs="0" name="BomRef" type="tns:BOMRef"/>
+<xs:element minOccurs="0" name="RouterRef" type="tns:RouterRef"/>
+<xs:element default="true" minOccurs="0" name="CurrentRevision" type="xs:boolean"/>
+<xs:element minOccurs="0" name="DrawingName" type="ns1:EXTENDEDName"/>
+<xs:element minOccurs="0" name="EffectiveEndDate" type="ns1:DateTime"/>
+<xs:element minOccurs="0" name="EffectiveEndSequence" type="ns1:INTEGERQuantity"/>
+<xs:element minOccurs="0" name="EffectiveStartDate" type="ns1:DateTime"/>
+<xs:element minOccurs="0" name="EffectiveStartSequence" type="ns1:INTEGERQuantity"/>
+<xs:element minOccurs="0" name="ItemGroupRef" type="tns:ItemGroupRef"/>
+<xs:element minOccurs="0" name="MaskGroupRef" type="tns:MaskGroupRef"/>
+<xs:element minOccurs="0" name="StorageLocationRef" type="tns:StorageLocationRef"/>
+<xs:element minOccurs="0" name="ErpPutawayStorageLocation" type="xs:string"/>
+<xs:element minOccurs="0" name="ErpGTIN" type="xs:string"/>
+<xs:element minOccurs="0" name="MaximumUsage" type="ns1:INTEGERQuantity"/>
+<xs:element minOccurs="0" name="Panel" type="xs:boolean"/>
+<xs:element minOccurs="0" name="PreAssembled" type="xs:boolean"/>
+<xs:element minOccurs="0" name="QuantityMultiplier" type="xs:decimal"/>
+<xs:element minOccurs="0" name="QuantityRestriction" type="tns:QuantityRestriction"/>
+<xs:element minOccurs="0" name="SelectorActivityRef" type="tns:ActivityRef"/>
+<xs:element minOccurs="0" name="SelectorNote" type="ns1:LEN40Name"/>
+<xs:element minOccurs="0" name="TransferItemGroupRef" type="tns:ItemGroupRef"/>
+<xs:element minOccurs="0" name="UseCompFromDrawing" type="xs:boolean"/>
+<xs:element minOccurs="0" name="IsCollector" type="xs:boolean"/>
+<xs:element minOccurs="0" name="UseOrderIdFirstRelease" type="xs:boolean"/>
+<xs:element minOccurs="0" name="CollectParentSerial" type="xs:boolean"/>
+<xs:element minOccurs="0" name="RequiresSerialNumberChange" type="xs:boolean"/>
+<xs:element minOccurs="0" name="TimeSensitive" type="xs:boolean"/>
+<xs:element minOccurs="0" name="MaxShelfLife" type="ns1:INTEGERQuantity"/>
+<xs:element minOccurs="0" name="MaxShelfLifeUnits" type="tns:TsmLifeUnit"/>
+<xs:element minOccurs="0" name="MaxFloorLife" type="ns1:INTEGERQuantity"/>
+<xs:element minOccurs="0" name="MaxFloorLifeUnits" type="tns:TsmLifeUnit"/>
+<xs:element minOccurs="0" name="Notes" type="ns1:Text"/>
+<xs:element minOccurs="0" name="DocumentLinkList" type="tns:DocumentLinkList"/>
+<xs:element minOccurs="0" name="ItemLocationList" type="tns:ItemLocationList"/>
+<xs:element minOccurs="0" name="ItemAlternateList" type="tns:ItemAlternateList"/>
+<xs:element minOccurs="0" name="ItemDPMOList" type="tns:ItemDPMOList"/>
+<xs:element minOccurs="0" name="TransferDataList" type="tns:TransferDataList"/>
+<xs:element minOccurs="0" name="ItemShopOrderTypeList" type="tns:ItemShopOrderTypeList"/>
+<xs:element minOccurs="0" name="CustomFieldList" type="tns:CustomFieldList"/>
+<xs:element minOccurs="0" name="ItemCharacteristicList" type="tns:ItemCharacteristicList"/>
+<xs:element minOccurs="0" name="CreatedDateTime" type="ns1:DateTime"/>
+<xs:element minOccurs="0" name="ModifiedDateTime" type="ns1:DateTime"/>
+<xs:element minOccurs="0" name="HoldId" type="ns1:INTEGERQuantity"/>
+<xs:element minOccurs="0" name="LastReleasedDate" type="ns1:DateTime"/>
+<xs:element minOccurs="0" name="OriginalStatusRef" type="tns:StatusRef"/>
+<xs:element minOccurs="0" name="ErpBackflushing" type="xs:boolean"/>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="BusinessException">
+<xs:sequence>
+<xs:element form="unqualified" minOccurs="0" name="errorCode" type="xs:decimal"/>
+<xs:element form="unqualified" minOccurs="0" name="errorMessage" type="ns1:Text"/>
+<xs:element form="unqualified" minOccurs="0" name="location" type="xs:string"/>
+<xs:element form="unqualified" minOccurs="0" name="stackTraceList" type="tns:StackTraceList"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="StackTraceList">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="StackTraceElement" type="tns:StackTraceElement"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="StackTraceElement">
+<xs:all>
+<xs:element minOccurs="0" name="FileName" type="xs:string"/>
+<xs:element minOccurs="0" name="ClassName" type="xs:string"/>
+<xs:element minOccurs="0" name="MethodName" type="xs:string"/>
+<xs:element minOccurs="0" name="LineNumber" type="xs:decimal"/>
+</xs:all>
+</xs:complexType>
+<xs:simpleType name="ItemType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="M"/>
+<xs:enumeration value="P"/>
+<xs:enumeration value="B"/>
+<xs:enumeration value="I"/>
+<xs:enumeration value="C"/>
+<xs:enumeration value="G"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="IncrementBatchNumber">
+<xs:restriction base="xs:string">
+<xs:enumeration value="N"/>
+<xs:enumeration value="D"/>
+<xs:enumeration value="O"/>
+<xs:enumeration value="S"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="EffectivityControl">
+<xs:restriction base="xs:string">
+<xs:enumeration value="R"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="CreateTrackableSFC">
+<xs:restriction base="xs:string">
+<xs:enumeration value="Y"/>
+<xs:enumeration value="N"/>
+<xs:enumeration value="I"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="BOMType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="U"/>
+<xs:enumeration value="H"/>
+<xs:enumeration value="S"/>
+<xs:enumeration value="C"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="RouterType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="U"/>
+<xs:enumeration value="H"/>
+<xs:enumeration value="S"/>
+<xs:enumeration value="C"/>
+<xs:enumeration value="N"/>
+<xs:enumeration value="D"/>
+<xs:enumeration value="M"/>
+<xs:enumeration value="G"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="QuantityRestriction">
+<xs:restriction base="xs:string">
+<xs:enumeration value="A"/>
+<xs:enumeration value="O"/>
+<xs:enumeration value="W"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="TsmLifeUnit">
+<xs:restriction base="xs:string">
+<xs:enumeration value="MINUTES"/>
+<xs:enumeration value="HOURS"/>
+<xs:enumeration value="DAYS"/>
+<xs:enumeration value="MONTHS"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="DPMOCategoryName">
+<xs:restriction base="xs:string">
+<xs:enumeration value="ASSEMBLY"/>
+<xs:enumeration value="COMPONENT"/>
+<xs:enumeration value="PLACEMENT"/>
+<xs:enumeration value="TERMINATION"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="TransferDataType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="C"/>
+<xs:enumeration value="S"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="TransferType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="C"/>
+<xs:enumeration value="S"/>
+<xs:enumeration value="N"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="TimeBasedComponentType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="C"/>
+<xs:enumeration value="S"/>
+<xs:enumeration value="N"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:element xmlns:ctr0="http://sap.com/xi/ME" name="ItemChangeRequest_sync" nillable="true" type="ctr0:ItemChangeRequestMessage_sync"/>
+<xs:element xmlns:ctr1="http://sap.com/xi/ME" name="ItemChangeConfirmation_sync" nillable="true" type="ctr1:ItemChangeConfirmationMessage_sync"/>
+<xs:element xmlns:ctr2="http://sap.com/xi/ME" name="ItemCreateRequest_sync" nillable="true" type="ctr2:ItemCreateRequestMessage_sync"/>
+<xs:element xmlns:ctr3="http://sap.com/xi/ME" name="ItemDeleteConfirmation_sync" nillable="true" type="ctr3:ItemDeleteConfirmationMessage_sync"/>
+<xs:element xmlns:ctr4="http://sap.com/xi/ME" name="ItemCreateConfirmation_sync" nillable="true" type="ctr4:ItemCreateConfirmationMessage_sync"/>
+<xs:element xmlns:ctr5="http://sap.com/xi/ME" name="ItemByBasicDataQuery_sync" nillable="true" type="ctr5:ItemByBasicDataQueryMessage_sync"/>
+<xs:element xmlns:ctr6="http://sap.com/xi/ME" name="ItemDeleteRequest_sync" nillable="true" type="ctr6:ItemDeleteRequestMessage_sync"/>
+<xs:element xmlns:ctr7="http://sap.com/xi/ME" name="ItemByBasicDataResponse_sync" nillable="true" type="ctr7:ItemByBasicDataResponseMessage_sync"/>
+<xs:element xmlns:ctr8="http://sap.com/xi/ME" name="ItemUpdateRequest_sync" nillable="true" type="ctr8:ItemUpdateRequestMessage_sync"/>
+<xs:element xmlns:ctr9="http://sap.com/xi/ME" name="ItemUpdateConfirmation_sync" nillable="true" type="ctr9:ItemUpdateConfirmationMessage_sync"/>
+</xs:schema>
+</wsdl:types>
+<wsdl:message name="CreateItemIn">
+<wsdl:part element="tns:ItemCreateRequest_sync" name="ItemCreateRequest_sync"/>
+</wsdl:message>
+<wsdl:message name="CreateItemOut">
+<wsdl:part element="tns:ItemCreateConfirmation_sync" name="ItemCreateConfirmation_sync"/>
+</wsdl:message>
+<wsdl:message name="CreateItemFault">
+<wsdl:part element="tns:StandardMessageFault" name="StandardMessageFault"/>
+</wsdl:message>
+<wsdl:message name="ChangeItemIn">
+<wsdl:part element="tns:ItemChangeRequest_sync" name="ItemChangeRequest_sync"/>
+</wsdl:message>
+<wsdl:message name="ChangeItemOut">
+<wsdl:part element="tns:ItemChangeConfirmation_sync" name="ItemChangeConfirmation_sync"/>
+</wsdl:message>
+<wsdl:message name="ChangeItemFault">
+<wsdl:part element="tns:StandardMessageFault" name="StandardMessageFault"/>
+</wsdl:message>
+<wsdl:message name="UpdateItemIn">
+<wsdl:part element="tns:ItemUpdateRequest_sync" name="ItemUpdateRequest_sync"/>
+</wsdl:message>
+<wsdl:message name="UpdateItemOut">
+<wsdl:part element="tns:ItemUpdateConfirmation_sync" name="ItemUpdateConfirmation_sync"/>
+</wsdl:message>
+<wsdl:message name="UpdateItemFault">
+<wsdl:part element="tns:StandardMessageFault" name="StandardMessageFault"/>
+</wsdl:message>
+<wsdl:message name="DeleteItemIn">
+<wsdl:part element="tns:ItemDeleteRequest_sync" name="ItemDeleteRequest_sync"/>
+</wsdl:message>
+<wsdl:message name="DeleteItemOut">
+<wsdl:part element="tns:ItemDeleteConfirmation_sync" name="ItemDeleteConfirmation_sync"/>
+</wsdl:message>
+<wsdl:message name="DeleteItemFault">
+<wsdl:part element="tns:StandardMessageFault" name="StandardMessageFault"/>
+</wsdl:message>
+<wsdl:message name="FindItemByBasicDataIn">
+<wsdl:part element="tns:ItemByBasicDataQuery_sync" name="ItemByBasicDataQuery_sync"/>
+</wsdl:message>
+<wsdl:message name="FindItemByBasicDataOut">
+<wsdl:part element="tns:ItemByBasicDataResponse_sync" name="ItemByBasicDataResponse_sync"/>
+</wsdl:message>
+<wsdl:message name="FindItemByBasicDataFault">
+<wsdl:part element="tns:StandardMessageFault" name="StandardMessageFault"/>
+</wsdl:message>
+<wsdl:portType name="ERPItemProcessingIn">
+<wsdl:operation name="CreateItem" parameterOrder="ItemCreateRequest_sync">
+<wsdl:input message="tns:CreateItemIn"/>
+<wsdl:output message="tns:CreateItemOut"/>
+<wsdl:fault message="tns:CreateItemFault" name="StandardMessageFault"/>
+</wsdl:operation>
+<wsdl:operation name="ChangeItem" parameterOrder="ItemChangeRequest_sync">
+<wsdl:input message="tns:ChangeItemIn"/>
+<wsdl:output message="tns:ChangeItemOut"/>
+<wsdl:fault message="tns:ChangeItemFault" name="StandardMessageFault"/>
+</wsdl:operation>
+<wsdl:operation name="UpdateItem" parameterOrder="ItemUpdateRequest_sync">
+<wsdl:input message="tns:UpdateItemIn"/>
+<wsdl:output message="tns:UpdateItemOut"/>
+<wsdl:fault message="tns:UpdateItemFault" name="StandardMessageFault"/>
+</wsdl:operation>
+<wsdl:operation name="DeleteItem" parameterOrder="ItemDeleteRequest_sync">
+<wsdl:input message="tns:DeleteItemIn"/>
+<wsdl:output message="tns:DeleteItemOut"/>
+<wsdl:fault message="tns:DeleteItemFault" name="StandardMessageFault"/>
+</wsdl:operation>
+<wsdl:operation name="FindItemByBasicData" parameterOrder="ItemByBasicDataQuery_sync">
+<wsdl:input message="tns:FindItemByBasicDataIn"/>
+<wsdl:output message="tns:FindItemByBasicDataOut"/>
+<wsdl:fault message="tns:FindItemByBasicDataFault" name="StandardMessageFault"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="ERPItemProcessingInBinding" type="tns:ERPItemProcessingIn">
+<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="CreateItem">
+<soap:operation soapAction="http://sap.com/xi/MEINT/CreateItem"/>
+<wsdl:input>
+<soap:body parts="ItemCreateRequest_sync" use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="StandardMessageFault">
+<soap:fault name="StandardMessageFault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="ChangeItem">
+<soap:operation soapAction="http://sap.com/xi/MEINT/ChangeItem"/>
+<wsdl:input>
+<soap:body parts="ItemChangeRequest_sync" use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="StandardMessageFault">
+<soap:fault name="StandardMessageFault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="UpdateItem">
+<soap:operation soapAction="http://sap.com/xi/MEINT/UpdateItem"/>
+<wsdl:input>
+<soap:body parts="ItemUpdateRequest_sync" use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="StandardMessageFault">
+<soap:fault name="StandardMessageFault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="DeleteItem">
+<soap:operation soapAction="http://sap.com/xi/MEINT/DeleteItem"/>
+<wsdl:input>
+<soap:body parts="ItemDeleteRequest_sync" use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="StandardMessageFault">
+<soap:fault name="StandardMessageFault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="FindItemByBasicData">
+<soap:operation soapAction="http://sap.com/xi/MEINT/FindItemByBasicData"/>
+<wsdl:input>
+<soap:body parts="ItemByBasicDataQuery_sync" use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="StandardMessageFault">
+<soap:fault name="StandardMessageFault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="ErpItemService">
+<wsdl:port binding="tns:ERPItemProcessingInBinding" name="ERPItemProcessingInPort">
+<soap:address xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" location="http://vhcalj2eci:50000/manufacturing-erpservices/ErpItemService"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

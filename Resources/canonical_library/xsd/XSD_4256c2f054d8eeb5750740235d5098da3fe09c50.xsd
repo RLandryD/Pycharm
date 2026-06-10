@@ -1,0 +1,277 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="Root">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Response" minOccurs="1" maxOccurs="1" >
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="id" type="xs:string" minOccurs="0" maxOccurs="1" />
+                            <xs:element name="documentNumber" type="xs:int" minOccurs="0" maxOccurs="1" />
+                            <xs:element name="metaData" type="metaDataType" minOccurs="1" maxOccurs="1" />
+                            <xs:element name="market" type="marketType" minOccurs="1" maxOccurs="1" />
+                            <xs:element name="timeZone" type="xs:string" minOccurs="0" maxOccurs="1" />
+                            <xs:element name="currency" type="xs:string" minOccurs="1" maxOccurs="1" />
+                            <xs:element name="billingType" type="xs:string" minOccurs="1" maxOccurs="1" />
+                            <xs:element name="billingDate" type="xs:date" minOccurs="1" maxOccurs="1" />
+                            <xs:element name="billingProfileId" type="xs:string" minOccurs="0" maxOccurs="1" />
+                            <xs:element name="billingPeriod" type="billingPeriodType" minOccurs="0" maxOccurs="1" />
+                            <xs:element name="createInvoice" type="xs:boolean" minOccurs="0" maxOccurs="1" />
+                            <xs:element name="customer" type="customerType" minOccurs="1" maxOccurs="1" />
+                            <xs:element name="payer" type="partnerType" minOccurs="0" maxOccurs="1" />
+                            <xs:element name="billTo" type="partnerType" minOccurs="0" maxOccurs="1" />
+                            <xs:element name="payment" type="paymentType" minOccurs="1" maxOccurs="1" />
+                            <xs:element name="netAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+                            <xs:element name="grossAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+                            <xs:element name="netCreditAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+                            <xs:element name="grossCreditAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+                            <xs:element name="taxAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+                            <xs:element name="customReferences" type="customReferenceType" minOccurs="0" maxOccurs="unbounded" />
+                            <xs:element name="billItems" type="billItemType" minOccurs="1" maxOccurs="unbounded" />
+                            <xs:element name="successorDocuments" type="successorDocumentType" minOccurs="1" maxOccurs="unbounded" />
+                            <xs:element name="creditCard" type="CreditCardType" minOccurs="0" maxOccurs="1" />   
+        					<xs:element name="S4CustomerId" type="xs:string" minOccurs="0"/>
+							<xs:element name="SalesOrganization" type="xs:string" minOccurs="0"/>
+							<xs:element name="DistributionChannel" type="xs:string" minOccurs="0"/>
+							<xs:element name="Division" type="xs:string" minOccurs="0"/>
+							<xs:element name="PriceType" type="xs:string" minOccurs="0"/>
+							<xs:element name="DateTime" type="xs:string" minOccurs="0"/>
+                            <xs:element name="SBSystemId" type="xs:string" minOccurs="0"/>
+                            <xs:element name="S4SystemId" type="xs:string" minOccurs="0"/>
+                            <xs:element name="SalesDocumentType" type="xs:string" minOccurs="0"/>
+                            <xs:element name="SubItemCategoryCharge" type="xs:string" minOccurs="0"/>
+                            <xs:element name="SubItemCategoryCredit" type="xs:string" minOccurs="0"/>
+                            <xs:element name="MainItemCategory" type="xs:string" minOccurs="0"/>
+                            <xs:element name="BillingDocumentRequestType" type="xs:string" minOccurs="0"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="metaDataType">
+        <xs:sequence>
+            <xs:element name="createdAt" type="xs:dateTime" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="marketType">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="timeZone" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="currency" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="priceType" type="xs:string" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="billingPeriodType">
+        <xs:sequence>
+            <xs:element name="period" type="periodDateType" minOccurs="1" maxOccurs="1" />
+            <xs:element name="billingSettings" type="billingSettingsType" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="billingSettingsType">
+        <xs:sequence>
+            <xs:element name="billingDateDelay" type="xs:int" minOccurs="0" maxOccurs="1" />
+            <xs:element name="adjustmentCycle" type="xs:string" minOccurs="0" maxOccurs="1" />
+            <xs:element name="billingOfBackdatedSubscriptions" type="xs:string" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="customerType">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="mdiId" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="country" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="s4Id" type="xs:string" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="partnerType">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="mdiId" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="country" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="s4Id" type="xs:string" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="periodType">
+        <xs:sequence>
+            <xs:element name="start" type="xs:dateTime" minOccurs="1" maxOccurs="1" />
+            <xs:element name="end" type="xs:dateTime" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="periodDateType">
+        <xs:sequence>
+            <xs:element name="start" type="xs:date" minOccurs="1" maxOccurs="1" />
+            <xs:element name="end" type="xs:date" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="paymentType">
+        <xs:sequence>
+            <xs:element name="method" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="token" type="xs:string" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="monetaryAmountType">
+        <xs:sequence>
+            <xs:element name="amount" type="xs:int" minOccurs="1" maxOccurs="1" />
+            <xs:element name="currency" type="xs:string" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="billItemType">
+        <xs:sequence>
+            <xs:element name="lineNumber" type="xs:int" minOccurs="1" maxOccurs="1" />
+            <xs:element name="subscription" type="subscriptionType" minOccurs="1" maxOccurs="1" />
+            <xs:element name="product" type="productType" minOccurs="1" maxOccurs="1" />
+            <xs:element name="ratePlan" type="ratePlanType" minOccurs="1" maxOccurs="1" />
+            <xs:element name="groupingEelement" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="netAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+            <xs:element name="grossAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+            <xs:element name="netCreditAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+            <xs:element name="grossCreditAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+            <xs:element name="taxAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+            <xs:element name="taxDetails" type="taxDetailType" minOccurs="0" maxOccurs="1" />
+            <xs:element name="comboChargesCredits" type="comboChargesCreditsType" maxOccurs="unbounded" minOccurs="0" />
+            <xs:element name="charges" type="chargeType" maxOccurs="unbounded" minOccurs="0" />
+            <xs:element name="credits" type="creditType" maxOccurs="unbounded" minOccurs="0" />
+            <xs:element name="customReferences" type="customReferenceType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="externalObjectReferences" type="externalObjectReferenceType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="shipTo" type="partnerType" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="successorDocumentType">
+        <xs:sequence>
+            <xs:element name="successorDocumentSystem" type="xs:string" minOccurs="0" maxOccurs="1" />
+            <xs:element name="successorDocumentId" type="xs:string" minOccurs="0" maxOccurs="1" />
+            <xs:element name="successorDocumentType" type="xs:string" minOccurs="0" maxOccurs="1" />
+            <xs:element name="reportedAt" type="xs:dateTime" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="subscriptionType">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="documentNumber" type="xs:int" minOccurs="1" maxOccurs="1" />
+            <xs:element name="itemId" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="subscriptionDocumentId" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="validFrom" type="xs:dateTime" minOccurs="1" maxOccurs="1" />
+            <xs:element name="validUntil" type="xs:dateTime" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="productType">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="code" type="xs:string" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ratePlanType">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="taxDetailType">
+        <xs:sequence>
+            <xs:element name="code" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="rate" type="xs:int" minOccurs="1" maxOccurs="1" />
+            <xs:element name="amount" type="xs:int" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="comboChargesCreditsType">
+        <xs:sequence>
+            <xs:element name="lineNumber" type="xs:int" minOccurs="1" maxOccurs="1" />
+            <xs:element name="metricId" type="xs:string" maxOccurs="1" minOccurs="1" />
+            <xs:element name="ratingPeriod" type="periodType" minOccurs="1" maxOccurs="1" />
+            <xs:element name="consumedQuantity" type="QuantityType" maxOccurs="1" minOccurs="1" />
+            <xs:element name="chargedQuantity" type="QuantityType" maxOccurs="1" minOccurs="1" />
+            <xs:element name="creditedQuantity" type="QuantityType" maxOccurs="1" minOccurs="1" />
+            <xs:element name="includedQuantity" type="QuantityType" maxOccurs="1" minOccurs="1" />
+            <xs:element name="netAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+            <xs:element name="grossAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+            <xs:element name="reversal" type="xs:boolean" maxOccurs="1" minOccurs="1" />
+            <xs:element name="pricingElements" type="pricingElementType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="externalObjectReferences" type="externalObjectReferenceType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="chargeType">
+        <xs:sequence>
+            <xs:element name="lineNumber" type="xs:int" minOccurs="1" maxOccurs="1" />
+            <xs:element name="metricId" type="xs:string" maxOccurs="1" minOccurs="1" />
+            <xs:element name="ratingPeriod" type="periodType" minOccurs="1" maxOccurs="1" />
+            <xs:element name="consumedQuantity" type="QuantityType" maxOccurs="1" minOccurs="1" />
+            <xs:element name="chargedQuantity" type="QuantityType" maxOccurs="1" minOccurs="1" />
+            <xs:element name="includedQuantity" type="QuantityType" maxOccurs="1" minOccurs="1" />
+            <xs:element name="netAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+            <xs:element name="grossAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+            <xs:element name="subCharges" type="subChargeType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="reversal" type="xs:boolean" maxOccurs="1" minOccurs="1" />
+            <xs:element name="pricingElements" type="pricingElementType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="externalObjectReferences" type="externalObjectReferenceType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="creditType">
+        <xs:sequence>
+            <xs:element name="lineNumber" type="xs:int" minOccurs="1" maxOccurs="1" />
+            <xs:element name="metricId" type="xs:string" maxOccurs="1" minOccurs="1" />
+            <xs:element name="ratingPeriod" type="periodType" minOccurs="1" maxOccurs="1" />
+            <xs:element name="consumedQuantity" type="QuantityType" maxOccurs="1" minOccurs="1" />
+            <xs:element name="creditedQuantity" type="QuantityType" maxOccurs="1" minOccurs="1" />
+            <xs:element name="includedQuantity" type="QuantityType" maxOccurs="1" minOccurs="1" />
+            <xs:element name="netAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+            <xs:element name="grossAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+            <xs:element name="subCredits" type="subChargeType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="reversal" type="xs:boolean" maxOccurs="1" minOccurs="1" />
+            <xs:element name="pricingElements" type="pricingElementType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="externalObjectReferences" type="externalObjectReferenceType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="customReferenceType">
+        <xs:sequence>
+            <xs:element name="typeCode" type="xs:string" minOccurs="0" maxOccurs="1"></xs:element>
+            <xs:element name="id" type="xs:string" minOccurs="0" maxOccurs="1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="QuantityType">
+        <xs:sequence>
+            <xs:element name="value" type="xs:int" minOccurs="1" maxOccurs="1" />
+            <xs:element name="unit" type="xs:int" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="subChargeType">
+        <xs:sequence>
+            <xs:element name="tier" type="tierType" maxOccurs="1" minOccurs="1" />
+            <xs:element name="consumedQuantity" type="QuantityType" maxOccurs="1" minOccurs="1" />
+            <xs:element name="netAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+            <xs:element name="grossAmount" type="monetaryAmountType" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="tierType">
+        <xs:sequence>
+            <xs:element name="from" type="xs:int" minOccurs="1" maxOccurs="1" />
+            <xs:element name="to" type="xs:int" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="CreditCardType">
+        <xs:sequence>
+            <xs:element name="token" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="version" type="xs:int" minOccurs="0" maxOccurs="1" />
+            <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="typeText" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="expirationMonth" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="expirationYear" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="maskedCardNumber" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="cardHolderName" type="xs:string" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="pricingElementType">
+        <xs:sequence>
+            <xs:element name="conditionType" type="xs:string" maxOccurs="1" minOccurs="1" />
+            <xs:element name="conditionValue" type="monetaryAmountType" maxOccurs="1" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="externalObjectReferenceType">
+        <xs:sequence>
+            <xs:element name="externalSystemId" type="xs:string" maxOccurs="1" minOccurs="1" />
+            <xs:element name="externalId" type="xs:string" maxOccurs="1" minOccurs="1" />
+            <xs:element name="externalIdTypeCode" type="xs:string" maxOccurs="1" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>    
+</xs:schema>

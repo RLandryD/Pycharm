@@ -1,0 +1,95 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:s="http://schemas.sap.com/commerce" Namespace="HybrisCommerceOData" s:schema-version="1">
+            <EntityType Name="Localized___VariantValueCategory">
+                <Key>
+                    <PropertyRef Name="language"/>
+                </Key>
+                <Property Name="name" Nullable="true" Type="Edm.String" s:IsLanguageDependent="true"/>
+                <Property Name="language" Nullable="false" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="VariantValueCategory">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="sequence" Nullable="true" Type="Edm.Int32"/>
+                <Property Name="name" Nullable="true" Type="Edm.String" s:IsLanguageDependent="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CatalogVersion_version|Catalog_id|VariantValueCategory_code"/>
+                <NavigationProperty FromRole="VariantValueCategory" Name="supercategories" Nullable="true" Relationship="HybrisCommerceOData.FK_VariantValueCategory_supercategories" ToRole="Category"/>
+                <NavigationProperty FromRole="VariantValueCategory" Name="catalogVersion" Nullable="false" Relationship="HybrisCommerceOData.FK_VariantValueCategory_catalogVersion" ToRole="CatalogVersion" s:IsUnique="true"/>
+                <NavigationProperty FromRole="VariantValueCategory" Name="localizedAttributes" Nullable="true" Relationship="HybrisCommerceOData.FK_VariantValueCategory_localizedAttributes" ToRole="Localized___VariantValueCategory"/>
+            </EntityType>
+            <EntityType Name="Category">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CatalogVersion_version|Catalog_id|Category_code"/>
+                <NavigationProperty FromRole="Category" Name="catalogVersion" Nullable="false" Relationship="HybrisCommerceOData.FK_Category_catalogVersion" ToRole="CatalogVersion" s:IsUnique="true"/>
+            </EntityType>
+            <EntityType Name="CatalogVersion">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="version" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CatalogVersion_version|Catalog_id"/>
+                <NavigationProperty FromRole="CatalogVersion" Name="catalog" Nullable="false" Relationship="HybrisCommerceOData.FK_CatalogVersion_catalog" ToRole="Catalog" s:IsUnique="true"/>
+            </EntityType>
+            <EntityType Name="Catalog">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="id" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="Catalog_id"/>
+            </EntityType>
+            <Association Name="FK_CatalogVersion_catalog">
+                <End Multiplicity="0..1" Role="CatalogVersion" Type="HybrisCommerceOData.CatalogVersion"/>
+                <End Multiplicity="0..1" Role="Catalog" Type="HybrisCommerceOData.Catalog"/>
+            </Association>
+            <Association Name="FK_Category_catalogVersion">
+                <End Multiplicity="0..1" Role="Category" Type="HybrisCommerceOData.Category"/>
+                <End Multiplicity="0..1" Role="CatalogVersion" Type="HybrisCommerceOData.CatalogVersion"/>
+            </Association>
+            <Association Name="FK_VariantValueCategory_supercategories">
+                <End Multiplicity="0..1" Role="VariantValueCategory" Type="HybrisCommerceOData.VariantValueCategory"/>
+                <End Multiplicity="*" Role="Category" Type="HybrisCommerceOData.Category"/>
+            </Association>
+            <Association Name="FK_VariantValueCategory_catalogVersion">
+                <End Multiplicity="0..1" Role="VariantValueCategory" Type="HybrisCommerceOData.VariantValueCategory"/>
+                <End Multiplicity="0..1" Role="CatalogVersion" Type="HybrisCommerceOData.CatalogVersion"/>
+            </Association>
+            <Association Name="FK_VariantValueCategory_localizedAttributes">
+                <End Multiplicity="1" Role="VariantValueCategory" Type="HybrisCommerceOData.VariantValueCategory"/>
+                <End Multiplicity="*" Role="Localized___VariantValueCategory" Type="HybrisCommerceOData.Localized___VariantValueCategory"/>
+            </Association>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet EntityType="HybrisCommerceOData.Localized___VariantValueCategory" Name="Localized___VariantValueCategories"/>
+                <EntitySet EntityType="HybrisCommerceOData.VariantValueCategory" Name="VariantValueCategories"/>
+                <EntitySet EntityType="HybrisCommerceOData.Category" Name="Categories"/>
+                <EntitySet EntityType="HybrisCommerceOData.CatalogVersion" Name="CatalogVersions"/>
+                <EntitySet EntityType="HybrisCommerceOData.Catalog" Name="Catalogs"/>
+                <AssociationSet Association="HybrisCommerceOData.FK_CatalogVersion_catalog" Name="CatalogVersion_Catalogs">
+                    <End EntitySet="CatalogVersions" Role="CatalogVersion"/>
+                    <End EntitySet="Catalogs" Role="Catalog"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_Category_catalogVersion" Name="Category_CatalogVersions">
+                    <End EntitySet="Categories" Role="Category"/>
+                    <End EntitySet="CatalogVersions" Role="CatalogVersion"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_VariantValueCategory_supercategories" Name="VariantValueCategory_Categories">
+                    <End EntitySet="VariantValueCategories" Role="VariantValueCategory"/>
+                    <End EntitySet="Categories" Role="Category"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_VariantValueCategory_catalogVersion" Name="VariantValueCategory_CatalogVersions">
+                    <End EntitySet="VariantValueCategories" Role="VariantValueCategory"/>
+                    <End EntitySet="CatalogVersions" Role="CatalogVersion"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_VariantValueCategory_localizedAttributes" Name="VariantValueCategory_Localized___VariantValueCategories">
+                    <End EntitySet="VariantValueCategories" Role="VariantValueCategory"/>
+                    <End EntitySet="Localized___VariantValueCategories" Role="Localized___VariantValueCategory"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

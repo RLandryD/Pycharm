@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="edocGreeceIncomeClassification"
+	targetNamespace="https://www.aade.gr/myDATA/incomeClassificaton/v1.0"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:inv="http://www.aade.gr/myDATA/invoice/v1.0"
+	xmlns:icls="https://www.aade.gr/myDATA/incomeClassificaton/v1.0">
+	<wsdl:types>
+
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:icls="https://www.aade.gr/myDATA/incomeClassificaton/v1.0"
+			xmlns:inv="http://www.aade.gr/myDATA/invoice/v1.0"
+			targetNamespace="https://www.aade.gr/myDATA/incomeClassificaton/v1.0"
+			elementFormDefault="qualified" attributeFormDefault="unqualified"
+			version="1.0.8">
+			<xs:element name="IncomeClassificationsDoc"
+				type="icls:IncomeClassificationsEnvType">
+				<xs:annotation>
+					<xs:documentation>Χαρατηρισμοί Εσόδων Πρότυπων Παραστατικών ΑΑΔΕ
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:complexType name="IncomeClassificationsEnvType">
+				<xs:sequence>
+						<xs:element name="incomeInvoiceClassification"
+							type="icls:InvoiceIncomeClassificationType" maxOccurs="unbounded"
+						minOccurs="1" />
+						<xs:element name="vatId" type="xs:string" maxOccurs="1"
+							minOccurs="0"></xs:element>
+					</xs:sequence>
+				</xs:complexType>
+<xs:complexType name="InvoiceIncomeClassificationType">
+    <xs:sequence>
+      <xs:element name="invoiceMark" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Μοναδικός Αριθμός Καταχώρησης Παραστατικού</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="classificationMark" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Αποδεικτικό Λήψης Χαρακτηρισμού Εσόδων. Συμπληρώνεται από την Υπηρεσία</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="entityVatNumber" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>ΑΦΜ Οντότητας Αναφοράς</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+        <xs:element name="transactionMode">
+          <xs:annotation>
+            <xs:documentation>Αιτιολογία Συναλλαγής</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:int">
+              <xs:minInclusive value="1"/>
+              <xs:maxInclusive value="2"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="invoicesIncomeClassificationDetails" type="icls:InvoicesIncomeClassificationDetailType" maxOccurs="unbounded"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+			<xs:complexType name="InvoicesIncomeClassificationDetailType">
+    <xs:sequence>
+      <xs:element name="lineNumber" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>Γραμμή Παραστατικού</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="incomeClassificationDetailData" type="icls:IncomeClassificationType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Λίστα Χαρακτηρισμών Εσόδων</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="IncomeClassificationType">
+    <xs:sequence>
+      <xs:element name="classificationType" type="icls:IncomeClassificationValueType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Κωδικός Χαρακτηρισμού</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="classificationCategory" type="icls:IncomeClassificationCategoryType">
+        <xs:annotation>
+          <xs:documentation>Κατηγορία Χαρακτηρισμού</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="amount" type="icls:AmountType">
+        <xs:annotation>
+          <xs:documentation>Ποσό Χαρακτηρισμού</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="id" type="xs:byte" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Μοναδικός Αριθμός Χαρακτηρισμού</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+			<xs:simpleType name="IncomeClassificationValueType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="E3_106"/>
+      <xs:enumeration value="E3_205"/>
+      <xs:enumeration value="E3_210"/>
+      <xs:enumeration value="E3_305"/>
+      <xs:enumeration value="E3_310"/>
+      <xs:enumeration value="E3_318"/>
+      <xs:enumeration value="E3_561_001"/>
+      <xs:enumeration value="E3_561_002"/>
+      <xs:enumeration value="E3_561_003"/>
+      <xs:enumeration value="E3_561_004"/>
+      <xs:enumeration value="E3_561_005"/>
+      <xs:enumeration value="E3_561_006"/>
+      <xs:enumeration value="E3_561_007"/>
+      <xs:enumeration value="E3_562"/>
+      <xs:enumeration value="E3_563"/>
+      <xs:enumeration value="E3_564"/>
+      <xs:enumeration value="E3_565"/>
+      <xs:enumeration value="E3_566"/>
+      <xs:enumeration value="E3_567"/>
+      <xs:enumeration value="E3_568"/>
+      <xs:enumeration value="E3_570"/>
+      <xs:enumeration value="E3_595"/>
+      <xs:enumeration value="E3_596"/>
+      <xs:enumeration value="E3_597"/>
+      <xs:enumeration value="E3_880_001"/>
+      <xs:enumeration value="E3_880_002"/>
+      <xs:enumeration value="E3_880_003"/>
+      <xs:enumeration value="E3_880_004"/>
+      <xs:enumeration value="E3_881_001"/>
+      <xs:enumeration value="E3_881_002"/>
+      <xs:enumeration value="E3_881_003"/>
+      <xs:enumeration value="E3_881_004"/>
+      <xs:enumeration value="E3_598_001"/>
+      <xs:enumeration value="E3_598_003"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="IncomeClassificationCategoryType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="category1_1"/>
+      <xs:enumeration value="category1_2"/>
+      <xs:enumeration value="category1_3"/>
+      <xs:enumeration value="category1_4"/>
+      <xs:enumeration value="category1_5"/>
+      <xs:enumeration value="category1_6"/>
+      <xs:enumeration value="category1_7"/>
+      <xs:enumeration value="category1_8"/>
+      <xs:enumeration value="category1_9"/>
+      <xs:enumeration value="category1_10"/>
+      <xs:enumeration value="category1_95"/>
+	  <xs:enumeration value="category3"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="AmountType">
+    <xs:restriction base="xs:decimal">
+      <xs:fractionDigits value="2"/>
+      <xs:minInclusive value="0"/>
+      <xs:totalDigits value="15"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+			<xs:element name="ResponseDoc" type="icls:ResponseTypeEnv">
+				<xs:annotation>
+					<xs:documentation>Comment describing your root element
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:complexType name="ResponseTypeEnv">
+				<xs:sequence>
+					<xs:element name="response" type="icls:ResponseType"
+						maxOccurs="unbounded" minOccurs="1" />
+				</xs:sequence>
+			</xs:complexType>
+			 <xs:complexType name="ResponseType">
+    <xs:sequence>
+      <xs:element name="index" type="xs:int" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>ΑΑ γραμμής οντότητας</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element name="invoiceUid" type="xs:string" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Αναγνωριστικό οντότητας</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="invoiceMark" type="xs:long" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Μοναδικός Αριθμός Καταχώρησης παραστατικού</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="qrUrl" type="xs:string" minOccurs="0">
+			<xs:annotation>
+				<xs:documentation>QR Code Url</xs:documentation>
+			</xs:annotation>
+		  </xs:element>
+          <xs:element name="classificationMark" type="xs:long" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Μοναδικός Αριθμός Παραλαβής Χαρακτηρισμού</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="cancellationMark" type="xs:long" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Μοναδικός Αριθμός Ακύρωσης</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+			<xs:element name="paymentMethodMark" type="xs:long" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Μοναδικός Αριθμός Παραλαβής Τρόπου Πληρωμής</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+          <xs:element name="authenticationCode" type="xs:string" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Συμβολοσειρά Αυθεντικοποίησης Παρόχου</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="receptionProviders" type="icls:receptionProvidersType" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Πάροχοι Λήπτη</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="receptionEmails" type="icls:receptionEmailsType" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Email Παραλαβής</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:element name="errors">
+          <xs:annotation>
+            <xs:documentation>Λίστα Σφαλμάτων</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="error" type="icls:ErrorType" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+      <xs:element name="statusCode" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Κωδικός αποτελέσματος</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ErrorType">
+    <xs:sequence>
+      <xs:element name="message" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Μήνυμα Σφάλματος</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="code" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Κωδικός Σφάλαματος</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="receptionProvidersType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="ProviderInfo" type="icls:ProviderInfoType">
+        <xs:annotation>
+          <xs:documentation>Πληροφορίες Παρόχου</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ProviderInfoType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="VATNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>ΑΦΜ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="receptionEmailsType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="email" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Email</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
+
+	</wsdl:types>
+	<wsdl:message name="SendIncomeClassificatonRequest">
+		<wsdl:part name="SendIncomeRequestParameter"
+			element="icls:IncomeClassificationsDoc">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="SendIncomeClassificatonResponse">
+		<wsdl:part name="SendIncomeResponseParameter"
+			element="icls:ResponseDoc">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="edocGreeceIncomeClass">
+		<wsdl:operation name="SendIncomeClassificaton">
+			<wsdl:input message="icls:SendIncomeClassificatonRequest"></wsdl:input>
+			<wsdl:output
+				message="icls:SendIncomeClassificatonResponse"></wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="NewBinding"
+		type="icls:edocGreeceIncomeClass">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="SendIncomeClassificaton">
+			<soap:operation
+				soapAction="http://www.example.org/edocGreeceIncomeClassification/SendIncomeClassification" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="edocGreeceIncomeClass">
+		<wsdl:port name="edocGreeceIncomeClass"
+			binding="icls:NewBinding">
+			<soap:address location="http://www.example.org/" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

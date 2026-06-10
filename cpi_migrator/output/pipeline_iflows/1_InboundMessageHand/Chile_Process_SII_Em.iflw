@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SCENARIO iFlow: Chile Process SII Emails
+  Display Name : OUT_InboundMessageHandle_TGT_Chile_Process_SII_Em
+  Package      : 1_InboundMessageHandle_TGT_Logistics
+  Strategy     : GREENFIELD: Clean cloud-native rebuild. No legacy mapping reuse.
+  Complexity   : HIGH (score: 34)
+  Effort       : 10.7 day(s)
+  Sender       : InboundMessageHandler (SOAP)
+  Receiver     :  ()
+  Batch        : No
+-->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+             id="Chile_Process_SII_Em"
+             name="OUT_InboundMessageHandle_TGT_Chile_Process_SII_Em">
+  <process id="Chile_Process_SII_Em_process" ifl:type="IntegrationFlow">
+
+    <startEvent id="Start_SC" name="From Interface Separation">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Chile_Process_SII_Em</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </startEvent>
+
+
+
+    <!-- PROCESSDIRECT: Forward to Outbound Delivery -->
+    <serviceTask id="CallOutbound_1" name="→ Outbound Delivery" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/outbound/1_InboundMessageHand</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+
+    <endEvent id="End_SC"/>
+    <sequenceFlow sourceRef="Start_SC" targetRef="CallOutbound_1"/>
+    
+    
+    <sequenceFlow sourceRef="CallOutbound_1" targetRef="End_SC"/>
+  </process>
+</definitions>

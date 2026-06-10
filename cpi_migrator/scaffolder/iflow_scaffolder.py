@@ -26,9 +26,15 @@ def _slugify(text: str) -> str:
 
 class IFlowScaffolder:
 
-    def __init__(self, output_dir: str, templates_dir: str = None):
+    def __init__(self, output_dir: str, templates_dir: str = None,
+                 resources_dir: str = None):
         self.output_dir = Path(output_dir) / "iflows"
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        # Original package exports (pinned Packages dir). When set, regenerated
+        # bundles ship the REAL scripts/mappings each step references instead of
+        # synthetic stubs. Loaded once, lazily; failure degrades gracefully.
+        self.resources_dir = resources_dir
+        self._corpus_cache = None
 
         # The skeleton template is only needed for the legacy fallback path.
         # Wired mode (default) doesn't use it, so templates_dir is optional.
@@ -45,6 +51,35 @@ class IFlowScaffolder:
                 self.template = self.env.get_template("iflow_base.xml.j2")
             except Exception:
                 self.template = None
+
+    # one corpus load per directory per session — scaffolders are constructed
+    # per-flow in the upload loop, so an instance cache reloads thousands of
+    # files for every iFlow (visible as repeated 'Loaded N resource files').
+    _CORPUS_BY_DIR: dict = {}
+
+    def _resource_corpus(self) -> dict:
+        """Lazily load + cache (module-wide) the path-keyed resource corpus from
+        the pinned packages dir. Returns {} (never raises) if unavailable, so
+        the deploy path falls back to synthetic stubs rather than failing."""
+        if self._corpus_cache is not None:
+            return self._corpus_cache
+        if self.resources_dir in IFlowScaffolder._CORPUS_BY_DIR:
+            self._corpus_cache = IFlowScaffolder._CORPUS_BY_DIR[self.resources_dir]
+            return self._corpus_cache
+        self._corpus_cache = {}
+        if self.resources_dir:
+            try:
+                from library_builder.corpus_pipeline import (walk_corpus,
+                                                              WIRING_EXTS)
+                self._corpus_cache = walk_corpus(self.resources_dir,
+                                                 exts=WIRING_EXTS) or {}
+                logger.info("Loaded %d resource files for bundle wiring (cached "
+                            "for this session)", len(self._corpus_cache))
+            except Exception as exc:                       # pragma: no cover
+                logger.warning("Resource corpus unavailable (%s); bundles will "
+                               "use synthetic stubs", exc)
+        IFlowScaffolder._CORPUS_BY_DIR[self.resources_dir] = self._corpus_cache
+        return self._corpus_cache
 
     def scaffold(
         self,
@@ -68,28 +103,143 @@ class IFlowScaffolder:
             try:
                 from scaffolder.minimal_iflow import (
                     generate_timer_interface_iflow, generate_minimal_iflow)
+
+                # If this interface carries a real source CPI iFlow (uploaded
+                # package), regenerate it from its true structure + config — the
+                # clean-room path — instead of sizing a placeholder from metadata.
+                src_xml = (getattr(iface, "source_iflow_xml", "") or "").strip()
+                if src_xml and shape != "minimal":
+                    from scaffolder.regenerate import regenerate_iflow_xml
+                    regen = regenerate_iflow_xml(
+                        src_xml, iface.name,
+                        resources=self._resource_corpus(),
+                        package=getattr(iface, "package", None))
+                    rep = getattr(regen.result, "resource_report", None) \
+                        if regen.result else None
+                    if rep is not None and (rep.resolved or rep.unresolved):
+                        logger.info("Resources for %s: %d resolved, %d shipped",
+                                    iface.name, len(rep.resolved),
+                                    len(rep.shipped))
+                        for sid, ref, kind in rep.unresolved:
+                            logger.warning(
+                                "Resource NOT FOUND for %s — step %s references "
+                                "%r (%s); the source package export is missing "
+                                "from the Packages folder or outside the corpus "
+                                "cap, so the tenant will report it as not found",
+                                iface.name, sid, ref, kind)
+                    if regen.reproduced and regen.result is not None:
+                        result = regen.result
+                        logger.info(
+                            "Regenerated iFlow from real source structure "
+                            "(%d steps) → %s", regen.n_steps, iface.name)
+                        return self._write_result(result)
+                    # Honest, loud fallback — do NOT pretend the stub is the flow.
+                    logger.warning(
+                        "Cannot fully regenerate '%s' yet (%d source steps); "
+                        "blocked by: %s. Falling back to a placeholder — this is "
+                        "NOT the real flow.", iface.name, regen.n_steps,
+                        ", ".join(regen.blockers) or regen.note or "unknown")
+
                 if shape == "minimal":
                     result = generate_minimal_iflow(iface.name, iflow_id)
                 else:
-                    result = generate_timer_interface_iflow(
-                        iface.name, iflow_id,
-                        properties=self._interface_properties(iface),
-                        note=f"Scaffolded from PI/PO interface '{iface.name}'")
-                out_path = self.output_dir / f"{result.iflow_id}.iflw"
-                out_path.write_text(result.iflw_xml, encoding="utf-8")
-                # Stash the manifest + .project so the packager uses the
-                # validated ones (not the uploader's hand-built manifest).
-                meta_dir = self.output_dir / f"{result.iflow_id}__meta"
-                meta_dir.mkdir(parents=True, exist_ok=True)
-                (meta_dir / "MANIFEST.MF").write_text(result.manifest, encoding="utf-8")
-                (meta_dir / ".project").write_text(result.project_xml, encoding="utf-8")
-                logger.info("Generated CPI-valid iFlow (%s) → %s", shape, out_path.name)
-                return out_path
+                    # Explicit CPI step pipeline (Steps column) wins over the
+                    # complexity heuristic: parse it verbatim and seed the rich
+                    # multi-record monster body so every XML/convert step has
+                    # real data to work on.
+                    steps_spec = (getattr(iface, "steps_spec", "") or "").strip()
+                    if steps_spec:
+                        from scaffolder.minimal_iflow import parse_steps_spec
+                        from scaffolder.monster_iflow import monster_body
+                        mids, _kinds = parse_steps_spec(steps_spec)
+                        result = generate_timer_interface_iflow(
+                            iface.name, iflow_id,
+                            properties=self._interface_properties(iface),
+                            note=f"Scaffolded from PI/PO interface '{iface.name}'",
+                            middle_steps=mids, seed_body=monster_body())
+                    else:
+                        result = generate_timer_interface_iflow(
+                            iface.name, iflow_id,
+                            properties=self._interface_properties(iface),
+                            note=f"Scaffolded from PI/PO interface '{iface.name}'",
+                            middle_steps=self._complexity_step_plan(iface))
+                logger.info("Generated CPI-valid iFlow (%s) → %s.iflw",
+                            shape, result.iflow_id)
+                return self._write_result(result)
             except Exception as exc:
                 logger.warning("minimal_iflow generation failed for %s (%s); "
                                "falling back to skeleton", iface.name, exc)
 
         return self._scaffold_skeleton(assessment, resolved, iflow_id)
+
+    def _write_result(self, result):
+        """Write a generated iFlow + its manifest/.project + referenced resource
+        files to the output dir (so the packager bundles them). Returns the
+        .iflw path. Shared by the metadata-scaffold and source-regeneration
+        branches."""
+        out_path = self.output_dir / f"{result.iflow_id}.iflw"
+        out_path.write_text(result.iflw_xml, encoding="utf-8")
+        meta_dir = self.output_dir / f"{result.iflow_id}__meta"
+        meta_dir.mkdir(parents=True, exist_ok=True)
+        (meta_dir / "MANIFEST.MF").write_text(result.manifest, encoding="utf-8")
+        (meta_dir / ".project").write_text(result.project_xml, encoding="utf-8")
+        for rel_path, content in (getattr(result, "files", {}) or {}).items():
+            if not rel_path.startswith("src/main/resources/"):
+                continue
+            if rel_path.startswith("src/main/resources/scenarioflows/"):
+                continue
+            if rel_path in ("src/main/resources/parameters.prop",
+                            "src/main/resources/parameters.propdef"):
+                continue
+            dest = meta_dir / rel_path
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            if isinstance(content, bytes):
+                dest.write_bytes(content)
+            else:
+                dest.write_text(content, encoding="utf-8")
+        return out_path
+
+    @staticmethod
+    def _complexity_step_plan(iface) -> list:
+        """Derive descriptive middle Content-Modifier steps from the interface's
+        complexity signals, so the generated iFlow scales with the work involved:
+        a simple interface keeps the bare Timer→CM→CM→End shape (empty plan); a
+        complex one gets extra named steps. Names mirror the real-iFlow
+        vocabulary decoded from the corpus (map / script / xslt / value mapping /
+        router / split / gather / orchestrate). All are the same proven
+        Content-Modifier element, so the accepted bundle structure is unchanged."""
+        steps = []
+        if getattr(iface, "mapping_program", ""):
+            steps.append({"kind": "mapping", "name": "Map Fields"})
+        if getattr(iface, "has_multi_mapping", False):
+            steps.append({"kind": "mapping", "name": "Apply Operation Mappings"})
+        # Description-driven structural steps (keywords the complexity engine
+        # also scores). (keyword, kind, label); built kinds render as the real
+        # decoded BPMN element, the rest stay labelled Content Modifiers.
+        desc = (getattr(iface, "description", "") or "").lower()
+        kw = [("groovy", "script", "Run Groovy Script"),
+              ("xslt", "mapping", "XSLT Transform"),
+              (".xsl", "mapping", "XSLT Transform"),
+              ("value mapping", "content_modifier", "Value Mapping"),
+              ("router", "content_modifier", "Route by Condition"),
+              ("multicast", "content_modifier", "Multicast"),
+              ("converter", "content_modifier", "Convert Format"),
+              ("rfc lookup", "content_modifier", "RFC Lookup"),
+              ("jdbc lookup", "content_modifier", "JDBC Lookup"),
+              ("filter", "filter", "Filter Content")]
+        have = {s["name"] for s in steps}
+        for k, kind, label in kw:
+            if k in desc and label not in have:
+                steps.append({"kind": kind, "name": label})
+                have.add(label)
+        ch = max(int(getattr(iface, "channel_count", 1) or 1), 1)
+        if ch > 1:
+            steps.append({"kind": "splitter", "name": "Split Records"})
+            steps.append({"kind": "gather", "name": "Gather Responses"})
+        if getattr(iface, "has_bpm", False):
+            steps.append({"kind": "content_modifier",
+                          "name": "Orchestrate Sub-Process"})
+        return steps[:12]   # cap to keep the scaffold readable
 
     @staticmethod
     def _interface_properties(iface):

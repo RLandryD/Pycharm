@@ -1,0 +1,1561 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="http://sap.com/xi/APPL/Global2" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://sap.com/xi/APPL/Global2" xmlns:n1="http://sap.com/xi/SAPGlobal20/Global" xmlns:n2="http://sap.com/xi/SAPGlobal/Global">
+	<wsdl:documentation>
+		<sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+	</wsdl:documentation>
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://sap.com/xi/SAPGlobal20/Global" xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0" xmlns:sprx="urn:sap.com:abap:proxy" xmlns:xi0="http://sap.com/xi/SAPGlobal20/Global" xmlns:xi1="http://sap.com/xi/SAPGlobal/Global" xmlns:xi2="http://sap.com/xi/APPL/Global2" xmlns="http://sap.com/xi/SAPGlobal20/Global">
+			<xsd:annotation>
+				<xsd:documentation>
+					<sprx:documentation version="1" baseURL="http://ldciq5e.wdf.sap.corp:50076/sap/bc/esdt/docu/xsd_type?sap-client=004"/>
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:import namespace="http://sap.com/xi/APPL/Global2"/>
+			<xsd:element name="ProjectERPUpdateConfirmation_sync" type="xi2:ProjERPUpdtConfMsg_s"/>
+			<xsd:element name="ProjectERPUpdateRequest_sync" type="xi2:ProjERPUpdtReqMsg_s"/>
+		</xsd:schema>
+		<xsd:schema targetNamespace="http://sap.com/xi/SAPGlobal/Global" xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0" xmlns:sprx="urn:sap.com:abap:proxy" xmlns:xi0="http://sap.com/xi/SAPGlobal20/Global" xmlns:xi1="http://sap.com/xi/SAPGlobal/Global" xmlns:xi2="http://sap.com/xi/APPL/Global2" xmlns="http://sap.com/xi/SAPGlobal/Global">
+			<xsd:annotation>
+				<xsd:documentation>
+					<sprx:documentation version="1" baseURL="http://ldciq5e.wdf.sap.corp:50076/sap/bc/esdt/docu/xsd_type?sap-client=004"/>
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:import namespace="http://sap.com/xi/APPL/Global2"/>
+			<xsd:element name="StandardMessageFault">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="standard" type="xi2:ExchangeFaultData"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+		<xsd:schema targetNamespace="http://sap.com/xi/APPL/Global2" xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0" xmlns:sprx="urn:sap.com:abap:proxy" xmlns:xi0="http://sap.com/xi/SAPGlobal20/Global" xmlns:xi1="http://sap.com/xi/SAPGlobal/Global" xmlns:xi2="http://sap.com/xi/APPL/Global2" xmlns="http://sap.com/xi/APPL/Global2">
+			<xsd:annotation>
+				<xsd:documentation>
+					<sprx:documentation version="1" baseURL="http://ldciq5e.wdf.sap.corp:50076/sap/bc/esdt/docu/xsd_type?sap-client=004"/>
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:simpleType name="ATTRIBUTEINDEPENDENT_UUID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="36"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ActionCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="01"/>
+					<xsd:enumeration value="02"/>
+					<xsd:enumeration value="03"/>
+					<xsd:enumeration value="04"/>
+					<xsd:enumeration value="05"/>
+					<xsd:enumeration value="06"/>
+					<xsd:length value="2"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="AddressPostalAddressID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="10"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="Amount">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Amount</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleContent>
+					<xsd:extension base="Amount.Content">
+						<xsd:attribute name="currencyCode" use="required" type="CurrencyCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="Amount.Content">
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="28"/>
+					<xsd:fractionDigits value="6"/>
+					<xsd:maxInclusive value="9999999999999999999999.999999"/>
+					<xsd:minInclusive value="-9999999999999999999999.999999"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="CLOSED_UNBOUNDED_DatePeriod">
+				<xsd:sequence>
+					<xsd:element name="StartDate" type="Date" minOccurs="0"/>
+					<xsd:element name="EndDate" type="Date" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CLOSED_UNBOUNDED_GLOBAL_DateTimePeriod">
+				<xsd:sequence>
+					<xsd:element name="StartDateTime" type="GLOBAL_DateTime" minOccurs="0"/>
+					<xsd:element name="EndDateTime" type="GLOBAL_DateTime" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:simpleType name="CalendarUnitCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="3"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ChangeStateID">
+				<xsd:restriction base="ChangeStateIDContent">
+					<xsd:maxLength value="40"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ChangeStateIDContent">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="40"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CostElementID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="10"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CostingVariantCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="10"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CurrencyCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="3"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="Date">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Date</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:date">
+					<xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="ExchangeFaultData">
+				<xsd:sequence>
+					<xsd:element name="faultText" type="xsd:string"/>
+					<xsd:element name="faultUrl" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="faultDetail" type="ExchangeLogData" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ExchangeLogData">
+				<xsd:sequence>
+					<xsd:element name="severity" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="text" type="xsd:string"/>
+					<xsd:element name="url" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="id" type="xsd:string" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:simpleType name="GLOBAL_DateTime">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>DateTime</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:dateTime">
+					<xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(.[0-9]{1,7})?Z"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="GeneralLedgerAccountID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="10"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="GoodsRecipientName">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Name</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string"/>
+			</xsd:simpleType>
+			<xsd:simpleType name="Indicator">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Indicator</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:boolean"/>
+			</xsd:simpleType>
+			<xsd:simpleType name="LANGUAGEINDEPENDENT_EXTENDED_Text">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Text</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="255"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LANGUAGEINDEPENDENT_SHORT_Description">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Description</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="40"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LanguageCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:language">
+					<xsd:maxLength value="9"/>
+					<xsd:minLength value="2"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LogItemNote">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Note</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="200"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LogItemSeverityCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LogItemTypeID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="40"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LogisticsItemIndexText">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Text</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="4"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LogisticsReservationItemRecordTypeCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LogisticsSchedulingTypeCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="Measure">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Measure</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleContent>
+					<xsd:extension base="Measure.Content">
+						<xsd:attribute name="unitCode" use="required" type="MeasureUnitCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="Measure.Content">
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="31"/>
+					<xsd:fractionDigits value="14"/>
+					<xsd:maxInclusive value="99999999999999999.99999999999999"/>
+					<xsd:minInclusive value="-99999999999999999.99999999999999"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="MeasureUnitCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="3"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_AccountingBusinessAreaCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="4"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_AccountingPeriodCapacityDistributionRuleCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="8"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="NOSC_BasicBusinessDocumentMessageHeader">
+				<xsd:sequence>
+					<xsd:element name="ID" type="NOSC_BusinessDocumentMessageID" minOccurs="0"/>
+					<xsd:element name="UUID" type="ATTRIBUTEINDEPENDENT_UUID" minOccurs="0"/>
+					<xsd:element name="ReferenceID" type="NOSC_BusinessDocumentMessageID" minOccurs="0"/>
+					<xsd:element name="ReferenceUUID" type="ATTRIBUTEINDEPENDENT_UUID" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:simpleType name="NOSC_BusinessDocumentMessageID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="35"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_CompanyID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="20"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ControllingObjectCategoryCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_CostCentreID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="32"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_DistributionChannelCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_DivisionCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ExpenseClassificationFunctionalAreaCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="4"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ImportanceCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_InstallationPointID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="40"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_LeadTimeReductionStrategyCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_LocationID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="20"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="NOSC_Log">
+				<xsd:sequence>
+					<xsd:element name="BusinessDocumentProcessingResultCode" type="ProcessingResultCode" minOccurs="0"/>
+					<xsd:element name="MaximumLogItemSeverityCode" type="LogItemSeverityCode" minOccurs="0"/>
+					<xsd:element name="Item" type="NOSC_LogItem" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="NOSC_LogItem">
+				<xsd:sequence>
+					<xsd:element name="TypeID" type="LogItemTypeID" minOccurs="0"/>
+					<xsd:element name="CategoryCode" type="NOSC_LogItemCategoryCode" minOccurs="0"/>
+					<xsd:element name="SeverityCode" type="LogItemSeverityCode" minOccurs="0"/>
+					<xsd:element name="Note" type="LogItemNote"/>
+					<xsd:element name="WebURI" type="WebURI" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:simpleType name="NOSC_LogItemCategoryCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="15"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_LogisticsItemTypeCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_MaterialRequirementsPlanningDistributionMethodCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="4"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_MerchandiseCategoryID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="40"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_OperationControlProfileCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="4"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_OperationWorkloadComponentCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_OrganisationalCentreID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="20"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_OverheadCostDeterminationOrderGroupCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="6"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_PartyBusinessCharacterCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="6"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_PartyInternalID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="32"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_PlantID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="4"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="NOSC_Price">
+				<xsd:sequence>
+					<xsd:element name="Amount" type="Amount"/>
+					<xsd:element name="BaseQuantity" type="Quantity"/>
+					<xsd:element name="BaseQuantityTypeCode" type="NOSC_QuantityTypeCode" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:simpleType name="NOSC_ProcurementEffectivenessConditionCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProductInternalID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="60"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProductProcurementArrangementID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="10"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProductionMasterDataExplosionDateID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="8"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProfitCentreID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="32"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProjectActivityID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="4"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProjectDrivenMaterialRequirementsPlanningBillOfMaterialItemGroupCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="20"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProjectID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="32"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProjectMaterialProcurementTypeCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProjectMilestoneTypeCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="5"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProjectNetworkID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="12"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProjectNetworkPlannedCostDeterminationEventCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProjectNetworkProfileCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="7"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProjectNetworkTypeCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="4"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProjectPlannerGroupCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="3"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ProjectWorkBreakdownStructureElementID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="32"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_PurchaseContractID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="10"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_QuantityTypeCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="10"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ReservationID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="10"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_ResourceClassID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="6"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_SalesOrderID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="10"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_TaxJurisdictionCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="15"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_VariableSizeMaterialQuantityCalculationFunctionCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_WorkCentreID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="8"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NOSC_WorkingDayCalendarCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="6"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NetworkPlanElementSuccessionTypeCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NumberValue">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Value</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:int">
+					<xsd:maxInclusive value="999999999"/>
+					<xsd:minInclusive value="0"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ObjectNodePartyTechnicalID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="70"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OverheadCostSchemeID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="50"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PartyRoleCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="10"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="Percent">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Percent</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="16"/>
+					<xsd:fractionDigits value="6"/>
+					<xsd:maxInclusive value="9999999999.999999"/>
+					<xsd:minInclusive value="-9999999999.999999"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ProcessingResultCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="ProductDimensions">
+				<xsd:sequence>
+					<xsd:element name="MeasureUnitCode" type="MeasureUnitCode"/>
+					<xsd:element name="LengthMeasure" type="Measure" minOccurs="0"/>
+					<xsd:element name="WidthMeasure" type="Measure" minOccurs="0"/>
+					<xsd:element name="HeightMeasure" type="Measure" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtConfMsg_s">
+				<xsd:sequence>
+					<xsd:element name="MessageHeader" type="NOSC_BasicBusinessDocumentMessageHeader" minOccurs="0"/>
+					<xsd:element name="Project" type="ProjERPUpdtConf_sProj" minOccurs="0"/>
+					<xsd:element name="Log" type="NOSC_Log"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtConf_sProj">
+				<xsd:sequence>
+					<xsd:element name="ID" type="NOSC_ProjectID"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReqMsg_s">
+				<xsd:sequence>
+					<xsd:element name="MessageHeader" type="NOSC_BasicBusinessDocumentMessageHeader" minOccurs="0"/>
+					<xsd:element name="Project" type="ProjERPUpdtReq_sProj"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProj">
+				<xsd:sequence>
+					<xsd:element name="ID" type="NOSC_ProjectID"/>
+					<xsd:element name="ChangeStateID" type="ChangeStateID"/>
+					<xsd:element name="CompanyID" type="NOSC_CompanyID" minOccurs="0"/>
+					<xsd:element name="PlantID" type="NOSC_PlantID" minOccurs="0"/>
+					<xsd:element name="ProfitCentreID" type="NOSC_ProfitCentreID" minOccurs="0"/>
+					<xsd:element name="AccountingBusinessAreaCode" type="NOSC_AccountingBusinessAreaCode" minOccurs="0"/>
+					<xsd:element name="SalesOrganisationID" type="NOSC_OrganisationalCentreID" minOccurs="0"/>
+					<xsd:element name="DistributionChannelCode" type="NOSC_DistributionChannelCode" minOccurs="0"/>
+					<xsd:element name="DivisionCode" type="NOSC_DivisionCode" minOccurs="0"/>
+					<xsd:element name="WorkingDayCalendarCode" type="NOSC_WorkingDayCalendarCode" minOccurs="0"/>
+					<xsd:element name="CalendarUnitCode" type="CalendarUnitCode" minOccurs="0"/>
+					<xsd:element name="CurrencyCode" type="CurrencyCode" minOccurs="0"/>
+					<xsd:element name="PlannedPeriod" type="CLOSED_UNBOUNDED_DatePeriod" minOccurs="0"/>
+					<xsd:element name="Description" type="LANGUAGEINDEPENDENT_SHORT_Description" minOccurs="0"/>
+					<xsd:element name="ResponsibleEmployeeParty" type="ProjERPUpdtReq_sProjRespEmplPty" minOccurs="0"/>
+					<xsd:element name="Party" type="ProjERPUpdtReq_sProjPty" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="WorkBreakdownStructureElement" type="ProjERPUpdtReq_sProjWBSElmnt" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="Network" type="ProjERPUpdtReq_sProjNtwk" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="Activity" type="ProjERPUpdtReq_sProjActy" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+				<xsd:attribute name="workBreakdownStructureElementListCompleteTransmissionIndicator" type="Indicator"/>
+				<xsd:attribute name="networkListCompleteTransmissionIndicator" type="Indicator"/>
+				<xsd:attribute name="activityListCompleteTransmissionIndicator" type="Indicator"/>
+				<xsd:attribute name="partyListCompleteTransmissionIndicator" type="Indicator"/>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjActy">
+				<xsd:sequence>
+					<xsd:element name="ID" type="NOSC_ProjectActivityID"/>
+					<xsd:element name="ParentNetworkID" type="NOSC_ProjectNetworkID" minOccurs="0"/>
+					<xsd:element name="ParentNetworkSenderTechnicalID" type="ObjectNodePartyTechnicalID" minOccurs="0"/>
+					<xsd:element name="ParentWorkBreakdownStructureElementID" type="NOSC_ProjectWorkBreakdownStructureElementID" minOccurs="0"/>
+					<xsd:element name="WorkCentrePlantID" type="NOSC_PlantID" minOccurs="0"/>
+					<xsd:element name="WorkCentreID" type="NOSC_WorkCentreID" minOccurs="0"/>
+					<xsd:element name="ProfitCentreID" type="NOSC_ProfitCentreID" minOccurs="0"/>
+					<xsd:element name="OverheadCostSchemeID" type="OverheadCostSchemeID" minOccurs="0"/>
+					<xsd:element name="OverheadCostDeterminationOrderGroupCode" type="NOSC_OverheadCostDeterminationOrderGroupCode" minOccurs="0"/>
+					<xsd:element name="CostElementID" type="CostElementID" minOccurs="0"/>
+					<xsd:element name="PurchaseContractID" type="NOSC_PurchaseContractID" minOccurs="0"/>
+					<xsd:element name="PurchaseContractItemID" type="PurchaseContractItemID" minOccurs="0"/>
+					<xsd:element name="PurchasingGroupID" type="PurchasingGroupID" minOccurs="0"/>
+					<xsd:element name="ResourceClassID" type="NOSC_ResourceClassID" minOccurs="0"/>
+					<xsd:element name="ProductProcurementArrangementID" type="NOSC_ProductProcurementArrangementID" minOccurs="0"/>
+					<xsd:element name="CostCentreID" type="NOSC_CostCentreID" minOccurs="0"/>
+					<xsd:element name="MerchandiseCategoryID" type="NOSC_MerchandiseCategoryID" minOccurs="0"/>
+					<xsd:element name="ControlProfileCode" type="NOSC_OperationControlProfileCode" minOccurs="0"/>
+					<xsd:element name="AccountingBusinessAreaCode" type="NOSC_AccountingBusinessAreaCode" minOccurs="0"/>
+					<xsd:element name="TaxJurisdictionCode" type="NOSC_TaxJurisdictionCode" minOccurs="0"/>
+					<xsd:element name="ControllingObjectCategoryCode" type="NOSC_ControllingObjectCategoryCode" minOccurs="0"/>
+					<xsd:element name="ExpenseClassificationFunctionalAreaCode" type="NOSC_ExpenseClassificationFunctionalAreaCode" minOccurs="0"/>
+					<xsd:element name="WorkloadComponentCode" type="NOSC_OperationWorkloadComponentCode" minOccurs="0"/>
+					<xsd:element name="ImportanceCode" type="NOSC_ImportanceCode" minOccurs="0"/>
+					<xsd:element name="AccountingPeriodCapacityDistributionRuleCode" type="NOSC_AccountingPeriodCapacityDistributionRuleCode" minOccurs="0"/>
+					<xsd:element name="WorkingDayCalendarCode" type="NOSC_WorkingDayCalendarCode" minOccurs="0"/>
+					<xsd:element name="LeadTimeReductionStrategyCode" type="NOSC_LeadTimeReductionStrategyCode" minOccurs="0"/>
+					<xsd:element name="CurrencyCode" type="CurrencyCode" minOccurs="0"/>
+					<xsd:element name="ProcurementEffectivenessConditionCode" type="NOSC_ProcurementEffectivenessConditionCode" minOccurs="0"/>
+					<xsd:element name="ScheduleActivityStartDateTimeConstraintTypeCode" type="ScheduleActivityStartDateTimeConstraintTypeCode" minOccurs="0"/>
+					<xsd:element name="ScheduleActivityEndDateTimeConstraintTypeCode" type="ScheduleActivityEndDateTimeConstraintTypeCode" minOccurs="0"/>
+					<xsd:element name="ProjectDrivenMaterialRequirementsPlanningBillOfMaterialItemGroupCode" type="NOSC_ProjectDrivenMaterialRequirementsPlanningBillOfMaterialItemGroupCode" minOccurs="0"/>
+					<xsd:element name="GoodsRecipientName" type="GoodsRecipientName" minOccurs="0"/>
+					<xsd:element name="BaseDurationTimeQuantity" type="UNITTIME_MEDIUMPOSITIVE_Quantity" minOccurs="0"/>
+					<xsd:element name="MinimumDurationTimeQuantity" type="UNITTIME_MEDIUMPOSITIVE_Quantity" minOccurs="0"/>
+					<xsd:element name="ForecastMinimumDurationTimeQuantity" type="UNITTIME_MEDIUMPOSITIVE_Quantity" minOccurs="0"/>
+					<xsd:element name="FreeFloatDurationTimeQuantity" type="Quantity" minOccurs="0"/>
+					<xsd:element name="TotalFloatDurationTimeQuantity" type="Quantity" minOccurs="0"/>
+					<xsd:element name="StartOffsetDurationTimeQuantity" type="Quantity" minOccurs="0"/>
+					<xsd:element name="EndOffsetDurationTimeQuantity" type="Quantity" minOccurs="0"/>
+					<xsd:element name="EarliestScheduledPeriod" type="CLOSED_UNBOUNDED_GLOBAL_DateTimePeriod" minOccurs="0"/>
+					<xsd:element name="LatestScheduledPeriod" type="CLOSED_UNBOUNDED_GLOBAL_DateTimePeriod" minOccurs="0"/>
+					<xsd:element name="ScheduleActivityConstraintStartDateTime" type="GLOBAL_DateTime" minOccurs="0"/>
+					<xsd:element name="ScheduleActivityConstraintEndDateTime" type="GLOBAL_DateTime" minOccurs="0"/>
+					<xsd:element name="ProjectSummarizationRelevanceIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="FlexibleDurationAllowedIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="ProductProcurementArrangementFixedIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="CapacityUtilizationPercent" type="Percent" minOccurs="0"/>
+					<xsd:element name="WorkQuantity" type="Quantity" minOccurs="0"/>
+					<xsd:element name="PlannedDeliveryQuantity" type="Quantity" minOccurs="0"/>
+					<xsd:element name="RequiredCapacityNumberValue" type="NumberValue" minOccurs="0"/>
+					<xsd:element name="ExecutionRecurrenceNumberValue" type="NumberValue" minOccurs="0"/>
+					<xsd:element name="PlannedDeliveryDayNumberValue" type="NumberValue" minOccurs="0"/>
+					<xsd:element name="PlannedCostsAmount" type="Amount" minOccurs="0"/>
+					<xsd:element name="Price" type="NOSC_Price" minOccurs="0"/>
+					<xsd:element name="Description" type="LANGUAGEINDEPENDENT_SHORT_Description" minOccurs="0"/>
+					<xsd:element name="HierarchyRelationship" type="ProjERPUpdtReq_sProjActyHierRelshp" minOccurs="0"/>
+					<xsd:element name="ResponsiblePurchasingUnitParty" type="ProjERPUpdtReq_sProjActyRespPurgUnitPty" minOccurs="0"/>
+					<xsd:element name="VendorParty" type="ProjERPUpdtReq_sProjActyVndrPty" minOccurs="0"/>
+					<xsd:element name="NetworkRelationship" type="ProjERPUpdtReq_sProjActyNtwkRelshp" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="Milestone" type="ProjERPUpdtReq_sProjActyMlstn" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="MaterialInput" type="ProjERPUpdtReq_sProjActyMatlInpt" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+				<xsd:attribute name="actionCode" type="ActionCode"/>
+				<xsd:attribute name="networkRelationshipListCompleteTransmissionIndicator" type="Indicator"/>
+				<xsd:attribute name="milestoneListCompleteTransmissionIndicator" type="Indicator"/>
+				<xsd:attribute name="materialInputListCompleteTransmissionIndicator" type="Indicator"/>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjActyHierRelshp">
+				<xsd:sequence>
+					<xsd:element name="ParentActivityID" type="NOSC_ProjectActivityID"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjActyMatlInpt">
+				<xsd:sequence>
+					<xsd:element name="ReservationID" type="NOSC_ReservationID" minOccurs="0"/>
+					<xsd:element name="ReservationItemID" type="ReservationItemID" minOccurs="0"/>
+					<xsd:element name="LogisticsReservationItemRecordTypeCode" type="LogisticsReservationItemRecordTypeCode" minOccurs="0"/>
+					<xsd:element name="MaterialProcurementTypeCode" type="NOSC_ProjectMaterialProcurementTypeCode" minOccurs="0"/>
+					<xsd:element name="LogisticsItemIndexText" type="LogisticsItemIndexText" minOccurs="0"/>
+					<xsd:element name="PlantID" type="NOSC_PlantID" minOccurs="0"/>
+					<xsd:element name="InventoryManagedLocationID" type="NOSC_LocationID" minOccurs="0"/>
+					<xsd:element name="GeneralLedgerAccountID" type="GeneralLedgerAccountID" minOccurs="0"/>
+					<xsd:element name="PurchasingGroupID" type="PurchasingGroupID" minOccurs="0"/>
+					<xsd:element name="ProductProcurementArrangementID" type="NOSC_ProductProcurementArrangementID" minOccurs="0"/>
+					<xsd:element name="ProductInternalID" type="NOSC_ProductInternalID" minOccurs="0"/>
+					<xsd:element name="ProductionMasterDataExplosionDateID" type="NOSC_ProductionMasterDataExplosionDateID" minOccurs="0"/>
+					<xsd:element name="PurchaseContractID" type="NOSC_PurchaseContractID" minOccurs="0"/>
+					<xsd:element name="PurchaseContractItemID" type="PurchaseContractItemID" minOccurs="0"/>
+					<xsd:element name="MerchandiseCategoryID" type="NOSC_MerchandiseCategoryID" minOccurs="0"/>
+					<xsd:element name="SalesOrderItemID" type="SalesOrderItemID" minOccurs="0"/>
+					<xsd:element name="LogisticsItemTypeCode" type="NOSC_LogisticsItemTypeCode" minOccurs="0"/>
+					<xsd:element name="ProcurementEffectivenessConditionCode" type="NOSC_ProcurementEffectivenessConditionCode" minOccurs="0"/>
+					<xsd:element name="MaterialRequirementsPlanningDistributionMethodCode" type="NOSC_MaterialRequirementsPlanningDistributionMethodCode" minOccurs="0"/>
+					<xsd:element name="VariableSizeMaterialQuantityCalculationFunctionCode" type="NOSC_VariableSizeMaterialQuantityCalculationFunctionCode" minOccurs="0"/>
+					<xsd:element name="GoodsRecipientName" type="GoodsRecipientName" minOccurs="0"/>
+					<xsd:element name="UnloadingPointName" type="UnloadingPointName" minOccurs="0"/>
+					<xsd:element name="SortCriterionText" type="LANGUAGEINDEPENDENT_EXTENDED_Text" minOccurs="0"/>
+					<xsd:element name="ProductDimensions" type="ProductDimensions" minOccurs="0"/>
+					<xsd:element name="OffsetDurationTimeQuantity" type="UNITTIME_SMALLINTEGER_Quantity" minOccurs="0"/>
+					<xsd:element name="Price" type="NOSC_Price" minOccurs="0"/>
+					<xsd:element name="RequirementQuantity" type="Quantity" minOccurs="0"/>
+					<xsd:element name="VariableSizeItemPerPieceQuantity" type="Quantity" minOccurs="0"/>
+					<xsd:element name="VariableSizeItemQuantity" type="Quantity" minOccurs="0"/>
+					<xsd:element name="OriginalQuantity" type="Quantity" minOccurs="0"/>
+					<xsd:element name="RequestedDate" type="Date" minOccurs="0"/>
+					<xsd:element name="PlannedDeliveryDayNumberValue" type="NumberValue" minOccurs="0"/>
+					<xsd:element name="CostRelevanceIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="BackflushIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="CompletedIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="BillOfMaterialItemDescription" type="SHORT_Description" minOccurs="0"/>
+					<xsd:element name="ResponsiblePurchasingUnitParty" type="ProjERPUpdtReq_sProjActyMatlInptRespPurgUnitPty" minOccurs="0"/>
+					<xsd:element name="VendorParty" type="ProjERPUpdtReq_sProjActyMatlInptVndrPty" minOccurs="0"/>
+					<xsd:element name="ProductRecipientParty" type="ProjERPUpdtReq_sProjActyMatlInptProdRcpntPty" minOccurs="0"/>
+					<xsd:element name="ShipToLocation" type="ProjERPUpdtReq_sProjActyMatlInptShipToLoc" minOccurs="0"/>
+				</xsd:sequence>
+				<xsd:attribute name="actionCode" type="ActionCode"/>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjActyMatlInptProdRcpntPty">
+				<xsd:sequence>
+					<xsd:element name="InternalID" type="NOSC_PartyInternalID"/>
+					<xsd:element name="BusinessCharacterCode" type="NOSC_PartyBusinessCharacterCode"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjActyMatlInptRespPurgUnitPty">
+				<xsd:sequence>
+					<xsd:element name="InternalID" type="NOSC_PartyInternalID"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjActyMatlInptShipToLoc">
+				<xsd:sequence>
+					<xsd:element name="AddressPostalAddressID" type="AddressPostalAddressID"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjActyMatlInptVndrPty">
+				<xsd:sequence>
+					<xsd:element name="InternalID" type="NOSC_PartyInternalID"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjActyMlstn">
+				<xsd:sequence>
+					<xsd:element name="ID" type="ProjectMilestoneID" minOccurs="0"/>
+					<xsd:element name="TypeCode" type="NOSC_ProjectMilestoneTypeCode" minOccurs="0"/>
+					<xsd:element name="ScheduledCompletionDateTime" type="GLOBAL_DateTime" minOccurs="0"/>
+					<xsd:element name="KeyCompletionDateTime" type="GLOBAL_DateTime" minOccurs="0"/>
+					<xsd:element name="ActualCompletionDateTime" type="GLOBAL_DateTime" minOccurs="0"/>
+					<xsd:element name="ForecastCompletionDateTime" type="GLOBAL_DateTime" minOccurs="0"/>
+					<xsd:element name="OffsetDurationTimeQuantity" type="Quantity" minOccurs="0"/>
+					<xsd:element name="ProjectActivityLatestScheduledPeriodUseIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="ProjectActivityEndDateUseIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="TrendAnalysisRelevanceIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="ProgressAnalysisRelevanceIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="SalesDocumentDateRelevanceIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="CompletionPercent" type="Percent" minOccurs="0"/>
+					<xsd:element name="InvoicePercent" type="Percent" minOccurs="0"/>
+					<xsd:element name="OffsetPercent" type="Percent" minOccurs="0"/>
+					<xsd:element name="Description" type="LANGUAGEINDEPENDENT_SHORT_Description" minOccurs="0"/>
+				</xsd:sequence>
+				<xsd:attribute name="actionCode" type="ActionCode"/>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjActyNtwkRelshp">
+				<xsd:sequence>
+					<xsd:element name="SuccessorNetworkID" type="NOSC_ProjectNetworkID" minOccurs="0"/>
+					<xsd:element name="SuccessorNetworkSenderTechnicalID" type="ObjectNodePartyTechnicalID" minOccurs="0"/>
+					<xsd:element name="SuccessorActivityID" type="NOSC_ProjectActivityID"/>
+					<xsd:element name="NetworkPlanElementSuccessionTypeCode" type="NetworkPlanElementSuccessionTypeCode"/>
+					<xsd:element name="LagDurationTimeQuantity" type="Quantity" minOccurs="0"/>
+				</xsd:sequence>
+				<xsd:attribute name="actionCode" type="ActionCode"/>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjActyRespPurgUnitPty">
+				<xsd:sequence>
+					<xsd:element name="InternalID" type="NOSC_PartyInternalID"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjActyVndrPty">
+				<xsd:sequence>
+					<xsd:element name="InternalID" type="NOSC_PartyInternalID"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjNtwk">
+				<xsd:sequence>
+					<xsd:element name="ID" type="NOSC_ProjectNetworkID" minOccurs="0"/>
+					<xsd:element name="SenderTechnicalID" type="ObjectNodePartyTechnicalID" minOccurs="0"/>
+					<xsd:element name="ParentWorkBreakdownStructureElementID" type="NOSC_ProjectWorkBreakdownStructureElementID" minOccurs="0"/>
+					<xsd:element name="SalesOrderID" type="NOSC_SalesOrderID" minOccurs="0"/>
+					<xsd:element name="SalesOrderItemID" type="SalesOrderItemID" minOccurs="0"/>
+					<xsd:element name="PlantID" type="NOSC_PlantID" minOccurs="0"/>
+					<xsd:element name="ProfitCentreID" type="NOSC_ProfitCentreID" minOccurs="0"/>
+					<xsd:element name="OverheadCostSchemeID" type="OverheadCostSchemeID" minOccurs="0"/>
+					<xsd:element name="OverheadCostDeterminationOrderGroupCode" type="NOSC_OverheadCostDeterminationOrderGroupCode" minOccurs="0"/>
+					<xsd:element name="TypeCode" type="NOSC_ProjectNetworkTypeCode" minOccurs="0"/>
+					<xsd:element name="ProfileCode" type="NOSC_ProjectNetworkProfileCode" minOccurs="0"/>
+					<xsd:element name="LogisticsSchedulingTypeCode" type="LogisticsSchedulingTypeCode" minOccurs="0"/>
+					<xsd:element name="AccountingBusinessAreaCode" type="NOSC_AccountingBusinessAreaCode" minOccurs="0"/>
+					<xsd:element name="ControllingObjectCategoryCode" type="NOSC_ControllingObjectCategoryCode" minOccurs="0"/>
+					<xsd:element name="TaxJurisdictionCode" type="NOSC_TaxJurisdictionCode" minOccurs="0"/>
+					<xsd:element name="ProjectPlannerGroupCode" type="NOSC_ProjectPlannerGroupCode" minOccurs="0"/>
+					<xsd:element name="ImportanceCode" type="NOSC_ImportanceCode" minOccurs="0"/>
+					<xsd:element name="CurrencyCode" type="CurrencyCode" minOccurs="0"/>
+					<xsd:element name="PlannedCostingVariantCode" type="CostingVariantCode" minOccurs="0"/>
+					<xsd:element name="ActualCostingVariantCode" type="CostingVariantCode" minOccurs="0"/>
+					<xsd:element name="ExpenseClassificationFunctionalAreaCode" type="NOSC_ExpenseClassificationFunctionalAreaCode" minOccurs="0"/>
+					<xsd:element name="PlannedCostDeterminationEventCode" type="NOSC_ProjectNetworkPlannedCostDeterminationEventCode" minOccurs="0"/>
+					<xsd:element name="ProcurementEffectivenessConditionCode" type="NOSC_ProcurementEffectivenessConditionCode" minOccurs="0"/>
+					<xsd:element name="ExecutionRecurrenceNumberValue" type="NumberValue" minOccurs="0"/>
+					<xsd:element name="BasePeriod" type="CLOSED_UNBOUNDED_DatePeriod" minOccurs="0"/>
+					<xsd:element name="ScheduleAutomaticIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="ScheduleDuringBreakAllowedIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="CapacityRequirementCalculateAutomaticIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="Description" type="LANGUAGEINDEPENDENT_SHORT_Description" minOccurs="0"/>
+					<xsd:element name="HierarchyRelationship" type="ProjERPUpdtReq_sProjNtwkHierRelshp" minOccurs="0"/>
+					<xsd:element name="MaterialRequirementPlannerParty" type="ProjERPUpdtReq_sProjNtwkMatlRqmtPlnrPty" minOccurs="0"/>
+				</xsd:sequence>
+				<xsd:attribute name="actionCode" type="ActionCode"/>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjNtwkHierRelshp">
+				<xsd:sequence>
+					<xsd:element name="ParentNetworkID" type="NOSC_ProjectNetworkID" minOccurs="0"/>
+					<xsd:element name="ParentNetworkSenderTechnicalID" type="ObjectNodePartyTechnicalID" minOccurs="0"/>
+					<xsd:element name="ParentActivityID" type="NOSC_ProjectActivityID"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjNtwkMatlRqmtPlnrPty">
+				<xsd:sequence>
+					<xsd:element name="InternalID" type="NOSC_PartyInternalID"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjPty">
+				<xsd:sequence>
+					<xsd:element name="InternalID" type="NOSC_PartyInternalID"/>
+					<xsd:element name="RoleCode" type="PartyRoleCode"/>
+				</xsd:sequence>
+				<xsd:attribute name="actionCode" type="ActionCode"/>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjRespEmplPty">
+				<xsd:sequence>
+					<xsd:element name="InternalID" type="NOSC_PartyInternalID"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjWBSElmnt">
+				<xsd:sequence>
+					<xsd:element name="ID" type="NOSC_ProjectWorkBreakdownStructureElementID"/>
+					<xsd:element name="CompanyID" type="NOSC_CompanyID" minOccurs="0"/>
+					<xsd:element name="PlantID" type="NOSC_PlantID" minOccurs="0"/>
+					<xsd:element name="ProfitCentreID" type="NOSC_ProfitCentreID" minOccurs="0"/>
+					<xsd:element name="OverheadCostSchemeID" type="OverheadCostSchemeID" minOccurs="0"/>
+					<xsd:element name="OverheadCostDeterminationOrderGroupCode" type="NOSC_OverheadCostDeterminationOrderGroupCode" minOccurs="0"/>
+					<xsd:element name="IndividualMaterialID" type="NOSC_ProductInternalID" minOccurs="0"/>
+					<xsd:element name="InstallationPointID" type="NOSC_InstallationPointID" minOccurs="0"/>
+					<xsd:element name="AccountingBusinessAreaCode" type="NOSC_AccountingBusinessAreaCode" minOccurs="0"/>
+					<xsd:element name="WorkingDayCalendarCode" type="NOSC_WorkingDayCalendarCode" minOccurs="0"/>
+					<xsd:element name="CurrencyCode" type="CurrencyCode" minOccurs="0"/>
+					<xsd:element name="ControllingObjectCategoryCode" type="NOSC_ControllingObjectCategoryCode" minOccurs="0"/>
+					<xsd:element name="ImportanceCode" type="NOSC_ImportanceCode" minOccurs="0"/>
+					<xsd:element name="BasePeriod" type="CLOSED_UNBOUNDED_DatePeriod" minOccurs="0"/>
+					<xsd:element name="ActualPeriod" type="CLOSED_UNBOUNDED_DatePeriod" minOccurs="0"/>
+					<xsd:element name="ProjectSummarizationRelevanceIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="PlanCostsAllowedIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="ActualCostsAllowedIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="RevenueAllowedIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="Description" type="LANGUAGEINDEPENDENT_SHORT_Description" minOccurs="0"/>
+					<xsd:element name="LeftNeighbourWorkBreakdownStructureElementID" type="NOSC_ProjectWorkBreakdownStructureElementID" minOccurs="0"/>
+					<xsd:element name="HierarchyRelationship" type="ProjERPUpdtReq_sProjWBSElmntHierRelshp" minOccurs="0"/>
+					<xsd:element name="ResponsibleEmployeeParty" type="ProjERPUpdtReq_sProjWBSElmntRespEmplPty" minOccurs="0"/>
+					<xsd:element name="Milestone" type="ProjERPUpdtReq_sProjWBSElmntMlstn" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+				<xsd:attribute name="actionCode" type="ActionCode"/>
+				<xsd:attribute name="milestoneListCompleteTransmissionIndicator" type="Indicator"/>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjWBSElmntHierRelshp">
+				<xsd:sequence>
+					<xsd:element name="ParentWorkBreakdownStructureElementID" type="NOSC_ProjectWorkBreakdownStructureElementID"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjWBSElmntMlstn">
+				<xsd:sequence>
+					<xsd:element name="ID" type="ProjectMilestoneID" minOccurs="0"/>
+					<xsd:element name="TypeCode" type="NOSC_ProjectMilestoneTypeCode" minOccurs="0"/>
+					<xsd:element name="ScheduledCompletionDateTime" type="GLOBAL_DateTime" minOccurs="0"/>
+					<xsd:element name="KeyCompletionDateTime" type="GLOBAL_DateTime" minOccurs="0"/>
+					<xsd:element name="ActualCompletionDateTime" type="GLOBAL_DateTime" minOccurs="0"/>
+					<xsd:element name="ForecastCompletionDateTime" type="GLOBAL_DateTime" minOccurs="0"/>
+					<xsd:element name="OffsetDurationTimeQuantity" type="Quantity" minOccurs="0"/>
+					<xsd:element name="ProjectActivityLatestScheduledPeriodUseIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="ProjectActivityEndDateUseIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="TrendAnalysisRelevanceIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="ProgressAnalysisRelevanceIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="SalesDocumentDateRelevanceIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="CompletionPercent" type="Percent" minOccurs="0"/>
+					<xsd:element name="InvoicePercent" type="Percent" minOccurs="0"/>
+					<xsd:element name="OffsetPercent" type="Percent" minOccurs="0"/>
+					<xsd:element name="Description" type="LANGUAGEINDEPENDENT_SHORT_Description" minOccurs="0"/>
+				</xsd:sequence>
+				<xsd:attribute name="actionCode" type="ActionCode"/>
+			</xsd:complexType>
+			<xsd:complexType name="ProjERPUpdtReq_sProjWBSElmntRespEmplPty">
+				<xsd:sequence>
+					<xsd:element name="InternalID" type="NOSC_PartyInternalID"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:simpleType name="ProjectMilestoneID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="12"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PurchaseContractItemID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="5"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PurchasingGroupID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="20"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="Quantity">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Quantity</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleContent>
+					<xsd:extension base="Quantity.Content">
+						<xsd:attribute name="unitCode" type="MeasureUnitCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="Quantity.Content">
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="31"/>
+					<xsd:fractionDigits value="14"/>
+					<xsd:maxInclusive value="99999999999999999.99999999999999"/>
+					<xsd:minInclusive value="-99999999999999999.99999999999999"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ReservationItemID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="4"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="SHORT_Description">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Description</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleContent>
+					<xsd:extension base="SHORT_Description.Content">
+						<xsd:attribute name="languageCode" type="LanguageCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="SHORT_Description.Content">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="40"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="SalesOrderItemID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="6"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ScheduleActivityEndDateTimeConstraintTypeCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ScheduleActivityStartDateTimeConstraintTypeCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="UNITTIME_MEDIUMPOSITIVE_Quantity">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Quantity</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleContent>
+					<xsd:extension base="UNITTIME_MEDIUMPOSITIVE_Quantity.Content">
+						<xsd:attribute name="unitCode" use="required" type="MeasureUnitCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="UNITTIME_MEDIUMPOSITIVE_Quantity.Content">
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="6"/>
+					<xsd:fractionDigits value="1"/>
+					<xsd:maxInclusive value="99999.9"/>
+					<xsd:minInclusive value="0.1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="UNITTIME_SMALLINTEGER_Quantity">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Quantity</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleContent>
+					<xsd:extension base="UNITTIME_SMALLINTEGER_Quantity.Content">
+						<xsd:attribute name="unitCode" use="required" type="MeasureUnitCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="UNITTIME_SMALLINTEGER_Quantity.Content">
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="3"/>
+					<xsd:fractionDigits value="0"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="UnloadingPointName">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>Name</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="25"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="WebURI">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm>URI</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:anyURI"/>
+			</xsd:simpleType>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="ProjectERPUpdateRequest_sync">
+		<wsdl:part name="ProjectERPUpdateRequest_sync" element="n1:ProjectERPUpdateRequest_sync"/>
+	</wsdl:message>
+	<wsdl:message name="ProjectERPUpdateConfirmation_sync">
+		<wsdl:part name="ProjectERPUpdateConfirmation_sync" element="n1:ProjectERPUpdateConfirmation_sync"/>
+	</wsdl:message>
+	<wsdl:message name="StandardMessageFault">
+		<wsdl:part name="StandardMessageFault" element="n2:StandardMessageFault"/>
+	</wsdl:message>
+	<wsdl:portType name="ProjectERPUpdateRequestConfirmation_In">
+		<wsdl:documentation>
+			<sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+				<sapdoc:docitem applicationComponent="PS"/>
+			</sapdoc:sapdoc>
+		</wsdl:documentation>
+		<wsdl:operation name="ProjectERPUpdateRequestConfirmation_In">
+			<wsdl:input message="tns:ProjectERPUpdateRequest_sync"/>
+			<wsdl:output message="tns:ProjectERPUpdateConfirmation_sync"/>
+			<wsdl:fault name="StandardMessageFault" message="tns:StandardMessageFault"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="CUAN_MSM_PROJECT" type="tns:ProjectERPUpdateRequestConfirmation_In">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="ProjectERPUpdateRequestConfirmation_In">
+			<soap:operation soapAction="http://sap.com/xi/APPL/Global2/ProjectERPUpdateRequestConfirmation_In/ProjectERPUpdateRequestConfirmation_InRequest" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="StandardMessageFault">
+				<soap:fault name="StandardMessageFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="CUAN_MSM_PROJECT">
+		<wsdl:port name="CUAN_MSM_PROJECT" binding="tns:CUAN_MSM_PROJECT">
+			<soap:address location="https://ldciq5e.wdf.sap.corp:44376/sap/bc/srt/xip/sap/ecc_projectupdrc/004/cuan_msm_project/cuan_msm_project"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

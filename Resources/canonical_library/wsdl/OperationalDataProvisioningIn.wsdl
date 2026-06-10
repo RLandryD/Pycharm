@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:p1="http://sap.com/xi/CODERINT" xmlns:p2="http://sap.com/bw"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap"
+	xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+	name="OperationalDataProvisioningIn" soap:location="http://www.example.org/"
+	targetNamespace="http://sap.com/xi/CODERINT" wsdlsoap:location="http://www.example.org/">
+	<wsdl:documentation />
+	<wsp:UsingPolicy wsdl:required="true" />
+	<wsp:Policy wsu:Id="OP_OperationalDataProvisioningIn" />
+	<wsdl:types>
+		<xsd:schema xmlns="http://sap.com/xi/BASIS/Global"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://sap.com/xi/BASIS/Global">
+			<xsd:simpleType name="InclusionExclusionCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="1" />
+					<xsd:minLength value="1" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CompareOperatorCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="2" />
+					<xsd:minLength value="2" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:schema>
+		<xsd:schema xmlns="http://sap.com/bw" xmlns:xi1="http://sap.com/xi/BASIS/Global"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://sap.com/bw">
+			<xsd:import namespace="http://sap.com/xi/BASIS/Global" />
+			<xsd:element name="OperationalDataProvisioningFetchDataDirectResponse"
+				type="OperationalDataProvisioningFetchDataDirectResponseMessage" />
+			<xsd:element name="OperationalDataProvisioningFaultMessage">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="standard"
+							type="OperationalDataProvisioningMessageStructure" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="OperationalDataProvisioningFetchDataDirectRequest"
+				type="OperationalDataProvisioningFetchDataDirectRequestMessage" />
+			<xsd:simpleType name="OperationalDataProvisioningMessageID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="20" />
+					<xsd:minLength value="1" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProvisioningProcessID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="64" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProvisioningBinaryObject">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">BinaryObject</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:base64Binary" />
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProvisioningMessageText">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Text</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="255" />
+					<xsd:minLength value="1" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProvisioningMessageTypeCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="1" />
+					<xsd:minLength value="1" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProviderID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="30" />
+					<xsd:minLength value="1" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProvisioningUserID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="12" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProvisioningDescription">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Text</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="60" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProvisioningSubscriberTypeID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="16" />
+					<xsd:minLength value="1" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProvisioningMessageNumberID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="3" />
+					<xsd:minLength value="1" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProvisioningFieldID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="30" />
+					<xsd:minLength value="1" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProvisioningReplicationNodeID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="32" />
+					<xsd:minLength value="1" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProviderContextID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Identifier</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="20" />
+					<xsd:minLength value="1" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProvisioningAggregationCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="5" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProvisioningXMLFormatCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Code</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="10" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OperationalDataProvisioningMessageVariableText">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<ccts:RepresentationTerm
+							xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">Text</ccts:RepresentationTerm>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="50" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType
+				name="OperationalDataProvisioningFetchDataDirectResponseMessage">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="BinaryObject"
+						type="OperationalDataProvisioningBinaryObject" />
+					<xsd:element minOccurs="0" name="xXMLFormatUsedCode"
+						type="OperationalDataProvisioningXMLFormatCode" />
+					<xsd:element maxOccurs="unbounded" minOccurs="0"
+						name="MessageStructure" type="OperationalDataProvisioningMessageStructure" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType
+				name="OperationalDataProvisioningFetchDataDirectRequestMessage">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="SubscriberTypeID"
+						type="OperationalDataProvisioningSubscriberTypeID" />
+					<xsd:element minOccurs="0" name="SubscriberNameID"
+						type="OperationalDataProvisioningReplicationNodeID" />
+					<xsd:element minOccurs="0" name="SubscriberProcessID"
+						type="OperationalDataProvisioningProcessID" />
+					<xsd:element minOccurs="0" name="SubscriberRunID"
+						type="OperationalDataProvisioningProcessID" />
+					<xsd:element minOccurs="0" name="ContextID"
+						type="OperationalDataProviderContextID" />
+					<xsd:element minOccurs="0" name="OperationalDataProviderID"
+						type="OperationalDataProviderID" />
+					<xsd:element maxOccurs="unbounded" minOccurs="0"
+						name="SelectionStructure" type="OperationalDataProvisioningSelectionStructure" />
+					<xsd:element maxOccurs="unbounded" minOccurs="0"
+						name="AggregationStructure" type="OperationalDataProvisioningAggregationStructure" />
+					<xsd:element maxOccurs="unbounded" minOccurs="0"
+						name="SupportXMLFormatCode" type="OperationalDataProvisioningXMLFormatCode" />
+					<xsd:element minOccurs="0" name="UserID"
+						type="OperationalDataProvisioningUserID" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="OperationalDataProvisioningSelectionStructure">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="FieldID"
+						type="OperationalDataProvisioningFieldID" />
+					<xsd:element minOccurs="0" name="InclusionExclusionCode"
+						type="xi1:InclusionExclusionCode" />
+					<xsd:element minOccurs="0" name="OperatorCode"
+						type="xi1:CompareOperatorCode" />
+					<xsd:element minOccurs="0" name="LowerBoundaryDescription"
+						type="OperationalDataProvisioningDescription" />
+					<xsd:element minOccurs="0" name="UpperBoundaryDescription"
+						type="OperationalDataProvisioningDescription" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="OperationalDataProvisioningMessageStructure">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="TypeCode"
+						type="OperationalDataProvisioningMessageTypeCode" />
+					<xsd:element minOccurs="0" name="ClassID"
+						type="OperationalDataProvisioningMessageID" />
+					<xsd:element minOccurs="0" name="NumberID"
+						type="OperationalDataProvisioningMessageNumberID" />
+					<xsd:element minOccurs="0" name="Text"
+						type="OperationalDataProvisioningMessageText" />
+					<xsd:element minOccurs="0" name="FirstVariableText"
+						type="OperationalDataProvisioningMessageVariableText" />
+					<xsd:element minOccurs="0" name="SecondVariableText"
+						type="OperationalDataProvisioningMessageVariableText" />
+					<xsd:element minOccurs="0" name="ThridVariableText"
+						type="OperationalDataProvisioningMessageVariableText" />
+					<xsd:element minOccurs="0" name="ForthVariableText"
+						type="OperationalDataProvisioningMessageVariableText" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="OperationalDataProvisioningAggregationStructure">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="FieldID"
+						type="OperationalDataProvisioningFieldID" />
+					<xsd:element minOccurs="0" name="AggregationCode"
+						type="OperationalDataProvisioningAggregationCode" />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="p2.OperationalDataProvisioningFetchDataDirectRequest">
+		<wsdl:documentation />
+		<wsdl:part element="p2:OperationalDataProvisioningFetchDataDirectRequest"
+			name="OperationalDataProvisioningFetchDataDirectRequest" />
+	</wsdl:message>
+	<wsdl:message name="p2.OperationalDataProvisioningFetchDataDirectResponse">
+		<wsdl:documentation />
+		<wsdl:part element="p2:OperationalDataProvisioningFetchDataDirectResponse"
+			name="OperationalDataProvisioningFetchDataDirectResponse" />
+	</wsdl:message>
+	<wsdl:message name="p2.OperationalDataProvisioningFaultMessage">
+		<wsdl:documentation />
+		<wsdl:part element="p2:OperationalDataProvisioningFaultMessage"
+			name="OperationalDataProvisioningFaultMessage" />
+	</wsdl:message>
+	<wsdl:portType name="OperationalDataProvisioningIn">
+		<wsdl:documentation />
+		<wsdl:operation name="OperationalDataProvisioningIn">
+			<wsdl:documentation />
+			<wsp:Policy>
+				<wsp:PolicyReference URI="#OP_OperationalDataProvisioningIn" />
+			</wsp:Policy>
+			<wsdl:input message="p1:p2.OperationalDataProvisioningFetchDataDirectRequest" />
+			<wsdl:output
+				message="p1:p2.OperationalDataProvisioningFetchDataDirectResponse" />
+			<wsdl:fault message="p1:p2.OperationalDataProvisioningFaultMessage"
+				name="p2.OperationalDataProvisioningFaultMessage" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="OperationalDataProvisioningInBinding"
+		type="p1:OperationalDataProvisioningIn">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="OperationalDataProvisioningIn">
+			<soap:operation soapAction="http://sap.com/xi/WebService/soap1.1" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="p2.OperationalDataProvisioningFaultMessage">
+				<soap:fault name="p2.OperationalDataProvisioningFaultMessage"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="OperationalDataProvisioningIn">
+		<wsdl:port binding="p1:OperationalDataProvisioningInBinding"
+			name="OperationalDataProvisioningIn">
+			<soap:address location="http://www.example.org/" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

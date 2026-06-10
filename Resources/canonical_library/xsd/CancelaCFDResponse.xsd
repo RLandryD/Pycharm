@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2011 rel. 3 sp1 (x64) (http://www.altova.com) by XMLSpy 2011 Professional Ed. Release 2, Installed for 10 users (with SMP from 2011-03-30 to 2012-03-30) (Intercambio Electrónico de Datos y Comunicaciones S.L.) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://cancelacfd.sat.gob.mx" xmlns:q1="http://www.w3.org/2000/09/xmldsig#" xmlns:q2="http://www.w3.org/2000/09/xmldsig#" targetNamespace="http://cancelacfd.sat.gob.mx" elementFormDefault="qualified">
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig.xsd" />
+				<xs:element name="Cancelacion">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Folios" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="UUID" type="xs:string" minOccurs="0" maxOccurs="1"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element ref="q1:Signature" minOccurs="0" maxOccurs="1"/>
+						</xs:sequence>
+						<xs:attribute name="RfcEmisor" type="xs:string"/>
+						<xs:attribute name="Fecha" type="xs:dateTime" use="required"/>
+					</xs:complexType>
+				</xs:element>
+
+	<xs:element name="CancelaCFDResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="CancelaCFDResult" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Folios" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="UUID" type="xs:string" minOccurs="0" maxOccurs="1"/>
+										<xs:element name="EstatusUUID" type="xs:string" minOccurs="0" maxOccurs="1"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element ref="q2:Signature" minOccurs="0" maxOccurs="1"/>
+						</xs:sequence>
+						<xs:attribute name="CodEstatus" type="xs:string"/>
+						<xs:attribute name="Fecha" type="xs:dateTime" use="required"/>
+						<xs:attribute name="RfcEmisor" type="xs:string"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

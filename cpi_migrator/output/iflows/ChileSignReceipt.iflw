@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1">
+    <bpmn2:collaboration id="Collaboration_1" name="Default Collaboration">
+        <bpmn2:extensionElements>
+            <ifl:property><key>routeid</key><value>com.sap.GS.Chile.EnvioRecibo</value></ifl:property>
+            <ifl:property><key>namespaceMapping</key><value>xmlns:p3=http://www.sap.com/edocument/Chile/SignEnvioRecibos/v1.0;xmlns:p2=http://www.sii.cl/SiiDte</value></ifl:property>
+            <ifl:property><key>traceLevel</key><value>Message Body and Header</value></ifl:property>
+            <ifl:property><key>returnExceptionToSender</key><value>true</value></ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:participant id="Participant_Process_1" ifl:type="IntegrationProcess" name="Integration Process" processRef="Process_1">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:participant id="Participant_4" ifl:type="EndpointSender" name="Sender">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:messageFlow id="MessageFlow_2" name="" sourceRef="Participant_4" targetRef="StartEvent_1">
+            <bpmn2:extensionElements>
+                <ifl:property><key>PublicKeyAliasResponseEncryption</key><value></value></ifl:property>
+                <ifl:property><key>InitiatorTokenIncludeStrategy</key><value>AlwaysToRecipient</value></ifl:property>
+                <ifl:property><key>WSSecurityType</key><value>VerifyMessage</value></ifl:property>
+                <ifl:property><key>SaveIncomingSignedMessage</key><value>0</value></ifl:property>
+                <ifl:property><key>MessageProtocol</key><value>SOAP 1.x</value></ifl:property>
+                <ifl:property><key>ComponentType</key><value>SOAP</value></ifl:property>
+                <ifl:property><key>X509TokenAssertion</key><value>WssX509V3Token10</value></ifl:property>
+                <ifl:property><key>soapOptions</key><value>None</value></ifl:property>
+                <ifl:property><key>PrivateKeyAliasResponseSigning</key><value></value></ifl:property>
+                <ifl:property><key>ComponentSWCVName</key><value>SAP BASIS 7.31</value></ifl:property>
+                <ifl:property><key>ComponentSWCVId</key><value>7e9a3ca782ab11dfb3adf6750a424100</value></ifl:property>
+                <ifl:property><key>ComponentNS</key><value>http://sap.com/xi/XI/System</value></ifl:property>
+                <ifl:property><key>TransportProtocol</key><value>HTTP</value></ifl:property>
+                <ifl:property><key>CheckTimeStamp</key><value>0</value></ifl:property>
+                <ifl:property><key>SenderBasicSecurityProfileCompliant</key><value>1</value></ifl:property>
+                <ifl:property><key>soapServiceName</key><value>p3:eDocChileEnvioRecibos_v1</value></ifl:property>
+                <ifl:property><key>RecipientTokenIncludeStrategy</key><value>Never</value></ifl:property>
+                <ifl:property><key>WSSecurity</key><value>None</value></ifl:property>
+                <ifl:property><key>Name</key><value>ERP</value></ifl:property>
+                <ifl:property><key>soapWsdlPortName</key><value>p3:eDocChileEnvioRecibos_v1SOAP</value></ifl:property>
+                <ifl:property><key>MessageProtocolVersion</key><value>1.2</value></ifl:property>
+                <ifl:property><key>TransportProtocolVersion</key><value>1.0</value></ifl:property>
+                <ifl:property><key>address</key><value>/ChileSignEnvioRecibo</value></ifl:property>
+                <ifl:property><key>soapWsdlURL</key><value>/wsdl/eDocChileEnvioRecibo_v1.wsdl</value></ifl:property>
+                <ifl:property><key>AlgorithmSuiteAssertion</key><value>Basic128Rsa15</value></ifl:property>
+            </bpmn2:extensionElements>
+        </bpmn2:messageFlow>
+    </bpmn2:collaboration>
+    <bpmn2:process id="Process_1" name="Integration Process">
+        <bpmn2:extensionElements>
+            <ifl:property><key>transactionTimeout</key><value>30</value></ifl:property>
+            <ifl:property><key>componentVersion</key><value>1.2</value></ifl:property>
+            <ifl:property><key>cmdVariantUri</key><value>ctype::FlowElementVariant/cname::IntegrationProcess/version::1.2.1</value></ifl:property>
+            <ifl:property><key>transactionalHandling</key><value>Not Required</value></ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:startEvent id="StartEvent_1" name="Start">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>StartEvent</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
+            <bpmn2:messageEventDefinition/>
+        </bpmn2:startEvent>
+        <bpmn2:callActivity id="CallActivity_1" name="Mapping">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>Mapping</value></ifl:property>
+                <ifl:property><key>mappinguri</key><value>dir://mapping/xslt/src/main/resources/mapping/remove_full_namespace.xsl</value></ifl:property>
+                <ifl:property><key>mappingname</key><value>remove_full_namespace</value></ifl:property>
+                <ifl:property><key>mappingpath</key><value>src/main/resources/mapping/remove_full_namespace</value></ifl:property>
+                <ifl:property><key>bundle-name</key><value></value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CallActivity_2" name="Content Modifier">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>Enricher</value></ifl:property>
+                <ifl:property><key>property_0</key><value>Name:=:caratula:;Type:=:xpath:;Datatype:=:org.w3c.dom.Node:;Value:=:/EnvioRecibos/SetRecibos/Caratula</value></ifl:property>
+                <ifl:property><key>property_1</key><value>Name:=:recibo:;Type:=:xpath:;Datatype:=:org.w3c.dom.Node:;Value:=:/EnvioRecibos/SetRecibos/Recibo:;Default:=:</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CallActivity_4" name="ReciboSigner">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>XMLDigitalSignMessage</value></ifl:property>
+                <ifl:property><key>Activity_Name</key><value>ReciboSigner</value></ifl:property>
+                <ifl:property><key>Block_Size</key><value></value></ifl:property>
+                <ifl:property><key>shouldIncludeContentInSign</key><value></value></ifl:property>
+                <ifl:property><key>signatureAlgorithm</key><value>SHA1/RSA</value></ifl:property>
+                <ifl:property><key>signatureType</key><value>Detached XML signatures</value></ifl:property>
+                <ifl:property><key>canonicalizationMethod</key><value>Inclusive XML Canonicalization</value></ifl:property>
+                <ifl:property><key>transformMethod</key><value>Inclusive XML Canonicalization</value></ifl:property>
+                <ifl:property><key>prefixForXmlSignatureNamespace</key><value></value></ifl:property>
+                <ifl:property><key>keyInfoContent</key><value>X509CertificateAndKeyValue</value></ifl:property>
+                <ifl:property><key>addKeyInfoReference</key><value>false</value></ifl:property>
+                <ifl:property><key>privateKeyAlias</key><value>chilesignaturekey</value></ifl:property>
+                <ifl:property><key>digestAlgorithm</key><value>SHA1</value></ifl:property>
+                <ifl:property><key>schemaResourceUri</key><value>xsd/Recibos_v10_noSig.xsd</value></ifl:property>
+                <ifl:property><key>xpathToIdAttribute</key><value>&lt;row&gt;&lt;cell&gt;/Recibo/DocumentoRecibo/@ID&lt;/cell&gt;&lt;/row&gt;</value></ifl:property>
+                <ifl:property><key>outputEncoding</key><value>ISO-8859-1</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CallActivity_5" name="Filter">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>Filter</value></ifl:property>
+                <ifl:property><key>wrapContent</key><value>//Recibo</value></ifl:property>
+                <ifl:property><key>xpathType</key><value>Nodelist</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CallActivity_6" name="Content Modifier">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>Enricher</value></ifl:property>
+                <ifl:property><key>wrapContent</key><value>&lt;EnvioRecibos version=&quot;1.0&quot;&gt;
+&lt;SetRecibos ID=&quot;SetDoc&quot;&gt;
+${property.caratula}
+${in.body}
+&lt;/SetRecibos&gt;
+&lt;/EnvioRecibos&gt;</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CallActivity_7" name="Mapping">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>Mapping</value></ifl:property>
+                <ifl:property><key>mappinguri</key><value>dir://mapping/xslt/src/main/resources/mapping/EnvioRecibo_Schema_Conversion.xsl</value></ifl:property>
+                <ifl:property><key>mappingname</key><value>EnvioRecibo_Schema_Conversion</value></ifl:property>
+                <ifl:property><key>mappingpath</key><value>src/main/resources/mapping/EnvioRecibo_Schema_Conversion</value></ifl:property>
+                <ifl:property><key>bundle-name</key><value></value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CallActivity_8" name="EnvioRecibosSigner">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>XMLDigitalSignMessage</value></ifl:property>
+                <ifl:property><key>Activity_Name</key><value>EnvioRecibosSigner</value></ifl:property>
+                <ifl:property><key>Block_Size</key><value></value></ifl:property>
+                <ifl:property><key>shouldIncludeContentInSign</key><value></value></ifl:property>
+                <ifl:property><key>signatureAlgorithm</key><value>SHA1/RSA</value></ifl:property>
+                <ifl:property><key>signatureType</key><value>Detached XML signatures</value></ifl:property>
+                <ifl:property><key>canonicalizationMethod</key><value>Inclusive XML Canonicalization</value></ifl:property>
+                <ifl:property><key>transformMethod</key><value>Inclusive XML Canonicalization</value></ifl:property>
+                <ifl:property><key>prefixForXmlSignatureNamespace</key><value></value></ifl:property>
+                <ifl:property><key>keyInfoContent</key><value>X509CertificateAndKeyValue</value></ifl:property>
+                <ifl:property><key>addKeyInfoReference</key><value>false</value></ifl:property>
+                <ifl:property><key>outputEncoding</key><value>ISO-8859-1</value></ifl:property>
+                <ifl:property><key>privateKeyAlias</key><value>chilesignaturekey</value></ifl:property>
+                <ifl:property><key>digestAlgorithm</key><value>SHA1</value></ifl:property>
+                <ifl:property><key>schemaResourceUri</key><value>xsd/EnvioRecibos_v10_noSig.xsd</value></ifl:property>
+                <ifl:property><key>xpathToIdAttribute</key><value>&lt;row&gt;&lt;cell&gt;/p2:EnvioRecibos/p2:SetRecibos/@ID&lt;/cell&gt;&lt;/row&gt;</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CallActivity_9" name="Encoder">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>Encoder</value></ifl:property>
+                <ifl:property><key>encoderType</key><value>Base64 Encode</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CallActivity_10" name="Content Modifier">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>Enricher</value></ifl:property>
+                <ifl:property><key>wrapContent</key><value>&lt;n0:EnvioRecibosResponse xmlns:n0=&quot;http://www.sap.com/edocument/Chile/SignEnvioRecibos/v1.0&quot;&gt;
+&lt;n0:Status&gt;SUCCESS&lt;/n0:Status&gt;
+&lt;n0:SignedEnvioRecibo&gt;${in.body}&lt;/n0:SignedEnvioRecibo&gt;
+&lt;/n0:EnvioRecibosResponse&gt;</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:endEvent id="EndEvent_1" name="End">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>EndEvent</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
+            <bpmn2:messageEventDefinition/>
+        </bpmn2:endEvent>
+        <bpmn2:subProcess id="SubProcess_1" name="Exception SubProcess">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>ErrorEventSubProcessTemplate</value></ifl:property>
+            </bpmn2:extensionElements>
+        <bpmn2:startEvent id="StartEvent_2" name="Start Event 2">
+            <bpmn2:extensionElements>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::ErrorStartEvent</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
+            <bpmn2:errorEventDefinition>
+                <bpmn2:extensionElements>
+                    <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::ErrorStartEvent</value></ifl:property>
+                </bpmn2:extensionElements>
+            </bpmn2:errorEventDefinition>
+        </bpmn2:startEvent>
+        <bpmn2:endEvent id="EndEvent_2" name="End Event 2">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>EndEvent</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
+            <bpmn2:messageEventDefinition/>
+        </bpmn2:endEvent>
+        <bpmn2:callActivity id="_CallActivity_2" name="Content Modifier">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>Enricher</value></ifl:property>
+                <ifl:property><key>wrapContent</key><value>&lt;n0:EnvioRecibosResponse xmlns:n0=&quot;http://www.sap.com/edocument/Chile/SignEnvioRecibos/v1.0&quot;&gt;
+&lt;n0:Status&gt;ERROR&lt;/n0:Status&gt;
+&lt;n0:error&gt;
+&lt;n0:error_code/&gt;
+&lt;n0:error_text&gt;${exception.message}&lt;/n0:error_text&gt;
+&lt;/n0:error&gt;
+&lt;/n0:EnvioRecibosResponse&gt;</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:sequenceFlow id="SequenceFlow_11" sourceRef="StartEvent_2" targetRef="_CallActivity_2"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_12" sourceRef="_CallActivity_2" targetRef="EndEvent_2"/>
+        </bpmn2:subProcess>
+        <bpmn2:callActivity id="_CallActivity_4" name="Filter">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>Filter</value></ifl:property>
+                <ifl:property><key>wrapContent</key><value>/EnvioRecibos/SetRecibos/Recibo</value></ifl:property>
+                <ifl:property><key>xpathType</key><value>Node</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_16</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:sequenceFlow id="SequenceFlow_15" sourceRef="StartEvent_1" targetRef="CallActivity_1"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_3" sourceRef="CallActivity_1" targetRef="CallActivity_2"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_4" sourceRef="CallActivity_2" targetRef="_CallActivity_4"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="CallActivity_4" targetRef="CallActivity_5"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_7" sourceRef="CallActivity_5" targetRef="CallActivity_6"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_8" sourceRef="CallActivity_6" targetRef="CallActivity_7"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_9" sourceRef="CallActivity_7" targetRef="CallActivity_8"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_10" sourceRef="CallActivity_8" targetRef="CallActivity_9"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="CallActivity_9" targetRef="CallActivity_10"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_13" sourceRef="CallActivity_10" targetRef="EndEvent_1"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_16" sourceRef="_CallActivity_4" targetRef="CallActivity_4"/>
+    </bpmn2:process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Collaboration Diagram">
+        <bpmndi:BPMNPlane bpmnElement="Collaboration_1" id="BPMNPlane_1">
+            <bpmndi:BPMNShape bpmnElement="Participant_Process_1" id="BPMNShape_Participant_Process_1">
+                <dc:Bounds height="375.0" width="2221.0" x="215.0" y="60.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="StartEvent_1" id="BPMNShape_StartEvent_1"><dc:Bounds height="32.0" width="32.0" x="354.0" y="144.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CallActivity_1" id="BPMNShape_CallActivity_1"><dc:Bounds height="60.0" width="100.0" x="500.0" y="130.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CallActivity_2" id="BPMNShape_CallActivity_2"><dc:Bounds height="60.0" width="100.0" x="680.0" y="130.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CallActivity_4" id="BPMNShape_CallActivity_4"><dc:Bounds height="60.0" width="100.0" x="1040.0" y="130.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CallActivity_5" id="BPMNShape_CallActivity_5"><dc:Bounds height="60.0" width="100.0" x="1220.0" y="130.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CallActivity_6" id="BPMNShape_CallActivity_6"><dc:Bounds height="60.0" width="100.0" x="1400.0" y="130.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CallActivity_7" id="BPMNShape_CallActivity_7"><dc:Bounds height="60.0" width="100.0" x="1580.0" y="130.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CallActivity_8" id="BPMNShape_CallActivity_8"><dc:Bounds height="60.0" width="100.0" x="1760.0" y="130.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CallActivity_9" id="BPMNShape_CallActivity_9"><dc:Bounds height="60.0" width="100.0" x="1940.0" y="130.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CallActivity_10" id="BPMNShape_CallActivity_10"><dc:Bounds height="60.0" width="100.0" x="2120.0" y="130.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="EndEvent_1" id="BPMNShape_EndEvent_1"><dc:Bounds height="32.0" width="32.0" x="2334.0" y="144.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="SubProcess_1" id="BPMNShape_SubProcess_1"><dc:Bounds height="110.0" width="170.0" x="285.0" y="255.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_CallActivity_4" id="BPMNShape__CallActivity_4"><dc:Bounds height="60.0" width="100.0" x="860.0" y="130.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Participant_4" id="BPMNShape_Participant_4"><dc:Bounds height="140.0" width="100.0" x="80.0" y="110.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_15" id="BPMNEdge_SequenceFlow_15" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_CallActivity_1"><di:waypoint x="386.0" xsi:type="dc:Point" y="160.0"/><di:waypoint x="500.0" xsi:type="dc:Point" y="160.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_3" id="BPMNEdge_SequenceFlow_3" sourceElement="BPMNShape_CallActivity_1" targetElement="BPMNShape_CallActivity_2"><di:waypoint x="600.0" xsi:type="dc:Point" y="160.0"/><di:waypoint x="680.0" xsi:type="dc:Point" y="160.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_4" id="BPMNEdge_SequenceFlow_4" sourceElement="BPMNShape_CallActivity_2" targetElement="BPMNShape__CallActivity_4"><di:waypoint x="780.0" xsi:type="dc:Point" y="160.0"/><di:waypoint x="860.0" xsi:type="dc:Point" y="160.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_2" id="BPMNEdge_SequenceFlow_2" sourceElement="BPMNShape_CallActivity_4" targetElement="BPMNShape_CallActivity_5"><di:waypoint x="1140.0" xsi:type="dc:Point" y="160.0"/><di:waypoint x="1220.0" xsi:type="dc:Point" y="160.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_7" id="BPMNEdge_SequenceFlow_7" sourceElement="BPMNShape_CallActivity_5" targetElement="BPMNShape_CallActivity_6"><di:waypoint x="1320.0" xsi:type="dc:Point" y="160.0"/><di:waypoint x="1400.0" xsi:type="dc:Point" y="160.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_8" id="BPMNEdge_SequenceFlow_8" sourceElement="BPMNShape_CallActivity_6" targetElement="BPMNShape_CallActivity_7"><di:waypoint x="1500.0" xsi:type="dc:Point" y="160.0"/><di:waypoint x="1580.0" xsi:type="dc:Point" y="160.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_9" id="BPMNEdge_SequenceFlow_9" sourceElement="BPMNShape_CallActivity_7" targetElement="BPMNShape_CallActivity_8"><di:waypoint x="1680.0" xsi:type="dc:Point" y="160.0"/><di:waypoint x="1760.0" xsi:type="dc:Point" y="160.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_10" id="BPMNEdge_SequenceFlow_10" sourceElement="BPMNShape_CallActivity_8" targetElement="BPMNShape_CallActivity_9"><di:waypoint x="1860.0" xsi:type="dc:Point" y="160.0"/><di:waypoint x="1940.0" xsi:type="dc:Point" y="160.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_1" id="BPMNEdge_SequenceFlow_1" sourceElement="BPMNShape_CallActivity_9" targetElement="BPMNShape_CallActivity_10"><di:waypoint x="2040.0" xsi:type="dc:Point" y="160.0"/><di:waypoint x="2120.0" xsi:type="dc:Point" y="160.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_13" id="BPMNEdge_SequenceFlow_13" sourceElement="BPMNShape_CallActivity_10" targetElement="BPMNShape_EndEvent_1"><di:waypoint x="2220.0" xsi:type="dc:Point" y="160.0"/><di:waypoint x="2334.0" xsi:type="dc:Point" y="160.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_16" id="BPMNEdge_SequenceFlow_16" sourceElement="BPMNShape__CallActivity_4" targetElement="BPMNShape_CallActivity_4"><di:waypoint x="960.0" xsi:type="dc:Point" y="160.0"/><di:waypoint x="1040.0" xsi:type="dc:Point" y="160.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="MessageFlow_2" id="BPMNEdge_MessageFlow_2" sourceElement="BPMNShape_Participant_4" targetElement="BPMNShape_StartEvent_1"><di:waypoint x="180.0" xsi:type="dc:Point" y="180.0"/><di:waypoint x="354.0" xsi:type="dc:Point" y="160.0"/></bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

@@ -1,0 +1,722 @@
+<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="BAPI_MATERIAL_GET_DETAIL">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element name="MATERIAL" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Material No.</xsd:documentation>
+					</xsd:annotation>
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:maxLength value="18"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="MATERIAL_EVG" type="BAPIMGVMATNR" minOccurs="0"/>
+				<xsd:element name="MATERIAL_LONG" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Material Number (40 Characters, Necessary for Technical Reasons)</xsd:documentation>
+					</xsd:annotation>
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:maxLength value="40"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="PLANT" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Plant</xsd:documentation>
+					</xsd:annotation>
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:maxLength value="4"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="VALUATIONAREA" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Valuation area</xsd:documentation>
+					</xsd:annotation>
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:maxLength value="4"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="VALUATIONTYPE" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Valuation type</xsd:documentation>
+					</xsd:annotation>
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:maxLength value="10"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+			</xsd:all>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:simpleType name="date">
+		<xsd:union memberTypes="xsd:date genericDate" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="genericDate">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="....-..-.."/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="BAPIRETURN">
+		<xsd:annotation>
+			<xsd:documentation>Return Parameter</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="TYPE" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Message type: S Success, E Error, W Warning, I Info, A Abort</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CODE" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Message code</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="5"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MESSAGE" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Message Text</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="220"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="LOG_NO" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Application log: log number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="20"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="LOG_MSG_NO" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Application log: Internal message serial number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="6"/>
+						<xsd:pattern value="\d+"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MESSAGE_V1" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Message Variable</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="50"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MESSAGE_V2" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Message Variable</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="50"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MESSAGE_V3" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Message Variable</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="50"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MESSAGE_V4" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Message Variable</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="50"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="BAPIMATDOBEW">
+		<xsd:annotation>
+			<xsd:documentation>Material Get Detail - Valuation Data</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="PRICE_CTRL" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Price control indicator</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MOVING_PR" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Moving average price/periodic unit price</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="23"/>
+						<xsd:fractionDigits value="4"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="STD_PRICE" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Standard price</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="23"/>
+						<xsd:fractionDigits value="4"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PRICE_UNIT" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Price unit</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="5"/>
+						<xsd:fractionDigits value="0"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CURRENCY" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Currency Key</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="5"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CURRENCY_ISO" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>ISO code currency</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="BAPIMATDOA">
+		<xsd:annotation>
+			<xsd:documentation>Material Get Detail - Material Data at Client Level</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="MATL_DESC" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Material description</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="40"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="OLD_MAT_NO" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Old Material Number (18 Characters, Compatibility Mode)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="18"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MATL_TYPE" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Material type</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="4"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="IND_SECTOR" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Industry Sector</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="DIVISION" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Division</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="2"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MATL_GROUP" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Material Group</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="9"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PROD_HIER" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Product hierarchy</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="18"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="BASIC_MATL" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Basic material (basic constituent of a material) - obsolete</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="14"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="STD_DESCR" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Industry Standard Description (such as ANSI or ISO)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="18"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="LAB_DESIGN" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Laboratory/design office</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PROD_MEMO" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Production/inspection memo</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="18"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PAGEFORMAT" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Page Format of Production Memo</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="4"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CONTAINER" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Container requirements</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="2"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="STOR_CONDS" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Storage conditions</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="2"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="TEMP_CONDS" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Temperature conditions indicator</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="2"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="BASE_UOM" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Base Unit of Measure</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="EAN_UPC" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>International Article Number (EAN/UPC)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="18"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="EAN_CAT" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Category of International Article Number (EAN)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="2"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="SIZE_DIM" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Size/dimensions</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="32"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="GROSS_WT" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Gross Weight</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="13"/>
+						<xsd:fractionDigits value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="NET_WEIGHT" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Net weight</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="13"/>
+						<xsd:fractionDigits value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="UNIT_OF_WT" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Weight Unit</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="VOLUME" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Volume</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="13"/>
+						<xsd:fractionDigits value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="VOLUMEUNIT" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Volume unit</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="LENGTH" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Length</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="13"/>
+						<xsd:fractionDigits value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="WIDTH" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Width</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="13"/>
+						<xsd:fractionDigits value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="HEIGHT" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Height</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="13"/>
+						<xsd:fractionDigits value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="UNIT_DIM" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Unit of Dimension for Length/Width/Height</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MANU_MAT" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Manufacturer Part Number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="40"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MFR_NO" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Manufacturer number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="BASE_UOM_ISO" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Base unit of measure in ISO code</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="UNIT_OF_WT_ISO" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Unit of weight in ISO code</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="VOLUMEUNIT_ISO" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Volume unit in ISO code</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="UNIT_DIM_ISO" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Unit for length/breadth/height in ISO code</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CREATED_ON" type="date" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Created On</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CREATED_BY" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Name of Person Responsible for Creating the Object</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="12"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="LAST_CHNGE" type="date" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Date of Last Change</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CHANGED_BY" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Name of person who changed object</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="12"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MATL_CAT" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Material Category</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="2"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="EMPTIESBOM" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Empties Bill of Material</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="BASIC_MATL_NEW" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Basic Material</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="48"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="OLD_MAT_NO_LONG" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Old material number (40 Characters, Technical Requirement)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="40"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="BAPIMGVMATNR">
+		<xsd:annotation>
+			<xsd:documentation>Bapie Structure for transfer of external material no, ver.,</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="MATERIAL_EXT" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>External Long Material Number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="40"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MATERIAL_VERS" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Material Version Number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MATERIAL_GUID" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Material number (external GUID)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="32"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="BAPIMATDOC">
+		<xsd:annotation>
+			<xsd:documentation>Material Get Detail - Plant Data for the Material</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="PUR_GROUP" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Purchasing Group</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ISSUE_UNIT" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Unit of issue</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

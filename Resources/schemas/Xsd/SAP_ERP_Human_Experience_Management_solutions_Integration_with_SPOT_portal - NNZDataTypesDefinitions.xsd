@@ -1,0 +1,1139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2020 rel. 2 sp1 (x64) (http://www.altova.com) by Tadej Poljsak (ZZZS (The Health Insurance Institute of Slovenia)) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ws="http://zzzs.si/b2b/nsk/wsGlobalTypes" xmlns:nnz="http://zzzs.si/b2b/nnz/globalTypes" xmlns:noz="http://zzzs.si/b2b/noz/globalTypes" targetNamespace="http://zzzs.si/b2b/nnz/globalTypes" elementFormDefault="unqualified" attributeFormDefault="unqualified" version="1.3">
+	<xs:import namespace="http://zzzs.si/b2b/noz/globalTypes" schemaLocation="NOZDataTypesDefinitions.xsd"/>
+	<xs:import namespace="http://zzzs.si/b2b/nsk/wsGlobalTypes" schemaLocation="NSKDataTypesDefinitions.xsd"/>
+	<!--Enostavni tipi-->
+	<xs:simpleType name="tCehStevilka">
+		<xs:annotation>
+			<xs:documentation>CEH številka dokumenta</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="tDavcnaStevilka">
+		<xs:annotation>
+			<xs:documentation>Davčna številka</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{8}"/>
+		</xs:restriction>
+		<!-- zaradi lazjega spreminjanja tipa datuma -->
+	</xs:simpleType>
+	<xs:simpleType name="tDecima4_2_non_negative">
+		<xs:annotation>
+			<xs:documentation>Številka 4 števk, 2 decimalni mesti, ne negativen</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="4"/>
+			<xs:fractionDigits value="2"/>
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="99.99"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tDecima5_2_non_negative">
+		<xs:annotation>
+			<xs:documentation>Številka 5 števk, 2 decimalni mesti, ne negativen</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="5"/>
+			<xs:fractionDigits value="2"/>
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="999.99"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tDecima6_2_non_negative">
+		<xs:annotation>
+			<xs:documentation>Številka 6 števk, 2 decimalni mesti, ne negativen</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="6"/>
+			<xs:fractionDigits value="2"/>
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="9999.99"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tDecima5_3_non_negative">
+		<xs:annotation>
+			<xs:documentation>Številka 5 števk, 3 decimalni mesti, ne negativen</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="5"/>
+			<xs:fractionDigits value="3"/>
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="99.999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tDecimal6_4">
+		<xs:annotation>
+			<xs:documentation>Številka 6 števk, 4 decimalni mesti</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="6"/>
+			<xs:fractionDigits value="4"/>
+			<xs:maxInclusive value="99.9999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tDecimal15_2">
+		<xs:annotation>
+			<xs:documentation>Številka 15 števk, 2 decimalni mesti</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="15"/>
+			<xs:fractionDigits value="2"/>
+			<xs:maxInclusive value="1000000000000"/>
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tDecimal15_4">
+		<xs:annotation>
+			<xs:documentation>Številka 15 števk, 4 decimalna mesta</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="15"/>
+			<xs:fractionDigits value="4"/>
+			<xs:maxInclusive value="10000000000"/>
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tEmail">
+		<xs:annotation>
+			<xs:documentation>Elektronska pošta</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="70"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tEVemStevilka">
+		<xs:annotation>
+			<xs:documentation>eVEM številka zahtevka</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="tFiksniObracun">
+		<xs:annotation>
+			<xs:documentation>Oznaka, ali gre za fiksni ali dejanski obračun</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="tIBAN2007Identifier">
+		<xs:annotation>
+			<xs:documentation>Transakcijski račun (IBAN)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tIdDokumenta">
+		<xs:annotation>
+			<xs:documentation>Enolična številka dokumenta na zahtevku ali obračunu</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="tIdObracuna">
+		<xs:annotation>
+			<xs:documentation>Enolična številka obračuna na zahtevku</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:short"/>
+	</xs:simpleType>
+	<xs:simpleType name="tIdZahtevkaZzzs">
+		<xs:annotation>
+			<xs:documentation>ZZZS številka zahtevka v oblki NNNNNN-LLLL-N*</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20"/>
+			<xs:minLength value="13"/>
+			<xs:pattern value="[0-9]{6}-[0-9]{4}-[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tIdZahtevkaUpload">
+		<xs:annotation>
+			<xs:documentation>Številka zahtevka pri UPLOAD zahtevkih, ki jo generira ZZZS za e-VEM</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="tIme">
+		<xs:annotation>
+			<xs:documentation>Ime osebe</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="136"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tLeto">
+		<xs:annotation>
+			<xs:documentation>Podatek za leto</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:short">
+			<xs:minInclusive value="2007"/>
+			<xs:maxInclusive value="2100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tMesec">
+		<xs:annotation>
+			<xs:documentation>Podatek za mesec</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:short">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="12"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tMeseciIzplacil">
+		<xs:annotation>
+			<xs:documentation>Številke mesecev izplacil, ločene z vejico</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="40"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tNaziv">
+		<xs:annotation>
+			<xs:documentation>Naziv zavezanca</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="500"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tOpomba">
+		<xs:annotation>
+			<xs:documentation>Opomba</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="100"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tOzPolicist">
+		<xs:annotation>
+			<xs:documentation>Oznaka, ali je zavarovana oaseba policist, ali ne</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="tOzZujf">
+		<xs:annotation>
+			<xs:documentation>Oznaka po ZUJF (A - do vključno 90 dni, B - nad 90 dni)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="B"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tPriimek">
+		<xs:annotation>
+			<xs:documentation>Priimek osebe</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="136"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tSifraOeZzzs">
+		<xs:annotation>
+			<xs:documentation>Šifra območne enote ZZZS</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="210000"/>
+			<xs:maxInclusive value="300500"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tSifraRazlogaZadrzanosti">
+		<xs:annotation>
+			<xs:documentation>Šifra razloga zadržanosti</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:short">
+			<xs:maxInclusive value="99"/>
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tSifraStatusaZahtevka">
+		<xs:annotation>
+			<xs:documentation>Šifra statusa zahtevka</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:short"/>
+	</xs:simpleType>
+	<xs:simpleType name="tSifraVrsteDelovnegaKoledarja">
+		<xs:annotation>
+			<xs:documentation>Šifra vrste delovnega koledarja: 1 (splošni 5x8 ur), 2 (splošni 5x7+5), 3 (posebni)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:short">
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tSifraVrsteDruzinskegaClana">
+		<xs:annotation>
+			<xs:documentation>Šifra vrste družinskega člana: 1 (otrok), 2 (zakonec); Šifra vrste povezane osebe: 11 (partner), 12 (otrok), 13 (drugo)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:short">
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="11"/>
+			<xs:enumeration value="12"/>
+			<xs:enumeration value="13"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tSifraPizZaBenefikacijo">
+		<xs:annotation>
+			<xs:documentation>Povečanje prispevka PIZ za beneficirano dobo</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="tSifraVrsteDokumenta">
+		<xs:annotation>
+			<xs:documentation>Vrsta dokumenta</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:short"/>
+	</xs:simpleType>
+	<xs:simpleType name="tSifraVrstePrispevka">
+		<xs:annotation>
+			<xs:documentation>Šifra vrste prispevka</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:short">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tSklic">
+		<xs:annotation>
+			<xs:documentation>Sklic za nakazilo</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="30"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tStObracunov">
+		<xs:annotation>
+			<xs:documentation>Skupno število obračunov</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:positiveInteger"/>
+	</xs:simpleType>
+	<xs:simpleType name="tStPrilog">
+		<xs:annotation>
+			<xs:documentation>Število vseh prilog (zahtevek + obračuni)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="tStDni">
+		<xs:annotation>
+			<xs:documentation>Število dni</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:positiveInteger"/>
+	</xs:simpleType>
+	<xs:simpleType name="tStevilkaPotrdilaOZadrzanostiOdDela">
+		<xs:annotation>
+			<xs:documentation>Stevilka Potrdila o zadrzanosti od dela</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="19"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tStUrDan">
+		<xs:annotation>
+			<xs:documentation>Število ur</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="4"/>
+			<xs:fractionDigits value="2"/>
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="24"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tTekst">
+		<xs:annotation>
+			<xs:documentation>Besedilo z naborom dovoljenih znakov</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-ZčćšžđČĆŠŽĐäëöüÄËÖÜÁáÉéÍíÓóÚúÔôŐőŰűŘřß .,'\-]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tTelefon">
+		<xs:annotation>
+			<xs:documentation>Telefonska številka</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="30"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tVirZahtevka">
+		<xs:annotation>
+			<xs:documentation>Vir zahtevka (1 - portal eVEM, 2 - vmesnik)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tVrstaZahtevka">
+		<xs:annotation>
+			<xs:documentation>Vrsta zahtevka (2 - refundacija delodajalca, 3 - razlika do minimalne osnove)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:short">
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tVrstaZahtevkaDisplay">
+		<xs:annotation>
+			<xs:documentation>Vrsta zahtevka za prikaz</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:short"/>
+	</xs:simpleType>
+	<!--Sestavljeni tipi-->
+	<xs:complexType name="tGlavaResponse">
+		<xs:annotation>
+			<xs:documentation>Glava odgovora na standardni zahtevek SOAP sporočila	</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Sporocilo" type="ws:tSporocilo">
+				<xs:annotation>
+					<xs:documentation>Podatki o sporočilu</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UspesnostIzvedbe" type="nnz:tUspesnostIzvedbe"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="tDelovniKoledar">
+		<xs:annotation>
+			<xs:documentation>Delovni koledar</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Dan" minOccurs="0" maxOccurs="200">
+				<xs:annotation>
+					<xs:documentation>Podatki za posamezen datum</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Datum" type="ws:tDatum"/>
+						<xs:element name="Ure" type="nnz:tStUrDan"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Sifra" type="nnz:tSifraVrsteDelovnegaKoledarja" use="required">
+			<xs:annotation>
+				<xs:documentation>1 (splošni 5x8 ur), 2 (splošni 5x7+5), 3 (posebni)</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="tDokument">
+		<xs:annotation>
+			<xs:documentation>Dokument na zahtevku ali obračunu</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="Id" type="nnz:tIdDokumenta" use="required">
+					<xs:annotation>
+						<xs:documentation>Enolična številka dokumenta na zahtevku ali obračunu</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="Sifra" type="nnz:tSifraVrsteDokumenta" use="required">
+					<xs:annotation>
+						<xs:documentation>Sifra vrste dokumenta</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="tDokumentSigned">
+		<xs:annotation>
+			<xs:documentation>Digitalno podpisan dokument ali priloga, ki se pretvori v tip CreaDoc</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="Id" type="nnz:tIdDokumenta" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="tDokumenti">
+		<xs:annotation>
+			<xs:documentation>Seznam dokumentov na zahtevku ali obračunu</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Dokument" type="nnz:tDokument" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="tGlavaZahtevka">
+		<xs:annotation>
+			<xs:documentation>Osnovni podatki zahtevka</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="DtZahtevka" type="ws:tDatum">
+				<xs:annotation>
+					<xs:documentation>Datum oddaje zahtevka</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtIzplacila" type="ws:tDatum">
+				<xs:annotation>
+					<xs:documentation>Datum izplačila zavezanca</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VrstaZahtevka" type="nnz:tVrstaZahtevka">
+				<xs:annotation>
+					<xs:documentation>Vrsta zahtevka (2 - refundacija delodajalca, 3 - razlika do minimalne osnove)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SifraOeZzzs" type="nnz:tSifraOeZzzs">
+				<xs:annotation>
+					<xs:documentation>Šifra OE ali izpostave ZZZS</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LetoZahtevka" type="nnz:tLeto">
+				<xs:annotation>
+					<xs:documentation>Leto zahtevka</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MesecZahtevka" type="nnz:tMesec">
+				<xs:annotation>
+					<xs:documentation>Mesec zahtevka</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FiksniObracun" type="nnz:tFiksniObracun">
+				<xs:annotation>
+					<xs:documentation>Oznaka, ali gre za fiksni ali dejanski obračun</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StUrSkupno">
+				<xs:annotation>
+					<xs:documentation>Skupno število ur</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="nnz:tDecima5_2_non_negative"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StUrPovprecno" type="nnz:tDecima5_2_non_negative" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Povprečno število ur (podano le, kadar gre za fiksni obračun)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StObracunov" type="nnz:tStObracunov">
+				<xs:annotation>
+					<xs:documentation>Število obračunov na zahtevku</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StPrilog" type="nnz:tStPrilog">
+				<xs:annotation>
+					<xs:documentation>Število vseh prilog (zahtevek + obračuni)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ZnZahtevka" type="nnz:tDecimal15_2">
+				<xs:annotation>
+					<xs:documentation>Znesek zahtevka</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sklic" type="nnz:tSklic" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sklic za nakazilo</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Opomba" type="nnz:tOpomba" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Opombe zavezanca</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Dokumenti" type="nnz:tDokumenti" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="tObracunBase">
+		<xs:annotation>
+			<xs:documentation>Podatki obračuna za getListObracun</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Oseba" type="nnz:tOseba">
+				<xs:annotation>
+					<xs:documentation>Podatki o zavarovani osebi</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SifraRazlogaZadrzanosti" type="nnz:tSifraRazlogaZadrzanosti">
+				<xs:annotation>
+					<xs:documentation>Šifra razloga zadržanosti (izbira iz šifranta ZZZS)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtZadrzanostiOd" type="ws:tDatum">
+				<xs:annotation>
+					<xs:documentation>Datuma začetka zadržanost od dela v breme ZZZS</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtZadrzanostiDo" type="ws:tDatum">
+				<xs:annotation>
+					<xs:documentation>Datuma konca zadržanost od dela v breme ZZZS</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Dt1DanZadrzanosti" type="ws:tDatum">
+				<xs:annotation>
+					<xs:documentation>1. dan zadržanosti (prvi dan celotne zadržanosti)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ZnObracuna" type="nnz:tDecimal15_2">
+				<xs:annotation>
+					<xs:documentation>Znesek obračuna zavezanca</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ZnObracunaZzzs" type="nnz:tDecimal15_2">
+				<xs:annotation>
+					<xs:documentation>Znesek po obračunu ZZZS</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StevilkaPotrdilaOZadrzanostiOdDela" type="nnz:tStevilkaPotrdilaOZadrzanostiOdDela" minOccurs="0"/>
+			<xs:element name="Dokumenti" type="nnz:tDokumenti" minOccurs="0"/>
+			<xs:element name="Status" type="nnz:tStatus">
+				<xs:annotation>
+					<xs:documentation>Status obračuna</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Napake" type="nnz:tNapake" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="Id" type="nnz:tIdObracuna">
+			<xs:annotation>
+				<xs:documentation>Enolična številka obračuna na zahtevku</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="tObracunExtended">
+		<xs:annotation>
+			<xs:documentation>Podatki obračuna za vnos</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Zavarovanec" type="nnz:tOseba">
+				<xs:annotation>
+					<xs:documentation>Podatki o zavarovani osebi</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DruzinskiClan" type="nnz:tOseba" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Podatki o družinskem članu</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DelovniKoledar" type="nnz:tDelovniKoledar" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Podatki delovnega koledarja</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PosebnostiPrispevkov" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Posebnosti prispevkov delodajalca</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Posebnost" type="nnz:tPosebnostPrispevka" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SifraZavarovalnePodlage" type="noz:PodlagaType">
+				<xs:annotation>
+					<xs:documentation>Šifra zavarovalne podlage</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ZnObracuna" type="nnz:tDecimal15_2">
+				<xs:annotation>
+					<xs:documentation>Znesek obračuna zavezanca</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ZnObracunaZzzs" type="nnz:tDecimal15_2" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Znesek obračuna ZZZS (podatka pri vnosu ni, podatek se pojavi, ko je obračun obdelan)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ZnPrispMin" type="nnz:tDecimal15_2" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Znesek prispevkov od razlike do minimalne osnove - skupaj</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SifraRazlogaZadrzanosti" type="nnz:tSifraRazlogaZadrzanosti">
+				<xs:annotation>
+					<xs:documentation>Šifra razloga zadržanosti (izbira iz šifranta ZZZS)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SifraPizZaBenefikacijo" type="nnz:tSifraPizZaBenefikacijo" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Povečanje prispevka PIZ za beneficirano dobo</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Dt1DanZadrzanosti" type="ws:tDatum">
+				<xs:annotation>
+					<xs:documentation>1. dan zadržanosti (prvi dan celotne zadržanosti)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Dt1DanVBremeZzzs" type="ws:tDatum" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>1. dan v breme ZZZS</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtZadrzanostiOd" type="ws:tDatum">
+				<xs:annotation>
+					<xs:documentation>Datuma začetka zadržanosti od dela (iz bolniškega lista)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtZadrzanostiDo" type="ws:tDatum">
+				<xs:annotation>
+					<xs:documentation>Datuma konca zadržanosti od dela (iz bolniškega lista)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtRecidivOd" type="ws:tDatum" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum začetka prejšnje zadržanosti</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtRecidivDo" type="ws:tDatum" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum konca prejšnje zadržanosti</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Dt121Dne" type="ws:tDatum" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum 121. dne</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Dt91Dne" type="ws:tDatum" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum 91. dne (se izračuna glede na 1. dan v breme ZZZS)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="KolicnikValorizacije">
+				<xs:annotation>
+					<xs:documentation>Količnik valorizacije</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="nnz:tDecimal6_4">
+						<xs:maxInclusive value="5.0000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StUrMesObveznosti" type="nnz:tDecima5_2_non_negative">
+				<xs:annotation>
+					<xs:documentation>Število ur dejanske mesečne obveznosti</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StUrPovpObveznosti" type="nnz:tDecima5_2_non_negative" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Število ur povprečne mesečne obveznosti (le pri fiksnem obračunu)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StUrZadrzanostiDejansko" type="nnz:tDecima5_2_non_negative">
+				<xs:annotation>
+					<xs:documentation>Število dejanskih ur zadržanosti</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StNormUrZadrzanosti" type="nnz:tDecima5_2_non_negative" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Število normiranih ur zadržanosti v breme ZZZS (le pri fiksnem obračunu)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StUrIk" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Število ur invalidnosti po dokončni odločbi ZPIZ</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="nnz:tStUrDan">
+						<xs:maxInclusive value="8"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StUrZk" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Število ur preostale delazmožnosti po odločbi ZK ZZZS</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="nnz:tStUrDan">
+						<xs:maxInclusive value="12"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StDniVBremeZzzs" type="nnz:tStDni" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Število dni v breme ZZZS</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OzPolicist" type="nnz:tOzPolicist" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Oznaka, ali je zavarovana oseba policist, ali ne (true/false)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OzZujf" type="nnz:tOzZujf" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Oznaka po ZUJF (A - do vključno 90 koledarskih dni, B - nad 90 koledarskih dni)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OsnovaPreteklegaLeta">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="LetoOsnove" type="nnz:tLeto">
+							<xs:annotation>
+								<xs:documentation>Leto osnove</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ZnBrutoOsnova" type="nnz:tDecimal15_2">
+							<xs:annotation>
+								<xs:documentation>Skupna bruto osnova za nadomestilo</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="MeseciIzplacil" type="nnz:tMeseciIzplacil">
+							<xs:annotation>
+								<xs:documentation>Številke mesecev izplačil, ločene z vejico</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="StUrOsnove">
+							<xs:annotation>
+								<xs:documentation>Skupno število ur osnove</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="nnz:tDecima6_2_non_negative">
+									<xs:maxInclusive value="5000.00"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="ZnUrnaOsnova">
+							<xs:annotation>
+								<xs:documentation>Urna osnova za delo (limit)</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="nnz:tDecimal15_4">
+									<xs:maxInclusive value="2000"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="InformativniIzracun" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ZnIzhodiscnaUrnaOsnova" type="nnz:tDecimal15_2">
+							<xs:annotation>
+								<xs:documentation>Znesek izhodiščne urne osnove</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ZnUrnaOsnovaZaNadomestilo" type="nnz:tDecimal15_2">
+							<xs:annotation>
+								<xs:documentation>Znesek urne osnove za nadomestilo</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ZnBruto1Nadomestila" type="nnz:tDecimal15_2">
+							<xs:annotation>
+								<xs:documentation>Znesek 1. bruto nadomestila</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ZnBruto2Nadomestila" type="nnz:tDecimal15_2">
+							<xs:annotation>
+								<xs:documentation>Znesek 2. bruto nadomestila</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ZnPrispevkiZavezanca" type="nnz:tDecimal15_2">
+							<xs:annotation>
+								<xs:documentation>Znesek prispevkov zavezanca</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ZnNadomestilaSkupaj" type="nnz:tDecimal15_2">
+							<xs:annotation>
+								<xs:documentation>Znesek obračunanega nadomestila zavezanca</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Prispevki" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Podatki o plačanih prispevkih</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Prispevek" type="nnz:tPrispevek" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Opomba" type="nnz:tOpomba" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Opombe zavezanca</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StevilkaPotrdilaOZadrzanostiOdDela" type="nnz:tStevilkaPotrdilaOZadrzanostiOdDela" minOccurs="0"/>
+			<xs:element name="Dokumenti" type="nnz:tDokumenti" minOccurs="0"/>
+			<xs:element name="Status" type="nnz:tStatus" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Status obračuna</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Napake" type="nnz:tNapake" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="Id" type="nnz:tIdObracuna" use="required">
+			<xs:annotation>
+				<xs:documentation>Enolična številka obračuna na zahtevku</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="tOseba">
+		<xs:annotation>
+			<xs:documentation>Podatki o osebi</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Ta segment je obvezen pri podatkih o zavarovani osebi, pri družinskem članu oz. povezani osebi ni obvezen.</xs:documentation>
+				</xs:annotation>
+				<xs:element name="ZzzsStevilka">
+					<xs:annotation>
+						<xs:documentation>ZZZS številka osebe</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="noz:ZzzsStevilkaType">
+							<xs:minInclusive value="20000000"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="DavcnaStevilka" type="nnz:tDavcnaStevilka">
+					<xs:annotation>
+						<xs:documentation>Davčna številka osebe</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="Priimek" type="nnz:tPriimek">
+				<xs:annotation>
+					<xs:documentation>Priimek osebe</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Ime" type="nnz:tIme">
+				<xs:annotation>
+					<xs:documentation>Ime osebe</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtRojstva" type="ws:tDatum" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum rojstva (le za družinskega člana)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SifraVrsteDruzinskegaClana" type="nnz:tSifraVrsteDruzinskegaClana" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Šifra vrste družinskega člana: 1 (otrok), 2 (zakonec); šifra vrste povezane osebe: 11 (partner), 12 (otrok), 13 (drugo).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="tPosebnostPrispevka">
+		<xs:annotation>
+			<xs:documentation>Posebnosti prispevkov delodajalca</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Odstotek" type="nnz:tDecima5_2_non_negative">
+				<xs:annotation>
+					<xs:documentation>Odstotek posebnosti prispevka</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Sifra" type="nnz:tSifraVrstePrispevka" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="tPrispevek">
+		<xs:annotation>
+			<xs:documentation>Podatki za posamezen prispevek</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:sequence>
+				<xs:element name="Odstotek" type="nnz:tDecima5_3_non_negative">
+					<xs:annotation>
+						<xs:documentation>Odstotek prispevka</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Znesek" type="nnz:tDecimal15_2">
+					<xs:annotation>
+						<xs:documentation>Znesek prispevka</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:sequence>
+		<xs:attribute name="Sifra" type="nnz:tSifraVrstePrispevka" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="tNapaka">
+		<xs:annotation>
+			<xs:documentation>Podatki o napaki (šifra, opis napake ter navodilo za odpravo)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Opis" type="xs:string"/>
+			<xs:element name="Ukrep" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="tNapake">
+		<xs:annotation>
+			<xs:documentation>Napake na entiteti (zahtevek ali obračun)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Napaka" type="nnz:tNapaka" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="tStatus">
+		<xs:annotation>
+			<xs:documentation>Status entitete (zahtevek ali obračun)</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="Id" type="nnz:tSifraStatusaZahtevka"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="tUspesnostIzvedbe">
+		<xs:annotation>
+			<xs:documentation>Uspešnost izvedbe zahtevka (vsebuje še nasvet za odpravo napake)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="VseOk" type="xs:boolean"/>
+			<xs:element name="Napaka" type="nnz:tNapaka" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="tZahtevekBase">
+		<xs:annotation>
+			<xs:documentation>Podatki za odgovor metode getListZahtevek</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="VrstaZahtevka" type="nnz:tVrstaZahtevkaDisplay">
+				<xs:annotation>
+					<xs:documentation>Vrsta zahtevka (2-6)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtPrejema" type="noz:DatumType">
+				<xs:annotation>
+					<xs:documentation>Datum prejema zahtevka na ZZZS</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtPlacila" type="noz:DatumType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum plačila ZZZS zavezancu</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LetoZahtevka" type="nnz:tLeto">
+				<xs:annotation>
+					<xs:documentation>Leto zahtevka</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MesecZahtevka" type="nnz:tMesec">
+				<xs:annotation>
+					<xs:documentation>Mesec zahtevka</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FiksniObracun" type="nnz:tFiksniObracun">
+				<xs:annotation>
+					<xs:documentation>Oznaka, ali gre za fiksni ali dejanski obračun</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StObracunov" type="nnz:tStObracunov">
+				<xs:annotation>
+					<xs:documentation>Število obračunov na zahtevku</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IBAN" type="nnz:tIBAN2007Identifier">
+				<xs:annotation>
+					<xs:documentation>Transakcijski račun zavezanca na katerega ZZZS nakaže nadomestilo</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ZnZahtevkaZavezanca" type="nnz:tDecimal15_2">
+				<xs:annotation>
+					<xs:documentation>Znesek zahtevka zavezanca</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ZnObracunanegaNadomestila" type="nnz:tDecimal15_2" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Znesek obračunanega nadomestila</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ZnPlacanegaZahtevka" type="nnz:tDecimal15_2" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Znesek plačanega zahtevka</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Opomba" type="nnz:tOpomba" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Opombe zavezanca</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EVemStevilka" type="nnz:tEVemStevilka" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>eVEM številka zahtevka</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Dokumenti" type="nnz:tDokumenti" minOccurs="0"/>
+			<xs:element name="Status" type="nnz:tStatus">
+				<xs:annotation>
+					<xs:documentation>Status zahtevka</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Napake" type="nnz:tNapake" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="Id" type="nnz:tIdZahtevkaZzzs" use="required">
+			<xs:annotation>
+				<xs:documentation>ZZZS številka zahtevka</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="tZahtevekExtended">
+		<xs:annotation>
+			<xs:documentation>Podatki zahtevka za vnos (vsebuje tudi podatke obračunov)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Zavezanec" type="nnz:tZavezanec">
+				<xs:annotation>
+					<xs:documentation>Podatki o zavezancu</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Zahtevek" type="nnz:tGlavaZahtevka">
+				<xs:annotation>
+					<xs:documentation>Podatki o zahtevku</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Obracuni">
+				<xs:annotation>
+					<xs:documentation>Seznam obračunov</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Obracun" type="nnz:tObracunExtended" maxOccurs="500"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="tZavezanec">
+		<xs:annotation>
+			<xs:documentation>Podatki zavezanca</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:sequence>
+				<xs:element name="DavcnaStevilka" type="nnz:tDavcnaStevilka">
+					<xs:annotation>
+						<xs:documentation>Davčna številka zavezanca</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="MaticnaStevilka" type="noz:MatStevPRSType">
+					<xs:annotation>
+						<xs:documentation>Matična številka zavezanca</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:element name="Naziv" type="nnz:tNaziv">
+				<xs:annotation>
+					<xs:documentation>Naziv zavezanca</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IBAN" type="nnz:tIBAN2007Identifier">
+				<xs:annotation>
+					<xs:documentation>Transakcijski račun zavezanca</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="KontaktEmail" type="nnz:tEmail" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Kontaktni podatki za obveščanje</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="KontaktTelefon" type="nnz:tTelefon" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Kontaktni podatki za obveščanje</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!--Globalni elementi-->
+	<xs:element name="Dokument" type="nnz:tDokument"/>
+	<xs:element name="ObracunBase" type="nnz:tObracunBase"/>
+	<xs:element name="ObracunExtended" type="nnz:tObracunExtended"/>
+	<xs:element name="ZahtevekBase" type="nnz:tZahtevekBase"/>
+	<xs:element name="ZahtevekExtended" type="nnz:tZahtevekExtended"/>
+</xs:schema>

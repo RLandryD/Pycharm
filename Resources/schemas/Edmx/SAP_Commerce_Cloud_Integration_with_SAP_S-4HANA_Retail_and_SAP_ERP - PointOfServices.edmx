@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+   <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="1.0">
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:s="http://schemas.sap.com/commerce" Namespace="HybrisCommerceOData" s:schema-version="1">
+         <EntityType Name="BaseStore">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="uid" Type="Edm.String" s:IsUnique="true" Nullable="false" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="BaseStore_uid" />
+         </EntityType>
+         <EntityType Name="Address">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="town" Type="Edm.String" Nullable="true" />
+            <Property Name="streetnumber" Type="Edm.String" Nullable="true" />
+            <Property Name="postalcode" Type="Edm.String" Nullable="true" />
+            <Property Name="pobox" Type="Edm.String" Nullable="true" />
+            <Property Name="streetname" Type="Edm.String" Nullable="true" />
+            <Property Name="duplicate" Type="Edm.Boolean" s:IsUnique="true" Nullable="true" />
+            <Property Name="publicKey" Type="Edm.String" s:IsUnique="true" Nullable="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Address_duplicate|Address_publicKey" />
+            <NavigationProperty Name="country" Relationship="HybrisCommerceOData.FK_Address_country" FromRole="Address" ToRole="Country" Nullable="true" />
+         </EntityType>
+         <EntityType Name="PointOfService">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="name" Type="Edm.String" s:IsUnique="true" Nullable="false" />
+            <Property Name="description" Type="Edm.String" Nullable="true" />
+            <Property Name="sapoaa_cacShippingPoint" Type="Edm.String" Nullable="true" />
+            <Property Name="displayName" Type="Edm.String" Nullable="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="PointOfService_name" />
+            <NavigationProperty Name="type" Relationship="HybrisCommerceOData.FK_PointOfService_type" FromRole="PointOfService" ToRole="PointOfServiceTypeEnum" Nullable="false" />
+            <NavigationProperty Name="address" Relationship="HybrisCommerceOData.FK_PointOfService_address" FromRole="PointOfService" ToRole="Address" Nullable="true" s:IsAutoCreate="true" />
+            <NavigationProperty Name="baseStore" Relationship="HybrisCommerceOData.FK_PointOfService_baseStore" FromRole="PointOfService" ToRole="BaseStore" Nullable="true" />
+         </EntityType>
+         <EntityType Name="PointOfServiceTypeEnum">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="code" Type="Edm.String" s:IsUnique="true" Nullable="false" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="PointOfServiceTypeEnum_code" />
+         </EntityType>
+         <EntityType Name="Country">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="isocode" Type="Edm.String" s:IsUnique="true" Nullable="false" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Country_isocode" />
+         </EntityType>
+         <Association Name="FK_PointOfService_type">
+            <End Type="HybrisCommerceOData.PointOfService" Multiplicity="0..1" Role="PointOfService" />
+            <End Type="HybrisCommerceOData.PointOfServiceTypeEnum" Multiplicity="0..1" Role="PointOfServiceTypeEnum" />
+         </Association>
+         <Association Name="FK_PointOfService_address">
+            <End Type="HybrisCommerceOData.PointOfService" Multiplicity="0..1" Role="PointOfService" />
+            <End Type="HybrisCommerceOData.Address" Multiplicity="0..1" Role="Address" />
+         </Association>
+         <Association Name="FK_PointOfService_baseStore">
+            <End Type="HybrisCommerceOData.PointOfService" Multiplicity="0..1" Role="PointOfService" />
+            <End Type="HybrisCommerceOData.BaseStore" Multiplicity="0..1" Role="BaseStore" />
+         </Association>
+         <Association Name="FK_Address_country">
+            <End Type="HybrisCommerceOData.Address" Multiplicity="0..1" Role="Address" />
+            <End Type="HybrisCommerceOData.Country" Multiplicity="0..1" Role="Country" />
+         </Association>
+         <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+            <EntitySet Name="BaseStores" EntityType="HybrisCommerceOData.BaseStore" />
+            <EntitySet Name="Addresses" EntityType="HybrisCommerceOData.Address" />
+            <EntitySet Name="PointOfServices" EntityType="HybrisCommerceOData.PointOfService" />
+            <EntitySet Name="PointOfServiceTypeEnums" EntityType="HybrisCommerceOData.PointOfServiceTypeEnum" />
+            <EntitySet Name="Countries" EntityType="HybrisCommerceOData.Country" />
+            <AssociationSet Name="PointOfService_PointOfServiceTypeEnums" Association="HybrisCommerceOData.FK_PointOfService_type">
+               <End EntitySet="PointOfServices" Role="PointOfService" />
+               <End EntitySet="PointOfServiceTypeEnums" Role="PointOfServiceTypeEnum" />
+            </AssociationSet>
+            <AssociationSet Name="PointOfService_Addresses" Association="HybrisCommerceOData.FK_PointOfService_address">
+               <End EntitySet="PointOfServices" Role="PointOfService" />
+               <End EntitySet="Addresses" Role="Address" />
+            </AssociationSet>
+            <AssociationSet Name="PointOfService_BaseStores" Association="HybrisCommerceOData.FK_PointOfService_baseStore">
+               <End EntitySet="PointOfServices" Role="PointOfService" />
+               <End EntitySet="BaseStores" Role="BaseStore" />
+            </AssociationSet>
+            <AssociationSet Name="Address_Countries" Association="HybrisCommerceOData.FK_Address_country">
+               <End EntitySet="Addresses" Role="Address" />
+               <End EntitySet="Countries" Role="Country" />
+            </AssociationSet>
+         </EntityContainer>
+      </Schema>
+   </edmx:DataServices>
+</edmx:Edmx>

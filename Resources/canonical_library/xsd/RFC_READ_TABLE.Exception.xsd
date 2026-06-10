@@ -1,0 +1,205 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="RFC_READ_TABLE.Response">
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element name="DATA">
+					<xsd:annotation>
+						<xsd:documentation>Data read (out)</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="item" type="TAB512" minOccurs="0" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="FIELDS">
+					<xsd:annotation>
+						<xsd:documentation>Names (in) and structure (out) of fields read</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="item" type="RFC_DB_FLD" minOccurs="0" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="OPTIONS">
+					<xsd:annotation>
+						<xsd:documentation>Selection entries, &quot;WHERE clauses&quot; (in)</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="item" type="RFC_DB_OPT" minOccurs="0" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:all>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="RFC_READ_TABLE.Exception">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Name">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="DATA_BUFFER_EXCEEDED"/>
+							<xsd:enumeration value="FIELD_NOT_VALID"/>
+							<xsd:enumeration value="NOT_AUTHORIZED"/>
+							<xsd:enumeration value="OPTION_NOT_VALID"/>
+							<xsd:enumeration value="TABLE_NOT_AVAILABLE"/>
+							<xsd:enumeration value="TABLE_WITHOUT_DATA"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="Text" type="xsd:string" minOccurs="0"/>
+				<xsd:element name="Message" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ID">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:maxLength value="20"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="Number">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="\d+"/>
+										<xsd:maxLength value="3"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="Attributes" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="V1" minOccurs="0">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:maxLength value="50"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="V2" minOccurs="0">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:maxLength value="50"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="V3" minOccurs="0">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:maxLength value="50"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="V4" minOccurs="0">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:maxLength value="50"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="TAB512">
+		<xsd:annotation>
+			<xsd:documentation>Table with a 512 byte field</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="WA" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Character field length 512</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="512"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="RFC_DB_FLD">
+		<xsd:annotation>
+			<xsd:documentation>RFC Table Read: Description of Fields to Retrieve</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="FIELDNAME" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Field Name</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="30"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="OFFSET" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Offset of a field</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="6"/>
+						<xsd:pattern value="\d+"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="LENGTH" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Length (No. of Characters)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="6"/>
+						<xsd:pattern value="\d+"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="TYPE" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>ABAP data type (C,D,N,...)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="FIELDTEXT" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Short Description of Repository Objects</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="60"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="RFC_DB_OPT">
+		<xsd:annotation>
+			<xsd:documentation>RFC Table Read: Select Options / WHERE Clause</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="TEXT" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Text line of a message</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="72"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

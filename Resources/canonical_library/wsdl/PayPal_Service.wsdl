@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://webservice.SalesOrder.test.org" 
+xmlns:apachesoap="http://xml.apache.org/xml-soap" 
+xmlns:impl="http://webservice.SalesOrder.test.org" 
+xmlns:intf="http://webservice.SalesOrder.test.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://webservice.SalesOrder.test.org" xmlns="http://www.w3.org/2001/XMLSchema">
+  
+   <element name="PayPal_REQUEST">
+    <complexType>
+     <sequence>
+      <element name="PayPalSenderId" type="xsd:string"/>
+      <element name="PayPalKeys" type="xsd:string"/>
+      <element name="PaymentToken" type="xsd:string"/>
+      <element name="EmailMessage" type="xsd:string"/>
+      <element name="Type" type="xsd:string"/>
+      <element name="Receiver" type="xsd:string"/>
+      <element name="Amount" type="xsd:string"/>
+      <element name="Currency" type="xsd:string"/>
+      <element name="SenderItemId" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   
+   <element name="PayPal_RESPONSE">
+    <complexType>
+     <sequence>
+      <element name="PayoutId" type="xsd:string"/>
+      <element name="TransactionId" type="xsd:string"/>
+      <element name="Status" type="xsd:string"/>
+      <element name="ProcessingTime" type="xsd:string"/>
+      <element name="FeeCurrency" type="xsd:string"/>
+      <element name="FeeAmount" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="PayPal_REQUEST">
+      <wsdl:part element="impl:PayPal_REQUEST" name="parameters"></wsdl:part>
+   </wsdl:message>
+
+   <wsdl:message name="PayPal_RESPONSE">
+      <wsdl:part element="impl:PayPal_RESPONSE" name="parameters"></wsdl:part>
+   </wsdl:message>
+
+
+   
+   <wsdl:portType name="PayPal_Service">
+      <wsdl:operation name="request">
+         <wsdl:input message="impl:PayPal_REQUEST" name="PayPal_REQUEST"></wsdl:input>
+         <wsdl:output message="impl:PayPal_RESPONSE" name="PayPal_RESPONSE"></wsdl:output>
+         
+      </wsdl:operation>
+   </wsdl:portType>
+
+   <wsdl:binding name="PayPal_ServiceBinding" type="impl:PayPal_Service">
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="request">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="PayPal_REQUEST">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+
+         <wsdl:output name="PayPal_RESPONSE">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+
+
+      </wsdl:operation>
+   </wsdl:binding>
+
+
+
+</wsdl:definitions>

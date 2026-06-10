@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:n1="urn:sap-com:document:sap:rfc:functions" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:sap-com:document:sap:soap:functions:mc-style">
+ <wsdl:documentation>
+  <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+ </wsdl:documentation>
+ <wsp:UsingPolicy wsdl:required="true"/>
+ <wsp:Policy wsu:Id="IF_IF_ISU_C4C_V2_OBJECT_SEARCH">
+  <sapsession:Session xmlns:sapsession="http://www.sap.com/webas/630/soap/features/session/">
+   <sapsession:enableSession>false</sapsession:enableSession>
+  </sapsession:Session>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_IsuC4cV2ObjectFinder">
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsdl:types>
+  <xsd:schema xmlns:n0="urn:sap-com:document:sap:rfc:functions" attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:soap:functions:mc-style">
+   <xsd:import namespace="urn:sap-com:document:sap:rfc:functions"/>
+   <xsd:simpleType name="char10">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="10"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="IsuC4cEfindpar">
+    <xsd:sequence>
+     <xsd:element minOccurs="0" name="BusinessPartner" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="BpLastName" type="n0:char40"/>
+     <xsd:element minOccurs="0" name="BpFirstName" type="n0:char40"/>
+     <xsd:element minOccurs="0" name="BpCity" type="n0:char40"/>
+     <xsd:element minOccurs="0" name="BpDistrict" type="n0:char40"/>
+     <xsd:element minOccurs="0" name="BpCityPostalCode" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="BpPoBoxPostalCode" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="BpCompanyPostalCode" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="BpPoBoxCity" type="n0:char40"/>
+     <xsd:element minOccurs="0" name="BpStreet" type="n0:char60"/>
+     <xsd:element minOccurs="0" name="BpHouseNumber" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="BpHouseNumberSuppl" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="BpCountry" type="n0:char3"/>
+     <xsd:element minOccurs="0" name="BpRegion" type="n0:char3"/>
+     <xsd:element minOccurs="0" name="BpSearchTerm1" type="n0:char20"/>
+     <xsd:element minOccurs="0" name="BpSearchTerm2" type="n0:char20"/>
+     <xsd:element minOccurs="0" name="BpAddressNumber" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="BpCompepletTeleNumber" type="n0:char30"/>
+     <xsd:element minOccurs="0" name="BpSocialInsuranceNumber" type="n0:char12"/>
+     <xsd:element minOccurs="0" name="BpDriverLicense" type="n0:char20"/>
+     <xsd:element minOccurs="0" name="BpWelfareOffice" type="n0:char9"/>
+     <xsd:element minOccurs="0" name="BpBankAccount" type="n0:char18"/>
+     <xsd:element minOccurs="0" name="BpBankNumber" type="n0:char15"/>
+     <xsd:element minOccurs="0" name="BpBankCountry" type="n0:char3"/>
+     <xsd:element minOccurs="0" name="BpTaxType" type="n0:char4"/>
+     <xsd:element minOccurs="0" name="BpTaxNumber" type="n0:char20"/>
+     <xsd:element minOccurs="0" name="ContractAccount" type="n0:char12"/>
+     <xsd:element minOccurs="0" name="AlternativePayer" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="AlternativePayee" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="AlternativeInvoiceRecipient" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="AlternativeDunningRecipient" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="AlternativeCaCollBills" type="n0:char12"/>
+     <xsd:element minOccurs="0" name="CaUsedForPayTrans" type="n0:char12"/>
+     <xsd:element minOccurs="0" name="Contract" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="CaCompanyCode" type="n0:char4"/>
+     <xsd:element minOccurs="0" name="CaDivision" type="n0:char2"/>
+     <xsd:element minOccurs="0" name="DateFindingObject" type="tns:char10"/>
+     <xsd:element minOccurs="0" name="BudgetBillingPlan" type="n0:char12"/>
+     <xsd:element minOccurs="0" name="DateFindObj" type="tns:char10"/>
+     <xsd:element minOccurs="0" name="ConnectionObject" type="n0:char30"/>
+     <xsd:element minOccurs="0" name="ConnObjCity" type="n0:char40"/>
+     <xsd:element minOccurs="0" name="ConnObjDist" type="n0:char40"/>
+     <xsd:element minOccurs="0" name="ConnObjPostalCode" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="ConnObjPoBoxPostalCode" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="ConnObjCompanyPostalCode" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="ConnObjPoBoxCity" type="n0:char40"/>
+     <xsd:element minOccurs="0" name="ConnObjStreet" type="n0:char60"/>
+     <xsd:element minOccurs="0" name="ConnObjHouseNumber" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="ConnObjHouseNumberSuppl" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="ConnObjHouseNum" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="ConnObjCountry" type="n0:char3"/>
+     <xsd:element minOccurs="0" name="ConnObjRegion" type="n0:char3"/>
+     <xsd:element minOccurs="0" name="ConnObjSearchTerm1" type="n0:char20"/>
+     <xsd:element minOccurs="0" name="ConnObjSearchTerm2" type="n0:char20"/>
+     <xsd:element minOccurs="0" name="ConnObjAddrnum" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="Premise" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="PremiseHouseNumberSuppl" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="PremiseStreet3" type="n0:char40"/>
+     <xsd:element minOccurs="0" name="PremiseStreet4" type="n0:char40"/>
+     <xsd:element minOccurs="0" name="PremiseFloor" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="PremiseRoomnumber" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="PremiseOwner" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="InstallationId" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="InstallationDivision" type="n0:char2"/>
+     <xsd:element minOccurs="0" name="InstallationBillingClass" type="n0:char4"/>
+     <xsd:element minOccurs="0" name="InstallationDate" type="tns:char10"/>
+     <xsd:element minOccurs="0" name="InstallationPod" type="n0:char50"/>
+     <xsd:element minOccurs="0" name="InstallationPodDate" type="tns:char10"/>
+     <xsd:element minOccurs="0" name="DeviceLocation" type="n0:char30"/>
+     <xsd:element minOccurs="0" name="LocationMaintenanceObj" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="DeviceEquipmentNumber" type="n0:char18"/>
+     <xsd:element minOccurs="0" name="DeviceSerialNumber" type="n0:char18"/>
+     <xsd:element minOccurs="0" name="DeviceDivison" type="n0:char2"/>
+     <xsd:element minOccurs="0" name="DeviceDate" type="tns:char10"/>
+     <xsd:element minOccurs="0" name="FicaDocNumber" type="n0:char12"/>
+     <xsd:element minOccurs="0" name="PostingDate" type="tns:char10"/>
+     <xsd:element minOccurs="0" name="ServiceOrderNumber" type="n0:char12"/>
+     <xsd:element minOccurs="0" name="ServiceOrderStatus" type="n0:numeric2"/>
+     <xsd:element minOccurs="0" name="ServiceOrderCategory" type="n0:char4"/>
+     <xsd:element minOccurs="0" name="ServiceOrderType" type="n0:numeric2"/>
+     <xsd:element minOccurs="0" name="SoNotificationNumber" type="n0:char12"/>
+     <xsd:element minOccurs="0" name="ServiceNotificationNumber" type="n0:char12"/>
+     <xsd:element minOccurs="0" name="ServiceNotificationStatus" type="n0:numeric2"/>
+     <xsd:element minOccurs="0" name="SnNotificationNumber" type="n0:char12"/>
+     <xsd:element minOccurs="0" name="ServiceNotificationOrderTyp" type="n0:char4"/>
+     <xsd:element minOccurs="0" name="GlobalDate" type="tns:char10"/>
+     <xsd:element minOccurs="0" name="CompanyCode" type="n0:char4"/>
+     <xsd:element minOccurs="0" name="Division" type="n0:char2"/>
+     <xsd:element minOccurs="0" name="FindLocByDeviceId" type="n0:char1"/>
+     <xsd:element minOccurs="0" name="KeepSelection" type="n0:char1"/>
+     <xsd:element minOccurs="0" name="Searchstring" type="n0:char132"/>
+     <xsd:element minOccurs="0" name="BusinessPartnerBirthdate" type="tns:char10"/>
+     <xsd:element minOccurs="0" name="BusinessPartnerBirthPlace" type="n0:char40"/>
+     <xsd:element minOccurs="0" name="BusinessPartnerEmail" type="n0:char241"/>
+     <xsd:element minOccurs="0" name="VaildDateTo" type="tns:char10"/>
+     <xsd:element minOccurs="0" name="SaleasDistributionPonumber" type="n0:char35"/>
+     <xsd:element minOccurs="0" name="SalesDocumentNumber" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="SalesOrganization" type="n0:char4"/>
+     <xsd:element minOccurs="0" name="SalesDocumentType" type="n0:char4"/>
+     <xsd:element minOccurs="0" name="InternationalAddrIndicator" type="n0:char1"/>
+     <xsd:element minOccurs="0" name="InternationalVersionAddr" type="n0:char1"/>
+     <xsd:element minOccurs="0" name="ProcessingVariantDisconnRec" type="n0:char4"/>
+     <xsd:element minOccurs="0" name="DisconnectionReason" type="n0:char2"/>
+     <xsd:element minOccurs="0" name="DisconnectionDocumentStatus" type="n0:numeric2"/>
+     <xsd:element minOccurs="0" name="CreationDate" type="tns:char10"/>
+     <xsd:element minOccurs="0" name="DisconnectionDocumentNumber" type="n0:char12"/>
+     <xsd:element minOccurs="0" name="IbanNumber" type="n0:char34"/>
+     <xsd:element minOccurs="0" name="IdentificationType" type="n0:char6"/>
+     <xsd:element minOccurs="0" name="IdentificationNumber" type="n0:char60"/>
+     <xsd:element minOccurs="0" name="DocumentToBeReleased" type="n0:char1"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="Bapiret2">
+    <xsd:sequence>
+     <xsd:element minOccurs="0" name="Type" type="n0:char1"/>
+     <xsd:element minOccurs="0" name="Id" type="n0:char20"/>
+     <xsd:element minOccurs="0" name="Number" type="n0:numeric3"/>
+     <xsd:element minOccurs="0" name="Message" type="n0:char220"/>
+     <xsd:element minOccurs="0" name="LogNo" type="n0:char20"/>
+     <xsd:element minOccurs="0" name="LogMsgNo" type="n0:numeric6"/>
+     <xsd:element minOccurs="0" name="MessageV1" type="n0:char50"/>
+     <xsd:element minOccurs="0" name="MessageV2" type="n0:char50"/>
+     <xsd:element minOccurs="0" name="MessageV3" type="n0:char50"/>
+     <xsd:element minOccurs="0" name="MessageV4" type="n0:char50"/>
+     <xsd:element minOccurs="0" name="Parameter" type="n0:char32"/>
+     <xsd:element minOccurs="0" name="Row" type="xsd:int"/>
+     <xsd:element minOccurs="0" name="Field" type="n0:char30"/>
+     <xsd:element minOccurs="0" name="System" type="n0:char10"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cSObjid">
+    <xsd:sequence>
+     <xsd:element minOccurs="0" name="Objtype" type="n0:char10"/>
+     <xsd:element minOccurs="0" name="Objkey" type="n0:char70"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="Bapiret2T">
+    <xsd:sequence>
+     <xsd:element maxOccurs="unbounded" minOccurs="0" name="item" type="tns:Bapiret2"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cTObjid">
+    <xsd:sequence>
+     <xsd:element maxOccurs="unbounded" minOccurs="0" name="item" type="tns:IsuC4cSObjid"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="IsuC4cV2ObjectFinder">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element minOccurs="0" name="IsFindpar" type="tns:IsuC4cEfindpar"/>
+      <xsd:element minOccurs="0" name="IvMaxrows" type="xsd:int"/>
+      <xsd:element minOccurs="0" name="IvObjtype" type="n0:char10"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="IsuC4cV2ObjectFinderResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element minOccurs="0" name="EtMessage" type="tns:Bapiret2T"/>
+      <xsd:element minOccurs="0" name="EtResult" type="tns:IsuC4cTObjid"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+  <xsd:schema xmlns:tns="urn:sap-com:document:sap:rfc:functions" attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:rfc:functions">
+   <xsd:simpleType name="char1">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char10">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="10"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char12">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="12"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char132">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="132"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char15">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="15"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char18">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="18"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char2">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="2"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char20">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="20"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char220">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="220"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char241">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="241"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char3">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char30">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="30"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char32">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="32"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char34">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="34"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char35">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="35"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char4">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="4"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char40">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="40"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char50">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="50"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char6">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="6"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char60">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="60"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char70">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="70"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char9">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="9"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric2">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="2"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric3">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric6">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="6"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+  </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="IsuC4cV2ObjectFinder">
+  <wsdl:part element="tns:IsuC4cV2ObjectFinder" name="parameters"/>
+ </wsdl:message>
+ <wsdl:message name="IsuC4cV2ObjectFinderResponse">
+  <wsdl:part element="tns:IsuC4cV2ObjectFinderResponse" name="parameter"/>
+ </wsdl:message>
+ <wsdl:portType name="ISU_C4C_V2_OBJECT_SEARCH">
+  <wsdl:documentation>
+   <sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+    <sapdoc:docitem docURL="http://ldciemt.wdf.sap.corp:50022/sap/bc/esdt/docu/sd_text?sap-client=350&amp;sd_name=ISU_C4C_V2_OBJECT_SEARCH"/>
+    <sapdoc:docitem applicationComponent="IS-U-CS-C4C"/>
+   </sapdoc:sapdoc>
+  </wsdl:documentation>
+  <wsp:Policy>
+   <wsp:PolicyReference URI="#IF_IF_ISU_C4C_V2_OBJECT_SEARCH"/>
+  </wsp:Policy>
+  <wsdl:operation name="IsuC4cV2ObjectFinder">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_IsuC4cV2ObjectFinder"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:IsuC4cV2ObjectFinder"/>
+   <wsdl:output message="tns:IsuC4cV2ObjectFinderResponse"/>
+  </wsdl:operation>
+ </wsdl:portType>
+</wsdl:definitions>

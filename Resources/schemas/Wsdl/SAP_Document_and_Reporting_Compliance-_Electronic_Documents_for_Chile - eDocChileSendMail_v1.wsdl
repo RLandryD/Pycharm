@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.sap.com/eDocument/Chile/SendMail/v1.0"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	name="eDocChileSendMail_v1" targetNamespace="http://www.sap.com/eDocument/Chile/SendMail/v1.0">
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://www.sap.com/eDocument/Chile/SendMail/v1.0">
+			<xsd:element name="SendMail">
+				<xsd:complexType>
+					<xsd:sequence>
+                        <xsd:element name="mail_info" type="tns:mail_infoType"></xsd:element>
+                    </xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="SendMailResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="out" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:complexType name="AttachmentInfoType">
+				<xsd:sequence>
+					<xsd:element name="FileName" type="xsd:string"></xsd:element>
+					<xsd:element name="FileContent" type="xsd:base64Binary"></xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="mail_infoType">
+				<xsd:sequence>
+					<xsd:element name="mail_id_from"
+						type="tns:emailAddressType">
+					</xsd:element>
+					<xsd:element name="mail_id_to"
+						type="tns:emailAddressType">
+					</xsd:element>
+					<xsd:element name="subject" type="xsd:string"></xsd:element>
+					<xsd:element name="body" type="xsd:string"></xsd:element>
+					<xsd:element name="Attachment" type="tns:AttachmentInfoType"></xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:simpleType name="emailAddressType">
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="[^@]+@[^\.]+\..+" />
+				</xsd:restriction>
+			</xsd:simpleType>
+
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="SendMailRequest">
+		<wsdl:part element="tns:SendMail" name="SendMailRequestParameters" />
+	</wsdl:message>
+	<wsdl:message name="SendMailResponse">
+  </wsdl:message>
+	<wsdl:portType name="eDocChileSendMail_v1">
+		<wsdl:operation name="SendMail">
+			<wsdl:input message="tns:SendMailRequest" />
+			<wsdl:output message="tns:SendMailResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="eDocChileSendMail_v1SOAP" type="tns:eDocChileSendMail_v1">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="SendMail">
+			<soap:operation
+				soapAction="http://www.sap.com/eDocument/Chile/SendMail/v1.0/NewOperation" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="eDocChileSendMail_v1">
+		<wsdl:port binding="tns:eDocChileSendMail_v1SOAP" name="eDocChileSendMail_v1SOAP">
+			<soap:address location="http://endpointaddress" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

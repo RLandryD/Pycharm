@@ -19,6 +19,34 @@ import streamlit as st
 ROOT = Path(__file__).parent
 sys.path.insert(0, str(ROOT))
 
+# ── Pinned local resource folders (per-machine; edit HERE, not in the UI) ──────
+# These were previously selectable in the UI. They are now fixed so the wiring
+# is unambiguous and can't be mis-set. Each is consumed at one specific moment:
+#   Packages         → deploy-time template ranking (rank_templates)
+#   Corpus           → Generate's artifact learning (capability corpus)
+#   canonical_library→ schema source for resource carry (used once wired)
+_RESOURCES_ROOT = Path("/home/landry/PycharmProjects/Resources")
+PINNED_LOCAL_DIRS = {
+    "template_library_dir":  str(_RESOURCES_ROOT / "Packages"),
+    "capability_corpus_dir": str(_RESOURCES_ROOT / "Corpus"),
+    "schema_library_dir":    str(_RESOURCES_ROOT / "canonical_library"),
+}
+
+
+def _pin_local_dirs():
+    """Force the local resource folders to their fixed paths (replacing the UI
+    selectors). To relocate them, edit PINNED_LOCAL_DIRS above — nowhere else."""
+    try:
+        from fetcher.user_settings import set_setting, get_setting
+        for _k, _v in PINNED_LOCAL_DIRS.items():
+            if get_setting(_k, "") != _v:
+                set_setting(_k, _v)
+    except Exception:
+        pass
+
+
+_pin_local_dirs()
+
 from auth.authenticator import CFAuthenticator, NeoAuthenticator, PIAuthenticator
 from extractor.pi_extractor import PIRestExtractor, PIFileExtractor, InterfaceRecord
 from analyzer.complexity_analyzer import ComplexityAnalyzer, MigrationAssessment
@@ -859,92 +887,6 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
         st.warning("Connect to CPI tenant in the sidebar first.")
         return
 
-    # ── Clone & personalize a real iFlow → deploy via API (no hash) ──────────
-    # Additive panel: take a real iFlow from an uploaded package, re-skin its
-    # identity (and optionally replace its Groovy), verify references stay valid,
-    # then deploy through the API path that bypasses the SHA-256 import hash.
-    # This is the proven clone-and-adapt recipe; the data contract (mappings/
-    # XSDs/edmx) is left intact so the iFlow still opens.
-    with st.expander("🧬 Clone & personalize a real iFlow → deploy (API, no hash)",
-                     expanded=False):
-        _pkgs = st.session_state.get("uploaded_packages", [])
-        if not _pkgs:
-            st.caption("Upload a CPI package in Tab 1 to use as a clone template.")
-        else:
-            import io as _io
-            from fetcher.cpi_api_deploy import read_package as _read_pkg
-            from fetcher.cpi_uploader import CPIUploader as _CU
-            _names = [p["filename"] for p in _pkgs]
-            _sel = st.selectbox("Template package", _names, key="clone_pkg")
-            _pbytes = _pkgs[_names.index(_sel)]["bytes"]
-            try:
-                _parsed = _read_pkg(_io.BytesIO(_pbytes))
-                _iflows = [a for a in _parsed["artifacts"] if a["type"] == "IFlow"]
-            except Exception as _e:
-                _iflows = []
-                st.warning(f"Could not read that package: {_e}")
-            if _iflows:
-                _inames = [a["name"] for a in _iflows]
-                _isel = st.selectbox("Template iFlow", _inames, key="clone_iflow")
-                _src = _iflows[_inames.index(_isel)]
-                _newname = st.text_input("New iFlow name",
-                                         value=f"Z_{_isel}"[:40], key="clone_newname")
-                _newpkg = st.text_input("New package name",
-                                        value="Z Personalized", key="clone_newpkg")
-                _repl = st.checkbox(
-                    "Replace all Groovy scripts with personalized stubs",
-                    value=False, key="clone_repl",
-                    help="Off = keep the real scripts (safest). On = swap in stubs.")
-                if st.button("Personalize & build", key="clone_build"):
-                    from scaffolder.iflow_personalizer import (
-                        PersonalizationSpec, personalize_bundle, references_intact)
-                    from fetcher.cpi_package_export import build_export_zip
-                    _iname = _newname.replace(" ", "_")
-                    _bundle = personalize_bundle(
-                        _src["content"],
-                        PersonalizationSpec(
-                            new_iflow_name=_iname,
-                            replace_all_scripts_with_default=_repl,
-                            xslt_marker=f"Personalized :: {_iname}"))
-                    _ok, _missing = references_intact(_bundle)
-                    if not _ok:
-                        st.error(f"Reference check failed (missing: {_missing}). "
-                                 "Not safe to deploy — left unchanged.")
-                    else:
-                        _pid = _CU.sanitize_package_id(_newpkg)
-                        _exp = build_export_zip(
-                            package={"id": _pid, "name": _newpkg},
-                            artifacts=[{"type": "IFlow", "name": _iname,
-                                        "content": _bundle}])
-                        st.session_state["clone_export"] = _exp
-                        st.session_state["clone_meta"] = (_pid, _newpkg, _iname, _bundle)
-                        st.success(f"Built a reference-checked package: {_iname}")
-                if st.session_state.get("clone_export"):
-                    st.download_button(
-                        "⬇ Download personalized package (.zip)",
-                        data=st.session_state["clone_export"],
-                        file_name="personalized_package.zip",
-                        mime="application/zip", key="clone_dl")
-                    if st.button("🚀 Deploy via API (no hash)", key="clone_deploy"):
-                        from fetcher.cpi_uploader import UploadResult
-                        _pid, _pname, _iname, _ibytes = st.session_state["clone_meta"]
-                        _up = CPIUploader(st.session_state.cpi_base_url,
-                                          st.session_state.cpi_session)
-                        if _up.ensure_package(_pid, _pname):
-                            _r = UploadResult(
-                                interface_name=_iname, package_id=_pid,
-                                artifact_id=_CU.sanitize_package_id(_iname),
-                                status="failed")
-                            _up._post_artifact(_ibytes, _pid,
-                                               _CU.sanitize_package_id(_iname),
-                                               _iname, _r, "IFlow")
-                            if _r.status in ("uploaded", "updated"):
-                                st.success(f"✅ Deployed {_iname} to {_pid} (hash-free).")
-                            else:
-                                st.error(f"Deploy failed: {_r.message}")
-                        else:
-                            st.error("Package creation failed — see the log.")
-
     dc1, dc2 = st.columns(2)
     with dc1:
         auto_deploy = st.checkbox("Auto-deploy after upload", value=False,
@@ -981,7 +923,7 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
 
     if selected_assessments:
         with st.expander("Set target package for each iFlow", expanded=not bool(tenant_pkgs)):
-            for a in selected_assessments:
+            for _row_i, a in enumerate(selected_assessments):
                 nm = a.interface.name
                 cols = st.columns([2, 2, 2])
                 with cols[0]:
@@ -989,13 +931,13 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
                 with cols[1]:
                     mode = st.selectbox(
                         "Mode", ["Auto", "Existing", "New"],
-                        key=f"pkgmode_{nm}",
+                        key=f"pkgmode_{_row_i}_{nm}",
                         label_visibility="collapsed")
                 with cols[2]:
                     if mode == "Existing":
                         if pkg_labels:
                             sel = st.selectbox(
-                                "Package", pkg_labels, key=f"pkgsel_{nm}",
+                                "Package", pkg_labels, key=f"pkgsel_{_row_i}_{nm}",
                                 label_visibility="collapsed")
                             idx = pkg_labels.index(sel)
                             st.session_state["pkg_targets"][nm] = {
@@ -1007,7 +949,7 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
                             st.session_state["pkg_targets"][nm] = {"mode": "auto"}
                     elif mode == "New":
                         newname = st.text_input(
-                            "New package name", key=f"pkgnew_{nm}",
+                            "New package name", key=f"pkgnew_{_row_i}_{nm}",
                             label_visibility="collapsed",
                             placeholder="New package name")
                         st.session_state["pkg_targets"][nm] = {
@@ -1302,6 +1244,7 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
                 except Exception:                       # noqa
                     pass
                 st.success("Stop requested.")
+                st.rerun()
         else:
             if not sk_path:
                 st.caption("Set a **service-key path** in settings to enable the "
@@ -1352,6 +1295,7 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
                     else:
                         st.success("Poller started — collecting into "
                                    f"{runs_path2.name}. Log: {log_path.name}")
+                        st.rerun()
                 except Exception as e:                  # noqa
                     st.error(f"Could not start poller: {e}")
 
@@ -1377,7 +1321,7 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
             if not cands:
                 try:
                     from scaffolder.iflow_scaffolder import IFlowScaffolder
-                    _scaf = IFlowScaffolder(output_dir=output_dir)
+                    _scaf = IFlowScaffolder(output_dir=output_dir, resources_dir=PINNED_LOCAL_DIRS["template_library_dir"])
                     cands = [Path(_scaf.scaffold(a))]
                 except Exception as _e:
                     wire_log.log_note(f"artifact export: could not generate iFlow for {name}: {_e}")
@@ -1412,7 +1356,7 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
             if not cands:
                 try:
                     from scaffolder.iflow_scaffolder import IFlowScaffolder
-                    _scaf = IFlowScaffolder(output_dir=output_dir)
+                    _scaf = IFlowScaffolder(output_dir=output_dir, resources_dir=PINNED_LOCAL_DIRS["template_library_dir"])
                     cands = [Path(_scaf.scaffold(a))]
                 except Exception as _e:
                     wire_log.log_note(f"export: could not generate iFlow for {name}: {_e}")
@@ -1472,25 +1416,27 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
             # Find iflw — generate on demand if it's not already on disk, so
             # the upload never silently skips just because Generate-all wasn't
             # run in this exact session / output dir.
-            candidates = list(iflow_dir.glob(f"*{name[:20]}*.iflw")) \
-                         if iflow_dir.exists() else []
-            if not candidates:
-                wire_log.log_note(
-                    f"No .iflw on disk for '{name}' in {iflow_dir} — generating now")
-                try:
-                    from scaffolder.iflow_scaffolder import IFlowScaffolder
-                    _scaf = IFlowScaffolder(output_dir=output_dir)
-                    _tid = target_ids.get(name, "s4hana_cloud") if "target_ids" in dir() else "s4hana_cloud"
-                    _resolved = st.session_state.get("resolutions", {}).get(name, {}).get(_tid)
-                    _gen = _scaf.scaffold(a, resolved=_resolved)
-                    candidates = [Path(_gen)]
-                    wire_log.log_note(f"Generated iFlow for '{name}': {Path(_gen).name}")
-                except Exception as _ge:
-                    wire_log.log_note(f"Could NOT generate iFlow for '{name}': {_ge}")
-                    import logging as _lg
-                    _lg.getLogger("cpi.upload").error(
-                        "Upload skipped for %s — no iFlow and generation failed: %s",
-                        name, _ge)
+            # Always (re)generate the iFlow fresh for upload. Globbing for a
+            # pre-existing file risked matching a STALE/partial .iflw whose meta
+            # dir no longer matched — on the tenant that produced a tiny ~1.7KB
+            # bundle and "Error while loading the details of the integration
+            # flow" (Settlement_Batch_EOIO). Regeneration is cheap and
+            # guarantees a correct iflw + validated manifest + bundled resources
+            # every time.
+            candidates = []
+            try:
+                from scaffolder.iflow_scaffolder import IFlowScaffolder
+                _scaf = IFlowScaffolder(output_dir=output_dir, resources_dir=PINNED_LOCAL_DIRS["template_library_dir"])
+                _tid = target_ids.get(name, "s4hana_cloud") if "target_ids" in dir() else "s4hana_cloud"
+                _resolved = st.session_state.get("resolutions", {}).get(name, {}).get(_tid)
+                _gen = _scaf.scaffold(a, resolved=_resolved)
+                candidates = [Path(_gen)]
+                wire_log.log_note(f"Generated iFlow for '{name}': {Path(_gen).name}")
+            except Exception as _ge:
+                wire_log.log_note(f"Could NOT generate iFlow for '{name}': {_ge}")
+                import logging as _lg
+                _lg.getLogger("cpi.upload").error(
+                    "Upload skipped for %s — generation failed: %s", name, _ge)
             if candidates:
                 from scaffolder.pipeline_scaffolder import (
                     generate_package_name, generate_iflow_name,
@@ -1549,13 +1495,11 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
                     continue
                 _art_id = name.replace(" ", "_")[:60]
                 _extras = st.session_state.get("artifact_bundles", {}).get(name)
-                _pref_tpl = st.session_state.local_template_choice.get(name, "")
                 result = uploader.upload_iflow(
                     candidates[0], pkg_id, _art_id, name,
                     overwrite=overwrite, extra_artifacts=_extras,
                     sender_adapter=getattr(a.interface, "sender_adapter", ""),
                     receiver_adapter=getattr(a.interface, "receiver_adapter", ""),
-                    prefer_template_name=_pref_tpl,
                 )
                 if result.status in ("uploaded", "updated") and auto_deploy:
                     deploy_status = uploader.deploy_iflow(result.artifact_id)
@@ -2011,23 +1955,17 @@ def render_capability_solver():
     #      since it can hold the entire 34k-file corpus, and
     #  (b) the packages uploaded in Tab 1.
     # The directory path wins when given (it's the richer source).
-    from fetcher.user_settings import get_setting as _get_setting, \
-        set_setting as _set_setting
-    corpus_dir = st.text_input(
-        "Capability source folder (optional)",
-        value=st.session_state.get(
-            "capability_corpus_dir",
-            _get_setting("capability_corpus_dir", "")),
-        placeholder="/home/<you>/PycharmProjects/Final",
-        key="capability_corpus_dir",
-        help="Point this at your harvested artifact folder (e.g. Final/) to "
-             "build the catalog from ALL of it. Saved externally so it "
-             "survives re-importing the project; also used by Generate. "
-             "Leave blank to use the packages uploaded in Tab 1.")
-    # Persist externally (to ~/.cpi_migrator/settings.json) so the path is not
-    # lost when the project is deleted/re-imported, and so Generate reuses it.
-    if corpus_dir and corpus_dir != _get_setting("capability_corpus_dir", ""):
-        _set_setting("capability_corpus_dir", corpus_dir)
+    # Pinned to Resources/Corpus (see PINNED_LOCAL_DIRS) — no longer selectable.
+    corpus_dir = PINNED_LOCAL_DIRS["capability_corpus_dir"]
+    if os.path.isdir(corpus_dir):
+        try:
+            _n = sum(1 for _ in os.scandir(corpus_dir))
+            st.caption(f"📁 Capability corpus: `{corpus_dir}` — ✓ {_n} entr(y/ies)")
+        except OSError:
+            st.caption(f"📁 Capability corpus: `{corpus_dir}` — ✓ set")
+    else:
+        st.caption(f"📁 Capability corpus: `{corpus_dir}` — ⚠ not found on disk "
+                   "(falls back to Tab-1 uploads)")
 
     packages = st.session_state.get("uploaded_packages") or []
     corpus = None
@@ -2295,7 +2233,7 @@ def render_ceiling_and_intervention(
             from scaffolder.iflow_scaffolder import IFlowScaffolder
             from scaffolder.parameter_injector import build_parameters_prop
 
-            scaffolder = IFlowScaffolder(output_dir=str(Path(output_dir) / "iflows"))
+            scaffolder = IFlowScaffolder(output_dir=str(Path(output_dir) / "iflows"), resources_dir=PINNED_LOCAL_DIRS["template_library_dir"])
             uploader = None
             if _b_upload and st.session_state.cpi_connected:
                 uploader = CPIUploader(st.session_state.cpi_base_url,
@@ -2608,19 +2546,25 @@ def render_proposal_generator(selected_assessments, output_dir,
 
 _active_program = st.session_state.get("active_program", "migration")
 
+# Global default: most client interfaces DO have endpoints, so default ON.
+# When the user turns this OFF in Tab 1, every iFlow is the self-contained
+# timer scaffold and the endpoint-selection tabs (3 · Match, 4 · Configure)
+# are not needed — so we drop them from the tab bar and route their bodies to
+# a discarded sink (same proven mechanism APIM mode uses, cleared at the end).
+st.session_state.setdefault("iflows_have_endpoints", True)
+_ep_sink = None
+
 if _active_program == "migration":
-    tab0, tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
-        "🔑 0 · Profiles",
-        "📥 1 · Source",
-        "🔍 2 · Interfaces",
-        "🎯 3 · Match iFlow",
-        "⚙ 4 · Configure",
-        "🚀 5 · Generate",
-        "🛡 6 · Clean Core",
-        "✅ 7 · Verify",
-        "🤖 8 · AI Solver",
-        "📋 9 · Client Tracker",
-    ])
+    # All tabs are ALWAYS shown. Conditionally hiding tabs 3/4 on the endpoint
+    # toggle caused the "Match iFlow flickers / hides" bug AND hid the corpus
+    # folder selector (needed for pattern extraction even in timer mode). The
+    # endpoint toggle now only sets the default deploy shape, never the tab set.
+    _labels = ["🔑 0 · Profiles", "📥 1 · Source", "🔍 2 · Interfaces",
+               "🎯 3 · Match iFlow", "⚙ 4 · Configure",
+               "🚀 5 · Generate", "🛡 6 · Clean Core", "✅ 7 · Verify",
+               "🤖 8 · AI Solver", "📋 9 · Client Tracker"]
+    _t = st.tabs(_labels)
+    tab0, tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = _t
     _apim_active = False
     _migration_sink = None
 else:
@@ -2649,6 +2593,27 @@ else:
 with tab1:
     st.header("Source Configuration")
     st.caption("Choose how to load PI/PO interfaces. The form adapts to your selection.")
+
+    # ── Endpoint mode (project-wide default) ─────────────────────────────
+    # ON (default): interfaces have real sender/receiver endpoints — the
+    # common case for client work; tabs 3 · Match and 4 · Configure are shown
+    # and the per-interface default in Tab 2 is "endpoints". OFF: every iFlow
+    # is the self-contained timer scaffold (no endpoints) and tabs 3 & 4 are
+    # hidden. Toggling reruns the app, which rebuilds the tab bar.
+    # NOTE: the checkbox must NOT share its key with the layout-controlling
+    # state `iflows_have_endpoints`, which the tab bar reads at the top of the
+    # run. Sharing the key (plus the setdefault above) creates a race where the
+    # widget re-asserts its value after the tab bar was already built, so tab 3
+    # mounts then vanishes on the next rerun ("Match iFlow flickers"). Instead
+    # the widget owns its own key and an on_change callback copies the value
+    # into the controlling key — callbacks run BEFORE the script reruns, so the
+    # tab bar always sees a settled value.
+    # Single build path: every iFlow goes through the same generator
+    # (clean-room regeneration when a source iFlow is present, else the
+    # self-contained timer scaffold). The old endpoints on/off toggle used to
+    # route to a separate clone-and-adapt method; that path has been removed, so
+    # there is no longer anything to choose — all tabs are always available.
+    st.session_state["iflows_have_endpoints"] = True
 
     # Quick-access How To button (visible at top regardless of source choice).
     # Steps are kept in session state so they survive reruns; toggle on click.
@@ -2695,7 +2660,7 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
     source_type = st.radio(
         "Source type",
         ["Live PI/PO REST API", "Upload package / ZIP", "Upload Excel inventory",
-         "🛠 SAP Migration Assessment (Excel)", "🌐 SAP GitHub samples"],
+         "🛠 SAP Migration Assessment (Excel)"],
         horizontal=True,
         key="source_type",
     )
@@ -2804,6 +2769,7 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
         if uploaded_files and parse_clicked:
             from fetcher.artifact_router import extract_iflows_recursive
             from extractor.pi_extractor import InterfaceRecord
+            from extractor.iflow_parser import extract_endpoints
             with st.spinner(f"Parsing {len(uploaded_files)} archive(s)…"):
                 fetcher = CPIFetcher(
                     base_url=st.session_state.cpi_base_url or "http://localhost",
@@ -2828,18 +2794,26 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
                         all_arts.extend(arts)
                         # One InterfaceRecord per iFlow (NOT per package).
                         for fl in flows:
+                            _ep = extract_endpoints(fl.get("iflw_xml", ""))
+                            _snd = _ep.get("sender_system", "")
+                            _rcv = _ep.get("receiver_system", "")
                             all_records.append(InterfaceRecord(
                                 id=fl["id"], name=fl["name"],
                                 namespace="", software_component="",
-                                sender_system="", receiver_system="",
-                                sender_adapter="HTTPS", receiver_adapter="HTTPS",
+                                sender_system=_snd, receiver_system=_rcv,
+                                sender_adapter=(_ep.get("sender_adapter")
+                                                or ("HTTPS" if _snd else "")),
+                                receiver_adapter=(_ep.get("receiver_adapter")
+                                                  or ("HTTPS" if _rcv else "")),
                                 message_interface="", description="",
+                                source_iflow_xml=fl.get("iflw_xml", ""),
                             ))
                         pkgs.append({
                             "filename": uf.name,
                             "bytes": raw,
                             "iflow_count": len(flows),
-                            "iflows": [{"id": f["id"], "name": f["name"]}
+                            "iflows": [{"id": f["id"], "name": f["name"],
+                                        "iflw_xml": f.get("iflw_xml", "")}
                                        for f in flows],
                         })
                     except Exception as exc:
@@ -2862,12 +2836,19 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
                         if fl["id"] in seen_ids:
                             continue
                         seen_ids.add(fl["id"])
+                        _ep = extract_endpoints(fl.get("iflw_xml", ""))
+                        _snd = _ep.get("sender_system", "")
+                        _rcv = _ep.get("receiver_system", "")
                         merged_records.append(InterfaceRecord(
                             id=fl["id"], name=fl["name"],
                             namespace="", software_component="",
-                            sender_system="", receiver_system="",
-                            sender_adapter="HTTPS", receiver_adapter="HTTPS",
+                            sender_system=_snd, receiver_system=_rcv,
+                            sender_adapter=(_ep.get("sender_adapter")
+                                            or ("HTTPS" if _snd else "")),
+                            receiver_adapter=(_ep.get("receiver_adapter")
+                                              or ("HTTPS" if _rcv else "")),
                             message_interface="", description="",
+                            source_iflow_xml=fl.get("iflw_xml", ""),
                         ))
                 analyzer = ComplexityAnalyzer({})
                 st.session_state.interfaces  = merged_records
@@ -3312,6 +3293,21 @@ with tab2:
             pass
 
         # Build display table
+        # Sender/Receiver are now user-selectable adapter dropdowns (incl.
+        # "None"). The list is curated to the common CPI adapter types; "None"
+        # means no endpoint on that side. Both sides None → self-contained timer
+        # scaffold; otherwise endpoint-bearing (clone-and-adapt today).
+        _ADAPTER_OPTS = ["None", "HTTPS", "HTTP", "SOAP", "IDoc", "REST",
+                         "OData", "SFTP", "FTP", "JDBC", "JMS", "AS2", "Mail",
+                         "ProcessDirect", "SuccessFactors"]
+
+        def _adapter_opt(raw):
+            """Map a detected adapter string to one of _ADAPTER_OPTS."""
+            if not raw:
+                return "None"
+            r = str(raw).strip().lower()
+            return next((o for o in _ADAPTER_OPTS if o.lower() == r), "HTTPS")
+
         rows = []
         for a in filtered:
             iface = a.interface
@@ -3331,16 +3327,25 @@ with tab2:
             custom_name = st.session_state.get("iflow_names", {}).get(iface.name, auto_name)
 
             _ma_sz, _ma_wt, _ma_days, _ma_lo, _ma_hi = _ma_assess(iface)
+            _topo = st.session_state.get("endpoint_topology", {}).get(iface.name, {})
+            # Default to the detected adapter only when a real system exists on
+            # that side; otherwise None (→ timer scaffold). This keeps endpoint-
+            # less interfaces timer-first while pre-filling real ones.
+            _snd_def = _adapter_opt(iface.sender_adapter) if iface.sender_system else "None"
+            _rcv_def = _adapter_opt(iface.receiver_adapter) if iface.receiver_system else "None"
+            _snd_sel = _topo.get("sender_adapter", _snd_def)
+            _rcv_sel = _topo.get("receiver_adapter", _rcv_def)
             rows.append({
                 "Name":          iface.name,
                 "iFlow Name":    custom_name,
                 "Package":       custom_pkg,
-                "Sender":        f"{iface.sender_system} ({iface.sender_adapter})",
-                "Receiver":      f"{iface.receiver_system} ({iface.receiver_adapter})",
+                "Sender":        _snd_sel,
+                "Receiver":      _rcv_sel,
                 "Size":          _ma_sz,
                 "Weight":        _ma_wt,
                 "Effort (d)":    f"{_ma_lo:g}–{_ma_hi:g}",
                 "Pattern":       a.recommended_pattern,
+                "Extract order": _topo.get("order", ""),
                 "BPM":           "⚠ Yes" if iface.has_bpm else "",
                 "Multi-map":     "⚠ Yes" if iface.has_multi_mapping else "",
             })
@@ -3372,22 +3377,76 @@ with tab2:
         else:
             selected_names = list(st.session_state.selected)
 
-        # Editable iFlow/Package names in an expander (kept out of the main grid)
-        with st.expander("✏ Edit iFlow / Package names"):
+        # Editable iFlow/Package names + per-iFlow Endpoints (kept out of grid).
+        # Endpoints = "no" (timer scaffold, self-contained, no matching) or
+        # "yes" (clone-and-adapt against a matched template — the only current
+        # endpoint-bearing path; not yet fully personalized). Default follows
+        # the Tab-1 global toggle.
+        # Per-interface endpoint topology: how many senders / receivers and the
+        # extraction order. Default "none" (no endpoints → self-contained timer
+        # scaffold). Choosing any count marks the interface endpoint-bearing.
+        # NOTE: today only none-vs-some changes the deploy (none → timer, some →
+        # clone-and-adapt). The exact counts + order are captured for the
+        # from-scratch multi-sender generator (the endpoint-build milestone);
+        # they don't yet change the generated iFlow.
+        # Default OFF: every iFlow deploys as a self-contained, runnable timer
+        # scaffold. Clone-and-adapt is opt-in only (enable this toggle) because
+        # cloned templates start with real senders and can't run/verify on a
+        # trial. This keeps adapter picks in the sheet (useful for effort
+        # sizing) without routing to the unverifiable clone path.
+        _ep_global = st.session_state.get("iflows_have_endpoints", False)
+        _edit_cols = ["Name", "iFlow Name", "Package",
+                      "Sender", "Receiver", "Extract order"]
+        # Guard: empty filter result → empty df with no columns → KeyError on
+        # slice. Use an empty frame WITH the right columns instead.
+        _edit_df = df[_edit_cols] if not df.empty else pd.DataFrame(columns=_edit_cols)
+        with st.expander("✏ Edit iFlow / Package names · Endpoints (sender / receiver adapters)"):
+            if not _ep_global:
+                st.caption("Endpoint-less mode (Tab 1) — sender/receiver picks "
+                           "are ignored; every iFlow deploys as a self-contained "
+                           "timer scaffold.")
+            else:
+                st.caption("Pick the sender and receiver adapter per interface. "
+                           "**None** on both sides → self-contained timer "
+                           "scaffold; any adapter → endpoint-bearing (clone-and-"
+                           "adapt against a matched template).")
             edited = st.data_editor(
-                df[["Name", "iFlow Name", "Package"]],
+                _edit_df,
                 column_config={
-                    "Name":       st.column_config.TextColumn("Name", disabled=True),
-                    "iFlow Name": st.column_config.TextColumn("iFlow Name", width="large"),
-                    "Package":    st.column_config.TextColumn("Package", width="large"),
+                    "Name":          st.column_config.TextColumn("Name", disabled=True),
+                    "iFlow Name":    st.column_config.TextColumn("iFlow Name", width="large"),
+                    "Package":       st.column_config.TextColumn("Package", width="large"),
+                    "Sender":        st.column_config.SelectboxColumn(
+                                         "Sender", options=_ADAPTER_OPTS,
+                                         default="None", width="small",
+                                         help="Sender (inbound) adapter. "
+                                              "None = no inbound endpoint."),
+                    "Receiver":      st.column_config.SelectboxColumn(
+                                         "Receiver", options=_ADAPTER_OPTS,
+                                         default="None", width="small",
+                                         help="Receiver (outbound) adapter. "
+                                              "None = no outbound endpoint."),
+                    "Extract order": st.column_config.TextColumn(
+                                         "Extract order", width="medium",
+                                         help="Order to read senders when one "
+                                              "depends on another, e.g. S1>S2 "
+                                              "(captured for the multi-sender "
+                                              "generator; not used yet)."),
                 },
                 hide_index=True, use_container_width=True,
                 key="interface_names_editor",
             )
-        # Save edited names
+        # Save names + endpoint topology → deploy shape. none/none → timer
+        # (self-contained); any count → endpoint-bearing (clone today). Global
+        # OFF forces timer regardless.
         for _, row in edited.iterrows():
             iface_name = row["Name"]
             st.session_state.setdefault("iflow_names", {})[iface_name] = row["iFlow Name"]
+            _snd = str(row.get("Sender", "None") or "None")
+            _rcv = str(row.get("Receiver", "None") or "None")
+            _ord = str(row.get("Extract order", "") or "")
+            st.session_state.setdefault("endpoint_topology", {})[iface_name] = {
+                "sender_adapter": _snd, "receiver_adapter": _rcv, "order": _ord}
             a = next((x for x in assessments if x.interface.name == iface_name), None)
             if a:
                 key = (a.interface.sender_system, a.interface.receiver_system)
@@ -3485,20 +3544,21 @@ with tab3:
         elif val:
             st.caption("⚠ folder not found on disk")
 
-    with st.expander("📁 Local libraries — point these at your folders "
-                     "(used by Generate + clone-and-adapt on deploy)",
-                     expanded=False):
-        _folder_input(
-            "iFlow / package library folder", "template_library_dir",
-            "tab3_template_library_dir",
-            "Folder of real CPI package/iFlow exports (.zip or extracted "
-            "project folders). On deploy, the closest real iFlow is cloned "
-            "and personalized so the upload is accepted (no more 500s).")
-        _folder_input(
-            "Capability corpus folder", "capability_corpus_dir",
-            "tab3_capability_corpus_dir",
-            "Folder of real artifacts (Groovy/XSLT/.mmap/XSD…). Generate "
-            "learns from these to emit real files instead of empty stubs.")
+    with st.expander("📁 Local libraries — fixed paths (edit in code, not here)",
+                     expanded=True):
+        def _folder_status(label, setting_key):
+            p = PINNED_LOCAL_DIRS.get(setting_key, "")
+            if p and os.path.isdir(p):
+                try:
+                    n = sum(1 for _ in os.scandir(p))
+                    st.caption(f"**{label}**: `{p}` — ✓ {n} entr(y/ies)")
+                except OSError:
+                    st.caption(f"**{label}**: `{p}` — ✓ set")
+            else:
+                st.caption(f"**{label}**: `{p}` — ⚠ not found on disk")
+        _folder_status("Packages (deploy template ranking)", "template_library_dir")
+        _folder_status("Corpus (Generate artifact learning)", "capability_corpus_dir")
+        _folder_status("Schemas (canonical_library)", "schema_library_dir")
 
     if not st.session_state.selected:
         st.info("Select interfaces in **Tab 2** first.")
@@ -3511,44 +3571,29 @@ with tab3:
         with ms1:
             mode_label = st.selectbox(
                 "Match source",
-                options=[
-                    "Smart fallback (tenant → Hub → GitHub)",
-                    "Tenant only",
-                    "Business Accelerator Hub only",
-                    "GitHub recipes only",
-                ],
+                options=["Computer (local library)", "Tenant"],
+                index=0,
                 key="tab3_source_mode",
-                help=("Default chain tries your tenant first, then Hub, then "
-                      "GitHub recipes. Pick a single source to force one only."),
+                help=("Computer (default): match against the local library "
+                      "folder above — what actually gets cloned on deploy. "
+                      "Tenant: also pull match candidates from your CPI tenant."),
             )
+        _use_tenant = (mode_label == "Tenant")
         with ms2:
-            if hub_api_key:
-                st.success(f"Hub: live catalog (key configured)", icon="🔑")
-            else:
-                st.warning("Hub: static fallback only — add API key in sidebar "
-                           "for live 3,400+ packages", icon="📦")
+            st.caption("Sources: local templates" + (" + CPI tenant" if _use_tenant
+                       else "") + " (Business Accelerator Hub and GitHub are "
+                       "disabled).")
 
-        # Build aggregator with whichever clients are available
-        try:
-            hub_client_inst = HubCatalogClient(api_key=hub_api_key) if hub_api_key else None
-        except Exception:  # pragma: no cover — defensive
-            hub_client_inst = None
-        try:
-            samples_browser_inst = SAPSamplesBrowser(
-                github_token=st.session_state.cfg.get("destinations", {}).get("github_token", ""))
-        except Exception:  # pragma: no cover
-            samples_browser_inst = None
+        # Hub + GitHub are unpaired — sources are computer or tenant only.
+        hub_client_inst = None
+        samples_browser_inst = None
+        active_mode = MatchMode.TENANT_ONLY  # local_tpls are added separately
 
-        mode_map = {
-            "Smart fallback (tenant → Hub → GitHub)": MatchMode.FALLBACK_CHAIN,
-            "Tenant only":                            MatchMode.TENANT_ONLY,
-            "Business Accelerator Hub only":          MatchMode.HUB_ONLY,
-            "GitHub recipes only":                    MatchMode.GITHUB_ONLY,
-        }
-        active_mode = mode_map[mode_label]
-
-        # Load artifacts if not done
-        if not st.session_state.all_artifacts:
+        # Only reach for the tenant when the user explicitly chose it. In
+        # Computer mode the local library (loaded per-interface below as
+        # local_tpls) is the match source, so we don't load — or warn about —
+        # tenant artifacts.
+        if _use_tenant and not st.session_state.all_artifacts:
             with st.spinner("Loading CPI artifacts…"):
                 if st.session_state.cpi_connected and st.session_state.cpi_session:
                     try:
@@ -3562,18 +3607,16 @@ with tab3:
                         st.warning(f"CPI fetch failed ({e}) — using local templates")
                         fetcher = CPIFetcher("http://localhost", None)
                         st.session_state.all_artifacts = fetcher._load_local_artifacts()
-                else:
-                    fetcher = CPIFetcher("http://localhost", None)
-                    st.session_state.all_artifacts = fetcher._load_local_artifacts()
 
-        artifacts     = st.session_state.all_artifacts
+        artifacts     = st.session_state.all_artifacts if _use_tenant else []
         assessments   = st.session_state.assessments
         artifact_map  = {a.id: a for a in artifacts}
 
-        if not artifacts:
-            st.warning("No artifacts found. Connect CPI tenant in sidebar or place .iflw files in the templates/ folder.")
+        if _use_tenant and not artifacts:
+            st.warning("No artifacts found on the tenant. Connect CPI in the "
+                       "sidebar, or switch Match source back to Computer.")
 
-        for name in st.session_state.selected:
+        for _row_i, name in enumerate(st.session_state.selected):
             assessment = next((a for a in assessments if a.interface.name == name), None)
             if not assessment:
                 continue
@@ -3593,7 +3636,7 @@ with tab3:
                         options=target_ids,
                         index=target_ids.index(current_tid) if current_tid in target_ids else 0,
                         format_func=lambda x: DESTINATION_REGISTRY[x].label,
-                        key=f"target_{name}",
+                        key=f"target_{_row_i}_{name}",
                     )
                     st.session_state.target_ids[name] = chosen_tid
 
@@ -3662,13 +3705,13 @@ with tab3:
                         "Standard iFlow",
                         options=art_options,
                         index=current_idx,
-                        key=f"match_{name}",
+                        key=f"match_{_row_i}_{name}",
                     )
                     if local_labels and chosen_label in local_by_label \
                             and current_idx == 1 and not prior_local:
                         st.caption("✨ Auto-recommended from your library "
                                    f"(top of {len(local_tpls)} adapter matches) — "
-                                   "this is what will be cloned on deploy.")
+                                   "used as a reference match (informational).")
                     chosen_result = None
                     chosen_art    = None  # tenant artifact, set only for tenant picks
                     chosen_local  = ""
@@ -3709,7 +3752,7 @@ with tab3:
                             st.dataframe(pd.DataFrame(param_df), hide_index=True,
                                          use_container_width=True)
 
-                            if st.button(f"⬇ Download from CPI", key=f"dl_{name}",
+                            if st.button(f"⬇ Download from CPI", key=f"dl_{_row_i}_{name}",
                                          disabled=not st.session_state.cpi_connected):
                                 with st.spinner(f"Downloading {chosen_art.id}…"):
                                     try:
@@ -4271,7 +4314,8 @@ with tab5:
             else:
                 templates_dir = str(ROOT / "templates")
                 scaffolder    = IFlowScaffolder(templates_dir=templates_dir,
-                                                output_dir=output_dir)
+                                                output_dir=output_dir,
+                                                resources_dir=PINNED_LOCAL_DIRS["template_library_dir"])
                 # Load the learned capability corpus ONCE (heavy; cached). When
                 # available, generate_bundle pulls REAL learned artifacts instead
                 # of generic templates. Falls back to template-mode (corpus=None)
@@ -4285,12 +4329,16 @@ with tab5:
                     from fetcher.user_settings import get_dir
                     _corpus_dir = get_dir("capability_corpus_dir")
                     if _corpus_dir:
+                        status.text("Building capability corpus (one-time; cached "
+                                    "to disk after)…")
                         _gen_corpus = _load_capability_corpus_dir(_corpus_dir)
                     else:
                         _pkgs = st.session_state.get("uploaded_packages") or []
                         if _pkgs:
                             _sig = "|".join(sorted(p.get("filename", "")
                                                    for p in _pkgs))
+                            status.text("Building capability corpus (one-time; "
+                                        "cached after)…")
                             _gen_corpus = _load_capability_corpus(_pkgs, _sig)
                 except Exception:
                     _gen_corpus = None   # any failure → template fallback
@@ -4425,7 +4473,7 @@ with tab5:
                            "rejects loose .iflw/.mmap/.groovy files — it only "
                            "accepts the zipped bundle (which is what this is).")
                 from fetcher.cpi_uploader import CPIUploader
-                for r in results:
+                for _row_i, r in enumerate(results):
                     fpath = r.get("file")
                     if not fpath or not Path(fpath).exists():
                         continue
@@ -4440,7 +4488,7 @@ with tab5:
                             st.download_button(
                                 f"⬇ {name}_import.zip", data=zdata,
                                 file_name=f"{CPIUploader.sanitize_package_id(name)}_import.zip",
-                                key=f"imp_{name}")
+                                key=f"imp_{_row_i}_{name}")
                     except Exception as e:
                         st.caption(f"({name}: {e})")
 
@@ -6147,6 +6195,9 @@ with tab9:
 # The migration `with tabN:` blocks above executed into a hidden sink when in
 # APIM mode. Clear that sink now so none of the migration UI is visible, then
 # render the six APIM tabs.
+
+if _ep_sink is not None:
+    _ep_sink.empty()   # discard hidden endpoint tabs (3 & 4) when endpoints OFF
 
 if _apim_active:
     if _migration_sink is not None:

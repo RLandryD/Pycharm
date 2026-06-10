@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PIPELINE STEP 3: Interface Separation iFlow
+  Package  : 1_YaaS_Category_C4C_YaaS_ProdCatHier_Integration
+  Purpose  : Routes to the correct scenario-specific iFlow
+             based on SAP_InterfaceName header set by Receiver Determination.
+  Internal : ProcessDirect address /pd/InterfaceSeparation_1_YaaS_Category_C4C_
+-->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+             id="Interface_Separation_1_YaaS_Category_C4C_"
+             name="Interface_Separation_1_YaaS_Category_C4C_">
+  <process id="IfaceSep_1_YaaS_Category_C4C__process" ifl:type="IntegrationFlow">
+
+    <startEvent id="Start_IS" name="From Receiver Determination">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/pd/InterfaceSeparation_1_YaaS_Category_C4C_</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </startEvent>
+
+    <!-- ROUTER: Branch to scenario-specific iFlow -->
+    <exclusiveGateway id="Router_1" name="Route by Interface Name"/>
+
+    <sequenceFlow id="route_0" sourceRef="Router_1"
+      targetRef="Call_Update_Category_from_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Update Category from YaaS to C4C' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Update_Category_from_1"
+      name="→ Update Category from YaaS to C4C" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Update_Category_from</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+
+    <endEvent id="End_IS"/>
+    <sequenceFlow sourceRef="Start_IS" targetRef="Router_1"/>
+  </process>
+</definitions>

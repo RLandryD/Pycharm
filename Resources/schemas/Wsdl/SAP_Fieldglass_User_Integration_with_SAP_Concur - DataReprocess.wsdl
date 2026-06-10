@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="integration" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" name="DataReprocess" targetNamespace="integration">
+	<wsdl:types>
+		<xsd:schema targetNamespace="integration">
+			<xsd:element name="DataReprocess_Request">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="EntryID" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="DataReprocess_Response">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Status" type="xsd:string"/>
+						<xsd:element name="Message" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="DataReprocessRequest">
+		<wsdl:part name="DataReprocessRequestType" element="ns:DataReprocess_Request"/>
+	</wsdl:message>
+	<wsdl:message name="DataReprocessResponse">
+		<wsdl:part name="DataReprocessResponseType" element="ns:DataReprocess_Response"/>
+	</wsdl:message>
+	<wsdl:portType name="DataReprocess">
+		<wsdl:operation name="reprocess">
+			<wsdl:input message="ns:DataReprocessRequest"/>
+			<wsdl:output message="ns:DataReprocessResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="DataReprocessBinding" type="ns:DataReprocess">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="reprocess">
+			<soap:operation soapAction="ns:reprocess"/>
+			<wsdl:input>
+				<soap:body parts="DataReprocessRequestType" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="DataReprocessResponseType" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="DataReprocess">
+		<wsdl:port name="DataReprocess" binding="ns:DataReprocessBinding">
+			<soap:address location="http://sample.com"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

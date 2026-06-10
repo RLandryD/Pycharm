@@ -1,0 +1,1579 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+ </edmx:Reference>
+ <edmx:DataServices m:DataServiceVersion="2.0">
+  <Schema Namespace="API_SALES_CONTRACT_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+   <EntityType Name="A_SalesContractType" sap:label="Sales Contract Header" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="SalesContract"/>
+    </Key>
+    <Property Name="SalesContract" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Contract"/>
+    <Property Name="SalesContractType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Sales Contract Type">
+     <Documentation>
+      <Summary>A classification that distinguishes between different types of sales contracts.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="SalesOrganization" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Sales Organization">
+     <Documentation>
+      <Summary>An organizational unit responsible for the sale of certain products or services. The responsibility of a sales organization may include legal liability for products and customer claims.</Summary>
+      <LongDescription>You can assign any number of distribution channels and divisions to a sales organization. A particular combination of sales organization, distribution channel, and division is known as a sales area.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="DistributionChannel" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Distribution Channel">
+     <Documentation>
+      <Summary>The way in which products or services reach the customer. Typical examples of distribution channels are wholesale, retail, or direct sales.</Summary>
+      <LongDescription>You can maintain information about customers and materials by sales organization and distribution channel. Within a sales organization you can deliver goods to a given customer through more than one distribution channel.You can assign a distribution channel to one or more sales organizations. If, for example, you have numerous sales organizations, each sales organization may use the "Wholesale" distribution channel.For each combination of sales organization and distribution channel, you can further assign one or more of the divisions that are defined for the sales organization. You can, for example, assign "Food" and "Non-food" divisions to the "Wholesale" distribution channel. A particular combination of sales organization, distribution channel, and division is known as a sales area.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="OrganizationDivision" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Division">
+     <Documentation>
+      <Summary>A way of grouping materials, products, or services. The system uses divisions to determine the sales areas and the business areas for a material, product, or service.</Summary>
+      <LongDescription>A product or service is always assigned to just one division. From the point of view of sales and distribution, the use of divisions lets you organize your sales structure around groups of similar products or product lines. This allows the people in a division who process orders and service customers to specialize within a manageable area of expertise.If a sales organization sells food and non-food products through both retail and wholesaledistribution channels each distribution channel could then be further split into food and non-food divisions.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesGroup" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Sales Group">
+     <Documentation>
+      <Summary>A group of sales people who are responsible for processing sales of certain products or services.</Summary>
+      <LongDescription>By using sales groups you can designate different areas of responsibility within a sales office.  When you generate sales statistics, you can use the sales group as one of the selection criteria.If sales office personnel service both retail and wholesale markets, you can assign a sales group to each market.You assign each salesperson to a sales group in his or her user master record. You assign each customer to a particular sales group in the customer's master record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesOffice" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Sales Office">
+     <Documentation>
+      <Summary>A physical location (for example, a branch office) that has responsibility for the sale of certain products or services within a given geographical area.</Summary>
+      <LongDescription>When you create sales statistics, you can use a sales office as one of the selection criteria. When you print out order confirmations, you can include the address of the sales office.You can assign each customer to a sales office in the customer master record.Within a sales office you can establish sales groups (for example, departments) with specific sales responsibilities. Each person who works in the sales office can be assigned to a sales group in his or her user master record. Each customer can also be assigned to a particular sales group in the customer master record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesDistrict" Type="Edm.String" MaxLength="6" sap:display-format="UpperCase" sap:label="Sales District">
+     <Documentation>
+      <Summary>A geographical sales district or region.</Summary>
+      <LongDescription>Each customer can be assigned to a sales district. You can use sales districts to apply pricing conditions. When you want to generate sales statistics, you can use sales districts as a selection criteria.The system can propose a value from the customer master record of the sold-to party. You can change the value manually in the document at the header or item level.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SoldToParty" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Sold-to Party">
+     <Documentation>
+      <Summary>The customer who orders the goods or services. The sold-to party is contractually responsible for sales orders.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="CreationDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Created On" sap:quickinfo="Date on Which Record Was Created" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="CreatedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Created By" sap:quickinfo="Name of Person Who Created Object" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="LastChangeDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Changed On" sap:quickinfo="Date of Last Change" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="LastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7" ConcurrencyMode="Fixed" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>The UTC timestamp displays date and time according to UTC (Universal Coordinated Time).</Summary>
+      <LongDescription>In order to convert local time into a UTC time stamp, which makes it easier to compare times, the local time must be converted according to your time zone. The ABAP command convert is available for this purpose.Even if the time zone that the conversion is based on can be redetermined from Customizing or master data, we still recommend that you save the time zone.The internal structure of the high-resolution UTC time stamp is logically organized in date and time sections in a packed decimal format (YYYYMMDDhhmmssmmmuuun), which depicts the year, month, day, hour,second, millisecond, microsecond and the first decimal of the nanoseconds. Please note that the hardware that is normally used does not fully support a resolution of 100 nanoseconds, which is available in the structure.See also GET TIME STAMPA UTC time stamp in short form is also available.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PurchaseOrderByCustomer" Type="Edm.String" MaxLength="35" sap:label="Customer Reference">
+     <Documentation>
+      <Summary>Number that the customer uses to uniquely identify a purchasing document (e.g. an inquiry or a purchase order).</Summary>
+      <LongDescription>The number creates the link between the customer purchase order and the sales document that you create. You can use the number used by the customer during correspondence with the customer to find certain document information. If the number refers to a purchase order, you can also print it on the documents that you send to the customer (e.g. on the delivery note).</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CustomerPurchaseOrderType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Purchase Order Type" sap:quickinfo="Customer Purchase Order Type">
+     <Documentation>
+      <Summary>The way in which the sales document (the inquiry or sales order, for example) arrives from the customer.</Summary>
+      <LongDescription>You can record here whether the sales document arrived, for example, by telephone, mail, or fax.Enter one of the values predefined for your system.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CustomerPurchaseOrderDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Customer Ref. Date" sap:quickinfo="Customer Reference Date">
+     <Documentation>
+      <Summary>The date that appears on the customer's purchase order. This date can be, for example, the date on which the customer created the purchase order.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="SalesContractDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Document Date" sap:quickinfo="Document Date (Date Received/Sent)">
+     <Documentation>
+      <Summary>The date on which you want the sales document (the sales order, for example) to become effective for sales management purposes.</Summary>
+      <LongDescription>When you want to generate a list of sales documents or sales statistics, the document date you enter determines which sales documents are selected. You can define the document date to meet the needs of your organization.For sales orders, for example, you can define the document date as the date when the order actually arrives at your offices. Alternatively, you could define it as the date when the order was written up by a field sales representative.The system proposes the current date. You can change it manually in the sales document.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="TotalNetAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="TransactionCurrency" sap:label="Net Value" sap:quickinfo="Net Value of the Sales Order in Document Currency" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>The total value of all items in the sales document, after any discounts and surcharges are taken into account. The value is expressed in the document currency.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="TransactionCurrency" Type="Edm.String" MaxLength="5" sap:label="Document Currency" sap:quickinfo="SD Document Currency" sap:semantics="currency-code">
+     <Documentation>
+      <Summary>The currency that applies to the document (for example, to a sales order or an invoice).</Summary>
+      <LongDescription>The system proposes the document currency from the customer master record of the sold-to party. You can change the currency manually in the document. If you change the currency, the system recalculates prices for the entire document.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SDDocumentReason" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Order Reason" sap:quickinfo="Order Reason (Reason for the Business Transaction)">
+     <Documentation>
+      <Summary>Indicates the reason for creating the sales document.</Summary>
+      <LongDescription>You can freely define order reasons according to the needs of your organization. When you generate sales statistics, you can use the order reason as one of the selection criteria.Enter one of the values predefined for your system. If you are creating a credit or debit memo request, you must enter an order reason.If the order reason specifies, for example, that a customer placed a sales order as a result of contact at a trade fair, you can later generate statistics for all sales orders that were placed at trade fairs.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PricingDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Pricing Date" sap:quickinfo="Date for Pricing and Exchange Rate">
+     <Documentation>
+      <Summary>The date that determines date-related pricing elements, such as conditions and foreign exchange rate.</Summary>
+      <LongDescription>You can use the pricing date as a selection criterion when you process billing documents collectively.The system proposes the current date. You can change it manually in the document. If you change the pricing date, the system recalculates pricing for the entire document. If the date is in the past, you receive a warning before you can continue.Determining the ProposalIn the order: You can customize the order type to determine a proposal, such as the current date or the requested delivery date as the pricing date.In the billing document: The billing date is proposed as the pricing date.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="IncotermsClassification" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Incoterms" sap:quickinfo="Incoterms (Part 1)">
+     <Documentation>
+      <Summary>Commonly used trading terms that comply with the standards established by the International Chamber of Commerce (ICC).</Summary>
+      <LongDescription>Incoterms specify internationally recognized procedures that the shipper and the receiving party must follow for the shipping transaction to be completed successfully.If goods are shipped through a port of departure, the appropriate Incoterm might be: FOB ("Free On Board"). You can provide further details (for example, the name of the port) in the secondary Incoterm field: FOB Boston, for example.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="IncotermsTransferLocation" Type="Edm.String" MaxLength="28" sap:label="Incoterms (Part 2)">
+     <Documentation>
+      <Summary>Additional information for the primary Incoterm.</Summary>
+      <LongDescription>If the primary Incoterm is, for example, FOB ("Free on Board"), then the second field provides details of the port from which the delivery leaves (for example, "FOB Boston").</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="IncotermsLocation1" Type="Edm.String" MaxLength="70" sap:label="Incoterms Location 1">
+     <Documentation>
+      <Summary>Provides additional information for the primary Incoterm. For Incoterms 2010, this field represents:</Summary>
+      <LongDescription>1. For sea and inland waterway transport - Port of Shipment2. For any mode of transport - Place of Delivery 2010Incoterms are divided as follows:Group 1: Rules for any mode or modes of transport (including by vessel)Incoterms Incoterms Description  Location 1 EXW Ex Works  Place of DeliveryFCA Free Carrier  Place of DeliveryCPT Carriage Paid To  Place of DestinationCIP Carriage &amp; Insurance Paid To  Place of DestinationDAF Delivered at Frontier  Place of DeliveryDDP Delivered Duty Paid  Place of DestinationDDU Delivered Duty Unpaid  Place of DestinationGroup 2: Rules for sea and inland waterwaysIncoterms Incoterms Description Location 1 FAS Free Alongside Ship Port of ShipmentFOB Free On Board Port of ShipmentCFR Cost &amp; Freight Port of DestinationCIF Cost Insurance &amp; Freight Port of DestinationDEQ Delivered Eq Quay (Duty Paid) Port of DestinationDES Delivered Ex Ship Port of DestinationIf the primary incoterm is specified as FOB “Free on Board”, the second field provides details of the port from which the delivery leaves, such as FOB Boston.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="IncotermsLocation2" Type="Edm.String" MaxLength="70" sap:label="Incoterms Location 2">
+     <Documentation>
+      <Summary>Provides additional information for the Incoterms. This field is only available for C-Clauses (if customized appropriately). Note the following for the incoterms versions below:</Summary>
+      <LongDescription>No Version:This field is disabledIncoterm Version 2000This field is disabled as part of standard delivery unless a customer decides to enable it by the way of Customizing for Sales and Distribution under Master Data -&gt; Business Partners -&gt; Customers -&gt; Billing Document -&gt; Incoterms -&gt; Map Incoterms to Versions.Incoterm Version 2010For this version, the field represents:Sea and inland waterway transport - Port of DestinationAny mode of transport - Place of Destination2010 Incoterms are divided as follows:Group 1: Rules for any mode or modes of transport (including by vessel)Incoterms Incoterms Description Location 2CPT Carriage Paid To Place of DestinationCIP Carriage &amp; Insurance Paid To Place of DestinationGroup 2: Rules for sea and inland waterwaysIncoterms Incoterms Description Location 2CFR Cost &amp; Freight Port of DestinationCIF Cost Insurance &amp; Freight Port of Destination</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="IncotermsVersion" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Incoterms Version">
+     <Documentation>
+      <Summary>An incoterms version is an edition containing a list of international terms for transportation that is defined by the International Chamber of Commerce (ICC).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="CustomerPaymentTerms" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Terms of Payment" sap:quickinfo="Terms of Payment Key">
+     <Documentation>
+      <Summary>Key for defining payment terms composed of cash discount percentages and payment periods.</Summary>
+      <LongDescription>It is used in sales orders, purchase orders, and invoices. Terms of payment provide information for:Cash managementDunning proceduresPayment transactionsData can be entered in the field for the terms of payment key in various ways as you enter a business transaction:In most business transactions, the system defaults the key specified in the master record of the customer/vendor in question.In some transactions (for example, credit memos), however, the system does not default the key from the master record. Despite this, you can use the key from the customer/vendor master record by entering "*" in the field.Regardless of whether or not a key is defaulted from the master record, you can manually enter a key during document entry at:item level in sales ordersheader level in purchase orders and invoicesMaster records have separate areas for Financial Accounting, Sales, and Purchasing. You can specify different terms of payment keys in each of these areas. When you then enter a business transaction, the application in question will use the key specified in its area of the master record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PaymentMethod" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Payment Method">
+     <Documentation>
+      <Summary>Payment method with which this item is to be paid.</Summary>
+      <LongDescription>If you enter a payment method, then only this payment method can be used in automatic payment transactions. Unless you enter a payment method, one of the payment methods that was allowed in the master record is selected in the payment program according to specified rules.For document entry or document changes, you only enter a payment method if you want to switch off the automatic payment method selection of the payment program.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesContractValidityStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid-From Date" sap:quickinfo="Valid-From Date (Outline Agreements, Product Proposals)">
+     <Documentation>
+      <Summary>Date that specifies the beginning of</Summary>
+      <LongDescription>an outline agreement ora product proposalThe outline agreement or product proposal is valid after this date. The beginning date and the end date together define the validity period.For more information about the impact of validity periods on scheduling agreements, please refer to SAP Note 914607.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesContractValidityEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid-To Date" sap:quickinfo="Valid-To Date (Outline Agreements, Product Proposals)">
+     <Documentation>
+      <Summary>The date that specifies the end of</Summary>
+      <LongDescription>An outline agreement orA product proposalAfter this date the outline agreement or the product proposal is no longer valid.The beginning date and the end date together define the validity period. The validity period affects processing. If, for example, you are processing a scheduling agreement, you can only deliver a schedule line if its requested delivery date falls within the validity period of the outline agreement.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesContractValidityPerdUnit" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Unit Validity Period" sap:quickinfo="Unit of Validity Period of Contract"/>
+    <Property Name="SalesContractValidityPerdCat" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Val.Period.Category" sap:quickinfo="Validity Period Category of Contract">
+     <Documentation>
+      <Summary>Enter a value here to indicate what kind of validity period the contract has (6 months, one year, and so on).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="SalesContractSignedDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Contract Signed" sap:quickinfo="Date on Which Contract Is Signed">
+     <Documentation>
+      <Summary>Enter the date on which the customer signs the contract.</Summary>
+      <LongDescription>The date you enter can be used as a baseline date for determining other dates in the contract.You want the contract to become valid on the day it is signed by the customer. You enter a date rule for the contract start date which has the date on which the contract is signed as its baseline date. When you enter the date on which the contract was signed in the contract, the system automatically makes the appropriate entry in the contract start date field.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="NmbrOfSalesContractValdtyPerd" Type="Edm.String" MaxLength="3" sap:display-format="NonNegative" sap:label="Contract Val.Period" sap:quickinfo="Validity Period of Contract"/>
+    <Property Name="SalesContractFollowUpAction" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Action" sap:quickinfo="Action at end of contract">
+     <Documentation>
+      <Summary>Enter the follow-up action which is to be taken when the contract ends. Follow-up actions are</Summary>
+      <LongDescription>Creating a contractCreating a quotationCreating a sales activity such as a telephone callSending an internal electronic mail</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SlsContractFollowUpActionDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Action Date" sap:quickinfo="Date for Action">
+     <Documentation>
+      <Summary>Enter the date on which you want the follow-up action for the contract to be performed.</Summary>
+      <LongDescription>The contract will be included in the worklist for contracts with follow-up actions whenThe date you enter in this field lies within the selection period you define for the worklistThe contract fulfills the other selection criteria you define for the worklist.You reach the selection screen for the worklist for contracts with follow-up actions by choosing Outline agreements -&gt; Contracts -&gt; Subsequent functions -&gt; Follow-up actions.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ContractManualCompletion" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Manual Completion" sap:quickinfo="Manual Completion of Contract" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="ReferenceSDDocument" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Reference Document" sap:quickinfo="Document Number of the Reference Document">
+     <Documentation>
+      <Summary>Identifies the sales order to which the delivery refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ReferenceSDDocumentCategory" Type="Edm.String" MaxLength="4" sap:label="Preceding Doc.Categ." sap:quickinfo="Document Category of Preceding SD Document" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Specifies the sales document category of the preceding sales, delivery, or billing document.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="SalesDocApprovalStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Approval Status" sap:quickinfo="Document Approval Status" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>States whether a sales document is relevant for approvals and, if so, which approval stage it is in.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="SalesContractApprovalReason" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Apprvl Req. Rsn ID" sap:quickinfo="Approval Request Reason ID" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>States in which cases an approval is needed.</Summary>
+      <LongDescription>Whenever an approval request reason is set and the corresponding workflow is defined, the sales document is considered relevant for approvals. The approval request reason consists of an ID and a description.You define that for customer ABC, sales quotations always have to be approved. The system automatically sets this reason when a sales quotation for this customer is created. It cannot be released without sending it to an approver first.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="OverallSDProcessStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Overall Status" sap:quickinfo="Overall Processing Status (Header/All Items)" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>The processing status of the entire sales document.</Summary>
+      <LongDescription>The system determines the status of the entire sales document by taking into account the status of all header-related information and the status of all individual items. The status message tells you whether processing of the sales document is open, in progress, or complete.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="TotalCreditCheckStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Credit Status" sap:quickinfo="Overall Status of Credit Checks" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="OverallSDDocumentRejectionSts" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Rejection Status" sap:quickinfo="Rejection Status (All Items)" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Displays the rejection status of the entire sales document.</Summary>
+      <LongDescription>The system determines the total status from the status of all individual items in the sales document. The status message tells you whether the sales document has been partially or completely rejected or whether nothing has been rejected.</LongDescription>
+     </Documentation>
+    </Property>
+    <NavigationProperty Name="to_Item" Relationship="API_SALES_CONTRACT_SRV.assoc_486B3B777EEB41E54CA1A019CFF35D3C" FromRole="FromRole_assoc_486B3B777EEB41E54CA1A019CFF35D3C" ToRole="ToRole_assoc_486B3B777EEB41E54CA1A019CFF35D3C"/>
+    <NavigationProperty Name="to_Partner" Relationship="API_SALES_CONTRACT_SRV.assoc_F7E2B6E189FE18642F3F53B5FCF940C4" FromRole="FromRole_assoc_F7E2B6E189FE18642F3F53B5FCF940C4" ToRole="ToRole_assoc_F7E2B6E189FE18642F3F53B5FCF940C4"/>
+    <NavigationProperty Name="to_PricingElement" Relationship="API_SALES_CONTRACT_SRV.assoc_166710B494E28D183E54DF569E31D6A8" FromRole="FromRole_assoc_166710B494E28D183E54DF569E31D6A8" ToRole="ToRole_assoc_166710B494E28D183E54DF569E31D6A8"/>
+   </EntityType>
+   <EntityType Name="A_SalesContractItemType" sap:label="Sales Contract Item" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="SalesContract"/>
+     <PropertyRef Name="SalesContractItem"/>
+    </Key>
+    <Property Name="SalesContract" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Contract" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="SalesContractItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:text="SalesContractItemText" sap:label="Sales Contract Item"/>
+    <Property Name="HigherLevelItem" Type="Edm.String" MaxLength="6" sap:display-format="NonNegative" sap:label="Higher-Level Item" sap:quickinfo="Higher-Level Item in Bill of Material Structures">
+     <Documentation>
+      <Summary>The number of the higher-level item to which this item belongs in a hierarchy.</Summary>
+      <LongDescription>Items can be organized hierarchically. When you assign a sub-item to another item, the other item becomes a higher-level item.Enter the number of a higher-level item.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesContractItemCategory" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Item Category" sap:quickinfo="Sales Document Item Category">
+     <Documentation>
+      <Summary>A classification that distinguishes between different types of item (for example, free of charge items and text items) and determines how the system processes the item.</Summary>
+      <LongDescription>The system proposes an item category. If alternatives are defined for your system, you can change the item category manually in the sales document.If, for example, you identify an item as a free or charge item, you tell the system, in this case, to ignore normal pricing procedures.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesContractItemText" Type="Edm.String" MaxLength="40" sap:label="Item Description" sap:quickinfo="Short Text for Sales Order Item">
+     <Documentation>
+      <Summary>A short description of the item.</Summary>
+      <LongDescription>Short texts are used throughout sales order processing, shipping, and billing. They also appear on printed order confirmations.The system proposes the short text from the material master record. If you have included a short text in a customer-material info record, it replaces the material master text during sales document processing. You can change the text at the item level in the sales document or during delivery processing.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PurchaseOrderByCustomer" Type="Edm.String" MaxLength="35" sap:label="Customer Reference">
+     <Documentation>
+      <Summary>Number that the customer uses to uniquely identify a purchasing document (e.g. an inquiry or a purchase order).</Summary>
+      <LongDescription>The number creates the link between the customer purchase order and the sales document that you create. You can use the number used by the customer during correspondence with the customer to find certain document information. If the number refers to a purchase order, you can also print it on the documents that you send to the customer (e.g. on the delivery note).</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="Material" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number">
+     <Documentation>
+      <Summary>Alphanumeric key uniquely identifying the material.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="MaterialByCustomer" Type="Edm.String" MaxLength="35" sap:display-format="UpperCase" sap:label="Customer Material" sap:quickinfo="Material Number Used by Customer">
+     <Documentation>
+      <Summary>Uniquely identifies the material from the customer's point of view.</Summary>
+      <LongDescription>If the customer uses a different identifier than the one you use for the material, you can include this information in a customer-material info record. You can also include in this record specific shipping details, such asMinimum delivery quantityPartial delivery conditionsEnter a value from an existing customer-material info record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PricingDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Pricing Date" sap:quickinfo="Date for Pricing and Exchange Rate">
+     <Documentation>
+      <Summary>The date that determines date-related pricing elements, such as conditions and foreign exchange rate.</Summary>
+      <LongDescription>You can use the pricing date as a selection criterion when you process billing documents collectively.The system proposes the current date. You can change it manually in the document. If you change the pricing date, the system recalculates pricing for the entire document. If the date is in the past, you receive a warning before you can continue.Determining the ProposalIn the order: You can customize the order type to determine a proposal, such as the current date or the requested delivery date as the pricing date.In the billing document: The billing date is proposed as the pricing date.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="RequestedQuantity" Type="Edm.Decimal" Precision="15" Scale="3" sap:unit="RequestedQuantityUnit" sap:label="Requested Quantity">
+     <Documentation>
+      <Summary>Specifies the quantity of a product a customer would like to receive for an item in a sales document. The quantity is expressed in sales units (for example, bottles).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="RequestedQuantityUnit" Type="Edm.String" MaxLength="3" sap:label="Requested Qty Unit" sap:quickinfo="Unit of the Requested Quantity" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Specifies the unit of measure in which a product is sold.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ItemGrossWeight" Type="Edm.Decimal" Precision="15" Scale="3" sap:unit="ItemWeightUnit" sap:label="Gross Weight" sap:quickinfo="Gross Weight of the Item" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>The total gross weight of the item. The gross weight represents the net weight plus the weight of packaging.</Summary>
+      <LongDescription>The system calculates the gross weight based on the order quantity for the item and the gross weight proposed from the material master record.If the item has more than one schedule line, the system uses the total order quantity of all schedule lines to calculate the gross weight. In sales documents where schedule lines are not allowed (contracts, for example), the system calculates the gross weight using the target quantity.You can change the value manually at the item level.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ItemNetWeight" Type="Edm.Decimal" Precision="15" Scale="3" sap:unit="ItemWeightUnit" sap:label="Net Weight" sap:quickinfo="Net Weight of the Item" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>The total net weight for the item. The net weight represents the gross weight less the weight of packaging.</Summary>
+      <LongDescription>The system calculates the net weight based on the order quantity for the item and the net weight proposed from the material master record. If the item has more than one schedule line, the system uses the total order quantity of all schedule lines to calculate the net weight. In sales documents where schedule lines are not allowed (contracts, for example), the system calculates the net weight using the target quantity.You can change the value manually at the item level.The gross weight of a refrigerator and its packaging (a cardboard box including protective padding) is 350 pounds. The packaging weighs 25 pounds. In this case, the net weight is 325 pounds.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ItemWeightUnit" Type="Edm.String" MaxLength="3" sap:label="Unit of Weight" sap:creatable="false" sap:updatable="false" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Unit referring to the gross weight or net weight of the material.</Summary>
+      <LongDescription>If you specify a weight, you must enter the corresponding unit of weight here.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ItemVolume" Type="Edm.Decimal" Precision="15" Scale="3" sap:unit="ItemVolumeUnit" sap:label="Volume" sap:quickinfo="Volume of the item" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>The total volume for the item.</Summary>
+      <LongDescription>The system calculates the volume based on the order quantity for the item and the volume proposed from the material master record. If the item has more than one schedule line, the system uses the total order quantity of all schedule lines to calculate the volume. In sales documents where schedule lines are not allowed (contracts, for example), the system calculates the volume using the target quantity.You can change the value manually at the item level.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ItemVolumeUnit" Type="Edm.String" MaxLength="3" sap:label="Volume Unit" sap:creatable="false" sap:updatable="false" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Unit referring to the volume of the material.</Summary>
+      <LongDescription>If you specify a volume, you have to enter the corresponding volume unit here.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="OutlineAgreementTargetAmount" Type="Edm.Decimal" Precision="14" Scale="3" sap:unit="TransactionCurrency" sap:label="OA Target Value" sap:quickinfo="Target Value for Outline Agreement in Document Currency">
+     <Documentation>
+      <Summary>The target value of an outline agreement (for example, a value contract). The value is expressed in the  document currency.</Summary>
+      <LongDescription>The target value represents the value of products or services that a customer has agreed to purchase or that a supplier has agreed to supply during the validity period of the outline agreement.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="TransactionCurrency" Type="Edm.String" MaxLength="5" sap:label="Document Currency" sap:quickinfo="SD Document Currency" sap:creatable="false" sap:updatable="false" sap:semantics="currency-code">
+     <Documentation>
+      <Summary>The currency that applies to the document (for example, to a sales order or an invoice).</Summary>
+      <LongDescription>The system proposes the document currency from the customer master record of the sold-to party. You can change the currency manually in the document. If you change the currency, the system recalculates prices for the entire document.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="NetAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="TransactionCurrency" sap:label="Net Value" sap:quickinfo="Net Value of the Order Item in Document Currency" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>The net value of the item, after any discounts and surcharges are taken into account. Sales taxes are not included. The value is expressed in the document currency.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="MaterialGroup" Type="Edm.String" MaxLength="9" sap:display-format="UpperCase" sap:label="Material Group">
+     <Documentation>
+      <Summary>Key that you use to group together several materials or services with the same attributes, and to assign them to a particular material group.</Summary>
+      <LongDescription>You can use material groups to:Restrict the scope of analysesSearch specifically for material master records via search helps</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="MaterialPricingGroup" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Material Price Grp" sap:quickinfo="Material Price Group">
+     <Documentation>
+      <Summary>A way of grouping materials to which you want to apply the same  condition.</Summary>
+      <LongDescription>You can create condition records for a material price group using the following condition types:Material price group (for example, all non-food products)A combination of customer and material price groupA combination of customer price group and material price group (for example, all wholesale customers and all non-food products)</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="Batch" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Batch" sap:quickinfo="Batch Number" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Assigns a material that is manufactured in batches or production lots to a specific batch.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ProductionPlant" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Plant" sap:quickinfo="Plant (Own or External)">
+     <Documentation>
+      <Summary>Key that uniquely identifies a plant.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="StorageLocation" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Storage Location">
+     <Documentation>
+      <Summary>Number of the storage location in which the material is stored. A plant may contain one or more storage locations.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ShippingPoint" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Shipping Point" sap:quickinfo="Shipping Point / Receiving Point">
+     <Documentation>
+      <Summary>The physical location (for example, a warehouse or collection of loading ramps) from which you ship the item.</Summary>
+      <LongDescription>You can predefine shipping/receiving points in the system, based on different combinations ofPlantsShipping conditionsLoading groupsDuring delivery processing, the shipping/receiving point is the most important criterion that you use to select deliveries.A delivery can be shipped from only one shipping point or received at only one receiving point.If you want to provide more detailed information about a shipping point you can specify a loading point (for example, one of a number of different loading ramps).If, for example, you want to ship refrigerated goods to a certain customer by rail, the system proposes a shipping point with a suitable location and equipment for loading refrigerated goods onto rail cars.The system can propose a shipping/receiving point. If valid alternatives are predefined in your system, you can change the shipping/receiving point manually.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="IncotermsClassification" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Incoterms" sap:quickinfo="Incoterms (Part 1)">
+     <Documentation>
+      <Summary>Commonly used trading terms that comply with the standards established by the International Chamber of Commerce (ICC).</Summary>
+      <LongDescription>Incoterms specify internationally recognized procedures that the shipper and the receiving party must follow for the shipping transaction to be completed successfully.If goods are shipped through a port of departure, the appropriate Incoterm might be: FOB ("Free On Board"). You can provide further details (for example, the name of the port) in the secondary Incoterm field: FOB Boston, for example.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="IncotermsTransferLocation" Type="Edm.String" MaxLength="28" sap:label="Incoterms (Part 2)">
+     <Documentation>
+      <Summary>Additional information for the primary Incoterm.</Summary>
+      <LongDescription>If the primary Incoterm is, for example, FOB ("Free on Board"), then the second field provides details of the port from which the delivery leaves (for example, "FOB Boston").</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="IncotermsLocation1" Type="Edm.String" MaxLength="70" sap:label="Incoterms Location 1">
+     <Documentation>
+      <Summary>Provides additional information for the primary Incoterm. For Incoterms 2010, this field represents:</Summary>
+      <LongDescription>1. For sea and inland waterway transport - Port of Shipment2. For any mode of transport - Place of Delivery 2010Incoterms are divided as follows:Group 1: Rules for any mode or modes of transport (including by vessel)Incoterms Incoterms Description  Location 1 EXW Ex Works  Place of DeliveryFCA Free Carrier  Place of DeliveryCPT Carriage Paid To  Place of DestinationCIP Carriage &amp; Insurance Paid To  Place of DestinationDAF Delivered at Frontier  Place of DeliveryDDP Delivered Duty Paid  Place of DestinationDDU Delivered Duty Unpaid  Place of DestinationGroup 2: Rules for sea and inland waterwaysIncoterms Incoterms Description Location 1 FAS Free Alongside Ship Port of ShipmentFOB Free On Board Port of ShipmentCFR Cost &amp; Freight Port of DestinationCIF Cost Insurance &amp; Freight Port of DestinationDEQ Delivered Eq Quay (Duty Paid) Port of DestinationDES Delivered Ex Ship Port of DestinationIf the primary incoterm is specified as FOB “Free on Board”, the second field provides details of the port from which the delivery leaves, such as FOB Boston.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="IncotermsLocation2" Type="Edm.String" MaxLength="70" sap:label="Incoterms Location 2">
+     <Documentation>
+      <Summary>Provides additional information for the Incoterms. This field is only available for C-Clauses (if customized appropriately). Note the following for the incoterms versions below:</Summary>
+      <LongDescription>No Version:This field is disabledIncoterm Version 2000This field is disabled as part of standard delivery unless a customer decides to enable it by the way of Customizing for Sales and Distribution under Master Data -&gt; Business Partners -&gt; Customers -&gt; Billing Document -&gt; Incoterms -&gt; Map Incoterms to Versions.Incoterm Version 2010For this version, the field represents:Sea and inland waterway transport - Port of DestinationAny mode of transport - Place of Destination2010 Incoterms are divided as follows:Group 1: Rules for any mode or modes of transport (including by vessel)Incoterms Incoterms Description Location 2CPT Carriage Paid To Place of DestinationCIP Carriage &amp; Insurance Paid To Place of DestinationGroup 2: Rules for sea and inland waterwaysIncoterms Incoterms Description Location 2CFR Cost &amp; Freight Port of DestinationCIF Cost Insurance &amp; Freight Port of Destination</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CustomerPaymentTerms" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Terms of Payment" sap:quickinfo="Terms of Payment Key">
+     <Documentation>
+      <Summary>Key for defining payment terms composed of cash discount percentages and payment periods.</Summary>
+      <LongDescription>It is used in sales orders, purchase orders, and invoices. Terms of payment provide information for:Cash managementDunning proceduresPayment transactionsData can be entered in the field for the terms of payment key in various ways as you enter a business transaction:In most business transactions, the system defaults the key specified in the master record of the customer/vendor in question.In some transactions (for example, credit memos), however, the system does not default the key from the master record. Despite this, you can use the key from the customer/vendor master record by entering "*" in the field.Regardless of whether or not a key is defaulted from the master record, you can manually enter a key during document entry at:item level in sales ordersheader level in purchase orders and invoicesMaster records have separate areas for Financial Accounting, Sales, and Purchasing. You can specify different terms of payment keys in each of these areas. When you then enter a business transaction, the application in question will use the key specified in its area of the master record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesDocumentRjcnReason" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Reason for Rejection" sap:quickinfo="Reason for Rejection of Sales Documents">
+     <Documentation>
+      <Summary>The reason for rejecting a sales document (for example, a sales quotation or a sales order).</Summary>
+      <LongDescription>The rejection can come from your organization (for example, you can reject a customer request for a credit memo because it is unreasonable) or from the customer (for example, the customer rejects a quotation because the price is too high). The following list shows the effects on different document types after you enter a reason for rejection:Inquiries and quotations: no further references by other documentsSales orders: no further delivery of itemsContracts: no further creation of release ordersCredit and debit memo requests: no further processing of credit or debit memosEnter one of the values predefined for your system.If you enter a reason for rejection, the system automatically cancels any MRP requirements previously generated for the items.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ItemBillingBlockReason" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Billing Block" sap:quickinfo="Billing Block for Item">
+     <Documentation>
+      <Summary>Indicates if the item is blocked for billing.</Summary>
+      <LongDescription>To block an item for billing, enter one of the values predefined for your system.You can block an item for billing so that, for example, terms of payment or prices can be checked before further processing takes place.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="WBSElement" Type="Edm.String" MaxLength="24" sap:display-format="NonNegative" sap:label="WBS Element" sap:quickinfo="Work Breakdown Structure Element (WBS Element)">
+     <Documentation>
+      <Summary>Key that identifies a WBS element.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ProfitCenter" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Profit Center">
+     <Documentation>
+      <Summary>Key which together with the controlling area uniquely identifies a profit center.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ReferenceSDDocument" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Reference Document" sap:quickinfo="Document Number of the Reference Document">
+     <Documentation>
+      <Summary>Identifies the sales order to which the delivery refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ReferenceSDDocumentItem" Type="Edm.String" MaxLength="6" sap:display-format="NonNegative" sap:label="Reference Item" sap:quickinfo="Item Number of the Reference Item">
+     <Documentation>
+      <Summary>The number of the sales order item to which the delivery item refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="SDProcessStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Overall Status" sap:quickinfo="Overall Processing Status (Item)" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Displays the overall processing status of the item.</Summary>
+      <LongDescription>The system determines the overall status from all statuses (for example, delivery and billing) for this item. The status message tells you whether processing of the item is open, in progress, or complete.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesContractValidityStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Contract Start Date">
+     <Documentation>
+      <Summary>Enter the contract start date.</Summary>
+      <LongDescription>The contract start date can be entered both at header and at item level. If the contract start date is only entered at header level, then it is valid for all items.The contract start date can be proposed automatically as a default from another data field on the basis of a date rule.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesContractValidityEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Contract End Date"/>
+    <Property Name="NmbrOfSalesContractValdtyPerd" Type="Edm.String" MaxLength="3" sap:display-format="NonNegative" sap:label="Contract Val.Period" sap:quickinfo="Validity Period of Contract"/>
+    <Property Name="SalesContractValidityPerdUnit" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Unit Validity Period" sap:quickinfo="Unit of Validity Period of Contract"/>
+    <Property Name="SalesContractValidityPerdCat" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Val.Period.Category" sap:quickinfo="Validity Period Category of Contract">
+     <Documentation>
+      <Summary>Enter a value here to indicate what kind of validity period the contract has (6 months, one year, and so on).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="SalesContractSignedDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Contract Signed" sap:quickinfo="Date on Which Contract Is Signed">
+     <Documentation>
+      <Summary>Enter the date on which the customer signs the contract.</Summary>
+      <LongDescription>The date you enter can be used as a baseline date for determining other dates in the contract.You want the contract to become valid on the day it is signed by the customer. You enter a date rule for the contract start date which has the date on which the contract is signed as its baseline date. When you enter the date on which the contract was signed in the contract, the system automatically makes the appropriate entry in the contract start date field.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesContractFollowUpAction" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Action" sap:quickinfo="Action at end of contract">
+     <Documentation>
+      <Summary>Enter the follow-up action which is to be taken when the contract ends. Follow-up actions are</Summary>
+      <LongDescription>Creating a contractCreating a quotationCreating a sales activity such as a telephone callSending an internal electronic mail</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SlsContractFollowUpActionDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Action Date" sap:quickinfo="Date for Action">
+     <Documentation>
+      <Summary>Enter the date on which you want the follow-up action for the contract to be performed.</Summary>
+      <LongDescription>The contract will be included in the worklist for contracts with follow-up actions whenThe date you enter in this field lies within the selection period you define for the worklistThe contract fulfills the other selection criteria you define for the worklist.You reach the selection screen for the worklist for contracts with follow-up actions by choosing Outline agreements -&gt; Contracts -&gt; Subsequent functions -&gt; Follow-up actions.</LongDescription>
+     </Documentation>
+    </Property>
+    <NavigationProperty Name="to_Partner" Relationship="API_SALES_CONTRACT_SRV.assoc_E571E5704D923290ADC6C32A44040BCF" FromRole="FromRole_assoc_E571E5704D923290ADC6C32A44040BCF" ToRole="ToRole_assoc_E571E5704D923290ADC6C32A44040BCF"/>
+    <NavigationProperty Name="to_PricingElement" Relationship="API_SALES_CONTRACT_SRV.assoc_CBD6E44D3CB028CA9CFD9823722374DA" FromRole="FromRole_assoc_CBD6E44D3CB028CA9CFD9823722374DA" ToRole="ToRole_assoc_CBD6E44D3CB028CA9CFD9823722374DA"/>
+    <NavigationProperty Name="to_SalesContract" Relationship="API_SALES_CONTRACT_SRV.assoc_6813D03AD1FCDC0FB826FBB5C31D3BAC" FromRole="FromRole_assoc_6813D03AD1FCDC0FB826FBB5C31D3BAC" ToRole="ToRole_assoc_6813D03AD1FCDC0FB826FBB5C31D3BAC"/>
+   </EntityType>
+   <EntityType Name="A_SalesContractItemPartnerType" sap:label="Item Partner" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="SalesContract"/>
+     <PropertyRef Name="SalesContractItem"/>
+     <PropertyRef Name="PartnerFunction"/>
+    </Key>
+    <Property Name="SalesContract" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Contract" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="SalesContractItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Sales Contract Item" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="PartnerFunction" Type="Edm.String" Nullable="false" MaxLength="2" sap:display-format="UpperCase" sap:label="Partner Function">
+     <Documentation>
+      <Summary>The abbreviated form of the name that identifies the partner function.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="Customer" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer" sap:quickinfo="Customer Number">
+     <Documentation>
+      <Summary>Gives an alphanumeric key, which clearly identifies the customer or vendor in the SAP system.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="Supplier" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Supplier" sap:quickinfo="Account Number of Supplier">
+     <Documentation>
+      <Summary>Specifies an alphanumeric key that uniquely identifies the supplier in the SAP system.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="Personnel" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:label="Personnel Number">
+     <Documentation>
+      <Summary>The personnel number is the only feature within a client which is unique to an employee. You have to enter a personnel number before you can display and maintain an employee's master data and time data.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ContactPerson" Type="Edm.String" MaxLength="10" sap:display-format="NonNegative" sap:label="Contact Person" sap:quickinfo="Number of Contact Person">
+     <Documentation>
+      <Summary>The number that uniquely identifies the contact person.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <NavigationProperty Name="to_SalesContract" Relationship="API_SALES_CONTRACT_SRV.assoc_11642AA6D6D7501A52752578E30AAD78" FromRole="FromRole_assoc_11642AA6D6D7501A52752578E30AAD78" ToRole="ToRole_assoc_11642AA6D6D7501A52752578E30AAD78"/>
+    <NavigationProperty Name="to_SalesContractItem" Relationship="API_SALES_CONTRACT_SRV.assoc_9068E649080C278421527A7F3297DF7C" FromRole="FromRole_assoc_9068E649080C278421527A7F3297DF7C" ToRole="ToRole_assoc_9068E649080C278421527A7F3297DF7C"/>
+   </EntityType>
+   <EntityType Name="A_SalesContractItemPrcgElmntType" sap:label="Item Pricing Element" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="SalesContract"/>
+     <PropertyRef Name="SalesContractItem"/>
+     <PropertyRef Name="PricingProcedureStep"/>
+     <PropertyRef Name="PricingProcedureCounter"/>
+    </Key>
+    <Property Name="SalesContract" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Contract" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="SalesContractItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Sales Contract Item" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="PricingProcedureStep" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="NonNegative" sap:label="Step Number">
+     <Documentation>
+      <Summary>Number that determines the sequence of the condition within a procedure.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="PricingProcedureCounter" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="NonNegative" sap:label="Counter" sap:quickinfo="Condition Counter">
+     <Documentation>
+      <Summary>Access number of the conditions within a step in the pricing procedure.</Summary>
+      <LongDescription>During automatic pricing, the system takes into account the sequence specified by the counter.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Condition Type">
+     <Documentation>
+      <Summary>The key that uniquely identifies the condition.</Summary>
+      <LongDescription>The condition type indicates, for example, whether, during pricing, the system applies a price, a discount, a surcharge, or other pricing elements, such as freight costs and sales taxes. For each of these pricing elements, there is a condition type defined in the system.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PricingDateTime" Type="Edm.String" MaxLength="14" sap:display-format="UpperCase" sap:label="Valid From" sap:quickinfo="Timestamp for Pricing" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="ConditionCalculationType" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Calculation Type" sap:quickinfo="Calculation Type for Condition" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Determines how the system calculates prices, discounts, or surcharges in a condition. For example, the system can calculate a price as a fixed amount or as a percentage based on quantity, volume, or weight.</Summary>
+      <LongDescription>The calculation type can be set when generating new condition records. If this does not happen, the calculation type maintained here is valid for the condition record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionBaseValue" Type="Edm.Decimal" Precision="24" Scale="9" sap:label="Condition Basis" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Defines the value in a business document that the system uses together with the condition amount to calculate the condition value for the price condition.</Summary>
+      <LongDescription>During the pricing process in a business document, for each condition type used in the pricing procedure, the system calculates the condition value as follows:For several calculation types (for example, A, C, D, E, F, H, I, J, K, M, N, O, P, W), the system multiplies the condition amount with the condition basis to calculate the condition value.For several calculation types (for example, A, C, D, E, F, H, I, M, N, O, P), the system multiplies the condition amount with the condition basis to calculate the condition value.For several calculation types (for example, C, D, E, F, H, I, M, N, O, P), the value of the condition basis refers to a unit of measure. If the unit of measure of the conditions basis differs from the unit of measure of the price condition (condition unit), the system automatically converts it into the unit of measure of the condition unit. For calculation types C, M, N, O, and P, the item quantity is the default value for the condition basis.For several calculation types (for example, A, B, H, I, J, K, W), the condition basis is a currency field and refers to a currency key field. Such a currency field in the context of pricing is called currency amount. If the currency key of the conditions basis (currency amount) differs from the currency key of the document, the system automatically converts the condition basis (currency amount) into the currency of the document. The system uses the exchange rates for the currencies that are defined in the general settings for currencies.For several calculation types (for example, A, B, H, I), the condition basis is a currency field and refers to a currency key field. Such a currency field in the context of pricing is called currency amount. If the currency key of the conditions basis (currency amount) differs from the currency key of the document, the system automatically converts the condition basis (currency amount) into the currency of the document. The system uses the exchange rates for the currencies that are defined in the general settings for currencies.Note: The standard number of decimal places for a currency is two.Currencies that use a different number of decimal places must in addition be entered into table TCURX, where you can explicitly define the number of decimal places, for example, zero decimals for Japanese yen JPY.Deviations are preconfigured depending on the currency, for example, zero decimals for Japanese yen JPY.If you have defined scales, the system uses the condition basis to determine the valid scale line with the corresponding condition amount.In usage-based pricing models, the usage corresponds to the condition basis.The condition basis can be aQuantityWeightVolumeCurrency AmountA sales order includes an item with a quantity of 120 pieces:The determined list price of USD 101 (condition amount) multiplied with the quantity of 120 pieces (condition basis) results in a condition value of USD 12120.Two discounts are applied to the item of this sales order:The first discount (-1 USD / PC) is based on the quantity ordered that is the condition basis equals the item quantity and the result is - 120 USD.The second discount (- 2 %) is calculated as a percentage which is applied to the results of the list price (USD 12120) and the first discount (- 120 USD). Its result (12000 USD) is the condition basis for the second discount. The result of the second discount is - 240 USD.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionRateValue" Type="Edm.Decimal" Precision="24" Scale="9" sap:label="Amount" sap:quickinfo="Condition Amount or Percentage">
+     <Documentation>
+      <Summary>Determines how the system calculates prices using a specific condition.</Summary>
+      <LongDescription>Depending on the condition type, it can be a fixed amount, a percentage, or per mille. If the condition includes a pricing scale, the condition amount or percentage displays the first line of the scale.The following examples illustrate how you can use the condition amount or percentage in different condition types:If you create a condition that includes prices (for example, prices for a material), you enter an amount.If you create a condition based on percentage, such as discounts or surcharges (for example, a customer-specific discount), you enter the value of a percentage. If the condition is a discount, the system automatically enters a minus sign behind the amount and a percent sign in the Condition Unit field.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionCurrency" Type="Edm.String" MaxLength="5" sap:label="Currency" sap:quickinfo="Currency Key" sap:semantics="currency-code">
+     <Documentation>
+      <Summary>Currency key for amounts in the system.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionQuantity" Type="Edm.Decimal" Precision="5" Scale="0" sap:unit="ConditionQuantityUnit" sap:label="Pricing Unit" sap:quickinfo="Condition Pricing Unit">
+     <Documentation>
+      <Summary>The quantity on which the amount or percentage is based. The quantity is expressed in sales units (for example, bottles).</Summary>
+      <LongDescription>You want to create a condition record for a material price of US$8 for 1 piece. You enter "8" in the Rate field, "USD" in the Unit field, and "1" as the condition pricing unit in this field.You create a condition record that gives a fixed discount of $10 to a customer who buys 1000 bottles. In this case, the condition pricing unit is 1000.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionQuantityUnit" Type="Edm.String" MaxLength="3" sap:label="Condition Unit" sap:quickinfo="Condition Unit in the Document" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Quantity unit, to which the condition amount or percentage refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionCategory" Type="Edm.String" MaxLength="1" sap:label="Condition Category" sap:quickinfo="Condition Category (Examples: Tax, Freight, Price, Cost)" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>A classification of conditions according to pre-defined categories (for example, all conditions that relate to freight costs).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionIsForStatistics" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Statistical" sap:quickinfo="Condition is used for statistics" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>This indicator causes a surcharge or discount to be set in the document statistically (that is, without altering the value).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="PricingScaleType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Scale Type" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Indicator that controls the validity of the scale value or percentage:</Summary>
+      <LongDescription>From a certain quantity or value (base scale)Up to a certain quantity or value (to-scale)Alternatively, it is possible to work with interval scales. Interval scales must be stored in the condition type, that is, the scale type "interval scale" cannot be changed in the condition record. The reason for this is technical restrictions resulting from the programming within pricing.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="IsRelevantForAccrual" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Accruals" sap:quickinfo="Condition is Relevant for Accrual  (e.g. Freight)" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Indicates that the system posts the amounts resulting from this condition to financial accounting as accruals.</Summary>
+      <LongDescription>If you mark this indicator, the condition appears in the document as a statistical condition.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CndnIsRelevantForInvoiceList" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Invoice List Cond." sap:quickinfo="Condition for Invoice List" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Indicates that the condition type is relevant for internal costing.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionOrigin" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Condition Origin" sap:quickinfo="Origin of the Condition" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Indicates where the condition originated (for example, whether you entered the condition manually or whether the system determined it automatically).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="IsGroupCondition" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Group Condition" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Indicates whether the system calculates the scale base value or the condition value taking all related items of the business document into account.</Summary>
+      <LongDescription>For a group condition to be effective, the items must belong to a group. You can freely define the group to meet the needs of your own organization. The items can, for example, all belong to the same material group.A sales order contains two items. Both items belong to the material group 01.Material Quantity Material groupA 150 01B 100 01The group condition indicator is set in the definition of the condition type for material group discounts. The condition record for material group 01 includes the following pricing scale:Scale quantity Discountfrom 1 pc -1%from 200 pc -2%Neither item alone qualifies for the 2% discount. However, when the items are combined as part of a group condition, the combined quantity creates a basis of 250 pieces. This basis then exceeds the scale value of 200 pieces, which is necessary to qualify for the higher discount.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionRecord" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Condition Record No." sap:quickinfo="Number of the Condition Record" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Number that uniquely identifies a condition record.</Summary>
+      <LongDescription>The system uses the condition record number to store and retrieve information during processing (pricing, for example).</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionSequentialNumber" Type="Edm.String" MaxLength="3" sap:display-format="NonNegative" sap:label="Sequent.No. of Cond." sap:quickinfo="Sequential Number of the Condition" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>The sequential number that uniquely identifies the condition if a condition supplement exists.</Summary>
+      <LongDescription>If you have assigned a condition supplement to the condition, the system automatically assigns the number.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="TaxCode" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Tax Code" sap:quickinfo="Tax on Sales/Purchases Code" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>The tax code represents a tax category which must be taken into consideration when making a tax return to the tax authorities.</Summary>
+      <LongDescription>Tax codes are unique per country. The tax rate calculation rules and further features are stored in a table for each tax code.For tax-exempt or non-taxable transactions, you should use tax codes with a 0 percentage rate if the corresponding transactions are to be displayed in the tax returns.You must define new tax codes if tax rates are changed by the state. The old codes with the old tax rates must remain in the system until no more open items which use this tax code exist.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="WithholdingTaxCode" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="W/tax code" sap:quickinfo="Withholding tax code" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>One or more "withholding tax codes" are assigned to each withholding tax type. One of the things these codes determine is the various percentage rates for the withholding tax type.</Summary>
+      <LongDescription>Note that when processing a business transaction, no more than one withholding tax code can be assigned per withholding tax type. If the business transaction is subject to more than one withholding taxes, these must be represented in the system by defining various withholding tax types.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CndnRoundingOffDiffAmount" Type="Edm.Decimal" Precision="6" Scale="3" sap:unit="TransactionCurrency" sap:label="Cond.Rounding Diff." sap:quickinfo="Rounding-Off Difference of the Condition" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="ConditionAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="TransactionCurrency" sap:label="Value" sap:quickinfo="Condition Value" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>The value, resulting from pricing, for a particular condition, total, or subtotal in a document.</Summary>
+      <LongDescription>This value is used as a total for the condition in the pricing procedure.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="TransactionCurrency" Type="Edm.String" MaxLength="5" sap:label="Document Currency" sap:quickinfo="SD Document Currency" sap:semantics="currency-code">
+     <Documentation>
+      <Summary>The currency that applies to the document (for example, to a sales order or an invoice).</Summary>
+      <LongDescription>The system proposes the document currency from the customer master record of the sold-to party. You can change the currency manually in the document. If you change the currency, the system recalculates prices for the entire document.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionControl" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Condition Control" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Indicates whether the prices or values in a condition are fixed or whether and in what way they changed.</Summary>
+      <LongDescription>The indicator shows, for example, if the prices generated by a condition have been changed manually during processing.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionInactiveReason" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Inactive Condition" sap:quickinfo="Condition is Inactive" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Indicates if the condition is active.</Summary>
+      <LongDescription>A condition can be inactive due to the following reasons:Condition is excludedSubsequent price deactivates conditionFormula deactivates conditionError during pricing</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionClass" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Condition Class" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Preliminary structuring of condition types, for example, in surcharges and discounts or prices.</Summary>
+      <LongDescription>Allows standardized processing of individual condition classes within the system.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PrcgProcedureCounterForHeader" Type="Edm.String" MaxLength="3" sap:display-format="NonNegative" sap:label="Counter" sap:quickinfo="Condition Counter (Header)" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="FactorForConditionBasisValue" Type="Edm.Double" sap:label="Condition Factor" sap:quickinfo="Factor for Condition Base Value" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="StructureCondition" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Structure Condition" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Controls whether the condition type is a duplicated condition or a cumulated condition.</Summary>
+      <LongDescription>This control is only helpful when you use bill of materials or configurable materials:'  ' - None'A' - Duplication Condition: A duplicated condition is duplicated into all assigned items.'B' - Cumulation Condition: A cumulated condition contains the net value of all assigned items.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PeriodFactorForCndnBasisValue" Type="Edm.Double" sap:label="Condition Factor" sap:quickinfo="Factor for Condition Basis (Period)" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="PricingScaleBasis" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Scale Basis" sap:quickinfo="Scale Basis Indicator" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Determines how the system interprets a pricing scale in a condition. For example, the scale can be based on quantity, weight, or volume.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleBasisValue" Type="Edm.Decimal" Precision="24" Scale="9" sap:label="Scale Base Val." sap:quickinfo="Scale Base Value" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>A value or quantity that the system uses to access a pricing scale to determine a scale level.</Summary>
+      <LongDescription>The scale base value can be a condition value or the value of a quantity, weight, and so on that has been entered in the document.You create a price condition based on a simple quantity scale with scale type A: Base scale:Quantity Price per Unit10 12 USD100 11 USD1000 10 USDA sales order item with 150 units qualifies for the condition scale quantity of 100 units and the price per unit of USD 11. In this case, the scale base value that determines the price is 150.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleBasisUnit" Type="Edm.String" MaxLength="3" sap:label="Scale Unit of Meas." sap:quickinfo="Condition Scale Unit of Measure" sap:creatable="false" sap:updatable="false" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Unit of measure to which the quantity scale refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleBasisCurrency" Type="Edm.String" MaxLength="5" sap:label="Scale Currency" sap:creatable="false" sap:updatable="false" sap:semantics="currency-code">
+     <Documentation>
+      <Summary>Specifies a currency for a pricing scale in a condition record.</Summary>
+      <LongDescription>If a pricing scale is based on a value instead of a quantity, you can specify a currency for the value. In the standard version of the SAP System, this field is only relevant in condition records for the following discounts:Price groupPrice group/Material pricing groupYou apply a price group discount to customers in a particular foreign country. When you create a condition record for this discount and enter values in the pricing scale, you can also enter the corresponding foreign currency. During pricing, the system then calculates discounts based on scale values in the foreign currency. The discount amount is then converted into the currency you are using in the sales document.After you enter a currency in this field and save the condition record, you cannot change the currency without deleting the record and creating it again.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CndnIsRelevantForIntcoBilling" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Intercomp.Billing" sap:quickinfo="Condition for Intercompany Billing" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Indicator that defines a condition as relevant for the intercompany process.</Summary>
+      <LongDescription>Intercompany conditions are usually statistical in the sales order and the customer invoice and not statistical in the intercompany invoice.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionIsManuallyChanged" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Changed Manually" sap:quickinfo="Condition Changed Manually" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>If this flag is set, the condition has been manually or automatically changed or created (by entry in the condition screen).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionIsForConfiguration" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="UsedforVariantConfig" sap:quickinfo="Condition Used for Variant Configuration" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>A condition that is relevant for variant configuration.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="VariantCondition" Type="Edm.String" MaxLength="26" sap:label="Variant Key" sap:quickinfo="Variant Condition Key" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Freely definable attribute that determines the valid price components of a configurable material.</Summary>
+      <LongDescription>To model the price for a variant of a configurable material, you typically use a larger number of variant condition keys.In a business document, the price for a selected variant is realized as surcharges and discounts specific for this variant: The sales price of a bike depends on the material that is used to produce the frame. You define a characteristic FRAME_MATERIAL that can have the values steel, aluminum, and carbon with the following surcharges:Steel: 0.0 USD per pieceAluminum: + 300 USD per pieceCarbon: + 1000 USD per pieceYou define three different variant condition keys FRAME_STEEL, FRAME_ALU, and FRAME_CARBON and maintain the above-mentioned surcharges as condition records. During order creation, you select the variant of the bike with the carbon frame. This will lead to a surcharge of 1000 USD that corresponds to the variant condition key FRAME_CARBON.</LongDescription>
+     </Documentation>
+    </Property>
+    <NavigationProperty Name="to_SalesContract" Relationship="API_SALES_CONTRACT_SRV.assoc_8ADD1326A9EC56924820B5F2A30C58BB" FromRole="FromRole_assoc_8ADD1326A9EC56924820B5F2A30C58BB" ToRole="ToRole_assoc_8ADD1326A9EC56924820B5F2A30C58BB"/>
+    <NavigationProperty Name="to_SalesContractItem" Relationship="API_SALES_CONTRACT_SRV.assoc_EFC09496D891F55422F534C6BEBF42A8" FromRole="FromRole_assoc_EFC09496D891F55422F534C6BEBF42A8" ToRole="ToRole_assoc_EFC09496D891F55422F534C6BEBF42A8"/>
+   </EntityType>
+   <EntityType Name="A_SalesContractPartnerType" sap:label="Header Partner" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="SalesContract"/>
+     <PropertyRef Name="PartnerFunction"/>
+    </Key>
+    <Property Name="SalesContract" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Contract" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="PartnerFunction" Type="Edm.String" Nullable="false" MaxLength="2" sap:display-format="UpperCase" sap:label="Partner Function">
+     <Documentation>
+      <Summary>The abbreviated form of the name that identifies the partner function.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="Customer" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer" sap:quickinfo="Customer Number">
+     <Documentation>
+      <Summary>Gives an alphanumeric key, which clearly identifies the customer or vendor in the SAP system.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="Supplier" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Supplier" sap:quickinfo="Account Number of Supplier">
+     <Documentation>
+      <Summary>Specifies an alphanumeric key that uniquely identifies the supplier in the SAP system.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="Personnel" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:label="Personnel Number">
+     <Documentation>
+      <Summary>The personnel number is the only feature within a client which is unique to an employee. You have to enter a personnel number before you can display and maintain an employee's master data and time data.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ContactPerson" Type="Edm.String" MaxLength="10" sap:display-format="NonNegative" sap:label="Contact Person" sap:quickinfo="Number of Contact Person">
+     <Documentation>
+      <Summary>The number that uniquely identifies the contact person.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <NavigationProperty Name="to_SalesContract" Relationship="API_SALES_CONTRACT_SRV.assoc_C05926A8B1CF11C57783DA64800F0711" FromRole="FromRole_assoc_C05926A8B1CF11C57783DA64800F0711" ToRole="ToRole_assoc_C05926A8B1CF11C57783DA64800F0711"/>
+   </EntityType>
+   <EntityType Name="A_SalesContractPrcgElmntType" sap:label="Header Pricing Element" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="SalesContract"/>
+     <PropertyRef Name="PricingProcedureStep"/>
+     <PropertyRef Name="PricingProcedureCounter"/>
+    </Key>
+    <Property Name="SalesContract" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Contract" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="PricingProcedureStep" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="NonNegative" sap:label="Step Number">
+     <Documentation>
+      <Summary>Number that determines the sequence of the condition within a procedure.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="PricingProcedureCounter" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="NonNegative" sap:label="Counter" sap:quickinfo="Condition Counter">
+     <Documentation>
+      <Summary>Access number of the conditions within a step in the pricing procedure.</Summary>
+      <LongDescription>During automatic pricing, the system takes into account the sequence specified by the counter.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Condition Type">
+     <Documentation>
+      <Summary>The key that uniquely identifies the condition.</Summary>
+      <LongDescription>The condition type indicates, for example, whether, during pricing, the system applies a price, a discount, a surcharge, or other pricing elements, such as freight costs and sales taxes. For each of these pricing elements, there is a condition type defined in the system.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PricingDateTime" Type="Edm.String" MaxLength="14" sap:display-format="UpperCase" sap:label="Valid From" sap:quickinfo="Timestamp for Pricing" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="ConditionCalculationType" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Calculation Type" sap:quickinfo="Calculation Type for Condition" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Determines how the system calculates prices, discounts, or surcharges in a condition. For example, the system can calculate a price as a fixed amount or as a percentage based on quantity, volume, or weight.</Summary>
+      <LongDescription>The calculation type can be set when generating new condition records. If this does not happen, the calculation type maintained here is valid for the condition record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionBaseValue" Type="Edm.Decimal" Precision="24" Scale="9" sap:label="Condition Basis" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Defines the value in a business document that the system uses together with the condition amount to calculate the condition value for the price condition.</Summary>
+      <LongDescription>During the pricing process in a business document, for each condition type used in the pricing procedure, the system calculates the condition value as follows:For several calculation types (for example, A, C, D, E, F, H, I, J, K, M, N, O, P, W), the system multiplies the condition amount with the condition basis to calculate the condition value.For several calculation types (for example, A, C, D, E, F, H, I, M, N, O, P), the system multiplies the condition amount with the condition basis to calculate the condition value.For several calculation types (for example, C, D, E, F, H, I, M, N, O, P), the value of the condition basis refers to a unit of measure. If the unit of measure of the conditions basis differs from the unit of measure of the price condition (condition unit), the system automatically converts it into the unit of measure of the condition unit. For calculation types C, M, N, O, and P, the item quantity is the default value for the condition basis.For several calculation types (for example, A, B, H, I, J, K, W), the condition basis is a currency field and refers to a currency key field. Such a currency field in the context of pricing is called currency amount. If the currency key of the conditions basis (currency amount) differs from the currency key of the document, the system automatically converts the condition basis (currency amount) into the currency of the document. The system uses the exchange rates for the currencies that are defined in the general settings for currencies.For several calculation types (for example, A, B, H, I), the condition basis is a currency field and refers to a currency key field. Such a currency field in the context of pricing is called currency amount. If the currency key of the conditions basis (currency amount) differs from the currency key of the document, the system automatically converts the condition basis (currency amount) into the currency of the document. The system uses the exchange rates for the currencies that are defined in the general settings for currencies.Note: The standard number of decimal places for a currency is two.Currencies that use a different number of decimal places must in addition be entered into table TCURX, where you can explicitly define the number of decimal places, for example, zero decimals for Japanese yen JPY.Deviations are preconfigured depending on the currency, for example, zero decimals for Japanese yen JPY.If you have defined scales, the system uses the condition basis to determine the valid scale line with the corresponding condition amount.In usage-based pricing models, the usage corresponds to the condition basis.The condition basis can be aQuantityWeightVolumeCurrency AmountA sales order includes an item with a quantity of 120 pieces:The determined list price of USD 101 (condition amount) multiplied with the quantity of 120 pieces (condition basis) results in a condition value of USD 12120.Two discounts are applied to the item of this sales order:The first discount (-1 USD / PC) is based on the quantity ordered that is the condition basis equals the item quantity and the result is - 120 USD.The second discount (- 2 %) is calculated as a percentage which is applied to the results of the list price (USD 12120) and the first discount (- 120 USD). Its result (12000 USD) is the condition basis for the second discount. The result of the second discount is - 240 USD.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionRateValue" Type="Edm.Decimal" Precision="24" Scale="9" sap:label="Amount" sap:quickinfo="Condition Amount or Percentage">
+     <Documentation>
+      <Summary>Determines how the system calculates prices using a specific condition.</Summary>
+      <LongDescription>Depending on the condition type, it can be a fixed amount, a percentage, or per mille. If the condition includes a pricing scale, the condition amount or percentage displays the first line of the scale.The following examples illustrate how you can use the condition amount or percentage in different condition types:If you create a condition that includes prices (for example, prices for a material), you enter an amount.If you create a condition based on percentage, such as discounts or surcharges (for example, a customer-specific discount), you enter the value of a percentage. If the condition is a discount, the system automatically enters a minus sign behind the amount and a percent sign in the Condition Unit field.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionCurrency" Type="Edm.String" MaxLength="5" sap:label="Currency" sap:quickinfo="Currency Key" sap:semantics="currency-code">
+     <Documentation>
+      <Summary>Currency key for amounts in the system.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionQuantity" Type="Edm.Decimal" Precision="5" Scale="0" sap:unit="ConditionQuantityUnit" sap:label="Pricing Unit" sap:quickinfo="Condition Pricing Unit">
+     <Documentation>
+      <Summary>The quantity on which the amount or percentage is based. The quantity is expressed in sales units (for example, bottles).</Summary>
+      <LongDescription>You want to create a condition record for a material price of US$8 for 1 piece. You enter "8" in the Rate field, "USD" in the Unit field, and "1" as the condition pricing unit in this field.You create a condition record that gives a fixed discount of $10 to a customer who buys 1000 bottles. In this case, the condition pricing unit is 1000.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionQuantityUnit" Type="Edm.String" MaxLength="3" sap:label="Condition Unit" sap:quickinfo="Condition Unit in the Document" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Quantity unit, to which the condition amount or percentage refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionCategory" Type="Edm.String" MaxLength="1" sap:label="Condition Category" sap:quickinfo="Condition Category (Examples: Tax, Freight, Price, Cost)" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>A classification of conditions according to pre-defined categories (for example, all conditions that relate to freight costs).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionIsForStatistics" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Statistical" sap:quickinfo="Condition is used for statistics" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>This indicator causes a surcharge or discount to be set in the document statistically (that is, without altering the value).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="PricingScaleType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Scale Type" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Indicator that controls the validity of the scale value or percentage:</Summary>
+      <LongDescription>From a certain quantity or value (base scale)Up to a certain quantity or value (to-scale)Alternatively, it is possible to work with interval scales. Interval scales must be stored in the condition type, that is, the scale type "interval scale" cannot be changed in the condition record. The reason for this is technical restrictions resulting from the programming within pricing.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionOrigin" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Condition Origin" sap:quickinfo="Origin of the Condition" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Indicates where the condition originated (for example, whether you entered the condition manually or whether the system determined it automatically).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="IsGroupCondition" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Group Condition" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Indicates whether the system calculates the scale base value or the condition value taking all related items of the business document into account.</Summary>
+      <LongDescription>For a group condition to be effective, the items must belong to a group. You can freely define the group to meet the needs of your own organization. The items can, for example, all belong to the same material group.A sales order contains two items. Both items belong to the material group 01.Material Quantity Material groupA 150 01B 100 01The group condition indicator is set in the definition of the condition type for material group discounts. The condition record for material group 01 includes the following pricing scale:Scale quantity Discountfrom 1 pc -1%from 200 pc -2%Neither item alone qualifies for the 2% discount. However, when the items are combined as part of a group condition, the combined quantity creates a basis of 250 pieces. This basis then exceeds the scale value of 200 pieces, which is necessary to qualify for the higher discount.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionRecord" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Condition Record No." sap:quickinfo="Number of the Condition Record" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Number that uniquely identifies a condition record.</Summary>
+      <LongDescription>The system uses the condition record number to store and retrieve information during processing (pricing, for example).</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionSequentialNumber" Type="Edm.String" MaxLength="3" sap:display-format="NonNegative" sap:label="Sequent.No. of Cond." sap:quickinfo="Sequential Number of the Condition" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>The sequential number that uniquely identifies the condition if a condition supplement exists.</Summary>
+      <LongDescription>If you have assigned a condition supplement to the condition, the system automatically assigns the number.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="TaxCode" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Tax Code" sap:quickinfo="Tax on Sales/Purchases Code" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>The tax code represents a tax category which must be taken into consideration when making a tax return to the tax authorities.</Summary>
+      <LongDescription>Tax codes are unique per country. The tax rate calculation rules and further features are stored in a table for each tax code.For tax-exempt or non-taxable transactions, you should use tax codes with a 0 percentage rate if the corresponding transactions are to be displayed in the tax returns.You must define new tax codes if tax rates are changed by the state. The old codes with the old tax rates must remain in the system until no more open items which use this tax code exist.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="WithholdingTaxCode" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="W/tax code" sap:quickinfo="Withholding tax code" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>One or more "withholding tax codes" are assigned to each withholding tax type. One of the things these codes determine is the various percentage rates for the withholding tax type.</Summary>
+      <LongDescription>Note that when processing a business transaction, no more than one withholding tax code can be assigned per withholding tax type. If the business transaction is subject to more than one withholding taxes, these must be represented in the system by defining various withholding tax types.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CndnRoundingOffDiffAmount" Type="Edm.Decimal" Precision="6" Scale="3" sap:unit="TransactionCurrency" sap:label="Cond.Rounding Diff." sap:quickinfo="Rounding-Off Difference of the Condition" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="ConditionAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="TransactionCurrency" sap:label="Value" sap:quickinfo="Condition Value" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>The value, resulting from pricing, for a particular condition, total, or subtotal in a document.</Summary>
+      <LongDescription>This value is used as a total for the condition in the pricing procedure.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="TransactionCurrency" Type="Edm.String" MaxLength="5" sap:label="Document Currency" sap:quickinfo="SD Document Currency" sap:semantics="currency-code">
+     <Documentation>
+      <Summary>The currency that applies to the document (for example, to a sales order or an invoice).</Summary>
+      <LongDescription>The system proposes the document currency from the customer master record of the sold-to party. You can change the currency manually in the document. If you change the currency, the system recalculates prices for the entire document.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionControl" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Condition Control" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Indicates whether the prices or values in a condition are fixed or whether and in what way they changed.</Summary>
+      <LongDescription>The indicator shows, for example, if the prices generated by a condition have been changed manually during processing.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionInactiveReason" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Inactive Condition" sap:quickinfo="Condition is Inactive" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Indicates if the condition is active.</Summary>
+      <LongDescription>A condition can be inactive due to the following reasons:Condition is excludedSubsequent price deactivates conditionFormula deactivates conditionError during pricing</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionClass" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Condition Class" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Preliminary structuring of condition types, for example, in surcharges and discounts or prices.</Summary>
+      <LongDescription>Allows standardized processing of individual condition classes within the system.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PrcgProcedureCounterForHeader" Type="Edm.String" MaxLength="3" sap:display-format="NonNegative" sap:label="Counter" sap:quickinfo="Condition Counter (Header)" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="FactorForConditionBasisValue" Type="Edm.Double" sap:label="Condition Factor" sap:quickinfo="Factor for Condition Base Value" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="StructureCondition" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Structure Condition" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Controls whether the condition type is a duplicated condition or a cumulated condition.</Summary>
+      <LongDescription>This control is only helpful when you use bill of materials or configurable materials:'  ' - None'A' - Duplication Condition: A duplicated condition is duplicated into all assigned items.'B' - Cumulation Condition: A cumulated condition contains the net value of all assigned items.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PeriodFactorForCndnBasisValue" Type="Edm.Double" sap:label="Condition Factor" sap:quickinfo="Factor for Condition Basis (Period)" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="PricingScaleBasis" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Scale Basis" sap:quickinfo="Scale Basis Indicator" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Determines how the system interprets a pricing scale in a condition. For example, the scale can be based on quantity, weight, or volume.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleBasisValue" Type="Edm.Decimal" Precision="24" Scale="9" sap:label="Scale Base Val." sap:quickinfo="Scale Base Value" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>A value or quantity that the system uses to access a pricing scale to determine a scale level.</Summary>
+      <LongDescription>The scale base value can be a condition value or the value of a quantity, weight, and so on that has been entered in the document.You create a price condition based on a simple quantity scale with scale type A: Base scale:Quantity Price per Unit10 12 USD100 11 USD1000 10 USDA sales order item with 150 units qualifies for the condition scale quantity of 100 units and the price per unit of USD 11. In this case, the scale base value that determines the price is 150.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleBasisUnit" Type="Edm.String" MaxLength="3" sap:label="Scale Unit of Meas." sap:quickinfo="Condition Scale Unit of Measure" sap:creatable="false" sap:updatable="false" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Unit of measure to which the quantity scale refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleBasisCurrency" Type="Edm.String" MaxLength="5" sap:label="Scale Currency" sap:creatable="false" sap:updatable="false" sap:semantics="currency-code">
+     <Documentation>
+      <Summary>Specifies a currency for a pricing scale in a condition record.</Summary>
+      <LongDescription>If a pricing scale is based on a value instead of a quantity, you can specify a currency for the value. In the standard version of the SAP System, this field is only relevant in condition records for the following discounts:Price groupPrice group/Material pricing groupYou apply a price group discount to customers in a particular foreign country. When you create a condition record for this discount and enter values in the pricing scale, you can also enter the corresponding foreign currency. During pricing, the system then calculates discounts based on scale values in the foreign currency. The discount amount is then converted into the currency you are using in the sales document.After you enter a currency in this field and save the condition record, you cannot change the currency without deleting the record and creating it again.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CndnIsRelevantForIntcoBilling" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Intercomp.Billing" sap:quickinfo="Condition for Intercompany Billing" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Indicator that defines a condition as relevant for the intercompany process.</Summary>
+      <LongDescription>Intercompany conditions are usually statistical in the sales order and the customer invoice and not statistical in the intercompany invoice.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionIsManuallyChanged" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Changed Manually" sap:quickinfo="Condition Changed Manually" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>If this flag is set, the condition has been manually or automatically changed or created (by entry in the condition screen).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionIsForConfiguration" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="UsedforVariantConfig" sap:quickinfo="Condition Used for Variant Configuration" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>A condition that is relevant for variant configuration.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="VariantCondition" Type="Edm.String" MaxLength="26" sap:label="Variant Key" sap:quickinfo="Variant Condition Key" sap:creatable="false" sap:updatable="false">
+     <Documentation>
+      <Summary>Freely definable attribute that determines the valid price components of a configurable material.</Summary>
+      <LongDescription>To model the price for a variant of a configurable material, you typically use a larger number of variant condition keys.In a business document, the price for a selected variant is realized as surcharges and discounts specific for this variant: The sales price of a bike depends on the material that is used to produce the frame. You define a characteristic FRAME_MATERIAL that can have the values steel, aluminum, and carbon with the following surcharges:Steel: 0.0 USD per pieceAluminum: + 300 USD per pieceCarbon: + 1000 USD per pieceYou define three different variant condition keys FRAME_STEEL, FRAME_ALU, and FRAME_CARBON and maintain the above-mentioned surcharges as condition records. During order creation, you select the variant of the bike with the carbon frame. This will lead to a surcharge of 1000 USD that corresponds to the variant condition key FRAME_CARBON.</LongDescription>
+     </Documentation>
+    </Property>
+    <NavigationProperty Name="to_SalesContract" Relationship="API_SALES_CONTRACT_SRV.assoc_8842853ACA1DBD5768A33574839E1157" FromRole="FromRole_assoc_8842853ACA1DBD5768A33574839E1157" ToRole="ToRole_assoc_8842853ACA1DBD5768A33574839E1157"/>
+   </EntityType>
+   <ComplexType Name="FunctionResult">
+    <Property Name="Boolean" Type="Edm.Boolean" Nullable="false" sap:label="Indicator" sap:heading="Flag" sap:quickinfo="General Flag" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+   </ComplexType>
+   <Association Name="assoc_E571E5704D923290ADC6C32A44040BCF" sap:content-version="1">
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractItemType" Multiplicity="1" Role="FromRole_assoc_E571E5704D923290ADC6C32A44040BCF"/>
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractItemPartnerType" Multiplicity="*" Role="ToRole_assoc_E571E5704D923290ADC6C32A44040BCF"/>
+   </Association>
+   <Association Name="assoc_CBD6E44D3CB028CA9CFD9823722374DA" sap:content-version="1">
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractItemType" Multiplicity="1" Role="FromRole_assoc_CBD6E44D3CB028CA9CFD9823722374DA"/>
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractItemPrcgElmntType" Multiplicity="*" Role="ToRole_assoc_CBD6E44D3CB028CA9CFD9823722374DA"/>
+   </Association>
+   <Association Name="assoc_6813D03AD1FCDC0FB826FBB5C31D3BAC" sap:content-version="1">
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractItemType" Multiplicity="1" Role="FromRole_assoc_6813D03AD1FCDC0FB826FBB5C31D3BAC"/>
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractType" Multiplicity="1" Role="ToRole_assoc_6813D03AD1FCDC0FB826FBB5C31D3BAC"/>
+   </Association>
+   <Association Name="assoc_C05926A8B1CF11C57783DA64800F0711" sap:content-version="1">
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractPartnerType" Multiplicity="1" Role="FromRole_assoc_C05926A8B1CF11C57783DA64800F0711"/>
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractType" Multiplicity="1" Role="ToRole_assoc_C05926A8B1CF11C57783DA64800F0711"/>
+   </Association>
+   <Association Name="assoc_F7E2B6E189FE18642F3F53B5FCF940C4" sap:content-version="1">
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractType" Multiplicity="1" Role="FromRole_assoc_F7E2B6E189FE18642F3F53B5FCF940C4"/>
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractPartnerType" Multiplicity="*" Role="ToRole_assoc_F7E2B6E189FE18642F3F53B5FCF940C4"/>
+   </Association>
+   <Association Name="assoc_166710B494E28D183E54DF569E31D6A8" sap:content-version="1">
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractType" Multiplicity="1" Role="FromRole_assoc_166710B494E28D183E54DF569E31D6A8"/>
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractPrcgElmntType" Multiplicity="*" Role="ToRole_assoc_166710B494E28D183E54DF569E31D6A8"/>
+   </Association>
+   <Association Name="assoc_486B3B777EEB41E54CA1A019CFF35D3C" sap:content-version="1">
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractType" Multiplicity="1" Role="FromRole_assoc_486B3B777EEB41E54CA1A019CFF35D3C"/>
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractItemType" Multiplicity="*" Role="ToRole_assoc_486B3B777EEB41E54CA1A019CFF35D3C"/>
+   </Association>
+   <Association Name="assoc_8ADD1326A9EC56924820B5F2A30C58BB" sap:content-version="1">
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractItemPrcgElmntType" Multiplicity="1" Role="FromRole_assoc_8ADD1326A9EC56924820B5F2A30C58BB"/>
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractType" Multiplicity="1" Role="ToRole_assoc_8ADD1326A9EC56924820B5F2A30C58BB"/>
+   </Association>
+   <Association Name="assoc_EFC09496D891F55422F534C6BEBF42A8" sap:content-version="1">
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractItemPrcgElmntType" Multiplicity="1" Role="FromRole_assoc_EFC09496D891F55422F534C6BEBF42A8"/>
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractItemType" Multiplicity="1" Role="ToRole_assoc_EFC09496D891F55422F534C6BEBF42A8"/>
+   </Association>
+   <Association Name="assoc_8842853ACA1DBD5768A33574839E1157" sap:content-version="1">
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractPrcgElmntType" Multiplicity="1" Role="FromRole_assoc_8842853ACA1DBD5768A33574839E1157"/>
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractType" Multiplicity="1" Role="ToRole_assoc_8842853ACA1DBD5768A33574839E1157"/>
+   </Association>
+   <Association Name="assoc_11642AA6D6D7501A52752578E30AAD78" sap:content-version="1">
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractItemPartnerType" Multiplicity="1" Role="FromRole_assoc_11642AA6D6D7501A52752578E30AAD78"/>
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractType" Multiplicity="1" Role="ToRole_assoc_11642AA6D6D7501A52752578E30AAD78"/>
+   </Association>
+   <Association Name="assoc_9068E649080C278421527A7F3297DF7C" sap:content-version="1">
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractItemPartnerType" Multiplicity="1" Role="FromRole_assoc_9068E649080C278421527A7F3297DF7C"/>
+    <End Type="API_SALES_CONTRACT_SRV.A_SalesContractItemType" Multiplicity="1" Role="ToRole_assoc_9068E649080C278421527A7F3297DF7C"/>
+   </Association>
+   <EntityContainer Name="API_SALES_CONTRACT_SRV_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+    <EntitySet Name="A_SalesContract" EntityType="API_SALES_CONTRACT_SRV.A_SalesContractType" sap:content-version="1"/>
+    <EntitySet Name="A_SalesContractItem" EntityType="API_SALES_CONTRACT_SRV.A_SalesContractItemType" sap:content-version="1"/>
+    <EntitySet Name="A_SalesContractItemPartner" EntityType="API_SALES_CONTRACT_SRV.A_SalesContractItemPartnerType" sap:creatable="false" sap:content-version="1"/>
+    <EntitySet Name="A_SalesContractItemPrcgElmnt" EntityType="API_SALES_CONTRACT_SRV.A_SalesContractItemPrcgElmntType" sap:creatable="false" sap:content-version="1"/>
+    <EntitySet Name="A_SalesContractPartner" EntityType="API_SALES_CONTRACT_SRV.A_SalesContractPartnerType" sap:creatable="false" sap:content-version="1"/>
+    <EntitySet Name="A_SalesContractPrcgElmnt" EntityType="API_SALES_CONTRACT_SRV.A_SalesContractPrcgElmntType" sap:creatable="false" sap:content-version="1"/>
+    <AssociationSet Name="assoc_E571E5704D923290ADC6C32A44040BCF" Association="API_SALES_CONTRACT_SRV.assoc_E571E5704D923290ADC6C32A44040BCF" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SalesContractItem" Role="FromRole_assoc_E571E5704D923290ADC6C32A44040BCF"/>
+     <End EntitySet="A_SalesContractItemPartner" Role="ToRole_assoc_E571E5704D923290ADC6C32A44040BCF"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_11642AA6D6D7501A52752578E30AAD78" Association="API_SALES_CONTRACT_SRV.assoc_11642AA6D6D7501A52752578E30AAD78" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SalesContractItemPartner" Role="FromRole_assoc_11642AA6D6D7501A52752578E30AAD78"/>
+     <End EntitySet="A_SalesContract" Role="ToRole_assoc_11642AA6D6D7501A52752578E30AAD78"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_C05926A8B1CF11C57783DA64800F0711" Association="API_SALES_CONTRACT_SRV.assoc_C05926A8B1CF11C57783DA64800F0711" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SalesContractPartner" Role="FromRole_assoc_C05926A8B1CF11C57783DA64800F0711"/>
+     <End EntitySet="A_SalesContract" Role="ToRole_assoc_C05926A8B1CF11C57783DA64800F0711"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_9068E649080C278421527A7F3297DF7C" Association="API_SALES_CONTRACT_SRV.assoc_9068E649080C278421527A7F3297DF7C" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SalesContractItemPartner" Role="FromRole_assoc_9068E649080C278421527A7F3297DF7C"/>
+     <End EntitySet="A_SalesContractItem" Role="ToRole_assoc_9068E649080C278421527A7F3297DF7C"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_EFC09496D891F55422F534C6BEBF42A8" Association="API_SALES_CONTRACT_SRV.assoc_EFC09496D891F55422F534C6BEBF42A8" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SalesContractItemPrcgElmnt" Role="FromRole_assoc_EFC09496D891F55422F534C6BEBF42A8"/>
+     <End EntitySet="A_SalesContractItem" Role="ToRole_assoc_EFC09496D891F55422F534C6BEBF42A8"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_F7E2B6E189FE18642F3F53B5FCF940C4" Association="API_SALES_CONTRACT_SRV.assoc_F7E2B6E189FE18642F3F53B5FCF940C4" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SalesContract" Role="FromRole_assoc_F7E2B6E189FE18642F3F53B5FCF940C4"/>
+     <End EntitySet="A_SalesContractPartner" Role="ToRole_assoc_F7E2B6E189FE18642F3F53B5FCF940C4"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_486B3B777EEB41E54CA1A019CFF35D3C" Association="API_SALES_CONTRACT_SRV.assoc_486B3B777EEB41E54CA1A019CFF35D3C" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SalesContract" Role="FromRole_assoc_486B3B777EEB41E54CA1A019CFF35D3C"/>
+     <End EntitySet="A_SalesContractItem" Role="ToRole_assoc_486B3B777EEB41E54CA1A019CFF35D3C"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_8ADD1326A9EC56924820B5F2A30C58BB" Association="API_SALES_CONTRACT_SRV.assoc_8ADD1326A9EC56924820B5F2A30C58BB" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SalesContractItemPrcgElmnt" Role="FromRole_assoc_8ADD1326A9EC56924820B5F2A30C58BB"/>
+     <End EntitySet="A_SalesContract" Role="ToRole_assoc_8ADD1326A9EC56924820B5F2A30C58BB"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_8842853ACA1DBD5768A33574839E1157" Association="API_SALES_CONTRACT_SRV.assoc_8842853ACA1DBD5768A33574839E1157" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SalesContractPrcgElmnt" Role="FromRole_assoc_8842853ACA1DBD5768A33574839E1157"/>
+     <End EntitySet="A_SalesContract" Role="ToRole_assoc_8842853ACA1DBD5768A33574839E1157"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_166710B494E28D183E54DF569E31D6A8" Association="API_SALES_CONTRACT_SRV.assoc_166710B494E28D183E54DF569E31D6A8" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SalesContract" Role="FromRole_assoc_166710B494E28D183E54DF569E31D6A8"/>
+     <End EntitySet="A_SalesContractPrcgElmnt" Role="ToRole_assoc_166710B494E28D183E54DF569E31D6A8"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_CBD6E44D3CB028CA9CFD9823722374DA" Association="API_SALES_CONTRACT_SRV.assoc_CBD6E44D3CB028CA9CFD9823722374DA" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SalesContractItem" Role="FromRole_assoc_CBD6E44D3CB028CA9CFD9823722374DA"/>
+     <End EntitySet="A_SalesContractItemPrcgElmnt" Role="ToRole_assoc_CBD6E44D3CB028CA9CFD9823722374DA"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_6813D03AD1FCDC0FB826FBB5C31D3BAC" Association="API_SALES_CONTRACT_SRV.assoc_6813D03AD1FCDC0FB826FBB5C31D3BAC" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SalesContractItem" Role="FromRole_assoc_6813D03AD1FCDC0FB826FBB5C31D3BAC"/>
+     <End EntitySet="A_SalesContract" Role="ToRole_assoc_6813D03AD1FCDC0FB826FBB5C31D3BAC"/>
+    </AssociationSet>
+    <FunctionImport Name="releaseApprovalRequest" ReturnType="API_SALES_CONTRACT_SRV.FunctionResult" m:HttpMethod="POST">
+     <Parameter Name="SalesContract" Type="Edm.String" Mode="In" MaxLength="10"/>
+    </FunctionImport>
+    <FunctionImport Name="rejectApprovalRequest" ReturnType="API_SALES_CONTRACT_SRV.FunctionResult" m:HttpMethod="POST">
+     <Parameter Name="SalesContract" Type="Edm.String" Mode="In" MaxLength="10"/>
+    </FunctionImport>
+   </EntityContainer>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+    <Annotation Term="Aggregation.ApplySupported">
+     <Record>
+      <PropertyValue Property="Transformations">
+       <Collection>
+        <String>aggregate</String>
+        <String>groupby</String>
+        <String>filter</String>
+       </Collection>
+      </PropertyValue>
+      <PropertyValue Property="Rollup" EnumMember="None"/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractValAddedSrvc" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.FilterRestrictions">
+     <Record>
+      <PropertyValue Property="NonFilterableProperties">
+       <Collection>
+        <PropertyPath>ValueAddedServiceLongText</PropertyPath>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+    <Annotation Term="Capabilities.SortRestrictions">
+     <Record>
+      <PropertyValue Property="NonSortableProperties">
+       <Collection>
+        <PropertyPath>ValueAddedServiceLongText</PropertyPath>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContract" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.ReadRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Reads all sales contract headers."/>
+      <PropertyValue Property="LongDescription" String="Reads the header data of all sales contracts in the system."/>
+      <PropertyValue Property="ReadByKeyRestrictions">
+       <Record>
+        <PropertyValue Property="Description" String="Reads the header of a specific sales contract."/>
+        <PropertyValue Property="LongDescription" String="Reads the header data of a specific sales contract, which the consumer specifies by passing the sales contract number."/>
+       </Record>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractItem" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.ReadRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Reads all sales contract items."/>
+      <PropertyValue Property="LongDescription" String="Reads all item data of all sales contracts in the system."/>
+      <PropertyValue Property="ReadByKeyRestrictions">
+       <Record>
+        <PropertyValue Property="Description" String="Reads a specific sales contract item."/>
+        <PropertyValue Property="LongDescription" String="Reads the data of a specific sales contract item, which the consumer specifies by passing the sales contract number and item number."/>
+       </Record>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractPartner" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.ReadRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Reads all header-level partners."/>
+      <PropertyValue Property="LongDescription" String="Reads partner data from the headers of all sales contracts in the system. This includes fields such as partner function, customer, contact person, and more."/>
+      <PropertyValue Property="ReadByKeyRestrictions">
+       <Record>
+        <PropertyValue Property="Description" String="Reads a specific header-level partner."/>
+        <PropertyValue Property="LongDescription" String="Reads a specific header-level partner, which the consumer specifies by passing the sales contract number and partner function."/>
+       </Record>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractPrcgElmnt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.ReadRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Reads all header-level pricing elements."/>
+      <PropertyValue Property="LongDescription" String="Reads pricing element data from the headers of all sales contracts in the system. This includes fields such as pricing procedure counter, pricing procedure step, and more."/>
+      <PropertyValue Property="ReadByKeyRestrictions">
+       <Record>
+        <PropertyValue Property="Description" String="Reads a specific header-level pricing element."/>
+        <PropertyValue Property="LongDescription" String="Reads a specific header-level pricing element, which the consumer specifies by passing the sales contract number, pricing procedure step, and pricing procedure counter."/>
+       </Record>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractItemPartner" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.ReadRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Reads all item-level partners."/>
+      <PropertyValue Property="LongDescription" String="Reads partner data from all sales contract items in the system. This includes fields such as partner function, customer, contact person, and more."/>
+      <PropertyValue Property="ReadByKeyRestrictions">
+       <Record>
+        <PropertyValue Property="Description" String="Reads a specific item-level partner."/>
+        <PropertyValue Property="LongDescription" String="Reads a specific item-level partner, which the consumer specifies by passing the sales contract number, item number, and partner function."/>
+       </Record>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractItemPrcgElmnt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.ReadRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Reads all item-level pricing elements."/>
+      <PropertyValue Property="LongDescription" String="Reads pricing element data from the all sales contracts items in the system. This includes fields such as pricing procedure counter, pricing procedure step, and more."/>
+      <PropertyValue Property="ReadByKeyRestrictions">
+       <Record>
+        <PropertyValue Property="Description" String="Reads a specific item-level pricing element."/>
+        <PropertyValue Property="LongDescription" String="Reads a specific item-level pricing element, which the consumer specifies by passing the sales contract number, item number, pricing procedure step, and pricing procedure counter."/>
+       </Record>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContract" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.InsertRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Creates a sales contract."/>
+      <PropertyValue Property="LongDescription" String="Creates a header of a sales contract. The consumer can use deep insert requests. This means the consumer can include the following entities in the payload:header partner, header pricing element, sales contract item, item partner, and item pricing element."/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContract" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.UpdateRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Updates the header of a specific sales contract."/>
+      <PropertyValue Property="LongDescription" String="Updates the header data of a specific sales contract, which the consumer specifies by passing the sales contract number."/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContract" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.DeleteRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Deletes a specific sales contract."/>
+      <PropertyValue Property="LongDescription" String="Deletes a specific sales contract, which the consumer specifies by passing the sales contract number."/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractItem" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.InsertRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Creates one or more sales contract items for a specific sales contract."/>
+      <PropertyValue Property="LongDescription" String="Creates sales contract item data for a specific sales contract, which the consumer must specify in the payload. The consumer can use deep insert requests.This means the consumer can include following entities in the payload: item partner and item pricing element."/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractItem" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.UpdateRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Updates a specific sales contract item."/>
+      <PropertyValue Property="LongDescription" String="Updates the data of a specific sales contract item, which the consumer specifies by passing the sales contract number and item number."/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractItem" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.DeleteRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Deletes a specific sales contract item."/>
+      <PropertyValue Property="LongDescription" String="Deletes the data of a specific sales contract item, which the consumer specifies by passing the sales contract number and item number."/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractPartner" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.UpdateRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Updates a specific header-level partner."/>
+      <PropertyValue Property="LongDescription" String="Updates a specific header-level partner, which the consumer specifies by passing the sales contract number and partner function."/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractPartner" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.DeleteRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Deletes a specific header-level partner."/>
+      <PropertyValue Property="LongDescription" String="Deletes a specific header-level partner, which the consumer specifies by passing the sales contract number and partner function."/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractPrcgElmnt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.UpdateRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Updates a specific header-level pricing element."/>
+      <PropertyValue Property="LongDescription" String="Updates a specific header-level pricing element, which the consumer specifies by passing the sales contract number, pricing procedure step, and pricing procedure counter."/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractPrcgElmnt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.DeleteRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Deletes a specific header-level pricing element."/>
+      <PropertyValue Property="LongDescription" String="Deletes a specific header-level pricing element, which the consumer specifies by passing the sales contract number, pricing procedure step, and pricing procedure counter."/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractItemPartner" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.UpdateRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Updates a specific item-level partner."/>
+      <PropertyValue Property="LongDescription" String="Updates a specific item-level partner, which the consumer specifies by passing the sales contract number, item number, and partner function."/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractItemPartner" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.DeleteRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Deletes a specific item-level partner."/>
+      <PropertyValue Property="LongDescription" String="Deletes a specific item-level partner, which the consumer specifies by passing the sales contract number, item number, and partner function."/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractItemPrcgElmnt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.UpdateRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Updates a specific item-level partner."/>
+      <PropertyValue Property="LongDescription" String="Updates a specific item-level partner, which the consumer specifies by passing the sales contract number, item number, and partner function."/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractItemPrcgElmnt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.DeleteRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Updates a specific item-level pricing element."/>
+      <PropertyValue Property="LongDescription" String="Updates a specific header-level pricing element, which the consumer specifies by passing the sales contract number, item number, pricing procedure step, and pricing procedure counter."/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContract" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.NavigationRestrictions">
+     <Record>
+      <PropertyValue Property="RestrictedProperties">
+       <Collection>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Item"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads items of a specific sales contract."/>
+           <PropertyValue Property="LongDescription" String="Reads item data from the header of a specific sales contract, which the consumer specifies by passing the sales contract number."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Item"/>
+         <PropertyValue Property="InsertRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Creates one or more items for a specific sales contract."/>
+           <PropertyValue Property="LongDescription" String="Creates item data for a specific sales contract, which the consumer specifies by passing the sales contract number. The consumer must also pass the sales contract number in the payload."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Partner"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads the header-level partners of a specific sales contract."/>
+           <PropertyValue Property="LongDescription" String="Reads partner data from the header of a specific sales contract, which the consumer specifies by passing the sales contract number."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_PricingElement"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads the header-level pricing elements of a specific sales contract."/>
+           <PropertyValue Property="LongDescription" String="Reads pricing element data from the header of a specific sales contract, which the consumer specifies by passing the sales contract number."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractItem" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.NavigationRestrictions">
+     <Record>
+      <PropertyValue Property="RestrictedProperties">
+       <Collection>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Partner"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads the item-level partner of a specific sales contract item."/>
+           <PropertyValue Property="LongDescription" String="Reads the partner data from a specific sales contract item, which the consumer specifies by passing the sales contract number and item number."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_PricingElement"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads the item-level pricing element of a specific sales contract item."/>
+           <PropertyValue Property="LongDescription" String="Reads the pricing element data from a specific sales contract item, which the consumer specifies by passing the sales contract number and item number."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesContract"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads the sales contract header for a specific sales contract item."/>
+           <PropertyValue Property="LongDescription" String="Reads sales contract header fields for a specific item. Consumers must pass the following key fields: sales contract number and item number."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractItemPartner" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.NavigationRestrictions">
+     <Record>
+      <PropertyValue Property="RestrictedProperties">
+       <Collection>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesContract"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads the sales contract header for a specific item partner."/>
+           <PropertyValue Property="LongDescription" String="Reads sales contract header fields for a specific item-level partner function. Consumers must pass the following key fields: sales contract, item number, and item partner function."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesContractItem"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads the sales contract item for a specific item partner."/>
+           <PropertyValue Property="LongDescription" String="Reads fields of a sales contract item for a specific item-level partner function. Consumers must pass the following key fields: sales contract number, item number, and item partner function."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractItemPrcgElmnt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.NavigationRestrictions">
+     <Record>
+      <PropertyValue Property="RestrictedProperties">
+       <Collection>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesContract"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads the sales contract header for a specific item pricing element."/>
+           <PropertyValue Property="LongDescription" String="Reads sales contract header fields for a specific item-level pricing element. Consumers must pass the following key fields: sales contract number, item number, item pricing procedure step,and item pricing procedure counter."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesContractItem"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads the sales contract item for a specific item pricing element."/>
+           <PropertyValue Property="LongDescription" String="Reads fields of a sales contract item for a specific item-level pricing element. Consumers must pass the following key fields: sales contract number, item number, pricing procedure step,and pricing procedure counter."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractPartner" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.NavigationRestrictions">
+     <Record>
+      <PropertyValue Property="RestrictedProperties">
+       <Collection>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesContract"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads the sales contract header for a specific header partner."/>
+           <PropertyValue Property="LongDescription" String="Reads sales contract header fields for a specific header-level partner function. Consumers must pass the following key fields: sales contract and partner function."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/A_SalesContractPrcgElmnt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.NavigationRestrictions">
+     <Record>
+      <PropertyValue Property="RestrictedProperties">
+       <Collection>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SalesContract"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads the sales contract header for a specific header pricing element."/>
+           <PropertyValue Property="LongDescription" String="Reads sales contract header fields for a specific header-level pricing element. Consumers must pass the following key fields: sales contract number, pricing procedure step, and pricing procedure counter."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/releaseApprovalRequest" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Core.Description" String="Approves a specific sales contract."/>
+    <Annotation Term="Core.LongDescription" String="Releases the approval request for a specific sales contract. Consumer must pass the sales contract number."/>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities/rejectApprovalRequest" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Core.Description" String="Rejects a specific sales contract."/>
+    <Annotation Term="Core.LongDescription" String="Rejects the approval request for a specific sales contract. Consumer must pass the sales contractnumber."/>
+   </Annotations>
+   <Annotations Target="API_SALES_CONTRACT_SRV.API_SALES_CONTRACT_SRV_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Org.OData.Capabilities.V1.BatchSupport">
+     <Record Type="Org.OData.Capabilities.V1.BatchSupportType">
+      <PropertyValue Property="ReferencesAcrossChangeSetsSupported" Bool="true"/>
+     </Record>
+    </Annotation>
+    <Annotation Term="SAP__CodeList.CurrencyCodes">
+     <Record>
+      <PropertyValue Property="Url" String="../../iwbep/common;v=0001;o=LOCAL/$metadata"/>
+      <PropertyValue Property="CollectionPath" String="Currencies"/>
+     </Record>
+    </Annotation>
+    <Annotation Term="SAP__CodeList.UnitsOfMeasure">
+     <Record>
+      <PropertyValue Property="Url" String="../../iwbep/common;v=0001;o=LOCAL/$metadata"/>
+      <PropertyValue Property="CollectionPath" String="UnitsOfMeasure"/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <atom:link rel="self" href="https://host:port/sap/opu/odata/sap/API_SALES_CONTRACT_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+   <atom:link rel="latest-version" href="https://host:port/sap/opu/odata/sap/API_SALES_CONTRACT_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+  </Schema>
+ </edmx:DataServices>
+</edmx:Edmx>

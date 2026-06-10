@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ERSInvoiceMapperXML">
+    <xs:complexType>
+      <xs:sequence>
+		<xs:element ref="HeaderData" />
+		<xs:element ref="InvoiceData" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="HeaderData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="BuyerCode" type="xs:string" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="InvoiceData">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="InvoiceDetail">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="ObjectRef" type="xs:string" minOccurs="0"/>
+                    <xs:element name="ExternalObjectRef" type="xs:string" minOccurs="0"/>
+                    <xs:element name="ServiceEntryRef" type="xs:string" minOccurs="0"/>
+                    <xs:element name="InvoiceNetAmount" type="xs:decimal" minOccurs="0"/>
+                    <xs:element name="Adjustments">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element maxOccurs="unbounded" name="Adjustment">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="AdjName" type="xs:string" />
+                                <xs:element name="AdjCode" type="xs:string" />
+                                <xs:element name="AdjAmount" type="xs:decimal" />
+								<xs:element name="AdjUnitType" type="xs:string" default="FLAT" minOccurs="0"/>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Attachments" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element maxOccurs="unbounded" minOccurs="0" name="Attachment">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="Content-Disposition" type="xs:string" />
+                                <xs:element name="Content-Type" type="xs:string" />
+                                <xs:element name="Content-Transfer-Encoding" type="xs:string" />
+                                <xs:element name="AttachmentReference">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="mimeType" type="xs:string" use="required" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="BinaryData" type="xs:string" />
+                                <xs:element name="Module" type="xs:string" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+</xs:schema>

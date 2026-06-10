@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices m:DataServiceVersion="1.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+        <Schema Namespace="HybrisCommerceOData" xmlns="http://schemas.microsoft.com/ado/2008/09/edm" s:schema-version="1" xmlns:s="http://schemas.sap.com/commerce">
+            <EntityType Name="Comment">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="text" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Comment_text"/>
+            </EntityType>
+            <EntityType Name="AbstractOrder">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="AbstractOrder_code"/>
+            </EntityType>
+            <EntityType Name="CsTicketState">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="CsTicketState_code"/>
+            </EntityType>
+            <EntityType Name="Employee">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="uid" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Employee_uid"/>
+            </EntityType>
+            <EntityType Name="CsTicket">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="isTicketReplicated" Type="Edm.Boolean" Nullable="true"/>
+                <Property Name="headline" Type="Edm.String" Nullable="true"/>
+                <Property Name="ticketID" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="reasonCategoryLevel" Type="Edm.Int32" Nullable="true"/>
+                <Property Name="retentionDate" Type="Edm.DateTime" Nullable="true"/>
+                <Property Name="cpi_categorizationcode" Type="Edm.String" Nullable="true"/>
+                <Property Name="resolutionData" Type="Edm.String" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="CsTicket_ticketID"/>
+                <NavigationProperty Name="order" Relationship="HybrisCommerceOData.FK_CsTicket_order" FromRole="CsTicket" ToRole="AbstractOrder" Nullable="true"/>
+                <NavigationProperty Name="category" Relationship="HybrisCommerceOData.FK_CsTicket_category" FromRole="CsTicket" ToRole="CsTicketCategory" Nullable="true"/>
+                <NavigationProperty Name="reasonCategory" Relationship="HybrisCommerceOData.FK_CsTicket_reasonCategory" FromRole="CsTicket" ToRole="CategorizationCategory" Nullable="true"/>
+                <NavigationProperty Name="priority" Relationship="HybrisCommerceOData.FK_CsTicket_priority" FromRole="CsTicket" ToRole="CsTicketPriority" Nullable="true"/>
+                <NavigationProperty Name="resolution" Relationship="HybrisCommerceOData.FK_CsTicket_resolution" FromRole="CsTicket" ToRole="CsTicketResolutionEvent" Nullable="true"/>
+                <NavigationProperty Name="state" Relationship="HybrisCommerceOData.FK_CsTicket_state" FromRole="CsTicket" ToRole="CsTicketState" Nullable="true"/>
+                <NavigationProperty Name="customer" Relationship="HybrisCommerceOData.FK_CsTicket_customer" FromRole="CsTicket" ToRole="Customer" Nullable="true"/>
+                <NavigationProperty Name="comments" Relationship="HybrisCommerceOData.FK_CsTicket_comments" FromRole="CsTicket" ToRole="Comment" Nullable="true"/>
+            </EntityType>
+            <EntityType Name="Customer">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="customerID" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Customer_customerID"/>
+            </EntityType>
+            <EntityType Name="BaseSite">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="uid" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="BaseSite_uid"/>
+            </EntityType>
+            <EntityType Name="CsAgentGroup">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="uid" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="CsAgentGroup_uid"/>
+            </EntityType>
+            <EntityType Name="CategorizationCategory">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="categorizationGuid" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="CategorizationCategory_categorizationGuid"/>
+            </EntityType>
+            <EntityType Name="CsTicketResolutionEvent">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="CsTicketResolutionEvent_code"/>
+            </EntityType>
+            <EntityType Name="CsTicketPriority">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="CsTicketPriority_code"/>
+            </EntityType>
+            <EntityType Name="CsTicketCategory">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="CsTicketCategory_code"/>
+            </EntityType>
+            <Association Name="FK_CsTicket_order">
+                <End Type="HybrisCommerceOData.CsTicket" Multiplicity="0..1" Role="CsTicket"/>
+                <End Type="HybrisCommerceOData.AbstractOrder" Multiplicity="0..1" Role="AbstractOrder"/>
+            </Association>
+            <Association Name="FK_CsTicket_category">
+                <End Type="HybrisCommerceOData.CsTicket" Multiplicity="0..1" Role="CsTicket"/>
+                <End Type="HybrisCommerceOData.CsTicketCategory" Multiplicity="0..1" Role="CsTicketCategory"/>
+            </Association>
+            <Association Name="FK_CsTicket_reasonCategory">
+                <End Type="HybrisCommerceOData.CsTicket" Multiplicity="0..1" Role="CsTicket"/>
+                <End Type="HybrisCommerceOData.CategorizationCategory" Multiplicity="0..1" Role="CategorizationCategory"/>
+            </Association>
+            <Association Name="FK_CsTicket_priority">
+                <End Type="HybrisCommerceOData.CsTicket" Multiplicity="0..1" Role="CsTicket"/>
+                <End Type="HybrisCommerceOData.CsTicketPriority" Multiplicity="0..1" Role="CsTicketPriority"/>
+            </Association>
+            <Association Name="FK_CsTicket_resolution">
+                <End Type="HybrisCommerceOData.CsTicket" Multiplicity="0..1" Role="CsTicket"/>
+                <End Type="HybrisCommerceOData.CsTicketResolutionEvent" Multiplicity="0..1" Role="CsTicketResolutionEvent"/>
+            </Association>
+            <Association Name="FK_CsTicket_state">
+                <End Type="HybrisCommerceOData.CsTicket" Multiplicity="0..1" Role="CsTicket"/>
+                <End Type="HybrisCommerceOData.CsTicketState" Multiplicity="0..1" Role="CsTicketState"/>
+            </Association>
+            <Association Name="FK_CsTicket_customer">
+                <End Type="HybrisCommerceOData.CsTicket" Multiplicity="0..1" Role="CsTicket"/>
+                <End Type="HybrisCommerceOData.Customer" Multiplicity="0..1" Role="Customer"/>
+            </Association>
+            <Association Name="FK_CsTicket_comments">
+                <End Type="HybrisCommerceOData.CsTicket" Multiplicity="0..1" Role="CsTicket"/>
+                <End Type="HybrisCommerceOData.Comment" Multiplicity="*" Role="Comment"/>
+            </Association>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="Comments" EntityType="HybrisCommerceOData.Comment"/>
+                <EntitySet Name="AbstractOrders" EntityType="HybrisCommerceOData.AbstractOrder"/>
+                <EntitySet Name="CsTicketStates" EntityType="HybrisCommerceOData.CsTicketState"/>
+                <EntitySet Name="Employees" EntityType="HybrisCommerceOData.Employee"/>
+                <EntitySet Name="CsTickets" EntityType="HybrisCommerceOData.CsTicket"/>
+                <EntitySet Name="Customers" EntityType="HybrisCommerceOData.Customer"/>
+                <EntitySet Name="BaseSites" EntityType="HybrisCommerceOData.BaseSite"/>
+                <EntitySet Name="CsAgentGroups" EntityType="HybrisCommerceOData.CsAgentGroup"/>
+                <EntitySet Name="CategorizationCategories" EntityType="HybrisCommerceOData.CategorizationCategory"/>
+                <EntitySet Name="CsTicketResolutionEvents" EntityType="HybrisCommerceOData.CsTicketResolutionEvent"/>
+                <EntitySet Name="CsTicketPriorities" EntityType="HybrisCommerceOData.CsTicketPriority"/>
+                <EntitySet Name="CsTicketCategories" EntityType="HybrisCommerceOData.CsTicketCategory"/>
+                <AssociationSet Name="CsTicket_AbstractOrders" Association="HybrisCommerceOData.FK_CsTicket_order">
+                    <End EntitySet="CsTickets" Role="CsTicket"/>
+                    <End EntitySet="AbstractOrders" Role="AbstractOrder"/>
+                </AssociationSet>
+                <AssociationSet Name="CsTicket_CsTicketCategories" Association="HybrisCommerceOData.FK_CsTicket_category">
+                    <End EntitySet="CsTickets" Role="CsTicket"/>
+                    <End EntitySet="CsTicketCategories" Role="CsTicketCategory"/>
+                </AssociationSet>
+                <AssociationSet Name="CsTicket_CategorizationCategories" Association="HybrisCommerceOData.FK_CsTicket_reasonCategory">
+                    <End EntitySet="CsTickets" Role="CsTicket"/>
+                    <End EntitySet="CategorizationCategories" Role="CategorizationCategory"/>
+                </AssociationSet>
+                <AssociationSet Name="CsTicket_CsTicketPriorities" Association="HybrisCommerceOData.FK_CsTicket_priority">
+                    <End EntitySet="CsTickets" Role="CsTicket"/>
+                    <End EntitySet="CsTicketPriorities" Role="CsTicketPriority"/>
+                </AssociationSet>
+                <AssociationSet Name="CsTicket_CsTicketResolutionEvents" Association="HybrisCommerceOData.FK_CsTicket_resolution">
+                    <End EntitySet="CsTickets" Role="CsTicket"/>
+                    <End EntitySet="CsTicketResolutionEvents" Role="CsTicketResolutionEvent"/>
+                </AssociationSet>
+                <AssociationSet Name="CsTicket_CsTicketStates" Association="HybrisCommerceOData.FK_CsTicket_state">
+                    <End EntitySet="CsTickets" Role="CsTicket"/>
+                    <End EntitySet="CsTicketStates" Role="CsTicketState"/>
+                </AssociationSet>
+                <AssociationSet Name="CsTicket_Customers" Association="HybrisCommerceOData.FK_CsTicket_customer">
+                    <End EntitySet="CsTickets" Role="CsTicket"/>
+                    <End EntitySet="Customers" Role="Customer"/>
+                </AssociationSet>
+                <AssociationSet Name="CsTicket_Comments" Association="HybrisCommerceOData.FK_CsTicket_comments">
+                    <End EntitySet="CsTickets" Role="CsTicket"/>
+                    <End EntitySet="Comments" Role="Comment"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

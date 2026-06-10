@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:ns1="http://sap.com/xi/XI/SplitAndMerge"
+           xmlns:n0="http://sap.com/xi/S4CRM/"
+           targetNamespace="http://sap.com/xi/XI/SplitAndMerge"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+
+  <!-- Root -->
+  <xs:element name="Messages">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Message1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="n0:ServiceOrderNotification"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="Message2">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="root" type="RootType"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ============================= -->
+  <!-- S4 ServiceOrderNotification   -->
+  <!-- ============================= -->
+
+  <xs:import namespace="http://sap.com/xi/S4CRM/"/>
+
+  <xs:complexType name="ServiceOrderNotificationType" xmlns="http://sap.com/xi/S4CRM/">
+    <xs:sequence>
+      <xs:element name="MessageHeader" type="MessageHeaderType"/>
+      <xs:element name="ServiceOrder" type="ServiceOrderType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Message Header -->
+  <xs:complexType name="MessageHeaderType">
+    <xs:sequence>
+      <xs:element name="ID" type="xs:string"/>
+      <xs:element name="UUID" type="xs:string"/>
+      <xs:element name="CreationDateTime" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Service Order -->
+  <xs:complexType name="ServiceOrderType">
+    <xs:sequence>
+
+      <xs:element name="ServiceOrder" type="xs:string"/>
+      <xs:element name="ServiceOrderType" type="xs:string"/>
+      
+      <xs:element name="ServiceOrderDescription">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="languageCode" type="xs:string"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="ServiceOrderStatus" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ServiceOrderIsNew" type="xs:boolean"/>
+            <xs:element name="ServiceOrderIsInProcess" type="xs:boolean"/>
+            <xs:element name="ServiceOrderIsReleased" type="xs:boolean"/>
+            <xs:element name="ServiceOrderIsCompleted" type="xs:boolean"/>
+            <xs:element name="ServiceOrderIsRejected" type="xs:boolean"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="TransactionCurrency" type="xs:string" minOccurs="0"/>
+
+      <xs:element name="ServiceDocGrossAmount" minOccurs="0">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:decimal">
+              <xs:attribute name="currencyCode" type="xs:string"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="ServiceReferenceObject" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ServiceReferenceEquipment" type="xs:string" minOccurs="0"/>
+            <xs:element name="ServiceRefFunctionalLocation" type="xs:string" minOccurs="0"/>
+            <xs:element name="SrvcRefObjIsMainObject" type="xs:boolean" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="Item" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ServiceOrderItem" type="xs:string"/>
+            <xs:element name="Material" type="xs:string" minOccurs="0"/>
+            <xs:element name="Quantity" minOccurs="0">
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="xs:decimal">
+                    <xs:attribute name="unitCode" type="xs:string"/>
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+
+            <xs:element name="PriceComponent" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="ConditionType" type="xs:string"/>
+                  <xs:element name="ConditionRateValue" type="xs:decimal" minOccurs="0"/>
+                  <xs:element name="ConditionAmount" minOccurs="0">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:decimal">
+                          <xs:attribute name="currencyCode" type="xs:string"/>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ============================= -->
+  <!-- Message2 Structure           -->
+  <!-- ============================= -->
+
+  <xs:complexType name="RootType">
+    <xs:sequence>
+      <xs:element name="messageHeader" type="SimpleHeaderType"/>
+      <xs:element name="messageRequests" type="MessageRequestType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SimpleHeaderType">
+    <xs:sequence>
+      <xs:element name="id" type="xs:string"/>
+      <xs:element name="senderCommunicationSystemDisplayId" type="xs:string" minOccurs="0"/>
+      <xs:element name="receiverCommunicationSystemDisplayId" type="xs:string" minOccurs="0"/>
+      <xs:element name="creationDateTime" type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="messageEntityName" type="xs:string" minOccurs="0"/>
+      <xs:element name="actionCode" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="MessageRequestType">
+    <xs:sequence>
+      <xs:element name="messageHeader" type="SimpleHeaderType"/>
+      <xs:element name="body" type="BodyType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BodyType">
+    <xs:sequence>
+      <xs:element name="isMainExternalIntegration" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="displayId" type="xs:string" minOccurs="0"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="lifeCycleStatus" type="xs:string" minOccurs="0"/>
+      <xs:element name="priority" type="xs:string" minOccurs="0"/>
+      <xs:element name="serviceOrderType" type="xs:string" minOccurs="0"/>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

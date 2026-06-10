@@ -1,0 +1,178 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ServiceOrder">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:long" name="ServiceOrder"/>
+        <xs:element type="xs:string" name="ServiceOrderType"/>
+        <xs:element name="ServiceOrderDescription">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="languageCode"/>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ServiceOrderStatus">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="ServiceOrderIsReleased"/>
+              <xs:element type="xs:string" name="ServiceOrderIsCompleted"/>
+              <xs:element type="xs:string" name="ServiceOrderIsRejected"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element type="xs:string" name="ServiceOrderRejectionReason"/>
+        <xs:element type="xs:string" name="ServiceDocumentPriority"/>
+        <xs:element type="xs:string" name="PurchaseOrderByCustomer"/>
+        <xs:element type="xs:string" name="CustomerPurchaseOrderDate"/>
+        <xs:element name="OrgUnit">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:short" name="SalesOrganization"/>
+              <xs:element type="xs:byte" name="DistributionChannel"/>
+              <xs:element type="xs:byte" name="Division"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Partners">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:int" name="SoldToParty"/>
+              <xs:element type="xs:int" name="ShipToParty"/>
+              <xs:element name="PersonResponsible">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="PersonResponsible"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element type="xs:int" name="BillToParty"/>
+              <xs:element type="xs:int" name="PayerParty"/>
+              <xs:element type="xs:int" name="ContactPerson"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element type="xs:dateTime" name="RequestedServiceStartDateTime"/>
+        <xs:element type="xs:dateTime" name="RequestedServiceEndDateTime"/>
+        <xs:element type="xs:string" name="TransactionCurrency"/>
+        <xs:element type="xs:date" name="PricingDate"/>
+        <xs:element name="ServiceReferenceObject">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:int" name="ServiceReferenceEquipment"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element type="xs:string" name="ReferenceServiceOrder"/>
+        <xs:element name="TextCollection">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Text">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="TypeCode"/>
+                    <xs:element type="xs:dateTime" name="CreationDateTime"/>
+                    <xs:element name="ContentText">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:string" name="languageCode"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Item">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:byte" name="ServiceOrderItem"/>
+              <xs:element type="xs:string" name="ParentServiceOrderItem"/>
+              <xs:element type="xs:string" name="Material"/>
+              <xs:element name="Quantity">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:float">
+                      <xs:attribute type="xs:string" name="unitCode"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element type="xs:float" name="ServiceDuration"/>
+              <xs:element type="xs:string" name="BillableControl"/>
+              <xs:element name="ServiceOrderItemDescription">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:string" name="languageCode"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element type="xs:string" name="ServiceOrderItemCategory"/>
+              <xs:element type="xs:string" name="ServiceOrderItemIsRejected"/>
+              <xs:element type="xs:string" name="ServiceOrderItemIsCompleted"/>
+              <xs:element type="xs:string" name="ServiceOrdItemRejectionReason"/>
+              <xs:element type="xs:string" name="ExecutingServiceEmployee"/>
+              <xs:element name="PriceComponent" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="ConditionType"/>
+                    <xs:element type="xs:string" name="ConditionTypeName"/>
+                    <xs:element type="xs:float" name="ConditionRateValue"/>
+                    <xs:element type="xs:string" name="ConditionCurrency"/>
+                    <xs:element name="ConditionAmount">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:float">
+                            <xs:attribute type="xs:string" name="currencyCode" use="optional"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="ConditionQuantity">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:byte">
+                            <xs:attribute type="xs:string" name="unitCode" use="optional"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element type="xs:string" name="TextCollection"/>
+              <xs:element name="ServiceReferenceObject">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:int" name="ServiceReferenceEquipment"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element type="xs:string" name="ReferenceServiceOrderItem"/>
+              <xs:element type="xs:string" name="ServiceContract"/>
+              <xs:element type="xs:string" name="ServiceContractItem"/>
+              <xs:element name="Procurement">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="SrvcDocItemProcmtStatus"/>
+                    <xs:element type="xs:string" name="SrvcDocItemProcmtStatusName"/>
+                    <xs:element type="xs:float" name="SrvcDocItemOrderProcmtQty"/>
+                    <xs:element type="xs:float" name="SrvcDocItemDlvrdProcmtQty"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element type="xs:string" name="OvertimeCategory"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

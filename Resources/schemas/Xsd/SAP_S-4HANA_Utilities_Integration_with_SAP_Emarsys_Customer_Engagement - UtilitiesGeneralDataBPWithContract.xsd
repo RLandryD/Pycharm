@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	
+	<!-- complexTypes and simpleTypes definitions -->
+	
+	<xs:complexType name="Measure">
+		<xs:annotation>
+			<xs:documentation xml:lang="EN">
+				<RepresentationTerm>Measure</RepresentationTerm>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="Measure.Content">
+				<xs:attribute name="unitCode" type="MeasureUnitCode" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name="Measure.Content">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="31"/>
+			<xs:fractionDigits value="14"/>
+			<xs:maxInclusive value="99999999999999999.99999999999999"/>
+			<xs:minInclusive value="-99999999999999999.99999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="MeasureUnitCode">
+		<xs:annotation>
+			<xs:documentation xml:lang="EN">
+				<RepresentationTerm>Code</RepresentationTerm>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="3"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:complexType name="Amount">
+		<xs:annotation>
+			<xs:documentation xml:lang="EN">
+				<RepresentationTerm>Amount</RepresentationTerm>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="Amount.Content">
+				<xs:attribute name="currencyCode" type="CurrencyCode" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name="CurrencyCode">
+		<xs:annotation>
+			<xs:documentation xml:lang="EN">
+				<RepresentationTerm>Code</RepresentationTerm>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:length value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="Amount.Content">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="28"/>
+			<xs:fractionDigits value="6"/>
+			<xs:maxInclusive value="9999999999999999999999.999999"/>
+			<xs:minInclusive value="-9999999999999999999999.999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- UtilitiesGeneralDataSet -->
+	
+	<xs:element name="UtilitiesGeneralDataSet">
+		<xs:complexType>
+			<xs:sequence>
+			
+				<xs:element nillable="false" minOccurs="1" maxOccurs="unbounded" name="BusinessPartner">
+					<xs:complexType>
+						<xs:sequence>
+						
+							<xs:element nillable="false" minOccurs="1" maxOccurs="1" name="BusinessPartnerID">
+								<xs:simpleType>
+									<xs:restriction base="xs:token" xmlns="">
+										<xs:minLength value="1"/>
+										<xs:maxLength value="60"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							
+							<!-- node: BusinessPartner/ContractAccount -->
+							<xs:element nillable="false" minOccurs="0" maxOccurs="unbounded" name="ContractAccount">
+								<xs:complexType>
+									<xs:sequence>
+									
+									   <!-- ContractAccount/ContractAccountID -->
+									   <xs:element nillable="false" minOccurs="0" maxOccurs="1" name="ContractAccountID">
+											<xs:simpleType>
+												<xs:restriction base="xs:token" xmlns="">
+													<xs:minLength value="1"/>
+													<xs:maxLength value="12"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										
+										<!-- ContractAccount/OpenBalance -->										
+										<xs:element nillable="false" minOccurs="0" maxOccurs="1" name="OpenBalance">
+											<xs:simpleType>
+												<xs:restriction base="xs:decimal" xmlns="">
+													<xs:totalDigits value='28'/>
+													<xs:fractionDigits value='6'/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>	
+										
+										<!-- ContractAccount/OpenBalance/@currencyCode -->									
+										<xs:element nillable="false" minOccurs="0" maxOccurs="1" name="OpenBalanceCurrencyCode">
+											<xs:simpleType>
+												<xs:restriction base="xs:token" xmlns="">
+													<xs:minLength value="0"/>
+													<xs:maxLength value="3"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>	
+									
+										<!-- node: BusinessPartner/ContractAccount/Contract -->
+										<xs:element nillable="false" minOccurs="0" maxOccurs="unbounded" name="Contract">
+											<xs:complexType>
+												<xs:sequence>
+
+													<!-- Contract/ContractID -->
+													<xs:element nillable="false" minOccurs="0" maxOccurs="1" name="ContractID">
+														<xs:simpleType>
+															<xs:restriction base="xs:token" xmlns="">
+																<xs:minLength value="1"/>
+																<xs:maxLength value="2"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+													
+													<!-- Consumption Data -->
+													<xs:element minOccurs="0" name="AverageAnnualConsumption" type="Measure"/>
+													<xs:element minOccurs="0" name="AverageAnnualBillingAmount" type="Amount"/>
+													<xs:element minOccurs="0" name="TotalAnnualBillingAmount" type="Amount"/>
+													<xs:element minOccurs="0" name="TotalAnnualConsumption" type="Measure"/>
+													<xs:element minOccurs="0" name="TotalConsumptionSummer" type="Measure"/>
+													<xs:element minOccurs="0" name="TotalConsumptionWinter" type="Measure"/>
+													<xs:element minOccurs="0" name="TotalSummerBillingAmount" type="Amount"/>
+													<xs:element minOccurs="0" name="TotalWinterBillingAmount" type="Amount"/>
+													
+												</xs:sequence>
+												
+											</xs:complexType> <!-- Contract -->
+										</xs:element>	     <!-- Contract -->
+									</xs:sequence>
+									
+								</xs:complexType>   <!-- ContractAccount -->
+							</xs:element>           <!-- ContractAccount -->
+							
+						</xs:sequence>
+						
+					</xs:complexType>   <!-- BusinessPartner -->
+				</xs:element>           <!-- BusinessPartner -->
+				
+			</xs:sequence>
+			
+		</xs:complexType>  <!-- UtilitiesGeneralSet -->
+	</xs:element>          <!-- UtilitiesGeneralSet -->
+	
+	
+	<!-- complexTypes and simpleTypes definitions -->
+	
+	
+</xs:schema>

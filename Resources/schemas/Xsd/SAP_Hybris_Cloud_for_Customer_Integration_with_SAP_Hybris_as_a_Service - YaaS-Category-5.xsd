@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="category" type="category"/>
+
+  <xs:element name="name" type="name"/>
+  
+  <xs:element name="description" type="name"/>
+  
+  <xs:element name="image" type="name"/>  
+
+  <xs:element name="metadata" type="metadata"/>
+
+  <xs:element name="mixins" type="mixins"/>
+  
+  <xs:element name="assignments" type="assignments"/>
+
+  <xs:complexType name="category">
+    <xs:sequence>
+      <xs:element ref="metadata" minOccurs="0"/>
+      <xs:element ref="mixins" minOccurs="0"/>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="parentId" type="xs:string" minOccurs="0"/>
+      <xs:element name="name" type="name" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="code" type="xs:string" minOccurs="0"/>
+      <xs:element name="description" type="name" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="image" type="name" minOccurs="0"/>
+      <xs:element name="media" type="media" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="position" type="xs:string" minOccurs="0"/>
+      <xs:element name="published" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="assignments" type="assignments" minOccurs="0" maxOccurs="unbounded"/>    
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="name">
+    <xs:sequence>
+      <xs:element name="languageCode" type="xs:string" minOccurs="0"/>
+      <xs:element name="content" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="metadata">
+    <xs:sequence>
+      <xs:element ref="mixins" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mixins">
+    <xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="media">
+    <xs:sequence>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="url" type="xs:string" minOccurs="0"/>
+      <xs:element name="tags" type="xs:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="contentType" type="xs:string" minOccurs="0"/>
+      <xs:element name="stored" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="createdAt" type="xs:string" minOccurs="0"/>
+      <xs:element name="uploadLink" type="xs:string" minOccurs="0"/>
+      <xs:element name="uncommittedMedia" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+   <xs:complexType name="assignments">
+    <xs:sequence>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="ref" type="ref" minOccurs="0"/>
+    </xs:sequence>  
+  </xs:complexType>
+  
+   <xs:complexType name="ref">
+    <xs:sequence>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="type" type="xs:string" minOccurs="0"/>
+      <xs:element name="url" type="xs:string" minOccurs="0"/>
+    </xs:sequence>  
+  </xs:complexType>  
+</xs:schema>
+

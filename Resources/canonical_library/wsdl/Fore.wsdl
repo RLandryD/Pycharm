@@ -1,0 +1,1811 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://www.govtalk.gov.uk/CM/envelope" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified" id="GovTalk-Envelope" targetNamespace="http://www.govtalk.gov.uk/CM/envelope" version="2.0-HMRC" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:p0="http://www.govtalk.gov.uk/CM/envelope" xmlns:rti="http://www.govtalk.gov.uk/taxation/PAYE/RTI/FullPaymentSubmission/21-22/1" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:annotation>
+				<xsd:documentation>This schema is used as the envelope for all GovTalk messages. It is described in detail in a separate document on the GovTalk web site.</xsd:documentation>
+				<xsd:appinfo>
+					<gt:KeyWords xmlns:gt="http://www.govtalk.gov.uk/CM/core">GovTalk, header, envelope</gt:KeyWords>
+					<gms:Metadata xmlns:gms="http://www.govtalk.gov.uk/CM/gms-xs">
+						<gms:Date>
+							<gms:Modified>2020-08-19</gms:Modified>
+						</gms:Date>
+						<gms:Relation>
+							<gms:Requires>xmldsig-core-schema.xsd</gms:Requires>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>GovTalkMessage</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>UnicodeNameString</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Subject>
+							<gms:Category>Economics, Finance and Tax</gms:Category>
+						</gms:Subject>
+						<gms:Title>GovTalk-Envelope schema</gms:Title>
+						<gms:Type>message</gms:Type>
+					</gms:Metadata>
+				</xsd:appinfo>
+			</xsd:annotation>
+			<xsd:import namespace="http://www.govtalk.gov.uk/taxation/PAYE/RTI/FullPaymentSubmission/21-22/1"/>
+			<xsd:element name="GovTalkMessage">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="EnvelopeVersion" type="xsd:string"/>
+						<xsd:element name="Header">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="MessageDetails">
+										<xsd:complexType>
+											<xsd:sequence>
+												<xsd:element name="Class">
+													<xsd:simpleType>
+														<xsd:restriction base="p0:UnicodeNameString">
+															<xsd:minLength value="4"/>
+															<xsd:maxLength value="32"/>
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:element>
+												<xsd:element name="Qualifier">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:string">
+															<xsd:enumeration value="request"/>
+															<xsd:enumeration value="acknowledgement"/>
+															<xsd:enumeration value="response"/>
+															<xsd:enumeration value="poll"/>
+															<xsd:enumeration value="error"/>
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:element>
+												<xsd:element minOccurs="0" name="Function">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:string">
+															<xsd:enumeration value="list"/>
+															<xsd:enumeration value="read"/>
+															<xsd:enumeration value="delete"/>
+															<xsd:enumeration value="add"/>
+															<xsd:enumeration value="submit"/>
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:element>
+												<xsd:element minOccurs="0" name="TransactionID">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:string">
+															<xsd:minLength value="0"/>
+															<xsd:maxLength value="32"/>
+															<xsd:pattern value="[0-9A-F]{0,32}"/>
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:element>
+												<xsd:element minOccurs="0" name="AuditID">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:string">
+															<xsd:minLength value="0"/>
+															<xsd:maxLength value="32"/>
+															<xsd:pattern value="[A-F0-9]{0,32}"/>
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:element>
+												<xsd:element minOccurs="0" name="CorrelationID">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:string">
+															<xsd:minLength value="0"/>
+															<xsd:maxLength value="32"/>
+															<xsd:pattern value="[0-9A-F]{0,32}"/>
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:element>
+												<xsd:element minOccurs="0" name="ResponseEndPoint">
+													<xsd:complexType>
+														<xsd:simpleContent>
+															<xsd:extension base="xsd:string">
+																<xsd:attribute default="2" name="PollInterval" type="xsd:integer"/>
+															</xsd:extension>
+														</xsd:simpleContent>
+													</xsd:complexType>
+												</xsd:element>
+												<xsd:element minOccurs="0" name="Transformation">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:string">
+															<xsd:enumeration value="XML"/>
+															<xsd:enumeration value="HTML"/>
+															<xsd:enumeration value="text"/>
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:element>
+												<xsd:element minOccurs="0" name="GatewayTest" type="xsd:integer"/>
+												<xsd:element minOccurs="0" name="GatewayTimestamp" type="xsd:string"/>
+											</xsd:sequence>
+										</xsd:complexType>
+									</xsd:element>
+									<xsd:element minOccurs="0" name="SenderDetails">
+										<xsd:complexType>
+											<xsd:sequence>
+												<xsd:element minOccurs="0" name="IDAuthentication">
+													<xsd:complexType>
+														<xsd:sequence>
+															<xsd:element minOccurs="0" name="SenderID" type="xsd:string"/>
+															<xsd:element maxOccurs="unbounded" name="Authentication">
+																<xsd:complexType>
+																	<xsd:sequence>
+																		<xsd:element name="Method">
+																			<xsd:simpleType>
+																				<xsd:restriction base="xsd:string">
+																					<xsd:enumeration value="clear"/>
+																					<xsd:enumeration value="MD5"/>
+																					<xsd:enumeration value="W3Csigned"/>
+																				</xsd:restriction>
+																			</xsd:simpleType>
+																		</xsd:element>
+																		<xsd:element minOccurs="0" name="Role" type="xsd:string"/>
+																		<xsd:choice>
+																			<xsd:element name="Value" type="xsd:string"/>
+																		</xsd:choice>
+																	</xsd:sequence>
+																</xsd:complexType>
+															</xsd:element>
+														</xsd:sequence>
+													</xsd:complexType>
+												</xsd:element>
+												<xsd:element minOccurs="0" name="EmailAddress">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:string">
+															<xsd:minLength value="3"/>
+															<xsd:maxLength value="129"/>
+															<xsd:pattern value="[A-Za-z0-9\.\-_]{1,64}@[A-Za-z0-9\.\-_]{1,64}"/>
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:element>
+											</xsd:sequence>
+										</xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="GovTalkDetails">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element minOccurs="0" name="Keys">
+										<xsd:complexType>
+											<xsd:sequence>
+												<xsd:element maxOccurs="unbounded" minOccurs="0" name="Key">
+													<xsd:complexType>
+														<xsd:simpleContent>
+															<xsd:extension base="xsd:token">
+																<xsd:attribute name="Type" type="p0:UnicodeNameString" use="required"/>
+															</xsd:extension>
+														</xsd:simpleContent>
+													</xsd:complexType>
+												</xsd:element>
+											</xsd:sequence>
+										</xsd:complexType>
+									</xsd:element>
+									<xsd:element minOccurs="0" name="TargetDetails">
+										<xsd:complexType>
+											<xsd:sequence>
+												<xsd:element maxOccurs="unbounded" minOccurs="0" name="Organisation">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:string">
+															<xsd:minLength value="1"/>
+															<xsd:maxLength value="64"/>
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:element>
+											</xsd:sequence>
+										</xsd:complexType>
+									</xsd:element>
+									<xsd:element minOccurs="0" name="GatewayValidation">
+										<xsd:complexType>
+											<xsd:sequence>
+												<xsd:element name="Processed">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:string">
+															<xsd:enumeration value="no"/>
+															<xsd:enumeration value="yes"/>
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:element>
+												<xsd:element name="Result">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:string">
+															<xsd:enumeration value="pass"/>
+															<xsd:enumeration value="fail"/>
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:element>
+											</xsd:sequence>
+										</xsd:complexType>
+									</xsd:element>
+									<xsd:element maxOccurs="unbounded" minOccurs="0" name="ChannelRouting">
+										<xsd:complexType>
+											<xsd:sequence>
+												<xsd:element name="Channel">
+													<xsd:complexType>
+														<xsd:sequence>
+															<xsd:choice>
+																<xsd:element name="URI" type="xsd:anyURI"/>
+																<xsd:element name="Name" type="xsd:string"/>
+															</xsd:choice>
+															<xsd:element minOccurs="0" name="Product" type="xsd:string"/>
+															<xsd:element minOccurs="0" name="Version" type="xsd:string"/>
+														</xsd:sequence>
+													</xsd:complexType>
+												</xsd:element>
+												<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID">
+													<xsd:complexType>
+														<xsd:simpleContent>
+															<xsd:extension base="xsd:string">
+																<xsd:attribute name="Type" type="xsd:string" use="required"/>
+															</xsd:extension>
+														</xsd:simpleContent>
+													</xsd:complexType>
+												</xsd:element>
+												<xsd:element minOccurs="0" name="Timestamp" type="xsd:string"/>
+											</xsd:sequence>
+										</xsd:complexType>
+									</xsd:element>
+									<xsd:element minOccurs="0" name="GatewayAdditions">
+										<xsd:complexType>
+											<xsd:sequence>
+												<xsd:any namespace="##other" processContents="lax"/>
+											</xsd:sequence>
+											<xsd:anyAttribute namespace="##other" processContents="lax"/>
+										</xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element minOccurs="0" name="Body">
+							<xsd:complexType>
+								<xsd:sequence>
+									<!-- <xsd:any maxOccurs="unbounded" minOccurs="0" processContents="lax"/> -->
+									<xsd:element ref="rti:IRenvelope"/>
+								</xsd:sequence>
+								<xsd:anyAttribute/>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:simpleType name="UnicodeNameString">
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="[\p{L}\p{Nd}_\-\(\)\{\}]*"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:schema>
+		<xsd:schema elementFormDefault="qualified" id="FullPaymentSubmission" targetNamespace="http://www.govtalk.gov.uk/taxation/PAYE/RTI/FullPaymentSubmission/21-22/1" version="1.0" xmlns:p0="http://www.govtalk.gov.uk/taxation/PAYE/RTI/FullPaymentSubmission/21-22/1" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:annotation>
+				<xsd:appinfo>
+					<gms:Metadata xmlns:gms="http://www.govtalk.gov.uk/CM/gms-xs">
+						<gms:Audience>e-service developers</gms:Audience>
+						<gms:Contributor>CoreFiling Ltd</gms:Contributor>
+						<gms:Creator>HMRC</gms:Creator>
+						<gms:Date>
+							<gms:Created>2020-08-07</gms:Created>
+						</gms:Date>
+						<gms:Date>
+							<gms:Modified>2020-08-19</gms:Modified>
+						</gms:Date>
+						<gms:Language>[ISO 639-2/B] ENG</gms:Language>
+						<gms:Publisher>HMRC</gms:Publisher>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>IRenvelope</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>IRheader</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_CharsetB</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_CharsetD</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_CharsetG</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_CharsetH</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_ContactDetailsStructure</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_DateType</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_EmailType</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_IRdecimalType</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_IRheaderStringType</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_IRmonetaryType</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_IRnonNegativeMax999IntegerType</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_IRnonNegativeMonetaryType</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_IRwholeUnitsMonetaryType</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_ISOcurrencyType</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_PAYENINOtype</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_PayrollIdType</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_TelephoneStructure</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_UTRtype</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_WorkHomeType</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_XType</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_YesNoType</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Relation>
+							<gms:ProvidesDefinitionOf>FullPaymentSubmission_YesType</gms:ProvidesDefinitionOf>
+						</gms:Relation>
+						<gms:Rights>
+							<gms:Copyright>(C) Crown Copyright 2013-2020</gms:Copyright>
+						</gms:Rights>
+						<gms:Subject>
+							<gms:Category>Economics, Finance and Tax</gms:Category>
+						</gms:Subject>
+						<gms:Title>PAYE RTI Full Payment Submission 2021-22 schema</gms:Title>
+						<gms:Type>message</gms:Type>
+					</gms:Metadata>
+				</xsd:appinfo>
+			</xsd:annotation>
+			<xsd:element name="IRenvelope">
+				<xsd:complexType name="IRenvelope">
+					<xsd:sequence>
+						<xsd:element ref="p0:IRheader"/>
+						<xsd:element ref="p0:FullPaymentSubmission"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="IRheader">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" name="Keys">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[This element contains identifiers for the sender of the message. Each identifier is contained within a <Key>element. Each <Key>element also contains a 'Type' attribute which describes the identifier type (e.g. <Key Type='UTR'>, <Key Type='TaxOfficeNumber'>, <Key Type='TaxOfficeReference'>).]]>
+								</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element maxOccurs="unbounded" name="Key">
+										<xsd:complexType>
+											<xsd:simpleContent>
+												<xsd:extension base="p0:FullPaymentSubmission_IRheaderStringType">
+													<xsd:attribute name="Type" type="p0:FullPaymentSubmission_IRheaderStringType"/>
+												</xsd:extension>
+											</xsd:simpleContent>
+										</xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="PeriodEnd" type="xsd:date"/>
+						<xsd:element minOccurs="0" name="DefaultCurrency">
+							<xsd:simpleType>
+								<xsd:restriction base="p0:FullPaymentSubmission_ISOcurrencyType">
+									<xsd:enumeration value="GBP">
+										<xsd:annotation>
+											<xsd:documentation>GBP</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element minOccurs="0" name="IRmark">
+							<xsd:complexType>
+								<xsd:simpleContent>
+									<xsd:extension base="xsd:string">
+										<xsd:attribute name="Type" use="required">
+											<xsd:simpleType>
+												<xsd:restriction base="p0:FullPaymentSubmission_IRheaderStringType">
+													<xsd:enumeration value="SAonly">
+														<xsd:annotation>
+															<xsd:documentation>SAonly</xsd:documentation>
+														</xsd:annotation>
+													</xsd:enumeration>
+													<xsd:enumeration value="generic">
+														<xsd:annotation>
+															<xsd:documentation>generic</xsd:documentation>
+														</xsd:annotation>
+													</xsd:enumeration>
+												</xsd:restriction>
+											</xsd:simpleType>
+										</xsd:attribute>
+									</xsd:extension>
+								</xsd:simpleContent>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="Sender">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:enumeration value="Individual">
+										<xsd:annotation>
+											<xsd:documentation>Individual</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="Company">
+										<xsd:annotation>
+											<xsd:documentation>Company</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="Agent">
+										<xsd:annotation>
+											<xsd:documentation>Agent</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="Bureau">
+										<xsd:annotation>
+											<xsd:documentation>Bureau</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="Partnership">
+										<xsd:annotation>
+											<xsd:documentation>Partnership</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="Trust">
+										<xsd:annotation>
+											<xsd:documentation>Trust</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="Employer">
+										<xsd:annotation>
+											<xsd:documentation>Employer</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="Government">
+										<xsd:annotation>
+											<xsd:documentation>Government</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="Acting in Capacity">
+										<xsd:annotation>
+											<xsd:documentation>Acting in Capacity</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="Other">
+										<xsd:annotation>
+											<xsd:documentation>Other</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="FullPaymentSubmission">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="EmpRefs">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="OfficeNo">
+										<xsd:simpleType>
+											<xsd:restriction base="xsd:string">
+												<xsd:pattern value="[0-9]{3}"/>
+											</xsd:restriction>
+										</xsd:simpleType>
+									</xsd:element>
+									<xsd:element name="PayeRef">
+										<xsd:simpleType>
+											<xsd:restriction base="p0:FullPaymentSubmission_CharsetG">
+												<xsd:minLength value="1"/>
+												<xsd:maxLength value="10"/>
+												<xsd:pattern value="[^ ].*"/>
+											</xsd:restriction>
+										</xsd:simpleType>
+									</xsd:element>
+									<xsd:element name="AORef">
+										<xsd:simpleType>
+											<xsd:restriction base="xsd:string">
+												<xsd:length value="13"/>
+												<xsd:pattern value="[0-9]{3}P[A-Z][0-9]{7}[0-9X]"/>
+											</xsd:restriction>
+										</xsd:simpleType>
+									</xsd:element>
+									<xsd:choice minOccurs="0">
+										<xsd:element name="SAUTR" type="p0:FullPaymentSubmission_UTRtype"/>
+										<xsd:element name="COTAXRef" type="p0:FullPaymentSubmission_UTRtype"/>
+									</xsd:choice>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="RelatedTaxYear">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:pattern value="[0-9]{2}-[0-9]{2}"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:choice minOccurs="0">
+							<xsd:element maxOccurs="unbounded" name="Employee">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="EmployeeDetails">
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element minOccurs="0" name="NINO" type="p0:FullPaymentSubmission_PAYENINOtype"/>
+													<xsd:element name="Name">
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element minOccurs="0" name="Ttl">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_CharsetH">
+																			<xsd:minLength value="1"/>
+																			<xsd:maxLength value="35"/>
+																			<xsd:pattern value="[A-Za-z].*"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element maxOccurs="2" minOccurs="0" name="Fore">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_CharsetD">
+																			<xsd:minLength value="1"/>
+																			<xsd:maxLength value="35"/>
+																			<xsd:pattern value="[A-Za-z].*"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="Initials">
+																	<xsd:simpleType>
+																		<xsd:restriction base="xsd:string">
+																			<xsd:minLength value="1"/>
+																			<xsd:maxLength value="5"/>
+																			<xsd:pattern value="[A-Za-z][A-Za-z ]*"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="Sur">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_CharsetD">
+																			<xsd:minLength value="1"/>
+																			<xsd:maxLength value="35"/>
+																			<xsd:pattern value="[A-Za-z].*"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+													<xsd:element minOccurs="0" name="Address">
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element maxOccurs="4" minOccurs="0" name="Line">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_CharsetG">
+																			<xsd:minLength value="1"/>
+																			<xsd:maxLength value="35"/>
+																			<xsd:pattern value="[A-Za-z0-9].*"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:choice minOccurs="0">
+																	<xsd:element name="UKPostcode">
+																		<xsd:simpleType>
+																			<xsd:restriction base="p0:FullPaymentSubmission_CharsetB">
+																				<xsd:minLength value="1"/>
+																				<xsd:maxLength value="10"/>
+																				<xsd:pattern value="[^ ].*"/>
+																			</xsd:restriction>
+																		</xsd:simpleType>
+																	</xsd:element>
+																	<xsd:element name="ForeignCountry">
+																		<xsd:simpleType>
+																			<xsd:restriction base="p0:FullPaymentSubmission_CharsetG">
+																				<xsd:minLength value="1"/>
+																				<xsd:maxLength value="35"/>
+																				<xsd:pattern value="[A-Za-z].*"/>
+																			</xsd:restriction>
+																		</xsd:simpleType>
+																	</xsd:element>
+																</xsd:choice>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+													<xsd:element minOccurs="0" name="BirthDate">
+														<xsd:simpleType>
+															<xsd:restriction base="p0:FullPaymentSubmission_DateType"/>
+														</xsd:simpleType>
+													</xsd:element>
+													<xsd:element name="Gender">
+														<xsd:simpleType>
+															<xsd:restriction base="xsd:string">
+																<xsd:enumeration value="M">
+																	<xsd:annotation>
+																		<xsd:documentation>Male</xsd:documentation>
+																	</xsd:annotation>
+																</xsd:enumeration>
+																<xsd:enumeration value="F">
+																	<xsd:annotation>
+																		<xsd:documentation>Female</xsd:documentation>
+																	</xsd:annotation>
+																</xsd:enumeration>
+															</xsd:restriction>
+														</xsd:simpleType>
+													</xsd:element>
+													<xsd:element minOccurs="0" name="PassportNumber">
+														<xsd:simpleType>
+															<xsd:restriction base="p0:FullPaymentSubmission_CharsetG">
+																<xsd:minLength value="1"/>
+																<xsd:maxLength value="35"/>
+															</xsd:restriction>
+														</xsd:simpleType>
+													</xsd:element>
+													<xsd:element minOccurs="0" name="PartnerDetails">
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element minOccurs="0" name="NINO" type="p0:FullPaymentSubmission_PAYENINOtype"/>
+																<xsd:element name="Name">
+																	<xsd:complexType>
+																		<xsd:sequence>
+																			<xsd:element maxOccurs="2" minOccurs="0" name="Fore">
+																				<xsd:simpleType>
+																					<xsd:restriction base="p0:FullPaymentSubmission_CharsetD">
+																						<xsd:minLength value="1"/>
+																						<xsd:maxLength value="35"/>
+																						<xsd:pattern value="[A-Za-z].*"/>
+																					</xsd:restriction>
+																				</xsd:simpleType>
+																			</xsd:element>
+																			<xsd:element minOccurs="0" name="Initials">
+																				<xsd:simpleType>
+																					<xsd:restriction base="xsd:string">
+																						<xsd:minLength value="1"/>
+																						<xsd:maxLength value="5"/>
+																						<xsd:pattern value="[A-Za-z][A-Za-z ]*"/>
+																					</xsd:restriction>
+																				</xsd:simpleType>
+																			</xsd:element>
+																			<xsd:element name="Sur">
+																				<xsd:simpleType>
+																					<xsd:restriction base="p0:FullPaymentSubmission_CharsetD">
+																						<xsd:minLength value="1"/>
+																						<xsd:maxLength value="35"/>
+																						<xsd:pattern value="[A-Za-z].*"/>
+																					</xsd:restriction>
+																				</xsd:simpleType>
+																			</xsd:element>
+																		</xsd:sequence>
+																	</xsd:complexType>
+																</xsd:element>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+										<xsd:element maxOccurs="15" name="Employment">
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element minOccurs="0" name="OffPayrollWorker" type="p0:FullPaymentSubmission_YesType"/>
+													<xsd:element minOccurs="0" name="OccPenInd" type="p0:FullPaymentSubmission_YesType"/>
+													<xsd:element minOccurs="0" name="DirectorsNIC">
+														<xsd:simpleType>
+															<xsd:restriction base="xsd:string">
+																<xsd:enumeration value="AN">
+																	<xsd:annotation>
+																		<xsd:documentation>Annual</xsd:documentation>
+																	</xsd:annotation>
+																</xsd:enumeration>
+																<xsd:enumeration value="AL">
+																	<xsd:annotation>
+																		<xsd:documentation>Alternative</xsd:documentation>
+																	</xsd:annotation>
+																</xsd:enumeration>
+															</xsd:restriction>
+														</xsd:simpleType>
+													</xsd:element>
+													<xsd:element minOccurs="0" name="TaxWkOfApptOfDirector">
+														<xsd:simpleType>
+															<xsd:restriction base="xsd:string">
+																<xsd:minLength value="1"/>
+																<xsd:maxLength value="2"/>
+																<xsd:pattern value="[1-9]|[1-4][0-9]|5[0-46]"/>
+															</xsd:restriction>
+														</xsd:simpleType>
+													</xsd:element>
+													<xsd:element minOccurs="0" name="Starter">
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element minOccurs="0" name="StartDate">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_DateType"/>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="StartDec">
+																	<xsd:simpleType>
+																		<xsd:restriction base="xsd:string">
+																			<xsd:enumeration value="A">
+																				<xsd:annotation>
+																					<xsd:documentation>This is my first job since 6th April</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="B">
+																				<xsd:annotation>
+																					<xsd:documentation>This is my only job</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="C">
+																				<xsd:annotation>
+																					<xsd:documentation>I have another job or pension</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="StudentLoan" type="p0:FullPaymentSubmission_YesType"/>
+																<xsd:element minOccurs="0" name="PostgradLoan" type="p0:FullPaymentSubmission_YesType"/>
+																<xsd:element minOccurs="0" name="Seconded">
+																	<xsd:complexType>
+																		<xsd:sequence>
+																			<xsd:choice minOccurs="0">
+																				<xsd:element name="Stay183DaysOrMore" type="p0:FullPaymentSubmission_YesType"/>
+																				<xsd:element name="StayLessThan183Days" type="p0:FullPaymentSubmission_YesType"/>
+																				<xsd:element name="InOutUK" type="p0:FullPaymentSubmission_YesType"/>
+																			</xsd:choice>
+																			<xsd:element minOccurs="0" name="EEACitizen" type="p0:FullPaymentSubmission_YesType"/>
+																			<xsd:element minOccurs="0" name="EPM6" type="p0:FullPaymentSubmission_YesType"/>
+																		</xsd:sequence>
+																	</xsd:complexType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="OccPension">
+																	<xsd:complexType>
+																		<xsd:sequence>
+																			<xsd:element minOccurs="0" name="Bereaved" type="p0:FullPaymentSubmission_YesType"/>
+																			<xsd:element name="Amount">
+																				<xsd:simpleType>
+																					<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																						<xsd:maxInclusive value="999999999.99"/>
+																						<xsd:minInclusive value="0.00"/>
+																					</xsd:restriction>
+																				</xsd:simpleType>
+																			</xsd:element>
+																		</xsd:sequence>
+																	</xsd:complexType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="StatePension">
+																	<xsd:complexType>
+																		<xsd:sequence>
+																			<xsd:element minOccurs="0" name="Bereaved" type="p0:FullPaymentSubmission_YesType"/>
+																			<xsd:element name="Amount">
+																				<xsd:simpleType>
+																					<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																						<xsd:maxInclusive value="999999999.99"/>
+																						<xsd:minInclusive value="0.01"/>
+																					</xsd:restriction>
+																				</xsd:simpleType>
+																			</xsd:element>
+																		</xsd:sequence>
+																	</xsd:complexType>
+																</xsd:element>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+													<xsd:element minOccurs="0" name="PayId">
+														<xsd:simpleType>
+															<xsd:restriction base="p0:FullPaymentSubmission_PayrollIdType">
+																<xsd:pattern value="[^ ].*"/>
+															</xsd:restriction>
+														</xsd:simpleType>
+													</xsd:element>
+													<xsd:element minOccurs="0" name="PayIdChgd">
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element name="PayrollIdChangedIndicator" type="p0:FullPaymentSubmission_YesType"/>
+																<xsd:element minOccurs="0" name="OldPayrollId">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_PayrollIdType">
+																			<xsd:minLength value="1"/>
+																			<xsd:maxLength value="35"/>
+																			<xsd:pattern value="[^ ].*"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+													<xsd:element minOccurs="0" name="PaymentToANonIndividual" type="p0:FullPaymentSubmission_YesType"/>
+													<xsd:element minOccurs="0" name="IrrEmp" type="p0:FullPaymentSubmission_YesType"/>
+													<xsd:element minOccurs="0" name="LeavingDate">
+														<xsd:simpleType>
+															<xsd:restriction base="p0:FullPaymentSubmission_DateType">
+																<xsd:minInclusive value="2015-04-06"/>
+															</xsd:restriction>
+														</xsd:simpleType>
+													</xsd:element>
+													<xsd:element name="FiguresToDate">
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element name="TaxablePay">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRnonNegativeMonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="TotalTax">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="-999999999.99"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="StudentLoansTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRwholeUnitsMonetaryType">
+																			<xsd:maxInclusive value="99999.00"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="PostgradLoansTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRwholeUnitsMonetaryType">
+																			<xsd:maxInclusive value="99999.00"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="BenefitsTaxedViaPayrollYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="EmpeePenContribnsPaidYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="EmpeePenContribnsNotPaidYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+													<xsd:element name="Payment">
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element minOccurs="0" name="BacsHashCode">
+																	<xsd:simpleType>
+																		<xsd:restriction base="xsd:string">
+																			<xsd:length value="64"/>
+																			<xsd:pattern value="[0-9a-f]{64}"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="PayFreq">
+																	<xsd:simpleType>
+																		<xsd:restriction base="xsd:string">
+																			<xsd:enumeration value="W1">
+																				<xsd:annotation>
+																					<xsd:documentation>Weekly</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="W2">
+																				<xsd:annotation>
+																					<xsd:documentation>Fortnightly</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="W4">
+																				<xsd:annotation>
+																					<xsd:documentation>4 Weekly</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="M1">
+																				<xsd:annotation>
+																					<xsd:documentation>Calendar Monthly</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="M3">
+																				<xsd:annotation>
+																					<xsd:documentation>Quarterly</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="M6">
+																				<xsd:annotation>
+																					<xsd:documentation>Bi-annually</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="MA">
+																				<xsd:annotation>
+																					<xsd:documentation>Annually</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="IO">
+																				<xsd:annotation>
+																					<xsd:documentation>One-off</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="IR">
+																				<xsd:annotation>
+																					<xsd:documentation>Irregular</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="PmtDate">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_DateType">
+																			<xsd:maxInclusive value="2022-04-05"/>
+																			<xsd:minInclusive value="2021-04-06"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="LateReason">
+																	<xsd:simpleType>
+																		<xsd:restriction base="xsd:string">
+																			<xsd:enumeration value="A">
+																				<xsd:annotation>
+																					<xsd:documentation>Notional payment: Payment to Expat by third party or overseas employer</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="B">
+																				<xsd:annotation>
+																					<xsd:documentation>Notional payment: Employment related security</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="C">
+																				<xsd:annotation>
+																					<xsd:documentation>Notional payment: Other</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="D">
+																				<xsd:annotation>
+																					<xsd:documentation>Payment subject to Class 1 NICs but P11D/P9D for tax</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="E">
+																				<xsd:annotation>
+																					<xsd:documentation>Micro Employer using temporary &quot;on or before&quot; relaxation</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="F">
+																				<xsd:annotation>
+																					<xsd:documentation>No requirement to maintain a Deductions Working Sheet or Impractical to report work done on the day</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="G">
+																				<xsd:annotation>
+																					<xsd:documentation>Reasonable excuse</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="H">
+																				<xsd:annotation>
+																					<xsd:documentation>Correction to earlier submission</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:choice>
+																	<xsd:element name="WeekNo">
+																		<xsd:simpleType>
+																			<xsd:restriction base="xsd:string">
+																				<xsd:pattern value="[1-9]|[1-4][0-9]|5[0-46]"/>
+																			</xsd:restriction>
+																		</xsd:simpleType>
+																	</xsd:element>
+																	<xsd:element name="MonthNo">
+																		<xsd:simpleType>
+																			<xsd:restriction base="xsd:string">
+																				<xsd:pattern value="[1-9]|1[0-2]"/>
+																			</xsd:restriction>
+																		</xsd:simpleType>
+																	</xsd:element>
+																</xsd:choice>
+																<xsd:element name="PeriodsCovered">
+																	<xsd:simpleType>
+																		<xsd:restriction base="xsd:positiveInteger">
+																			<xsd:pattern value="[1-9][0-9]*"/>
+																			<xsd:maxInclusive value="99"/>
+																			<xsd:minInclusive value="1"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="AggregatedEarnings" type="p0:FullPaymentSubmission_YesType"/>
+																<xsd:element minOccurs="0" name="PmtAfterLeaving" type="p0:FullPaymentSubmission_YesType"/>
+																<xsd:element name="HoursWorked">
+																	<xsd:simpleType>
+																		<xsd:restriction base="xsd:string">
+																			<xsd:enumeration value="A">
+																				<xsd:annotation>
+																					<xsd:documentation>Up to 15.99 hours</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="B">
+																				<xsd:annotation>
+																					<xsd:documentation>16 to 23.99 hours</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="C">
+																				<xsd:annotation>
+																					<xsd:documentation>24 to 29.99 hours</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="D">
+																				<xsd:annotation>
+																					<xsd:documentation>30 hours or more</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																			<xsd:enumeration value="E">
+																				<xsd:annotation>
+																					<xsd:documentation>Other</xsd:documentation>
+																				</xsd:annotation>
+																			</xsd:enumeration>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="TaxCode">
+																	<xsd:complexType>
+																		<xsd:simpleContent>
+																			<xsd:extension base="p0:_intermediate_TaxCode">
+																				<xsd:attribute name="BasisNonCumulative" type="p0:FullPaymentSubmission_YesType"/>
+																				<xsd:attribute name="TaxRegime">
+																					<xsd:simpleType>
+																						<xsd:restriction base="xsd:string">
+																							<xsd:enumeration value="S"/>
+																							<xsd:enumeration value="C"/>
+																						</xsd:restriction>
+																					</xsd:simpleType>
+																				</xsd:attribute>
+																			</xsd:extension>
+																		</xsd:simpleContent>
+																	</xsd:complexType>
+																</xsd:element>
+																<xsd:element name="TaxablePay">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="-999999999.99"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="NonTaxOrNICPmt">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="-999999999.99"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="DednsFromNetPay">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="-999999999.99"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="PayAfterStatDedns">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="-999999999.99"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="BenefitsTaxedViaPayroll">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="-999999999.99"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="Class1ANICsYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="Benefits">
+																	<xsd:complexType>
+																		<xsd:sequence>
+																			<xsd:element maxOccurs="15" name="Car">
+																				<xsd:complexType>
+																					<xsd:sequence>
+																						<xsd:element name="Make">
+																							<xsd:simpleType>
+																								<xsd:restriction base="xsd:string">
+																									<xsd:minLength value="1"/>
+																									<xsd:maxLength value="35"/>
+																									<xsd:pattern value="[A-Za-z0-9 \(\)\-\./]*"/>
+																								</xsd:restriction>
+																							</xsd:simpleType>
+																						</xsd:element>
+																						<xsd:element name="FirstRegd" type="p0:FullPaymentSubmission_DateType"/>
+																						<xsd:element name="CO2">
+																							<xsd:simpleType>
+																								<xsd:restriction base="xsd:string">
+																									<xsd:minLength value="1"/>
+																									<xsd:maxLength value="35"/>
+																								</xsd:restriction>
+																							</xsd:simpleType>
+																						</xsd:element>
+																						<xsd:element minOccurs="0" name="ZeroEmissionsMileage">
+																							<xsd:simpleType>
+																								<xsd:restriction base="xsd:nonNegativeInteger">
+																									<xsd:maxInclusive value="9999"/>
+																									<xsd:minInclusive value="0"/>
+																								</xsd:restriction>
+																							</xsd:simpleType>
+																						</xsd:element>
+																						<xsd:element name="Fuel">
+																							<xsd:simpleType>
+																								<xsd:restriction base="xsd:string">
+																									<xsd:enumeration value="F">
+																										<xsd:annotation>
+																											<xsd:documentation>Diesel cars meeting Euro standard 6d</xsd:documentation>
+																										</xsd:annotation>
+																									</xsd:enumeration>
+																									<xsd:enumeration value="D">
+																										<xsd:annotation>
+																											<xsd:documentation>All other diesel cars</xsd:documentation>
+																										</xsd:annotation>
+																									</xsd:enumeration>
+																									<xsd:enumeration value="A">
+																										<xsd:annotation>
+																											<xsd:documentation>All other cars</xsd:documentation>
+																										</xsd:annotation>
+																									</xsd:enumeration>
+																								</xsd:restriction>
+																							</xsd:simpleType>
+																						</xsd:element>
+																						<xsd:element minOccurs="0" name="ID">
+																							<xsd:simpleType>
+																								<xsd:restriction base="p0:FullPaymentSubmission_CharsetB">
+																									<xsd:minLength value="1"/>
+																									<xsd:maxLength value="10"/>
+																								</xsd:restriction>
+																							</xsd:simpleType>
+																						</xsd:element>
+																						<xsd:element name="Amendment" type="p0:FullPaymentSubmission_YesNoType"/>
+																						<xsd:element name="Price">
+																							<xsd:simpleType>
+																								<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																									<xsd:maxInclusive value="9999999.99"/>
+																									<xsd:minInclusive value="1000.00"/>
+																								</xsd:restriction>
+																							</xsd:simpleType>
+																						</xsd:element>
+																						<xsd:element name="AvailFrom">
+																							<xsd:simpleType>
+																								<xsd:restriction base="p0:FullPaymentSubmission_DateType">
+																									<xsd:maxInclusive value="2022-04-05"/>
+																									<xsd:minInclusive value="2021-04-06"/>
+																								</xsd:restriction>
+																							</xsd:simpleType>
+																						</xsd:element>
+																						<xsd:element name="CashEquiv">
+																							<xsd:simpleType>
+																								<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																									<xsd:maxInclusive value="999999999.99"/>
+																									<xsd:minInclusive value="-999999999.99"/>
+																								</xsd:restriction>
+																							</xsd:simpleType>
+																						</xsd:element>
+																						<xsd:element minOccurs="0" name="AvailTo">
+																							<xsd:simpleType>
+																								<xsd:restriction base="p0:FullPaymentSubmission_DateType">
+																									<xsd:maxInclusive value="2022-04-05"/>
+																									<xsd:minInclusive value="2021-04-06"/>
+																								</xsd:restriction>
+																							</xsd:simpleType>
+																						</xsd:element>
+																						<xsd:element minOccurs="0" name="FreeFuel">
+																							<xsd:complexType>
+																								<xsd:sequence>
+																									<xsd:element name="Provided">
+																										<xsd:simpleType>
+																											<xsd:restriction base="p0:FullPaymentSubmission_DateType">
+																												<xsd:maxInclusive value="2022-04-05"/>
+																												<xsd:minInclusive value="2021-04-06"/>
+																											</xsd:restriction>
+																										</xsd:simpleType>
+																									</xsd:element>
+																									<xsd:element name="CashEquiv">
+																										<xsd:simpleType>
+																											<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																												<xsd:maxInclusive value="999999999.99"/>
+																												<xsd:minInclusive value="-999999999.99"/>
+																											</xsd:restriction>
+																										</xsd:simpleType>
+																									</xsd:element>
+																									<xsd:element minOccurs="0" name="Withdrawn">
+																										<xsd:simpleType>
+																											<xsd:restriction base="p0:FullPaymentSubmission_DateType">
+																												<xsd:maxInclusive value="2022-04-05"/>
+																												<xsd:minInclusive value="2021-04-06"/>
+																											</xsd:restriction>
+																										</xsd:simpleType>
+																									</xsd:element>
+																								</xsd:sequence>
+																							</xsd:complexType>
+																						</xsd:element>
+																					</xsd:sequence>
+																				</xsd:complexType>
+																			</xsd:element>
+																		</xsd:sequence>
+																	</xsd:complexType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="EmpeePenContribnsPaid">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="-999999999.99"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="ItemsSubjectToClass1NIC">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="-999999999.99"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="EmpeePenContribnsNotPaid">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="-999999999.99"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="StudentLoanRecovered">
+																	<xsd:complexType>
+																		<xsd:simpleContent>
+																			<xsd:extension base="p0:_intermediate_StudentLoanRecovered">
+																				<xsd:attribute name="PlanType" use="required">
+																					<xsd:simpleType>
+																						<xsd:restriction base="xsd:string">
+																							<xsd:enumeration value="01">
+																								<xsd:annotation>
+																									<xsd:documentation>Plan type 1</xsd:documentation>
+																								</xsd:annotation>
+																							</xsd:enumeration>
+																							<xsd:enumeration value="02">
+																								<xsd:annotation>
+																									<xsd:documentation>Plan type 2</xsd:documentation>
+																								</xsd:annotation>
+																							</xsd:enumeration>
+																							<xsd:enumeration value="04">
+																								<xsd:annotation>
+																									<xsd:documentation>Plan type 4</xsd:documentation>
+																								</xsd:annotation>
+																							</xsd:enumeration>
+																						</xsd:restriction>
+																					</xsd:simpleType>
+																				</xsd:attribute>
+																			</xsd:extension>
+																		</xsd:simpleContent>
+																	</xsd:complexType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="PostgradLoanRecovered">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRwholeUnitsMonetaryType">
+																			<xsd:maxInclusive value="99999.00"/>
+																			<xsd:minInclusive value="-99999.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="TaxDeductedOrRefunded">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="9999999999.99"/>
+																			<xsd:minInclusive value="-9999999999.99"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="OnStrike" type="p0:FullPaymentSubmission_YesType"/>
+																<xsd:element minOccurs="0" name="UnpaidAbsence" type="p0:FullPaymentSubmission_YesType"/>
+																<xsd:element minOccurs="0" name="SMPYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="SPPYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="SAPYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="ShPPYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="SPBPYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element maxOccurs="3" minOccurs="0" name="TrivialCommutationPayment">
+																	<xsd:complexType>
+																		<xsd:simpleContent>
+																			<xsd:extension base="p0:_intermediate_TrivialCommutationPayment">
+																				<xsd:attribute name="type" use="required">
+																					<xsd:simpleType>
+																						<xsd:restriction base="xsd:string">
+																							<xsd:enumeration value="A">
+																								<xsd:annotation>
+																									<xsd:documentation>Trivial commutation lump sums (TCLS)</xsd:documentation>
+																								</xsd:annotation>
+																							</xsd:enumeration>
+																							<xsd:enumeration value="B">
+																								<xsd:annotation>
+																									<xsd:documentation>Small pot lump sum payments from personal pension schemes</xsd:documentation>
+																								</xsd:annotation>
+																							</xsd:enumeration>
+																							<xsd:enumeration value="C">
+																								<xsd:annotation>
+																									<xsd:documentation>Small pot lump sum payments from occupational pension schemes</xsd:documentation>
+																								</xsd:annotation>
+																							</xsd:enumeration>
+																						</xsd:restriction>
+																					</xsd:simpleType>
+																				</xsd:attribute>
+																			</xsd:extension>
+																		</xsd:simpleContent>
+																	</xsd:complexType>
+																</xsd:element>
+																<xsd:element minOccurs="0" name="FlexibleDrawdown">
+																	<xsd:complexType>
+																		<xsd:sequence>
+																			<xsd:element minOccurs="0" name="FlexiblyAccessingPensionRights" type="p0:FullPaymentSubmission_YesType"/>
+																			<xsd:element minOccurs="0" name="PensionDeathBenefit" type="p0:FullPaymentSubmission_YesType"/>
+																			<xsd:element minOccurs="0" name="SeriousIllHealthLumpSum" type="p0:FullPaymentSubmission_YesType"/>
+																			<xsd:element minOccurs="0" name="TaxablePayment">
+																				<xsd:simpleType>
+																					<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																						<xsd:maxInclusive value="999999999.99"/>
+																						<xsd:minInclusive value="-999999999.99"/>
+																					</xsd:restriction>
+																				</xsd:simpleType>
+																			</xsd:element>
+																			<xsd:element minOccurs="0" name="NontaxablePayment">
+																				<xsd:simpleType>
+																					<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																						<xsd:maxInclusive value="999999999.99"/>
+																						<xsd:minInclusive value="-999999999.99"/>
+																					</xsd:restriction>
+																				</xsd:simpleType>
+																			</xsd:element>
+																		</xsd:sequence>
+																	</xsd:complexType>
+																</xsd:element>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+													<xsd:element maxOccurs="4" minOccurs="0" name="NIlettersAndValues">
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element name="NIletter">
+																	<xsd:simpleType>
+																		<xsd:restriction base="xsd:string">
+																			<xsd:enumeration value="A"/>
+																			<xsd:enumeration value="B"/>
+																			<xsd:enumeration value="C"/>
+																			<xsd:enumeration value="G"/>
+																			<xsd:enumeration value="H"/>
+																			<xsd:enumeration value="J"/>
+																			<xsd:enumeration value="M"/>
+																			<xsd:enumeration value="P"/>
+																			<xsd:enumeration value="Q"/>
+																			<xsd:enumeration value="R"/>
+																			<xsd:enumeration value="T"/>
+																			<xsd:enumeration value="W"/>
+																			<xsd:enumeration value="X"/>
+																			<xsd:enumeration value="Y"/>
+																			<xsd:enumeration value="Z"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="GrossEarningsForNICsInPd">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="-999999999.99"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="GrossEarningsForNICsYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="AtLELYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRwholeUnitsMonetaryType">
+																			<xsd:maxInclusive value="9999.00"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="LELtoPTYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="9999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="PTtoUELYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="99999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="TotalEmpNICInPd">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="-999999999.99"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="TotalEmpNICYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="EmpeeContribnsInPd">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="-999999999.99"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+																<xsd:element name="EmpeeContribnsYTD">
+																	<xsd:simpleType>
+																		<xsd:restriction base="p0:FullPaymentSubmission_IRmonetaryType">
+																			<xsd:maxInclusive value="999999999.99"/>
+																			<xsd:minInclusive value="0.00"/>
+																		</xsd:restriction>
+																	</xsd:simpleType>
+																</xsd:element>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="CompressedPart">
+								<xsd:complexType>
+									<xsd:simpleContent>
+										<xsd:extension base="p0:_intermediate_CompressedPart">
+											<xsd:attribute default="gzip" name="Type">
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:string">
+														<xsd:enumeration value="zip">
+															<xsd:annotation>
+																<xsd:documentation>zip encoding</xsd:documentation>
+															</xsd:annotation>
+														</xsd:enumeration>
+														<xsd:enumeration value="gzip">
+															<xsd:annotation>
+																<xsd:documentation>gzip encoding</xsd:documentation>
+															</xsd:annotation>
+														</xsd:enumeration>
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:attribute>
+										</xsd:extension>
+									</xsd:simpleContent>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:choice>
+						<xsd:element minOccurs="0" name="FinalSubmission">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element minOccurs="0" name="BecauseSchemeCeased" type="p0:FullPaymentSubmission_YesType"/>
+									<xsd:element minOccurs="0" name="DateSchemeCeased">
+										<xsd:simpleType>
+											<xsd:restriction base="p0:FullPaymentSubmission_DateType">
+												<xsd:maxInclusive value="2022-04-05"/>
+												<xsd:minInclusive value="2021-04-06"/>
+											</xsd:restriction>
+										</xsd:simpleType>
+									</xsd:element>
+									<xsd:element minOccurs="0" name="ForYear" type="p0:FullPaymentSubmission_YesType"/>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:simpleType name="FullPaymentSubmission_CharsetB">
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="[A-Za-z0-9 ]*"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_CharsetD">
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="[A-Za-z \-']*"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_CharsetG">
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="[A-Za-z0-9 \.,\-\(\)/=!&quot;%&amp;\*;&lt;&gt;'\+:\?]*"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_CharsetH">
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="[A-Za-z\- \.']*"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_DateType">
+				<xsd:annotation>
+					<xsd:documentation>The date is in the Common Era (minus sign in years is not permitted)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:date">
+					<xsd:pattern value="\d{4}-\d{2}-\d{2}"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_EmailType">
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="3"/>
+					<xsd:maxLength value="254"/>
+					<xsd:pattern value="[^@'&lt;&gt;&quot;]+@[^@'&lt;&gt;&quot;]+"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_IRdecimalType">
+				<xsd:restriction base="xsd:decimal">
+					<xsd:pattern value="-?(([1-9][0-9]*)|0)\.[0-9]{2}"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_IRheaderStringType">
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="[A-Za-z0-9 &amp;'\(\)\*,\-\./]*"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_IRmonetaryType">
+				<xsd:restriction base="p0:FullPaymentSubmission_IRdecimalType"/>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_IRnonNegativeMax999IntegerType">
+				<xsd:restriction base="xsd:nonNegativeInteger">
+					<xsd:maxInclusive value="999"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_IRnonNegativeMonetaryType">
+				<xsd:restriction base="p0:FullPaymentSubmission_IRdecimalType">
+					<xsd:minInclusive value="0.00"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_IRwholeUnitsMonetaryType">
+				<xsd:restriction base="p0:FullPaymentSubmission_IRdecimalType">
+					<xsd:pattern value=".*\.00"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_ISOcurrencyType">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="EUR">
+						<xsd:annotation>
+							<xsd:documentation>Euro</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="GBP">
+						<xsd:annotation>
+							<xsd:documentation>Sterling</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_PAYENINOtype">
+				<xsd:restriction base="xsd:string">
+					<xsd:length value="9"/>
+					<xsd:pattern value="([ACEHJLMOPRSWXY][A-CEGHJ-NPR-TW-Z]|B[A-CEHJ-NPR-TW-Z]|G[ACEGHJ-NPR-TW-Z]|[KT][A-CEGHJ-MPR-TW-Z]|N[A-CEGHJL-NPR-SW-Z]|Z[A-CEGHJ-NPR-TW-Y])[0-9]{6}[A-D ]"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_PayrollIdType">
+				<xsd:restriction base="p0:FullPaymentSubmission_CharsetG">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="35"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_UTRtype">
+				<xsd:restriction base="xsd:string">
+					<xsd:length value="10"/>
+					<xsd:pattern value="[0-9]{10}"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_WorkHomeType">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="home"/>
+					<xsd:enumeration value="work"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_XType">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="X"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_YesNoType">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="no"/>
+					<xsd:enumeration value="yes"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FullPaymentSubmission_YesType">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="yes"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="_intermediate_TaxCode">
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="2"/>
+					<xsd:maxLength value="7"/>
+					<xsd:pattern value="([1-9][0-9]{0,5}[LMNPTY])|(BR)|(0T)|(NT)|(D[0-8])|([K][1-9][0-9]{0,5})"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="_intermediate_StudentLoanRecovered">
+				<xsd:restriction base="p0:FullPaymentSubmission_IRwholeUnitsMonetaryType">
+					<xsd:maxInclusive value="99999.00"/>
+					<xsd:minInclusive value="-99999.00"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="_intermediate_TrivialCommutationPayment">
+				<xsd:restriction base="p0:FullPaymentSubmission_IRwholeUnitsMonetaryType">
+					<xsd:maxInclusive value="99999.00"/>
+					<xsd:minInclusive value="-99999.00"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="_intermediate_CompressedPart">
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="4"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="FullPaymentSubmission_ContactDetailsStructure">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="Name">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element minOccurs="0" name="Ttl">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:minLength value="1"/>
+											<xsd:maxLength value="4"/>
+											<xsd:pattern value="[A-Za-z][A-Za-z'\-]*"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element maxOccurs="2" name="Fore">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:minLength value="1"/>
+											<xsd:maxLength value="35"/>
+											<xsd:pattern value="[A-Za-z][A-Za-z'\-]*"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="Sur">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:minLength value="1"/>
+											<xsd:maxLength value="35"/>
+											<xsd:pattern value="[A-Za-z0-9 ,\.\(\)/&amp;\-']+"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="Email">
+						<xsd:complexType>
+							<xsd:simpleContent>
+								<xsd:extension base="p0:FullPaymentSubmission_EmailType">
+									<xsd:attribute name="Type" type="p0:FullPaymentSubmission_WorkHomeType"/>
+									<xsd:attribute name="Preferred" type="p0:FullPaymentSubmission_YesNoType"/>
+								</xsd:extension>
+							</xsd:simpleContent>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="Telephone" type="p0:FullPaymentSubmission_TelephoneStructure"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="Fax" type="p0:FullPaymentSubmission_TelephoneStructure"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="FullPaymentSubmission_TelephoneStructure">
+				<xsd:sequence>
+					<xsd:element name="Number">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:minLength value="1"/>
+								<xsd:maxLength value="35"/>
+								<xsd:pattern value="[0-9\(\)\-\s]{1,35}"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="Extension">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:minLength value="1"/>
+								<xsd:maxLength value="6"/>
+								<xsd:pattern value="[0-9]{1,6}"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+				<xsd:attribute name="Type" type="p0:FullPaymentSubmission_WorkHomeType"/>
+				<xsd:attribute name="Mobile" type="p0:FullPaymentSubmission_YesNoType"/>
+				<xsd:attribute name="Preferred" type="p0:FullPaymentSubmission_YesNoType"/>
+			</xsd:complexType>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="GovTalkMessage">
+		<wsdl:part element="p20:GovTalkMessage" name="GovTalkMessage" xmlns:p20="http://www.govtalk.gov.uk/CM/envelope"/>
+	</wsdl:message>
+</wsdl:definitions>

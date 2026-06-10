@@ -136,6 +136,24 @@ class CPIUploader:
             cleaned = "P" + cleaned
         return cleaned[:120]
 
+    @staticmethod
+    def sanitize_artifact_name(raw: str) -> str:
+        """CPI artifact/package *display Name* rules (HTTP 400 otherwise):
+        must start with a letter or underscore, may then contain letters,
+        digits, space, period (.) or hyphen (-), and must not end with a
+        period. Anything else (& ( ) / : , etc.) is replaced with a space and
+        runs of whitespace are collapsed. This is the fix for the tenant
+        rejection of 'Order Sync & Validate (EU/US)'."""
+        import re as _re
+        s = _re.sub(r"[^A-Za-z0-9 ._-]", " ", str(raw))   # illegal -> space
+        s = _re.sub(r"\s+", " ", s).strip()                # collapse runs
+        s = s.rstrip(".").strip()                          # no trailing period
+        if not s:
+            s = "IFlow"
+        if not _re.match(r"[A-Za-z_]", s):                 # must start letter/_
+            s = "X" + s
+        return s[:240]
+
     def ensure_package(self, package_id: str, package_name: str,
                        description: str = "", owner_email: str = "") -> bool:
         """Create package if it doesn't exist. Returns True if ready.
@@ -284,12 +302,15 @@ class CPIUploader:
         extra_artifacts: Optional[list] = None,
         sender_adapter: str = "",
         receiver_adapter: str = "",
-        prefer_template_name: str = "",
     ) -> UploadResult:
         """
         Upload a .iflw file to CPI.
         The iflw is packaged into a zip before upload (CPI requirement).
         extra_artifacts: (rel_path, content) tuples for referenced scripts/maps.
+
+        Single build path: the .iflw produced by the generator (clean-room
+        regeneration when a source iFlow is present, else the self-contained
+        timer scaffold) is packaged and deployed as-is.
         """
         # Enforce valid IDs (same rules as ensure_package) so the package the
         # artifact targets matches the one that was created, and the artifact
@@ -312,24 +333,9 @@ class CPIUploader:
             result.message = "Artifact already exists (overwrite=False)"
             return result
 
-        # Prefer clone-and-adapt from the template library (the proven 201 path):
-        # a REAL importable iFlow re-skinned to carry the generated scripts/mapping.
-        # STRICTLY ADDITIVE — if no library is set, no template matches, or the
-        # result fails preflight, we fall back to the scaffolded package below, so
-        # behavior is never worse than today.
-        zip_bytes = None
-        try:
-            zip_bytes = self._maybe_clone_bundle(
-                artifact_name, extra_artifacts,
-                sender_adapter=sender_adapter, receiver_adapter=receiver_adapter,
-                prefer_template_name=prefer_template_name)
-        except Exception as exc:   # never let the clone path break the upload
-            logger.warning("clone-and-adapt path errored (%s); using scaffolder", exc)
-            zip_bytes = None
-        if not zip_bytes:
-            # Package iflw into zip (with referenced scripts/mappings bundled)
-            zip_bytes = self._package_iflow(iflw_path, artifact_id, artifact_name,
-                                            parameters_prop, extra_artifacts=extra_artifacts)
+        # Package ONLY the generated .iflw (+ its validated manifest/.project).
+        zip_bytes = self._package_iflow(iflw_path, artifact_id, artifact_name,
+                                        parameters_prop, extra_artifacts=None)
         if not zip_bytes:
             result.message = f"Failed to package iFlow from {iflw_path}"
             return result
@@ -343,60 +349,6 @@ class CPIUploader:
             result.message = str(exc)
             logger.error("Upload error for %s: %s", artifact_id, exc)
         return result
-
-    def _maybe_clone_bundle(self, artifact_name: str, extra_artifacts,
-                            sender_adapter: str = "", receiver_adapter: str = "",
-                            prefer_template_name: str = ""):
-        """If a template library is configured, build the artifact via
-        clone-and-adapt: a real, importable template iFlow re-skinned to carry
-        the interface's generated Groovy + mapping. If the user explicitly chose
-        a template in Tab-3 (`prefer_template_name`), that one is used; otherwise
-        the template is chosen by this interface's sender/receiver adapters, so
-        each interface clones an adapter-appropriate flow (not all the same one).
-        Returns inner-bundle bytes that PASS preflight, else None (caller falls
-        back to the scaffolded package)."""
-        from fetcher.user_settings import get_dir
-        folder = get_dir("template_library_dir")
-        if not folder:
-            return None
-        from scaffolder.template_library import (find_best_template,
-                                                 find_template_by_name)
-        from scaffolder.iflow_personalizer import clone_and_adapt
-        from fetcher.preflight import preflight_inner_bundle
-        from fetcher import wire_log
-
-        scripts = [c for (rp, c) in (extra_artifacts or [])
-                   if str(rp).endswith(".groovy")]
-        mapping = next((c for (rp, c) in (extra_artifacts or [])
-                        if str(rp).endswith((".mmap", ".xsl", ".xslt"))), None)
-
-        tmpl = None
-        if prefer_template_name:
-            tmpl = find_template_by_name(folder, prefer_template_name)
-        if not tmpl:
-            # need_scripts steers same-adapter interfaces toward different
-            # templates sized to the logic they actually carry.
-            tmpl = find_best_template(folder, sender=sender_adapter,
-                                      receiver=receiver_adapter,
-                                      need_scripts=len(scripts))
-        if not tmpl:
-            return None
-        bundle, refs_ok, rep = clone_and_adapt(
-            tmpl.bundle, artifact_name,
-            generated_scripts=scripts, generated_mapping=mapping)
-        pf_ok, findings = preflight_inner_bundle(bundle)
-        if refs_ok and pf_ok:
-            wire_log.log_note(
-                f"clone-and-adapt: template='{tmpl.name}' "
-                f"scripts_injected={rep.get('scripts_injected')} "
-                f"mapping={rep.get('mapping_injected')} → deploying real content")
-            return bundle
-        wire_log.log_note(
-            "clone-and-adapt preflight failed "
-            f"(refs_ok={refs_ok}, errors="
-            f"{[f['message'] for f in findings if f['severity']=='error'][:2]}) "
-            "→ falling back to scaffolder")
-        return None
 
     def _post_artifact(self, zip_bytes: bytes, package_id: str, artifact_id: str,
                        artifact_name: str, result: "UploadResult",
@@ -434,7 +386,7 @@ class CPIUploader:
         zip_b64  = base64.b64encode(zip_bytes).decode("utf-8")
         coll_url = f"{self.base_url}/api/v1/{endpoint}"
         payload  = {
-            "Id": artifact_id, "Name": artifact_name,
+            "Id": artifact_id, "Name": self.sanitize_artifact_name(artifact_name),
             "PackageId": package_id, "ArtifactContent": zip_b64,
         }
 
@@ -526,7 +478,7 @@ class CPIUploader:
         key_url  = (f"{self.base_url}/api/v1/{endpoint}"
                     f"(Id='{artifact_id}',Version='active')")
         payload  = {
-            "Id": artifact_id, "Name": artifact_name,
+            "Id": artifact_id, "Name": self.sanitize_artifact_name(artifact_name),
             "PackageId": package_id, "ArtifactContent": zip_b64,
         }
         body_str = _json.dumps(payload)
@@ -577,7 +529,7 @@ class CPIUploader:
         zip_b64  = base64.b64encode(zip_bytes).decode("utf-8")
         coll_url = f"{self.base_url}/api/v1/{endpoint}"
         payload  = {
-            "Id": artifact_id, "Name": artifact_name,
+            "Id": artifact_id, "Name": self.sanitize_artifact_name(artifact_name),
             "PackageId": package_id, "ArtifactContent": zip_b64,
         }
         body_str = _json.dumps(payload)
@@ -973,8 +925,7 @@ class CPIUploader:
                           package_name: str, artifact_id: str,
                           artifact_name: str, parameters_prop: str = "",
                           extra_artifacts=None, sender_adapter: str = "",
-                          receiver_adapter: str = "",
-                          prefer_template_name: str = "") -> "UploadResult":
+                          receiver_adapter: str = "") -> "UploadResult":
         """Upload an iFlow by building a FULL package zip and POSTing it to
         IntegrationPackages (whole-package import). If the package already
         exists, CPI does not support replacing it via $value (501), so we fall
@@ -986,19 +937,9 @@ class CPIUploader:
             interface_name=artifact_name, package_id=package_id,
             artifact_id=artifact_id, status="failed",
             cpi_url=f"{self.base_url}/api/v1/IntegrationPackages")
-        # Prefer a real cloned bundle (so the package carries importable content,
-        # not a stub); fall back to the scaffolded package on any failure.
-        inner = None
-        try:
-            inner = self._maybe_clone_bundle(
-                artifact_name, extra_artifacts,
-                sender_adapter=sender_adapter, receiver_adapter=receiver_adapter,
-                prefer_template_name=prefer_template_name)
-        except Exception:
-            inner = None
-        if not inner:
-            inner = self._package_iflow(iflw_path, artifact_id, artifact_name,
-                                        parameters_prop, extra_artifacts=extra_artifacts)
+        # Single build path: package the generated .iflw.
+        inner = self._package_iflow(iflw_path, artifact_id, artifact_name,
+                                    parameters_prop, extra_artifacts=extra_artifacts)
         if not inner:
             result.message = f"Failed to package iFlow from {iflw_path}"
             return result
@@ -1129,7 +1070,8 @@ class CPIUploader:
     @staticmethod
     def _package_iflow(iflw_path: Path, artifact_id: str, artifact_name: str,
                        parameters_prop: str = "",
-                       extra_artifacts: Optional[list] = None) -> Optional[bytes]:
+                       extra_artifacts: Optional[list] = None,
+                       parameters_propdef: str = "") -> Optional[bytes]:
         """
         Package a .iflw XML file into the zip format CPI expects.
 
@@ -1154,8 +1096,16 @@ class CPIUploader:
             validated_project = None
             if meta_dir.is_dir():
                 try:
-                    validated_manifest = (meta_dir / "MANIFEST.MF").read_text("utf-8")
-                    validated_project = (meta_dir / ".project").read_text("utf-8")
+                    # IMPORTANT: read as bytes, NOT read_text(). read_text()
+                    # applies universal-newline translation (CRLF -> LF), which
+                    # silently strips the carriage returns the JAR/OSGi manifest
+                    # spec REQUIRES. CPI's OData artifact parser is strict about
+                    # this (the UI importer is lenient, which is why a bare-LF
+                    # manifest imports by hand but 500s "InputStream cannot be
+                    # null" via the API). Reading bytes preserves the CRLF that
+                    # the generator wrote.
+                    validated_manifest = (meta_dir / "MANIFEST.MF").read_bytes().decode("utf-8")
+                    validated_project = (meta_dir / ".project").read_bytes().decode("utf-8")
                 except Exception:
                     pass
 
@@ -1191,9 +1141,16 @@ class CPIUploader:
                         "SAP-BundleType: IntegrationFlow\r\n"
                         "SAP-NodeType: IFLMAP\r\n"
                         "SAP-RuntimeProfile: iflmap\r\n"
-                        "SAP-ArtifactTrait: \r\n"
+                        "SAP-ContentMode: ConfigureOnly\r\n"
                         "\r\n"
                     )
+                # JAR/OSGi manifests MUST use CRLF line endings and end with a
+                # blank line. Normalize unconditionally so neither the validated
+                # nor the fallback path can ship a bare-LF manifest (the cause of
+                # CPI's HTTP 500 "InputStream cannot be null").
+                manifest = manifest.replace("\r\n", "\n").replace("\r", "\n").replace("\n", "\r\n")
+                if not manifest.endswith("\r\n\r\n"):
+                    manifest = manifest.rstrip("\r\n") + "\r\n\r\n"
                 _dos_write(zf, "META-INF/MANIFEST.MF", manifest)
 
                 # .project (validated one when available)
@@ -1211,9 +1168,29 @@ class CPIUploader:
                     iflw_content,
                 )
 
-                # parameters.prop — real externalized values when provided
-                _dos_write(zf, "src/main/resources/parameters.prop",
-                           parameters_prop or "")
+                # parameters.prop — real externalized values when provided.
+                # Real importable bundles never ship a 0-byte prop; they carry
+                # at least a timestamp comment header. Match that.
+                import time as _t
+                _prop = parameters_prop or (
+                    "#" + _t.strftime("%a %b %d %H:%M:%S UTC %Y", _t.gmtime()) + "\n")
+                _dos_write(zf, "src/main/resources/parameters.prop", _prop)
+
+                # parameters.propdef — REQUIRED. Every real importable iFlow
+                # bundle (verified across the corpus) carries BOTH parameters.prop
+                # and parameters.propdef. CPI's OData create reads parameters.propdef
+                # by name to build the parameter model; when it's absent the
+                # lookup returns null and the create fails with HTTP 500
+                # "InputStream cannot be null". A flow with no externalized
+                # parameters still needs an (empty) <parameters/> definition.
+                # This is what was missing from the timer scaffold (the UI
+                # importer tolerated it; the API does not).
+                _dos_write(
+                    zf, "src/main/resources/parameters.propdef",
+                    parameters_propdef
+                    or '<?xml version="1.0" encoding="UTF-8" '
+                       'standalone="no"?><parameters></parameters>',
+                )
 
                 # ── Bundled scripts/mappings the iFlow references ──
                 # Makes the package self-contained instead of pointing at
@@ -1224,6 +1201,31 @@ class CPIUploader:
                         _dos_write(zf, rel_path, content)
                     except Exception as exc:
                         logger.warning("Skipping malformed extra artifact: %s", exc)
+
+                # Also auto-include any resource files persisted next to the
+                # iFlow (meta_dir/src/main/resources/**) — scripts, XSLT/message
+                # mappings, schemas written by the scaffolder. This guarantees
+                # the referenced files ship even when the caller didn't pass
+                # extra_artifacts (the on-demand generate-then-upload path),
+                # which was the cause of "Mapping file not found" on the tenant.
+                if meta_dir.is_dir():
+                    _res_root = meta_dir / "src" / "main" / "resources"
+                    if _res_root.is_dir():
+                        _already = set(zf.namelist())
+                        for _p in _res_root.rglob("*"):
+                            if not _p.is_file():
+                                continue
+                            _rel = "src/main/resources/" + \
+                                _p.relative_to(_res_root).as_posix()
+                            if _rel in _already:
+                                continue
+                            if _rel.startswith("src/main/resources/scenarioflows/"):
+                                continue
+                            if _rel in ("src/main/resources/parameters.prop",
+                                        "src/main/resources/parameters.propdef"):
+                                continue
+                            _dos_write(zf, _rel, _p.read_bytes())
+                            _already.add(_rel)
 
             buf.seek(0)
             data = buf.read()

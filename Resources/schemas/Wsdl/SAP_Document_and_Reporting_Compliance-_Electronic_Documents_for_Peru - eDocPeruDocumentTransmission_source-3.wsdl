@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.sap.com/eDocument/Peru/DocumentTransmission/v1.0"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	name="eDocPeruDocumentTransmission" targetNamespace="http://www.sap.com/eDocument/Peru/DocumentTransmission/v1.0"
+	xmlns:dn="urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2"
+	xmlns:in="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+	xmlns:cn="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="http://www.sap.com/eDocument/Peru/DocumentTransmission/v1.0"
+			xmlns:ar="urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2">
+
+			<xsd:import schemaLocation="UBL-ApplicationResponse-2_1.xsd"
+				namespace="urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2">
+			</xsd:import>
+
+			<xsd:element name="SendDocumentResponse"
+				type="tns:SendDocumentResponseType">
+			</xsd:element>
+
+			<xsd:complexType name="SendDocumentResponseType">
+				<xsd:sequence>
+
+					<xsd:element name="EncodedZippedApplicationResponse"
+						type="xsd:base64Binary" minOccurs="0" maxOccurs="1">
+					</xsd:element>
+					<xsd:element name="EncodedResponse" type="xsd:base64Binary" minOccurs="0" maxOccurs="1"></xsd:element>
+					<xsd:element name="SignedDocument"
+						type="xsd:base64Binary" minOccurs="1" maxOccurs="1">
+					</xsd:element>
+					<xsd:element name="FileName" type="xsd:string"
+						minOccurs="1" maxOccurs="1">
+					</xsd:element>
+					<xsd:element name="SignatureValue"
+						type="xsd:base64Binary" minOccurs="1" maxOccurs="1">
+					</xsd:element>
+					<xsd:element name="DigestValue"
+						type="xsd:base64Binary" minOccurs="1" maxOccurs="1">
+					</xsd:element>
+					<xsd:element name="Error" type="tns:ErrorType"
+						minOccurs="0" maxOccurs="1">
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ErrorType">
+				<xsd:sequence>
+					<xsd:element name="FaultCode" type="xsd:string"
+						minOccurs="0" maxOccurs="1">
+					</xsd:element>
+					<xsd:element name="Message" type="xsd:string"
+						minOccurs="0" maxOccurs="1">
+					</xsd:element>
+					<xsd:element name="MessageDetail" type="xsd:string"
+						minOccurs="0" maxOccurs="1">
+					</xsd:element>
+					<xsd:element name="StatusCode" type="xsd:string"
+						minOccurs="0" maxOccurs="1">
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+		</xsd:schema>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:import
+				namespace="urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2"
+				schemaLocation="UBL-DebitNote-2.1.xsd">
+			</xsd:import>
+			<xsd:import
+				namespace="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
+				schemaLocation="UBL-CreditNote-2.1.xsd">
+			</xsd:import>
+			<xsd:import
+				namespace="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+				schemaLocation="UBL-Invoice-2.1.xsd">
+			</xsd:import></xsd:schema></wsdl:types>
+	<wsdl:message name="SendInvoiceRequest">
+		<wsdl:part element="in:Invoice" name="InvoicePart" />
+	</wsdl:message>
+	<wsdl:message name="SendDocumentResponse">
+		<wsdl:part element="tns:SendDocumentResponse" name="SendDocumentResponseParameters" />
+	</wsdl:message>
+	<wsdl:message name="SendCreditNoteRequest">
+		<wsdl:part name="CreditNotePart" element="cn:CreditNote"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="SendDebitNoteRequest">
+		<wsdl:part name="DebitNotePart" element="dn:DebitNote"></wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="eDocPeruDocumentTransmission">
+		<wsdl:operation name="Invoice">
+			<wsdl:input message="tns:SendInvoiceRequest" name="SendInvoiceInput"/>
+			<wsdl:output message="tns:SendDocumentResponse" name="SendInvoiceOutput"/>
+		</wsdl:operation>
+		<wsdl:operation name="CreditNote">
+			<wsdl:input message="tns:SendCreditNoteRequest" name="SendCreditNoteInput"></wsdl:input>
+			<wsdl:output message="tns:SendDocumentResponse" name="SendCreditNoteOutput"></wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="DebitNote">
+			<wsdl:input message="tns:SendDebitNoteRequest" name="SendDebitNoteInput"></wsdl:input>
+			<wsdl:output message="tns:SendDocumentResponse" name="SendDebitNoteOutput"></wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="eDocPeruDocumentTransmissionSOAP"
+		type="tns:eDocPeruDocumentTransmission">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="Invoice">
+			<soap:operation soapAction="http://www.sap.com/eDocument/Peru/DocumentTransmission/v1.0/Invoice" />
+			<wsdl:input name="SendInvoiceInput">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="SendInvoiceOutput">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="CreditNote">
+			<soap:operation soapAction="http://www.sap.com/eDocument/Peru/DocumentTransmission/v1.0/CreditNote" />
+			<wsdl:input name="SendCreditNoteInput">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="SendCreditNoteOutput">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="DebitNote">
+			<soap:operation soapAction="http://www.sap.com/eDocument/Peru/DocumentTransmission/v1.0/DebitNote" />
+			<wsdl:input name="SendDebitNoteInput">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="SendDebitNoteOutput">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="eDocPeruDocumentTransmission">
+		<wsdl:port binding="tns:eDocPeruDocumentTransmissionSOAP"
+			name="eDocPeruDocumentTransmissionSOAP">
+			<soap:address location="http://endpointaddress" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

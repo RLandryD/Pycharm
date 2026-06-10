@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SCENARIO iFlow: Fetch Participant Engagement Data from GoToWebinar Platform
+  Display Name : OUT_SMC_POLL_Marketing_Events_Ses_Fetch_Participant_En
+  Package      : 1_SMC_POLL_Marketing_Events_Ses_Finance
+  Strategy     : GREENFIELD: Clean cloud-native rebuild. No legacy mapping reuse.
+  Complexity   : HIGH (score: 162)
+  Effort       : 49.1 day(s)
+  Sender       : SMC_POLL (HTTPS)
+  Receiver     : Marketing_Events_Sessions (OpenConnectors)
+  Batch        : No
+-->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+             id="Fetch_Participant_En"
+             name="OUT_SMC_POLL_Marketing_Events_Ses_Fetch_Participant_En">
+  <process id="Fetch_Participant_En_process" ifl:type="IntegrationFlow">
+
+    <startEvent id="Start_SC" name="From Interface Separation">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Fetch_Participant_En</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </startEvent>
+
+
+
+    <!-- PROCESSDIRECT: Forward to Outbound Delivery -->
+    <serviceTask id="CallOutbound_1" name="→ Outbound Delivery" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/outbound/1_SMC_POLL_Marketing</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+
+    <endEvent id="End_SC"/>
+    <sequenceFlow sourceRef="Start_SC" targetRef="CallOutbound_1"/>
+    
+    
+    <sequenceFlow sourceRef="CallOutbound_1" targetRef="End_SC"/>
+  </process>
+</definitions>

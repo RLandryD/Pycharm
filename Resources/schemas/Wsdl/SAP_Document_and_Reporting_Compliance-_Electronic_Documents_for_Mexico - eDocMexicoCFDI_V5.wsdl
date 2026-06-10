@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns1="http://www.sap.com/eDocument/Mexico/CFDI/v5" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="CFDIeDocumentsV5"
+	targetNamespace="http://www.sap.com/eDocument/Mexico/CFDI/v5"
+	xmlns:cfdi="http://www.sat.gob.mx/cfd/4">
+	<wsdl:types>
+		<xs:schema elementFormDefault="qualified"
+			attributeFormDefault="unqualified" targetNamespace="http://www.sap.com/eDocument/Mexico/CFDI/v5" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns1="http://www.sap.com/eDocument/Mexico/CFDI/v5" xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:Q1="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:Q2="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI" xmlns:Q3="http://www.w3.org/2000/09/xmldsig#" xmlns:Q4="http://www.sat.gob.mx/sitio_internet/cfd" xmlns:Q5="http://www.sap.com/eDocument/Mexico/CFDI/v5">
+			
+            <xs:import namespace="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI" schemaLocation="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI/tdCFDI.xsd"/>
+			<xs:import schemaLocation="xmldsig.xsd" namespace="http://www.w3.org/2000/09/xmldsig#"></xs:import>
+            <xs:import schemaLocation="complemento/TimbreFiscalDigitalv11.xsd" namespace="http://www.sat.gob.mx/TimbreFiscalDigital"></xs:import>
+            <xs:import schemaLocation="cfdv50.xsd" namespace="http://www.sat.gob.mx/cfd/4"></xs:import>
+			<xs:import schemaLocation="CancelaCfdi.xsd" namespace="http://www.sat.gob.mx/sitio_internet/cfd"></xs:import>
+			<xs:element name="CFDSubmitRequest" type="tns1:CFDSubmitRequestType">
+			</xs:element>
+
+			<xs:element name="CFDCancelRequest">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="Q4:Cancelacion"></xs:element>
+						<xs:element name="ServiceProvider"
+							type="xs:string">
+						</xs:element>
+
+						<xs:element name="DocType"
+							type="xs:string" minOccurs="0" maxOccurs="1">
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="version" use="required" fixed="1.0">
+						<xs:annotation>
+							<xs:documentation>
+								Atributo requerido que indica la versión
+								bajo el
+								que se encuentra expresado el
+								documento.
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:whiteSpace value="collapse" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			
+			<xs:element name="CFDGetStatusRequest">
+				<xs:complexType>
+					<xs:sequence>
+
+						<xs:element name="Folio" maxOccurs="unbounded"
+							minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="UUID"
+										type="xs:string">
+									</xs:element>
+									<xs:element name="Total"
+										type="xs:string">
+									</xs:element>
+								</xs:sequence>
+
+								<xs:attribute name="RfcReceptor"
+									type="xs:string">
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+
+						<xs:element name="ServiceProvider"
+							type="xs:string">
+						</xs:element>
+						<xs:element name="DocType"
+							type="xs:string" minOccurs="0" maxOccurs="1">
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="version" use="required"
+						fixed="1.0">
+						<xs:annotation>
+							<xs:documentation>
+								Atributo requerido que indica la versión
+								bajo el que se encuentra expresado el
+								documento.
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:whiteSpace value="collapse" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="RfcEmisor" type="xs:string">
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="PACResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="EncodedZippedResponse"
+							type="xs:base64Binary" maxOccurs="1" minOccurs="0">
+						</xs:element>
+						<xs:element name="SignedDocument"
+							type="xs:base64Binary" minOccurs="0" maxOccurs="1">
+						</xs:element>
+
+						<xs:element ref="Q1:TimbreFiscalDigital" maxOccurs="1" minOccurs="0"></xs:element>
+						<xs:element name="Error" minOccurs="0"
+							maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>
+									Errores detectados. Aplica en caso
+									de Transacciones concluidas con
+									Error
+								</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:attribute name="noIdentificacion"
+									use="required">
+									<xs:annotation>
+										<xs:documentation>
+											Numero de Identificacion del
+											Error
+										</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction
+											base="xs:string">
+											<xs:minLength value="1" />
+											<xs:whiteSpace
+												value="collapse" />
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+								<xs:attribute name="descripcion"
+									use="required">
+									<xs:annotation>
+										<xs:documentation>
+											Texto que describe el Error
+										</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction
+											base="xs:string">
+											<xs:minLength value="1" />
+											<xs:whiteSpace
+												value="collapse" />
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+
+						<xs:element name="StatusCode"
+							type="xs:string" maxOccurs="1" minOccurs="0">
+						</xs:element>
+						<xs:element name="CFDResponseMulti" maxOccurs="1" minOccurs="0">
+                            <xs:complexType>
+                            	<xs:sequence>
+                            		<xs:element name="Folios" maxOccurs="unbounded" minOccurs="0">
+                                        <xs:complexType>
+                                        	<xs:sequence>
+                                        		<xs:element name="UUID"
+                                        			type="xs:string" maxOccurs="1" minOccurs="0">
+                                        		</xs:element>
+                                        		<xs:element
+                                        			name="StatusCode"
+                                        			type="xs:double" maxOccurs="1" minOccurs="0">
+                                        		</xs:element>
+
+                                        		<xs:element
+                                        			name="Error" maxOccurs="1" minOccurs="0">
+                                                    <xs:complexType>
+                                                    	<xs:attribute
+                                                    		name="noIdentificacion"
+                                                    		type="xs:string">
+                                                    	</xs:attribute>
+                                                    	<xs:attribute
+                                                    		name="decripcion"
+                                                    		type="xs:string">
+                                                    	</xs:attribute>
+                                                    </xs:complexType>
+                                        		</xs:element>
+                                        	</xs:sequence>
+                                        </xs:complexType>
+                            		</xs:element>
+                            	</xs:sequence>
+                            </xs:complexType>
+						</xs:element>
+					</xs:sequence>
+
+
+				</xs:complexType>
+			</xs:element>
+
+			<xs:complexType name="t_InformacionAduanera">
+				<xs:annotation>
+					<xs:documentation>
+						Tipo definido para expresar información aduanera
+					</xs:documentation>
+				</xs:annotation>
+				<xs:attribute name="numero" use="required">
+					<xs:annotation>
+						<xs:documentation>
+							Atributo requerido para expresar el número
+							del
+							documento aduanero que ampara la
+							importación del bien.
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1" />
+							<xs:whiteSpace value="collapse" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="fecha" use="required">
+					<xs:annotation>
+						<xs:documentation>
+							Atributo requerido para expresar la fecha de
+							expedición del documento aduanero que ampara
+							la importación del
+							bien.
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:date">
+							<xs:whiteSpace value="collapse" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="aduana" use="required">
+					<xs:annotation>
+						<xs:documentation>
+							Atributo requerido para precisar la aduana
+							por la
+							que se efectuó la importación del
+							bien.
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1" />
+							<xs:whiteSpace value="collapse" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:complexType>
+
+			<xs:complexType name="CFDSubmitRequestType">
+				<xs:sequence>
+					<xs:element name="Comprobante" type="cfdi:t_Comprobante">
+					</xs:element>
+					<xs:element name="ServiceProvider" type="xs:string" minOccurs="1" maxOccurs="1">
+					</xs:element>
+					<xs:element name="DocType" type="xs:string" minOccurs="0" maxOccurs="1">
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:simpleType name="t_RFC">
+				<xs:annotation>
+					<xs:documentation>Tipo definido para expresar claves del Registro
+						Federal de Contribuyentes
+					</xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="12" />
+					<xs:maxLength value="13" />
+					<xs:whiteSpace value="collapse" />
+					<xs:pattern
+						value="[A-Z,Ñ,&amp;]{3,4}[0-9]{2}[0-1][0-9][0-3][0-9][A-Z,0-9]?[A-Z,0-9]?[0-9,A-Z]?" />
+				</xs:restriction>
+			</xs:simpleType>
+		
+			<xs:complexType name="SATResponseType">
+				<xs:sequence>
+					<xs:element name="UUID">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+
+								<xs:length value="36"></xs:length>
+								<xs:whiteSpace value="collapse"></xs:whiteSpace>
+								<xs:pattern
+									value="[a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{12}">
+								</xs:pattern>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="FechaTimbrado" type="Q2:t_FechaH"></xs:element>
+					<xs:element name="SelloCFD" type="xs:string"></xs:element>
+					<xs:element name="NoCertificadoSAT"
+						type="tns1:NoCertificadoSATType">
+					</xs:element>
+
+				</xs:sequence>
+			</xs:complexType>
+		
+			<xs:simpleType name="NoCertificadoSATType">
+				<xs:restriction base="xs:string">
+
+					<xs:length value="20"></xs:length>
+					<xs:pattern value="[0-9]{20}"></xs:pattern>
+					<xs:whiteSpace value="collapse"></xs:whiteSpace>
+				</xs:restriction>
+			</xs:simpleType>
+		
+            <xs:complexType name="UUIDType"></xs:complexType>
+            <xs:element name="CFDCancelEdoc" type="xs:string"></xs:element>
+        
+            <xs:simpleType name="NewSimpleType">
+            	<xs:restriction base="xs:string"></xs:restriction>
+            </xs:simpleType>
+		
+            <xs:simpleType name="NewSimpleType1">
+            	<xs:restriction base="xs:string"></xs:restriction>
+            </xs:simpleType>
+            <xs:element name="GetViewEdoc">
+            	<xs:complexType>
+            		<xs:sequence>
+
+            			<xs:element name="UUID" type="xs:string"></xs:element>
+            			<xs:element name="ServiceProvider"
+            				type="xs:string">
+            			</xs:element>
+
+            			<xs:element name="DocType"
+            				type="xs:string" minOccurs="0" maxOccurs="1">
+            			</xs:element>
+            		</xs:sequence>
+            		<xs:attribute name="version" type="xs:string">
+            		</xs:attribute>
+                    <xs:attribute name="RfcEmisor" type="xs:string">
+            		</xs:attribute>
+            	</xs:complexType>
+            </xs:element>
+            <xs:element name="GetViewEdocResponse">
+            	<xs:complexType>
+            		<xs:sequence>
+
+            			<xs:element name="DocData"
+            				type="xs:base64Binary">
+            			</xs:element>
+            			<xs:element name="Error">
+                            <xs:complexType>
+                            	<xs:attribute name="noIdentificacion"
+                            		type="xs:string">
+                            	</xs:attribute>
+                            	<xs:attribute name="descripcion"
+                            		type="xs:string">
+                            	</xs:attribute>
+                            </xs:complexType>
+            			</xs:element>
+            		</xs:sequence>
+            	</xs:complexType>
+            </xs:element>
+		</xs:schema>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.sap.com/eDocument/Mexico/CFDI/v5">
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="SubmitEdocRequest">
+		<wsdl:part name="parameters"  element="tns1:CFDSubmitRequest"  />
+	</wsdl:message>
+	<wsdl:message name="CertProviderResponse">
+		<wsdl:part element="tns1:PACResponse" name="parameters" />
+	</wsdl:message>
+	<wsdl:message name="CancelEdocRequest">
+		<wsdl:part name="parameters" element="tns1:CFDCancelRequest"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="GetStatusEdocRequest">
+		<wsdl:part name="parameters"
+			element="tns1:CFDGetStatusRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="GetViewEdocRequest">
+		<wsdl:part name="parameters" element="tns1:GetViewEdoc"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="GetViewEdocResponse">
+		<wsdl:part name="parameters" element="tns1:GetViewEdocResponse"></wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="CFDIeDocumentsV5">
+		<wsdl:operation name="SubmitEdoc">
+			<wsdl:input message="tns1:SubmitEdocRequest" />
+			<wsdl:output message="tns1:CertProviderResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="CancelEdoc">
+			<wsdl:input message="tns1:CancelEdocRequest"></wsdl:input>
+			<wsdl:output message="tns1:CertProviderResponse"></wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetStatusEdoc">
+			<wsdl:input message="tns1:GetStatusEdocRequest"></wsdl:input>
+			<wsdl:output message="tns1:CertProviderResponse"></wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetViewEdoc">
+			<wsdl:input message="tns1:GetViewEdocRequest"></wsdl:input>
+			<wsdl:output message="tns1:GetViewEdocResponse"></wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="CFDIeDocumentV5SOAP" type="tns1:CFDIeDocumentsV5">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="SubmitEdoc">
+			<soap:operation
+				soapAction="http://www.sap.com/eDocument/Mexico/CFDI/v5/SubmitEdoc" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="CancelEdoc">
+			<soap:operation
+				soapAction="http://www.sap.com/eDocument/Mexico/CFDI/v5/CancelEdoc" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetStatusEdoc">
+			<soap:operation
+				soapAction="http://www.sap.com/eDocument/Mexico/CFDI/v5/GetStatus" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="CFDIeDocumentV5">
+		<wsdl:port binding="tns1:CFDIeDocumentV5SOAP" name="CFDIeDocumentV5SOAP">
+			<soap:address location="http://www.sap.com/" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

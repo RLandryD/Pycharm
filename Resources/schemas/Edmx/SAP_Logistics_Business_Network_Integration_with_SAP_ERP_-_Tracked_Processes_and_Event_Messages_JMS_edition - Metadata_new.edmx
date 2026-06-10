@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <edmx:Edmx Version="1.0" 
+        xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+		xmlns:sap="http://www.sap.com/Protocols/SAPData"
+        xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+ <edmx:DataServices m:DataServiceVersion="3.0">
+
+		<Schema Namespace="ODataTNT" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+
+			<EntityType xmlns:sap="http://www.sap.com/Protocols/SAPData" Name="Delivery" sap:isLineItem="true" sap:trackedProcessLabel="Track Delivery" >
+				<Key>
+				<PropertyRef Name="TrackedObjectId"/>
+				</Key>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData" Name="TrackedObjectId" Type="Edm.String" sap:label="Tracked Object ID" sap:alias="TRACKEDOBJECTID" sap:visible="true" sap:filterable="true" sap:isDataField ="true"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData"  Name="SalesOrder" Type="Edm.String" sap:label="Sales Order Number" Nullable="false" MaxLength="10" sap:visible="true" sap:filterable="true" sap:isDataField ="true"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData"  Name="ShipToParty" Type="Edm.String" sap:label="Ship to Party" Nullable="true" MaxLength="10" sap:visible="true" sap:filterable="true" sap:isDataField ="true" sap:alias="DESCRIPTION"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData"  Name="SoldToParty" Type="Edm.String" sap:label="Sold to Party" Nullable="true" MaxLength="10" sap:visible="true" sap:filterable="true" sap:isDataField ="true"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData"  Name="SalesOrganization" Type="Edm.String" sap:label="Sales Organization" Nullable="true" MaxLength="4" sap:visible="true" sap:filterable="true" sap:isDataField ="true"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData"  Name="DeliveryDate" Type="Edm.DateTime" sap:label="Delivery Date" Nullable="true" MaxLength="8" sap:visible="true" sap:filterable="true" sap:isDataField ="true" sap:filter-restriction ="interval"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData"  Name="StorageLocation" Type="Edm.String" sap:label="Storage Location" Nullable="true" MaxLength="10" sap:visible="true" sap:filterable="true" sap:isDataField ="true"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData"  Name="ShippingPoint" Type="Edm.String" sap:label="Shipping Type" Nullable="true" MaxLength="10" sap:visible="true" sap:filterable="true" sap:isDataField ="true"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData"  Name="DeliveryWeight" Type="Edm.Int16" sap:label="Delivery Weight" Nullable="true" MaxLength="7" sap:visible="true" sap:filterable="true" sap:isDataField ="true" sap:unit="DeliveryWeightUnit"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData"  Name="DeliveryWeightUnit" Type="Edm.String" sap:label="Delivery Weight Unit" Nullable="true" MaxLength="3" sap:visible="true" sap:filterable="true" sap:isDataField ="true" sap:semantics="unit-of-measure"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData"  Name="ShippingStatus" Type="Edm.String" sap:label="Shipping Status" Nullable="true" MaxLength="20" sap:visible="true" sap:filterable="true" sap:isDataField ="true"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData"  Name="DeliveryStatus" Type="Edm.String" sap:label="Delivery Status" Nullable="true" MaxLength="20" sap:visible="true" sap:filterable="true" sap:isDataField ="true" sap:alias="PROCESSSTATUS" />
+				<NavigationProperty Name="Events" Relationship="ODataTNT.Delivery_Events" FromRole="Delivery" ToRole="Event" />
+			</EntityType>
+
+			<EntityType Name="Event">
+				<Key>
+				<PropertyRef Name="EventID" />
+				</Key>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData" Name="EventID" Type="Edm.String" MaxLength="12" sap:label="Event ID" sap:visible="false"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData" Name="TrackedObjectId" Type="Edm.String" MaxLength="12" sap:label="Tracked Object ID" sap:visible="false"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData" Name="EventCode" Type="Edm.String" sap:label="Event Code" Nullable="false" MaxLength="20" sap:visible="false"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData" Name="EventDescription" Type="Edm.String" sap:label="Event Description" Nullable="false" MaxLength="50" sap:visible="true"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData" Name="EventStatus" Type="Edm.String" Nullable="true" MaxLength="20" sap:label="Event Status" sap:visible="true" />
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData" Name="EventLocation" Type="Edm.String" sap:label="Event Location" Nullable="true" MaxLength="50" sap:visible="false"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData" Name="PlannedDatetime" Type="Edm.DateTime" Nullable="true" sap:label="Planned Datetime" sap:visible="true" sap:timezone="PlannedTimezone"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData" Name="PlannedTimezone" Type="Edm.String" Nullable="true" sap:label="Planned Timezone" sap:visible="false"  sap:semantics="timezone"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData" Name="ActualDatetime" Type="Edm.DateTime" Nullable="true" sap:label="Actual Datetime" sap:visible="true" sap:nullable="true" sap:filterable="false" sap:timezone="ActualTimezone"/>
+				<Property xmlns:sap="http://www.sap.com/Protocols/SAPData" Name="ActualTimezone" Type="Edm.String" Nullable="true" sap:label="Actual Timezone" sap:visible="flase"  sap:semantics="timezone"/>
+				
+				<NavigationProperty Name="Events" Relationship="ODataTNT.Delivery_Events" FromRole="Event" ToRole="Delivery" />
+		   </EntityType>
+		   
+		    <Association Name="Delivery_Events">
+			 <End Role="Delivery" Type="ODataTNT.Delivery" Multiplicity="1" />
+			 <End Role="Event" Type="ODataTNT.Event" Multiplicity="*" />
+			 <ReferentialConstraint>
+			   <Principal Role="Delivery">
+				 <PropertyRef Name="TrackedObjectId" />
+			   </Principal>
+			   <Dependent Role="Event">
+				 <PropertyRef Name="TrackedObjectId" />
+			   </Dependent>
+			 </ReferentialConstraint>
+		   </Association>
+		   
+		   	<EntityType Name="EventMessage">
+				<Key>
+				<PropertyRef Name="TrackingID"/>
+				</Key>
+				<Property Name="TrackingID" Type="Edm.String" sap:label="Tracking ID" sap:field-control="7" MaxLength="50" />
+				<Property Name="EventCode" Type="Edm.String" sap:label="Event Code" sap:field-control="7" MaxLength="20"/>
+				<Property Name="TrackingIDType" Type="Edm.String" sap:label="Tracking ID Type" sap:field-control="0" MaxLength="20" />
+				<Property Name="SenderID" Type="Edm.String" sap:label="Sender ID" sap:field-control="0" MaxLength="20" />
+				<Property Name="SenderCodeSet" Type="Edm.String" sap:label="Sender Code Set" sap:field-control="0" MaxLength="20" />
+				<Property Name="EventDateTime" Type="Edm.DateTime" sap:label="Event Date and Time" sap:field-control="7" />
+				<Property Name="EventTimeZone" Type="Edm.String" sap:label="Event Timezone" sap:field-control="7" MaxLength="3" />
+				<Property Name="EventLocation" Type="Edm.String" sap:label="Event Location" sap:field-control="7" MaxLength="50" />
+				<Property Name="EventStatus" Type="Edm.String" sap:label="Event Status" sap:field-control="7" MaxLength="20" />
+			</EntityType>
+
+			<EntityContainer Name="ODataTNTEntityContainer" m:IsDefaultEntityContainer="true">
+				<EntitySet Name="Deliveries" EntityType="ODataTNT.Delivery" />
+				<EntitySet Name="Events" EntityType="ODataTNT.Event" />
+				<EntitySet Name="EventMessages" EntityType="ODataTNT.EventMessage" />
+				<AssociationSet Name="Delivery_Events" Association="ODataTNT.Delivery_Events">
+				   <End Role="Delivery" EntitySet="Deliveries" />
+				   <End Role="Event" EntitySet="Events" />
+				 </AssociationSet>
+			</EntityContainer>
+
+		</Schema>
+
+  </edmx:DataServices>
+ </edmx:Edmx>

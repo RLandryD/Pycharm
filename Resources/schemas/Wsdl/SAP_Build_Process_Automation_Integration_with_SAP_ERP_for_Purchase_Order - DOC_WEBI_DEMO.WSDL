@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:n1="urn:sap-com:document:sap:rfc:functions">
+ <wsdl:documentation>
+  <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+ </wsdl:documentation>
+ <wsp:UsingPolicy wsdl:required="true"/>
+ <wsp:Policy wsu:Id="IF_IF_demo">
+  <sapsession:Session xmlns:sapsession="http://www.sap.com/webas/630/soap/features/session/">
+   <sapsession:enableSession>false</sapsession:enableSession>
+  </sapsession:Session>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_RfcMetadataGet">
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsdl:types>
+  <xsd:schema attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:rfc:functions">
+   <xsd:simpleType name="char1">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char14">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="14"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char21">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="21"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char255">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="255"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char30">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="30"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char4">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="4"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char60">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="60"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char79">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="79"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="date10">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="10"/>
+     <xsd:pattern value="\d\d\d\d-\d\d-\d\d"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="lang">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric6">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="6"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="time">
+    <xsd:restriction base="xsd:time">
+     <xsd:pattern value="[0-9]{2}:[0-9]{2}:[0-9]{2}"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+  </xsd:schema>
+  <xsd:schema attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:n0="urn:sap-com:document:sap:rfc:functions">
+   <xsd:import namespace="urn:sap-com:document:sap:rfc:functions"/>
+   <xsd:simpleType name="RfcException.Message.Number">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="RfcMdDdicName">
+    <xsd:sequence>
+     <xsd:element name="Tabname" type="n0:char30"/>
+     <xsd:element name="Fieldname" type="n0:char30"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RfcMetadataDdic">
+    <xsd:sequence>
+     <xsd:element name="Typename" type="n0:char30"/>
+     <xsd:element name="Fieldname" type="n0:char30"/>
+     <xsd:element name="Comptype" type="n0:char1"/>
+     <xsd:element name="Fieldtype" type="n0:char30"/>
+     <xsd:element name="Datatype" type="n0:char4"/>
+     <xsd:element name="Tablength" type="n0:numeric6"/>
+     <xsd:element name="TablengthUc" type="n0:numeric6"/>
+     <xsd:element name="Description" type="n0:char60"/>
+     <xsd:element name="Decimals" type="n0:numeric6"/>
+     <xsd:element name="Inttype" type="n0:char1"/>
+     <xsd:element name="Offset" type="n0:numeric6"/>
+     <xsd:element name="OffsetUc" type="n0:numeric6"/>
+     <xsd:element name="Intlen" type="n0:numeric6"/>
+     <xsd:element name="IntlenUc" type="n0:numeric6"/>
+     <xsd:element name="Timestamp" type="n0:char14"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RfcDdError">
+    <xsd:sequence>
+     <xsd:element name="Tabname" type="n0:char30"/>
+     <xsd:element name="Fieldname" type="n0:char30"/>
+     <xsd:element name="Exception" type="n0:char30"/>
+     <xsd:element name="ExceptionText" type="n0:char255"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="Rfcfunctionname">
+    <xsd:sequence>
+     <xsd:element name="Functionname" type="n0:char30"/>
+     <xsd:element name="BasxmlSupported" type="n0:char1"/>
+     <xsd:element name="Udat" type="n0:date10"/>
+     <xsd:element name="Utime" type="n0:time"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RfcFuncError">
+    <xsd:sequence>
+     <xsd:element name="Funcname" type="n0:char30"/>
+     <xsd:element name="Exception" type="n0:char30"/>
+     <xsd:element name="ExceptionText" type="n0:char255"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RfcMetadataDdicIndirect">
+    <xsd:sequence>
+     <xsd:element name="Tabname" type="n0:char30"/>
+     <xsd:element name="Fieldname" type="n0:char30"/>
+     <xsd:element name="Fieldtype" type="n0:char30"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RfcMetadataParams">
+    <xsd:sequence>
+     <xsd:element name="Funcname" type="n0:char30"/>
+     <xsd:element name="Paramclass" type="n0:char1"/>
+     <xsd:element name="Parameter" type="n0:char30"/>
+     <xsd:element name="Tabname" type="n0:char30"/>
+     <xsd:element name="Fieldname" type="n0:char30"/>
+     <xsd:element name="Exid" type="n0:char1"/>
+     <xsd:element name="Position" type="xsd:int"/>
+     <xsd:element name="Offset" type="xsd:int"/>
+     <xsd:element name="Intlength" type="xsd:int"/>
+     <xsd:element name="Decimals" type="xsd:int"/>
+     <xsd:element name="Default" type="n0:char21"/>
+     <xsd:element name="Paramtext" type="n0:char79"/>
+     <xsd:element name="Optional" type="n0:char1"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RfcException.Message">
+    <xsd:sequence>
+     <xsd:element name="ID" type="xsd:string"/>
+     <xsd:element name="Number" type="tns:RfcException.Message.Number"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RfcMetadataGet.RfcException">
+    <xsd:sequence>
+     <xsd:element name="Name" type="tns:RfcMetadataGet.RfcExceptions"/>
+     <xsd:element name="Text" type="xsd:string" minOccurs="0"/>
+     <xsd:element name="Message" type="tns:RfcException.Message" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TableOfRfcMdDdicName">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:RfcMdDdicName" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TableOfRfcMetadataDdic">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:RfcMetadataDdic" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TableOfRfcDdError">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:RfcDdError" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TableOfRfcfunctionname">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:Rfcfunctionname" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TableOfRfcFuncError">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:RfcFuncError" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TableOfRfcMetadataDdicIndirect">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:RfcMetadataDdicIndirect" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TableOfRfcMetadataParams">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:RfcMetadataParams" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:simpleType name="RfcMetadataGet.RfcExceptions">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="InternalError"/>
+     <xsd:enumeration value="InvalidMode"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:element name="RfcMetadataGet.Exception" type="tns:RfcMetadataGet.RfcException"/>
+   <xsd:element name="RfcMetadataGet">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="Datatypes" type="tns:TableOfRfcMdDdicName"/>
+      <xsd:element name="Datatypescont" type="tns:TableOfRfcMetadataDdic"/>
+      <xsd:element name="DdErrors" type="tns:TableOfRfcDdError" minOccurs="0"/>
+      <xsd:element name="Deep" type="n0:char1" minOccurs="0"/>
+      <xsd:element name="DoNotResolveSimpleTypes" type="n0:char1" minOccurs="0"/>
+      <xsd:element name="EvaluateLinks" type="n0:char1" minOccurs="0"/>
+      <xsd:element name="FuncErrors" type="tns:TableOfRfcFuncError" minOccurs="0"/>
+      <xsd:element name="Functionnames" type="tns:TableOfRfcfunctionname"/>
+      <xsd:element name="GetClientDepFields" type="n0:char1" minOccurs="0"/>
+      <xsd:element name="GetTimestamps" type="n0:char1" minOccurs="0"/>
+      <xsd:element name="Indirecttypes" type="tns:TableOfRfcMetadataDdicIndirect"/>
+      <xsd:element name="KnownDatatypes" type="tns:TableOfRfcMdDdicName"/>
+      <xsd:element name="Language" type="n0:lang" minOccurs="0"/>
+      <xsd:element name="Parameters" type="tns:TableOfRfcMetadataParams"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="RfcMetadataGetResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="Datatypes" type="tns:TableOfRfcMdDdicName"/>
+      <xsd:element name="Datatypescont" type="tns:TableOfRfcMetadataDdic"/>
+      <xsd:element name="DdErrors" type="tns:TableOfRfcDdError" minOccurs="0"/>
+      <xsd:element name="FuncErrors" type="tns:TableOfRfcFuncError" minOccurs="0"/>
+      <xsd:element name="Functionnames" type="tns:TableOfRfcfunctionname"/>
+      <xsd:element name="Indirecttypes" type="tns:TableOfRfcMetadataDdicIndirect"/>
+      <xsd:element name="KnownDatatypes" type="tns:TableOfRfcMdDdicName"/>
+      <xsd:element name="Parameters" type="tns:TableOfRfcMetadataParams"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="RfcMetadataGet">
+  <wsdl:part name="parameters" element="tns:RfcMetadataGet"/>
+ </wsdl:message>
+ <wsdl:message name="RfcMetadataGetResponse">
+  <wsdl:part name="parameter" element="tns:RfcMetadataGetResponse"/>
+ </wsdl:message>
+ <wsdl:message name="RfcMetadataGet.Exception">
+  <wsdl:part name="RfcMetadataGet.Exception" element="tns:RfcMetadataGet.Exception"/>
+ </wsdl:message>
+ <wsdl:portType name="demo">
+  <wsdl:documentation>
+   <sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+    <sapdoc:docitem docURL="http://INCTURE:8080/sap/bc/esdt/docu/sd_text?sap-client=200&amp;sd_name=DEMO"/>
+   </sapdoc:sapdoc>
+  </wsdl:documentation>
+  <wsp:Policy>
+   <wsp:PolicyReference URI="#IF_IF_demo"/>
+  </wsp:Policy>
+  <wsdl:operation name="RfcMetadataGet">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_RfcMetadataGet"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:RfcMetadataGet"/>
+   <wsdl:output message="tns:RfcMetadataGetResponse"/>
+   <wsdl:fault name="RfcMetadataGet.Exception" message="tns:RfcMetadataGet.Exception"/>
+  </wsdl:operation>
+ </wsdl:portType>
+</wsdl:definitions>

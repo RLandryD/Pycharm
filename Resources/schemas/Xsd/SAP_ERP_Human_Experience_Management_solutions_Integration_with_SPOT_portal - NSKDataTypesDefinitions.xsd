@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2007 sp2 (http://www.altova.com) by Tadej Poljsak (ZZZS Informacijski center) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ws="http://zzzs.si/b2b/nsk/wsGlobalTypes" targetNamespace="http://zzzs.si/b2b/nsk/wsGlobalTypes" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.3">
+	<xs:annotation>
+		<xs:documentation>Shema definira skupne podatkovne XML strukture, ki se uporabljajo pri izmenjavi podatkov z zunanjimi partnerji</xs:documentation>
+	</xs:annotation>
+	<!--Enostavni tipi-->
+	<xs:simpleType name="tCA">
+		<xs:annotation>
+			<xs:documentation>Certifikatna agencija, ki je izdala digitalno potrdilo</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="tDatumCas">
+		<xs:annotation>
+			<xs:documentation>Datum in cas</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:dateTime"/>
+	</xs:simpleType>
+	<xs:simpleType name="tDatum">
+		<xs:annotation>
+			<xs:documentation>Datum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:date"/>
+	</xs:simpleType>
+	<xs:simpleType name="tIdSporocila">
+		<xs:annotation>
+			<xs:documentation>Enolična številka sporočila, ki jo kreira uporabnik spletne storitve</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="30"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tGesloUporabnika">
+		<xs:annotation>
+			<xs:documentation>Geslo uporabnika za dostop do spletne storitve</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="tNamenZahtevka">
+		<xs:annotation>
+			<xs:documentation>Namen klica spletne storitve</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="tNazivUporabnika">
+		<xs:annotation>
+			<xs:documentation>Uporabniško ime za dostop do spletne storitve</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="tNazivVpogledovalca">
+		<xs:annotation>
+			<xs:documentation>Naziv vpogledovalca</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="tSerijskaStevilkaDP">
+		<xs:annotation>
+			<xs:documentation>Serijska številka digitalnega potrdila</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="tSifraSpletneStoritve">
+		<xs:annotation>
+			<xs:documentation>Šifra spletne storitve</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="tSifraMetodeSpletneStoritve">
+		<xs:annotation>
+			<xs:documentation>Šifra metode spletne storitve</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="tStatusIzmenjave">
+		<xs:annotation>
+			<xs:documentation>Status izmenjave (1 - testno, 11 - produkcijsko)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="tVerzijaSporocila">
+		<xs:annotation>
+			<xs:documentation>Verzija sporočila</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:maxInclusive value="9999"/>
+			<xs:minInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tEchoRequest">
+		<xs:annotation>
+			<xs:documentation>Zahtevek metode Echo</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="tEchoResponse">
+		<xs:annotation>
+			<xs:documentation>Odgovor metode Echo</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:complexType name="tVerzijaRequest">
+		<xs:annotation>
+			<xs:documentation>Zahtevek metode Verzija</xs:documentation>
+		</xs:annotation>
+		<xs:sequence/>
+	</xs:complexType>
+	<xs:simpleType name="tVerzijaResponse">
+		<xs:annotation>
+			<xs:documentation>Odgovor metode Verzija</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<!--Sestavljeni tipi-->
+	<xs:complexType name="ErrorType">
+		<xs:annotation>
+			<xs:documentation>Šifra in opis napake</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="id" type="xs:string"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="tGlavaRequest">
+		<xs:annotation>
+			<xs:documentation>Glava standardnega zahtevka SOAP sporočila	</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Uporabnik" type="ws:tUporabnik">
+				<xs:annotation>
+					<xs:documentation>Podatki o uporabniku</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sporocilo" type="ws:tSporocilo">
+				<xs:annotation>
+					<xs:documentation>Podatki o sporočilu</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="tGlavaResponse">
+		<xs:annotation>
+			<xs:documentation>Glava odgovora na standardni zahtevek SOAP sporočila	</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Sporocilo" type="ws:tSporocilo">
+				<xs:annotation>
+					<xs:documentation>Podatki o sporočilu</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UspesnostIzvedbe" type="ws:tUspesnostIzvedbe"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="tSporocilo">
+		<xs:annotation>
+			<xs:documentation>Podatki o sporočilu</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IdSporocila" type="ws:tIdSporocila">
+				<xs:annotation>
+					<xs:documentation>Enolična številka sporočila, ki jo kreira uporabnik spletne storitve</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VerzijaSporocila" type="ws:tVerzijaSporocila">
+				<xs:annotation>
+					<xs:documentation>Verzija sporočila</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StatusIzmenjave">
+				<xs:annotation>
+					<xs:documentation>Status izmenjave (1 - testno, 11 - produkcijsko)</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="ws:tStatusIzmenjave">
+						<xs:enumeration value="1"/>
+						<xs:enumeration value="11"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SifraSpletneStoritve" type="ws:tSifraSpletneStoritve">
+				<xs:annotation>
+					<xs:documentation>Šifra spletne storitve po šifrantu ZZZS</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SifraMetodeSpletneStoritve" type="ws:tSifraMetodeSpletneStoritve">
+				<xs:annotation>
+					<xs:documentation>Šifra metode spletne storitve po šifrantu ZZZS</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DatumInCas" type="ws:tDatumCas">
+				<xs:annotation>
+					<xs:documentation>Datum in čas zahtevka sporočila</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="tUporabnik">
+		<xs:annotation>
+			<xs:documentation>Podatki o uporabniku</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="NazivUporabnika" type="ws:tNazivUporabnika">
+				<xs:annotation>
+					<xs:documentation>Uporabniško ime za dostop do spletne storitve</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GesloUporabnika" type="ws:tGesloUporabnika">
+				<xs:annotation>
+					<xs:documentation>Geslo uporabnika za dostop do spletne storitve</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CA" type="ws:tCA">
+				<xs:annotation>
+					<xs:documentation>Certifikatna agencija, ki je izdala digitalno potrdilo</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SerijskaStevilkaDP" type="ws:tSerijskaStevilkaDP">
+				<xs:annotation>
+					<xs:documentation>Serijska številka digitalnega potrdila</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NazivVpogledovalca" type="ws:tNamenZahtevka">
+				<xs:annotation>
+					<xs:documentation>Vpogledovalec v podatke</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NamenZahtevka" type="ws:tNamenZahtevka">
+				<xs:annotation>
+					<xs:documentation>Namen klica spletne storitve</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="tUspesnostIzvedbe">
+		<xs:annotation>
+			<xs:documentation>Uspešnost izvedbe zahtevka</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="VseOk" type="xs:boolean"/>
+			<xs:element name="Napaka" type="ws:ErrorType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--Globalni element-->
+	<xs:element name="EchoRequest" type="ws:tEchoRequest">
+		<xs:annotation>
+			<xs:documentation>Zahtevek metode Echo</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="EchoResponse" type="ws:tEchoResponse">
+		<xs:annotation>
+			<xs:documentation>Odgovor metode Echo</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="VerzijaRequest" type="ws:tVerzijaRequest">
+		<xs:annotation>
+			<xs:documentation>Zahtevek metode Verzija</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="VerzijaResponse" type="ws:tVerzijaResponse">
+		<xs:annotation>
+			<xs:documentation>Zahtevek metode Verzija</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

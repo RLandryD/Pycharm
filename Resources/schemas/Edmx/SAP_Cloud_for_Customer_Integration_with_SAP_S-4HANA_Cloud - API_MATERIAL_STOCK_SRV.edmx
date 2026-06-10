@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+ </edmx:Reference>
+ <edmx:DataServices m:DataServiceVersion="2.0">
+  <Schema Namespace="API_MATERIAL_STOCK_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+   <EntityType Name="A_MaterialStockType" sap:label="Material Master" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="Material"/>
+    </Key>
+    <Property Name="Material" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number">
+     <Documentation>
+      <Summary>Alphanumeric key uniquely identifying the material.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="MaterialBaseUnit" Type="Edm.String" MaxLength="3" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Unit of measure in which stocks of the material are managed. The system converts all the quantities you enter in other units of measure (alternative units of measure) to the base unit of measure.</Summary>
+      <LongDescription>You define the base unit of measure and also alternative units of measure and their conversion factors in the material master record.Since all data is updated in the base unit of measure, your entry is particularly important for the conversion of alternative units of measure. A quantity in the alternative unit of measure can only be shown precisely if its value can be shown with the decimal places available. To ensure this, please note the following:The base unit of measure is the unit satisfying the highest necessary requirement for precision.The conversion of alternative units of measure to the base unit should result in simple decimal fractions (not, for example, 1/3 = 0.333...).Inventory ManagementIn Inventory Management, the base unit of measure is the same as the stockkeeping unit.ServicesServices have units of measure of their own, including the following:Service unitUnit of measure at the higher item level. The precise quantities of the individual services are each at the detailed service line level.BlanketUnit of measure at service line level for services to be provided once only, and for which no precise quantities can or are to be specified.</LongDescription>
+     </Documentation>
+    </Property>
+    <NavigationProperty Name="to_MatlStkInAcctMod" Relationship="API_MATERIAL_STOCK_SRV.assoc_54E8EB962C48178E40453A31481776EE" FromRole="FromRole_assoc_54E8EB962C48178E40453A31481776EE" ToRole="ToRole_assoc_54E8EB962C48178E40453A31481776EE"/>
+   </EntityType>
+   <EntityType Name="A_MatlStkInAcctModType" sap:label="Material Stock" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="Material"/>
+     <PropertyRef Name="Plant"/>
+     <PropertyRef Name="StorageLocation"/>
+     <PropertyRef Name="Batch"/>
+     <PropertyRef Name="Supplier"/>
+     <PropertyRef Name="Customer"/>
+     <PropertyRef Name="WBSElementInternalID"/>
+     <PropertyRef Name="SDDocument"/>
+     <PropertyRef Name="SDDocumentItem"/>
+     <PropertyRef Name="InventorySpecialStockType"/>
+     <PropertyRef Name="InventoryStockType"/>
+    </Key>
+    <Property Name="Material" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Stock Material" sap:quickinfo="Material in Respect of Which Stock is Managed">
+     <Documentation>
+      <Summary>Material in respect of which the stock is managed.</Summary>
+      <LongDescription>For inventory management on a material-exact basis, this material is the same as the actual material. In the case of value-based inventory management, this material can differ from the actual material.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="Plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Plant">
+     <Documentation>
+      <Summary>Key uniquely identifying a plant.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="StorageLocation" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Storage Location">
+     <Documentation>
+      <Summary>Number of the storage location in which the material is stored. A plant may contain one or more storage locations.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="Batch" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Batch SID" sap:quickinfo="Batch Number (Stock Identifier)">
+     <Documentation>
+      <Summary>Assigns a material that is manufactured in batches or production lots to a specific batch.</Summary>
+      <LongDescription>NoteThe system determines the stock types on the basis of  stock identifiers.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="Supplier" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Supplier SID" sap:quickinfo="Supplier for Special Stock">
+     <Documentation>
+      <Summary>Specifies an alphanumeric key that uniquely identifies the supplier in the SAP system.</Summary>
+      <LongDescription>NoteThe system determines the stock on the basis of stock identifiers.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="Customer" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer SID" sap:quickinfo="Customer for Special Stock">
+     <Documentation>
+      <Summary>Gives an alphanumeric key, which clearly identifies the customer or supplier in the SAP system.</Summary>
+      <LongDescription>NoteThe system determines the stock on the basis of stock identifiers.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="WBSElementInternalID" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="NonNegative" sap:label="WBS Element" sap:quickinfo="Valuated Sales Order Stock WBS Element">
+     <Documentation>
+      <Summary>Key that identifies the WBS element that is assigned to a sales order stock</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="SDDocument" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Order" sap:quickinfo="Sales Order Number of Valuated Sales Order Stock">
+     <Documentation>
+      <Summary>Uniquely identifies a sales order.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="SDDocumentItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Sales order item" sap:quickinfo="Sales Order Item of Valuated Sales Order Stock">
+     <Documentation>
+      <Summary>Uniquely identifies an item in a sales order.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="InventorySpecialStockType" Type="Edm.String" Nullable="false" MaxLength="1" sap:display-format="UpperCase" sap:label="Special Stock Type"/>
+    <Property Name="InventoryStockType" Type="Edm.String" Nullable="false" MaxLength="2" sap:display-format="UpperCase" sap:label="Stock Type" sap:quickinfo="Stock Type of Goods Movement (Stock Identifier)">
+     <Documentation>
+      <Summary>Unique stock type that identifies the purpose of the stock.</Summary>
+      <LongDescription>NoteThe system determines the stock on the basis of stock identifiers.The following keys are possible for this field:01: Unrestricted-Use Stock02: Stock in Quality Inspection03: Returns04: Stock Transfer (Storage Location)05: Stock Transfer (Plant)06: Stock in Transit07: Blocked Stock08: Restricted-Use Stock09: Tied Empties10: Valuated Goods Receipt Blocked Stock</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="MaterialBaseUnit" Type="Edm.String" MaxLength="3" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Unit of measure in which stocks of the material are managed. The system converts all the quantities you enter in other units of measure (alternative units of measure) to the base unit of measure.</Summary>
+      <LongDescription>You define the base unit of measure and also alternative units of measure and their conversion factors in the material master record.Since all data is updated in the base unit of measure, your entry is particularly important for the conversion of alternative units of measure. A quantity in the alternative unit of measure can only be shown precisely if its value can be shown with the decimal places available. To ensure this, please note the following:The base unit of measure is the unit satisfying the highest necessary requirement for precision.The conversion of alternative units of measure to the base unit should result in simple decimal fractions (not, for example, 1/3 = 0.333...).Inventory ManagementIn Inventory Management, the base unit of measure is the same as the stockkeeping unit.ServicesServices have units of measure of their own, including the following:Service unitUnit of measure at the higher item level. The precise quantities of the individual services are each at the detailed service line level.BlanketUnit of measure at service line level for services to be provided once only, and for which no precise quantities can or are to be specified.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="MatlWrhsStkQtyInMatlBaseUnit" Type="Edm.Decimal" Precision="31" Scale="14" sap:unit="MaterialBaseUnit"/>
+    <NavigationProperty Name="to_MaterialStock" Relationship="API_MATERIAL_STOCK_SRV.assoc_F6B85CF893D9D7998DAB6F6B58E318D6" FromRole="FromRole_assoc_F6B85CF893D9D7998DAB6F6B58E318D6" ToRole="ToRole_assoc_F6B85CF893D9D7998DAB6F6B58E318D6"/>
+   </EntityType>
+   <Association Name="assoc_54E8EB962C48178E40453A31481776EE" sap:content-version="1">
+    <End Type="API_MATERIAL_STOCK_SRV.A_MaterialStockType" Multiplicity="1" Role="FromRole_assoc_54E8EB962C48178E40453A31481776EE"/>
+    <End Type="API_MATERIAL_STOCK_SRV.A_MatlStkInAcctModType" Multiplicity="*" Role="ToRole_assoc_54E8EB962C48178E40453A31481776EE"/>
+   </Association>
+   <Association Name="assoc_F6B85CF893D9D7998DAB6F6B58E318D6" sap:content-version="1">
+    <End Type="API_MATERIAL_STOCK_SRV.A_MatlStkInAcctModType" Multiplicity="1" Role="FromRole_assoc_F6B85CF893D9D7998DAB6F6B58E318D6"/>
+    <End Type="API_MATERIAL_STOCK_SRV.A_MaterialStockType" Multiplicity="1" Role="ToRole_assoc_F6B85CF893D9D7998DAB6F6B58E318D6"/>
+   </Association>
+   <EntityContainer Name="API_MATERIAL_STOCK_SRV_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+    <EntitySet Name="A_MaterialStock" EntityType="API_MATERIAL_STOCK_SRV.A_MaterialStockType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+    <EntitySet Name="A_MatlStkInAcctMod" EntityType="API_MATERIAL_STOCK_SRV.A_MatlStkInAcctModType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+    <AssociationSet Name="assoc_F6B85CF893D9D7998DAB6F6B58E318D6" Association="API_MATERIAL_STOCK_SRV.assoc_F6B85CF893D9D7998DAB6F6B58E318D6" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_MatlStkInAcctMod" Role="FromRole_assoc_F6B85CF893D9D7998DAB6F6B58E318D6"/>
+     <End EntitySet="A_MaterialStock" Role="ToRole_assoc_F6B85CF893D9D7998DAB6F6B58E318D6"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_54E8EB962C48178E40453A31481776EE" Association="API_MATERIAL_STOCK_SRV.assoc_54E8EB962C48178E40453A31481776EE" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_MaterialStock" Role="FromRole_assoc_54E8EB962C48178E40453A31481776EE"/>
+     <End EntitySet="A_MatlStkInAcctMod" Role="ToRole_assoc_54E8EB962C48178E40453A31481776EE"/>
+    </AssociationSet>
+   </EntityContainer>
+   <Annotations Target="API_MATERIAL_STOCK_SRV.API_MATERIAL_STOCK_SRV_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+    <Annotation Term="Aggregation.ApplySupported">
+     <Record>
+      <PropertyValue Property="Transformations">
+       <Collection>
+        <String>aggregate</String>
+        <String>groupby</String>
+        <String>filter</String>
+       </Collection>
+      </PropertyValue>
+      <PropertyValue Property="Rollup" EnumMember="None"/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_MATERIAL_STOCK_SRV.API_MATERIAL_STOCK_SRV_Entities/A_MaterialStock" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.ReadRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Reads material ID and base unit of measure"/>
+      <PropertyValue Property="LongDescription" String="Reads material ID and base unit of measure for which a certain stock has been posted."/>
+      <PropertyValue Property="ReadByKeyRestrictions">
+       <Record>
+        <PropertyValue Property="Description" String="Reads material ID and base unit of measure for a specific material"/>
+        <PropertyValue Property="LongDescription" String="Reads material ID and base unit of measure for which a certain stock has been posted for a specific material."/>
+       </Record>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+    <Annotation Term="Capabilities.NavigationRestrictions">
+     <Record>
+      <PropertyValue Property="RestrictedProperties">
+       <Collection>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_MatlStkInAcctMod"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads material stock information for a specific material"/>
+           <PropertyValue Property="LongDescription" String="Reads material stock information in the account model for a specific material for which a certain stock has been posted."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_MATERIAL_STOCK_SRV.API_MATERIAL_STOCK_SRV_Entities/A_MatlStkInAcctMod" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.ReadRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Reads material stocks in account model"/>
+      <PropertyValue Property="LongDescription" String="Reads material stocks in account model for which a certain stock has been posted."/>
+      <PropertyValue Property="ReadByKeyRestrictions">
+       <Record>
+        <PropertyValue Property="Description" String="Reads material stocks in account model for a specific set of stock identifiers"/>
+        <PropertyValue Property="LongDescription" String="Reads material stocks in account model for which a certain stock has been posted for a specific set of stock identifiers."/>
+       </Record>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+    <Annotation Term="Capabilities.NavigationRestrictions">
+     <Record>
+      <PropertyValue Property="RestrictedProperties">
+       <Collection>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_MaterialStock"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads material stocks in account model for a specific set of stock identifiers including material ID and base unit"/>
+           <PropertyValue Property="LongDescription" String="Reads material stocks in account model for which a certain stock has been posted for a specific set of stock identifiers including material ID and base unit."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <atom:link rel="self" href="https://host:port/sap/opu/odata/sap/API_MATERIAL_STOCK_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+   <atom:link rel="latest-version" href="https://host:port/sap/opu/odata/sap/API_MATERIAL_STOCK_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+  </Schema>
+ </edmx:DataServices>
+</edmx:Edmx>

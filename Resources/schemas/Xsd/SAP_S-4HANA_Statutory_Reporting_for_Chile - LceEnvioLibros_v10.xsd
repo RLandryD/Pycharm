@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Version 1, 01-08-2005 17:00 Modif: 09-08-2005 16:00 Se agrega Libro 
+	Diario Modif: 08-09-2005 18:00 Se altera el orden del campo "Comprobante 
+	de certificacion" Modif: 25-10-2005 17:00 Se elimina atributo "VERSION" de 
+	etiqueta "Caratula" Modif: 28-10-2005 17:10 -Se agrega etiqueta opcional 
+	"DocumentoEnvioLibros.LceCal" -Se agrega LceExistencia a LCE -Se elimina 
+	etiqueta "Caratula" y se traspasan sus campos a "DocumentoEnvioLibros" -Ya 
+	no se firma campo "LCE" 14-11-2005 16:00 - Balance y Diccionario pasan a 
+	formar parte de la etiqueta NoCerrado 14-03-2006 17:00 - Se agrega campo 
+	"Parcial". 18-04-2007 11:30 - Se elimina Compra y Venta 07-03-2008 12:10 
+	- Se elimina de Compra y Venta de los include -->
+<xs:schema targetNamespace="http://www.sii.cl/SiiLce"
+	xmlns:SiiLce="http://www.sii.cl/SiiLce" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
+		schemaLocation="xmldsignature_v10.xsd" />
+	<!--<xs:include schemaLocation="LceMayor_v10.xsd" />-->
+	<!--<xs:include schemaLocation="LceDiario_v10.xsd" />-->
+	<xs:include schemaLocation="LceCoCertif_v10.xsd" />
+	<xs:include schemaLocation="LceBalance_v10.xsd" />
+	<xs:include schemaLocation="LceDic_v10.xsd" />
+	<xs:element name="LceEnvioLibros">
+		<xs:annotation>
+			<xs:documentation>Envio de Libros Contables Electronicos
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="DocumentoEnvioLibros">
+					<xs:annotation>
+						<xs:documentation>Documento de Envio de LCE</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="RutEnvia" type="SiiLce:RUTType">
+								<xs:annotation>
+									<xs:documentation>RUT que envia los LCE</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="RutContribuyente" type="SiiLce:RUTType">
+								<xs:annotation>
+									<xs:documentation>RUT contribuyente.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Notificacion">
+								<xs:annotation>
+									<xs:documentation>Notificacion emitida por el SII
+									</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Tipo">
+											<xs:annotation>
+												<xs:documentation>1: Formulario F 3301. Usado para IVA e
+													Impuesto a la Renta 2: Formulario F 3302: Origen de Fondos
+												</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:nonNegativeInteger">
+													<xs:enumeration value="1">
+														<xs:annotation>
+															<xs:documentation>Formulario F 3301. Usado para IVA e
+																Impuesto a la Renta </xs:documentation>
+														</xs:annotation>
+													</xs:enumeration>
+													<xs:enumeration value="2">
+														<xs:annotation>
+															<xs:documentation>Formulario F 3302: Origen de Fondos
+															</xs:documentation>
+														</xs:annotation>
+													</xs:enumeration>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="Folio" type="SiiLce:FolioType">
+											<xs:annotation>
+												<xs:documentation>Folio de la notificacion
+												</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="TmstFirmaEnv" type="xs:dateTime">
+								<xs:annotation>
+									<xs:documentation>Fecha y Hora de la Firma del Archivo de Envio
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="ID" type="xs:ID" use="required" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="ds:Signature"  minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Firma Digital sobre Documento</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="LCE" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:sequence minOccurs="0" maxOccurs="unbounded">
+								<xs:choice>
+									<xs:annotation>
+										<xs:documentation>Libro a enviar</xs:documentation>
+									</xs:annotation>
+									<!-- <xs:element ref="SiiLce:LceMayor"> <xs:annotation> <xs:documentation>Informacion 
+										Electronica de Libros de Compra y Venta</xs:documentation> </xs:annotation> 
+										</xs:element> -->
+									<xs:element name="LceMayor">
+										<xs:annotation>
+											<xs:documentation>Informacion del Mayor</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<!--<xs:element ref="SiiLce:LceMayorRes" />-->
+<xs:element name="LceMayorRes">
+		<xs:annotation>
+			<xs:documentation>Informacion del Resumen del Mayor</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="DocumentoMayorRes">
+					<xs:annotation>
+						<xs:documentation>Informacion de Resumen de Libro Mayor</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Identificacion">
+								<xs:annotation>
+									<xs:documentation>Identificacion del Envio del Libro Electronico</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="RutContribuyente" type="SiiLce:RUTType">
+											<xs:annotation>
+												<xs:documentation>RUT contribuyente.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="PeriodoTributario" type="SiiLce:Periodo">
+											<xs:annotation>
+												<xs:documentation>Periodo Tributario del Libro Electronico </xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Moneda" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Codigo de Moneda</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:token">
+													<xs:minLength value="1"/>
+													<xs:maxLength value="10"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="Rectificatoria" type="xs:positiveInteger" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Si un Libro se emite mas de una vez se debe anotar la secuencia de reemisión   que corresponda, partiendo del número 1.El mismo número debe estar en el Comprobante de Cierre.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Cuenta" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Informacion de cada cuenta.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="CodigoCuenta">
+											<xs:annotation>
+												<xs:documentation>Codigo Cuenta Contable</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:token">
+													<xs:minLength value="1"/>
+													<xs:maxLength value="20"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="CantidadMovimientos">
+											<xs:annotation>
+												<xs:documentation>Cantidad de movimientos para este codigo de cuenta.</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:nonNegativeInteger">
+													<xs:totalDigits value="10"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="Cierre">
+											<xs:annotation>
+												<xs:documentation>Cierre de la cuenta.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="MontosPeriodo" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>Montos del Periodo</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Debe" type="SiiLce:MontoType" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Sumatoria de los "Debe" de los movimientos.</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="Haber" type="SiiLce:MontoType" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Sumatoria de los "Haber" de los movimientos.</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:choice>
+																	<xs:element name="SaldoDeudor" type="SiiLce:MontoType">
+																		<xs:annotation>
+																			<xs:documentation>Solo si Debe es mayor que Haber. Corresponde a "Debe - Haber"</xs:documentation>
+																		</xs:annotation>
+																	</xs:element>
+																	<xs:element name="SaldoAcreedor" type="SiiLce:MontoType">
+																		<xs:annotation>
+																			<xs:documentation>Solo si Haber es mayor de Debe. Corresponde "Haber - Debe"</xs:documentation>
+																		</xs:annotation>
+																	</xs:element>
+																</xs:choice>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="MontosAcumulado">
+														<xs:annotation>
+															<xs:documentation>Montos Acumulados</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Debe" type="SiiLce:MontoType" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Corresponde a la suma de "Debe" de Apertura mas "Debe" de MontosPeriodo.</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="Haber" type="SiiLce:MontoType" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Corresponde a la suma de "Haber" de Apertura mas "Haber" de MontosPeriodo.</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:choice>
+																	<xs:element name="SaldoDeudor" type="SiiLce:MontoType">
+																		<xs:annotation>
+																			<xs:documentation>Solo si Debe es mayor que Haber. Corresponde a "Debe - Haber"</xs:documentation>
+																		</xs:annotation>
+																	</xs:element>
+																	<xs:element name="SaldoAcreedor" type="SiiLce:MontoType">
+																		<xs:annotation>
+																			<xs:documentation>Solo si Haber es mayor de Debe. Corresponde "Haber - Debe"</xs:documentation>
+																		</xs:annotation>
+																	</xs:element>
+																</xs:choice>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="RutFirma" type="SiiLce:RUTType">
+								<xs:annotation>
+									<xs:documentation>RUT que firma este Documento</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="TmstFirma">
+								<xs:annotation>
+									<xs:documentation>Fecha y Hora en formato AAAA-MM-DDTHH24:MI:SS de la Firma Electronica</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:dateTime"/>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="ID" type="xs:ID" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="ds:Signature"  minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Firma Digital del Envio del Libro Electronico</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="version" type="xs:decimal" use="required" fixed="1.0"/>
+		</xs:complexType>
+	</xs:element>												
+												<xs:element name="Cuenta" maxOccurs="unbounded">
+													<xs:annotation>
+														<xs:documentation>Detalle de Documentos que Componen el
+															Libro Electronico</xs:documentation>
+													</xs:annotation>
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="CodigoCuenta">
+																<xs:annotation>
+																	<xs:documentation>Codigo Cuenta Contable
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:token">
+																		<xs:minLength value="1" />
+																		<xs:maxLength value="20" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="Apertura" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Apertura de la cuenta.
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="Debe" type="SiiLce:MontoType"
+																			minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation>Monto del Debe.</xs:documentation>
+																			</xs:annotation>
+																		</xs:element>
+																		<xs:element name="Haber" type="SiiLce:MontoType"
+																			minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation>Monto del Haber.
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:element>
+																		<xs:choice>
+																			<xs:element name="SaldoDeudor" type="SiiLce:MontoType">
+																				<xs:annotation>
+																					<xs:documentation>Solo si Debe es mayor que Haber.
+																						Corresponde a "Debe - Haber"</xs:documentation>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="SaldoAcreedor" type="SiiLce:MontoType">
+																				<xs:annotation>
+																					<xs:documentation>Solo si Haber es mayor de Debe.
+																						Corresponde "Haber - Debe"</xs:documentation>
+																				</xs:annotation>
+																			</xs:element>
+																		</xs:choice>
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+															<xs:element name="Movimientos" minOccurs="0"
+																maxOccurs="unbounded">
+																<xs:annotation>
+																	<xs:documentation>Movimientos de la cuenta.
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="TpoComp">
+																			<xs:annotation>
+																				<xs:documentation>Tipo de Comprobante.
+																				</xs:documentation>
+																			</xs:annotation>
+																			<xs:simpleType>
+																				<xs:restriction base="xs:token">
+																					<xs:maxLength value="4" />
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="NumComp">
+																			<xs:annotation>
+																				<xs:documentation>Numero comprobante. Es
+																					obligatorio, excepto si Tipo Comprobante es de
+																					Apertura o Cierre</xs:documentation>
+																			</xs:annotation>
+																			<xs:simpleType>
+																				<xs:restriction base="xs:token">
+																					<xs:minLength value="1" />
+																					<xs:maxLength value="18" />
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="FechaContable" type="xs:date">
+																			<xs:annotation>
+																				<xs:documentation>Fecha Contable (AAAA-MM-DD)
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:element>
+																		<xs:element name="GlosaAnalisis" minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation>Glosa de analisis.
+																				</xs:documentation>
+																			</xs:annotation>
+																			<xs:simpleType>
+																				<xs:restriction base="xs:string">
+																					<xs:maxLength value="120" />
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="Rut" type="SiiLce:RUTType"
+																			minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation>RUT </xs:documentation>
+																			</xs:annotation>
+																		</xs:element>
+																		<xs:element name="Nombre" minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation>Nombre o Razon Social
+																				</xs:documentation>
+																			</xs:annotation>
+																			<xs:simpleType>
+																				<xs:restriction base="xs:string">
+																					<xs:maxLength value="120" />
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="TpoDocum" minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation>Nombre del tipo de documento, se
+																					puede usar abreviatura</xs:documentation>
+																			</xs:annotation>
+																			<xs:simpleType>
+																				<xs:restriction base="xs:token">
+																					<xs:maxLength value="15" />
+																					<xs:minLength value="1" />
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="Numero" minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation>Número del documento
+																				</xs:documentation>
+																			</xs:annotation>
+																			<xs:simpleType>
+																				<xs:restriction base="xs:token">
+																					<xs:maxLength value="18" />
+																					<xs:minLength value="1" />
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="FchEmision" type="xs:date"
+																			minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation>Fecha de Emision (AAAA-MM-DD)
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:element>
+																		<xs:element name="FchVencimiento" type="xs:date"
+																			minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation>fecha de Vencimiento (AAAA-MM-DD)
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:element>
+																		<xs:element name="GlosaRef" minOccurs="0"
+																			maxOccurs="4">
+																			<xs:complexType>
+																				<xs:sequence>
+																					<xs:element name="Glosa">
+																						<xs:annotation>
+																							<xs:documentation>Nombre del campo
+																							</xs:documentation>
+																						</xs:annotation>
+																						<xs:simpleType>
+																							<xs:restriction base="xs:string">
+																								<xs:maxLength value="30" />
+																							</xs:restriction>
+																						</xs:simpleType>
+																					</xs:element>
+																					<xs:element name="Ref">
+																						<xs:annotation>
+																							<xs:documentation>Dato del campo
+																							</xs:documentation>
+																						</xs:annotation>
+																						<xs:simpleType>
+																							<xs:restriction base="xs:string">
+																								<xs:maxLength value="20" />
+																							</xs:restriction>
+																						</xs:simpleType>
+																					</xs:element>
+																				</xs:sequence>
+																			</xs:complexType>
+																		</xs:element>
+																		<xs:choice>
+																			<xs:element name="Debe" type="SiiLce:MontoType"
+																				minOccurs="0">
+																				<xs:annotation>
+																					<xs:documentation>Debe haber uno sólo campo ( Debe
+																						o Haber).</xs:documentation>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="Haber" type="SiiLce:MontoType"
+																				minOccurs="0">
+																				<xs:annotation>
+																					<xs:documentation>Debe haber uno sólo campo ( Debe
+																						o Haber). </xs:documentation>
+																				</xs:annotation>
+																			</xs:element>
+																		</xs:choice>
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+											<xs:attribute name="version" type="xs:decimal"
+												use="required" fixed="1.0" />
+										</xs:complexType>
+									</xs:element>
+									<!--<xs:element ref="SiiLce:LceDiario" />-->
+	<xs:element name="LceDiario">
+		<xs:annotation>
+			<xs:documentation>Informacion del Mayor</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<!--<xs:element ref="SiiLce:LceDiarioRes"/>-->
+	<xs:element name="LceDiarioRes">
+		<xs:annotation>
+			<xs:documentation>Informacion de resumen del Diario</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="DocumentoDiarioRes">
+					<xs:annotation>
+						<xs:documentation>Informacion de de resumen del Libro Diario</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Identificacion">
+								<xs:annotation>
+									<xs:documentation>Identificacion del Envio del Libro Electronico</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="RutContribuyente" type="SiiLce:RUTType">
+											<xs:annotation>
+												<xs:documentation>RUT contribuyente.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="PeriodoTributario" type="SiiLce:Periodo">
+											<xs:annotation>
+												<xs:documentation>Periodo Tributario del Libro Electronico </xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Moneda" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Codigo de Moneda</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:token">
+													<xs:minLength value="1"/>
+													<xs:maxLength value="10"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="Rectificatoria" type="xs:positiveInteger" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Si un Libro se emite mas de una vez se debe anotar la secuencia de reemisión   que corresponda, partiendo del número 1.El mismo número debe estar en el Comprobante de Cierre.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="RegistroDiario" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Detalle de Documentos que Componen el Libro Electronico</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="FechaContable" type="xs:date">
+											<xs:annotation>
+												<xs:documentation>Fecha Contable(AAAA-MM-DD)</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="CantidadComprobantes">
+											<xs:annotation>
+												<xs:documentation>Cantidad de Comprobantes en este dia</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:nonNegativeInteger">
+													<xs:totalDigits value="10"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="CantidadMovimientos">
+											<xs:annotation>
+												<xs:documentation>Cantidad de movimientos</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:nonNegativeInteger">
+													<xs:totalDigits value="10"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="SumaValorComprobante" type="SiiLce:MontoType">
+											<xs:annotation>
+												<xs:documentation>Sumatoria de los Valores Comprobante.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Cierre">
+								<xs:annotation>
+									<xs:documentation>Cierre del Libro.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="CantidadComprobantes">
+											<xs:annotation>
+												<xs:documentation>Cantidad de Comprobantes en el periodo.</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:nonNegativeInteger">
+													<xs:totalDigits value="10"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="CantidadMovimientos">
+											<xs:annotation>
+												<xs:documentation>Cantidad de movimientos del periodo</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:nonNegativeInteger">
+													<xs:totalDigits value="10"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="SumaValorComprobante" type="SiiLce:MontoType">
+											<xs:annotation>
+												<xs:documentation>Sumatoria de los Valores Comprobante del periodo.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="ValorAcumulado" type="SiiLce:MontoType">
+											<xs:annotation>
+												<xs:documentation>Valor Acumulado. Es la sumatoria de Valor Apertura mas "Suma Valor Comprobante".</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="RutFirma" type="SiiLce:RUTType">
+								<xs:annotation>
+									<xs:documentation>RUT que firma este Documento</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="TmstFirma">
+								<xs:annotation>
+									<xs:documentation>Fecha y Hora en formato AAAA-MM-DDTHH24:MI:SS de la Firma Electronica</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:dateTime"/>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="ID" type="xs:ID" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="ds:Signature" minOccurs="0" >
+					<xs:annotation>
+						<xs:documentation>Firma Digital del Envio del Libro Electronico</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="version" type="xs:decimal" use="required" fixed="1.0"/>
+		</xs:complexType>
+	</xs:element>				
+				<xs:element name="ValorApertura" type="SiiLce:MontoType" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Valor de la Apertura </xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Comprobante" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Detalle de Documentos que Componen el Libro Electronico</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TpoComp">
+								<xs:annotation>
+									<xs:documentation>Tipo de Comprobante. </xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:token">
+										<xs:maxLength value="4"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="NumComp">
+								<xs:annotation>
+									<xs:documentation>Numero comprobante. Puede ser alfanumerico.</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:token">
+										<xs:maxLength value="18"/>
+										<xs:minLength value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="FechaContable" type="xs:date">
+								<xs:annotation>
+									<xs:documentation>Fecha Contable (AAAA-MM-DD)</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="GlosaAnalisis" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Glosa de analisis.</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="120"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="Movimientos" minOccurs="2" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="CodigoCuenta">
+											<xs:annotation>
+												<xs:documentation>Codigo Cuenta Contable</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Rut" type="SiiLce:RUTType" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>RUT </xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Nombre" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Nombre o Razon Social</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:maxLength value="120"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="TpoDocum" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Nombre del tipo de documento, se puede usar abreviatura</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:maxLength value="60"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="Numero" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Número del documento</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:nonNegativeInteger">
+													<xs:totalDigits value="18"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="FchEmision" type="xs:date" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Fecha de Emision ( AAAA-MM-DD)</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="FchVencimiento" type="xs:date" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>fecha de Vencimiento ( AAAA-MM-DD)</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="GlosaRef" minOccurs="0" maxOccurs="4">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Glosa">
+														<xs:annotation>
+															<xs:documentation>Nombre del campo</xs:documentation>
+														</xs:annotation>
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:maxLength value="30"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+													<xs:element name="Ref" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>Dato del campo</xs:documentation>
+														</xs:annotation>
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:maxLength value="20"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:choice>
+											<xs:element name="Debe" type="SiiLce:MontoType" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>Debe haber uno sólo campo ( Debe o Haber).</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Haber" type="SiiLce:MontoType" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>Debe haber uno sólo campo ( Debe o Haber). </xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:choice>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ValorComprobante" type="SiiLce:MontoType">
+								<xs:annotation>
+									<xs:documentation>Valor del Comprobante. Es la sumatoria de los "Debe" de los movimientos.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="version" type="xs:decimal" use="required" fixed="1.0"/>
+		</xs:complexType>
+	</xs:element>									
+								</xs:choice>
+								<xs:element name="Parcial" type="xs:boolean" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>true= Indica que el libro es PARCIAL. Se
+											asume "false", es decir, que es COMPLETO.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+							<xs:element name="NoCerrado" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="SiiLce:LceBalance" minOccurs="0" />
+										<xs:element ref="SiiLce:LceDiccionario" minOccurs="0" />
+										<xs:choice>
+											<xs:element ref="SiiLce:LceCoCertif" />
+											<xs:element ref="SiiLce:LceCal">
+												<xs:annotation>
+													<xs:documentation>Certificado Autorizacion de Libros,
+														generado por el SII</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:choice>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="version" type="xs:decimal" use="required"
+				fixed="1.0" />
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

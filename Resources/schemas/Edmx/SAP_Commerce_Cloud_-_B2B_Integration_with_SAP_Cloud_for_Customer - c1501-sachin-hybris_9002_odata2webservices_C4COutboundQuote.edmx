@@ -1,0 +1,84 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:s="http://schemas.sap.com/commerce" Namespace="HybrisCommerceOData" s:schema-version="1">
+            <EntityType Name="SAPC4CComment">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="textListCompleteTransmissionIndicator" Nullable="true" Type="Edm.String"/>
+                <Property Name="textActionCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="textTypeCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="textLanguageCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="commentText" Nullable="true" Type="Edm.String"/>
+                <Property Name="commentCode" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="SAPC4CComment_commentCode"/>
+            </EntityType>
+            <EntityType Name="SAPC4CCpiOutboundQuote">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="predecessorIndicator" Nullable="true" Type="Edm.String"/>
+                <Property Name="salesEmployeePartyListCompleteTransmissionIndicator" Nullable="true" Type="Edm.String"/>
+                <Property Name="otherPartyListCompleteTransmissionIndicator" Nullable="true" Type="Edm.String"/>
+                <Property Name="actionCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="businessTransactionDocumentReferenceCompleteTransmissionIndicator" Nullable="true" Type="Edm.String"/>
+                <Property Name="itemCompleteTransmissionIndicator" Nullable="true" Type="Edm.String"/>
+                <Property Name="name" Nullable="true" Type="Edm.String"/>
+                <Property Name="quoteId" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="senderSequenceNumberVaue" Nullable="true" Type="Edm.String"/>
+                <Property Name="processingTypeCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="buyerID" Nullable="true" Type="Edm.String"/>
+                <Property Name="salesOrganization" Nullable="true" Type="Edm.String"/>
+                <Property Name="distributionChannel" Nullable="true" Type="Edm.String"/>
+                <Property Name="division" Nullable="true" Type="Edm.String"/>
+                <Property Name="currencyIsoCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="billPartyRoleCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="buyerPartyRoleCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="productRecepientRoleCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="partyId" Nullable="true" Type="Edm.String"/>
+                <Property Name="contactId" Nullable="true" Type="Edm.String"/>
+                <Property Name="partyIdType" Nullable="true" Type="Edm.String"/>
+                <Property Name="logicalSystemId" Nullable="true" Type="Edm.String"/>
+                <Property Name="cancellationReasonCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="SAPC4CCpiOutboundQuote_quoteId"/>
+                <NavigationProperty FromRole="SAPC4CCpiOutboundQuote" Name="sapC4COutboundQuoteItems" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPC4CCpiOutboundQuote_sapC4COutboundQuoteItems" ToRole="SAPC4CCpiOutboundItem" s:IsAutoCreate="true" s:IsPartOf="true"/>
+                <NavigationProperty FromRole="SAPC4CCpiOutboundQuote" Name="c4cComments" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPC4CCpiOutboundQuote_c4cComments" ToRole="SAPC4CComment"/>
+            </EntityType>
+            <EntityType Name="SAPC4CCpiOutboundItem">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="lineItemId" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="productId" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="description" Nullable="true" Type="Edm.String"/>
+                <Property Name="scheduleLineTypeCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="scheduleLineId" Nullable="true" Type="Edm.String"/>
+                <Property Name="quantity" Nullable="true" Type="Edm.String"/>
+                <Property Name="unitCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="logicalSystemId" Nullable="true" Type="Edm.String"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="SAPC4CCpiOutboundItem_lineItemId|SAPC4CCpiOutboundItem_productId"/>
+            </EntityType>
+            <Association Name="FK_SAPC4CCpiOutboundQuote_sapC4COutboundQuoteItems">
+                <End Multiplicity="0..1" Role="SAPC4CCpiOutboundQuote" Type="HybrisCommerceOData.SAPC4CCpiOutboundQuote"/>
+                <End Multiplicity="*" Role="SAPC4CCpiOutboundItem" Type="HybrisCommerceOData.SAPC4CCpiOutboundItem"/>
+            </Association>
+            <Association Name="FK_SAPC4CCpiOutboundQuote_c4cComments">
+                <End Multiplicity="0..1" Role="SAPC4CCpiOutboundQuote" Type="HybrisCommerceOData.SAPC4CCpiOutboundQuote"/>
+                <End Multiplicity="*" Role="SAPC4CComment" Type="HybrisCommerceOData.SAPC4CComment"/>
+            </Association>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet EntityType="HybrisCommerceOData.SAPC4CComment" Name="SAPC4CComments"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPC4CCpiOutboundQuote" Name="SAPC4CCpiOutboundQuotes"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPC4CCpiOutboundItem" Name="SAPC4CCpiOutboundItems"/>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPC4CCpiOutboundQuote_sapC4COutboundQuoteItems" Name="SAPC4CCpiOutboundQuote_SAPC4CCpiOutboundItems">
+                    <End EntitySet="SAPC4CCpiOutboundQuotes" Role="SAPC4CCpiOutboundQuote"/>
+                    <End EntitySet="SAPC4CCpiOutboundItems" Role="SAPC4CCpiOutboundItem"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPC4CCpiOutboundQuote_c4cComments" Name="SAPC4CCpiOutboundQuote_SAPC4CComments">
+                    <End EntitySet="SAPC4CCpiOutboundQuotes" Role="SAPC4CCpiOutboundQuote"/>
+                    <End EntitySet="SAPC4CComments" Role="SAPC4CComment"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

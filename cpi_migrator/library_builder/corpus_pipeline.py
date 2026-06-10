@@ -21,39 +21,99 @@ No SAP, no tenant — pure corpus processing, fully sandbox-testable.
 """
 from __future__ import annotations
 
+import hashlib
 import io
+import logging
 import os
+import pickle
 import zipfile
 from dataclasses import dataclass, field as _field
+from pathlib import Path
 
 from . import capability_catalog as _cc
 from . import solver as _solver
 
+log = logging.getLogger(__name__)
+
+# Safety caps so a too-broad capability_corpus_dir (e.g. pointed at a whole
+# Resources tree with thousands of schemas) degrades to a warning + partial
+# corpus instead of a multi-minute hang. Loose files above the size cap (e.g. a
+# 12.9 MB EDMX) are skipped — the capability corpus is built from package
+# internals, not large standalone schemas.
+_MAX_FILES = 20000
+_MAX_TOTAL_BYTES = 200 * 1024 * 1024
+_MAX_FILE_BYTES = 5 * 1024 * 1024
+
+
+class _Budget:
+    """Tracks files/bytes ingested during a corpus walk and trips a cap so a
+    misconfigured directory can't run away."""
+    def __init__(self, max_files=_MAX_FILES, max_bytes=_MAX_TOTAL_BYTES):
+        self.max_files, self.max_bytes = max_files, max_bytes
+        self.files = self.bytes = 0
+        self.capped = False
+
+    def ok(self) -> bool:
+        return not self.capped
+
+    def take(self, nbytes: int) -> bool:
+        if self.capped:
+            return False
+        self.files += 1
+        self.bytes += nbytes
+        if self.files > self.max_files or self.bytes > self.max_bytes:
+            self.capped = True
+            log.warning(
+                "corpus walk hit the safety cap (%d files / %d MB) — ingesting no "
+                "more. Point capability_corpus_dir at a narrower folder (CPI "
+                "package exports only), not a whole tree.",
+                self.max_files, self.max_bytes // (1024 * 1024))
+            return False
+        return True
+
 
 # ───────────────────────────── corpus walking ─────────────────────────────
-def _read_zip(zf: zipfile.ZipFile, out: dict, depth: int = 0, max_depth: int = 8):
+def _read_zip(zf: zipfile.ZipFile, out: dict, depth: int = 0, max_depth: int = 8,
+              budget: "_Budget | None" = None, prefix: str = "",
+              exts: "set | None" = None):
     """Recursively read files from a zip, descending into nested zips and
-    *_content bundles (the SAP package structure)."""
+    *_content bundles (the SAP package structure). Keys are CONTAINER-QUALIFIED
+    (outer.zip/inner.zip/hash_content::src/...): without the prefix, every
+    package's identical internal paths (src/main/resources/parameters.prop,
+    same-named scripts) collide and all but the first are silently dropped —
+    which shipped the WRONG package's parameter values and lost resources."""
     if depth > max_depth:
         return
     for n in zf.namelist():
         if n.endswith("/"):
             continue
+        if budget is not None and not budget.ok():
+            return
         try:
             raw = zf.read(n)
         except Exception:
             continue
         if raw[:2] == b"PK" and (n.endswith(".zip") or n.endswith("_content")):
             try:
-                _read_zip(zipfile.ZipFile(io.BytesIO(raw)), out, depth + 1)
+                sep = "::" if n.endswith("_content") else "/"
+                _read_zip(zipfile.ZipFile(io.BytesIO(raw)), out, depth + 1,
+                          max_depth, budget, prefix=f"{prefix}{n}{sep}",
+                          exts=exts)
                 continue
             except Exception:
                 pass
-        # key by the full zip-internal PATH, not the basename — same-named files
-        # in different folders (e.g. many script.groovy) must not collapse.
-        if n and n not in out:
+        if len(raw) > _MAX_FILE_BYTES:        # skip oversized leaf blobs
+            continue
+        if exts is not None and \
+                ("." + n.rsplit(".", 1)[-1].lower() if "." in n else "") \
+                not in exts:
+            continue
+        key = f"{prefix}{n}"
+        if key and key not in out:
+            if budget is not None and not budget.take(len(raw)):
+                return
             try:
-                out[n] = raw.decode("utf-8", "replace")
+                out[key] = raw.decode("utf-8", "replace")
             except Exception:
                 pass
 
@@ -80,7 +140,14 @@ def walk_corpus_bytes(packages) -> dict:
     return out
 
 
-def walk_corpus(path: str) -> dict:
+#: leaf extensions the bundle-wiring resource corpus actually consumes —
+#: walking everything blew the 200 MB budget before reaching the user's
+#: packages, so nothing resolved and parameters shipped empty.
+WIRING_EXTS = {".groovy", ".gsh", ".js", ".xsl", ".xslt", ".mmap", ".opmap",
+               ".xsd", ".wsdl", ".edmx", ".prop", ".propdef", ".iflw"}
+
+
+def walk_corpus(path: str, exts: "set | None" = None) -> dict:
     """Read every file from a path (a directory, a .zip, or a single file) into
     {name: text}. Descends nested zips and *_content bundles.
 
@@ -92,26 +159,45 @@ def walk_corpus(path: str) -> dict:
     (e.g. the schema catalog dedups by structure).
     """
     out: dict = {}
+    budget = _Budget()
     if os.path.isdir(path):
         for root, _dirs, files in os.walk(path):
+            if not budget.ok():
+                break
             for f in files:
+                if not budget.ok():
+                    break
                 fp = os.path.join(root, f)
                 try:
                     if f.endswith(".zip"):
+                        rel = os.path.relpath(fp, path)
                         with zipfile.ZipFile(fp) as zf:
-                            _read_zip(zf, out)
+                            _read_zip(zf, out, budget=budget,
+                                      prefix=rel + "/", exts=exts)
                     else:
-                        with open(fp, "r", encoding="utf-8",
-                                  errors="replace") as fh:
-                            # path-qualified key (relative to the walked dir)
-                            rel = os.path.relpath(fp, path)
-                            if rel not in out:
+                        try:
+                            sz = os.path.getsize(fp)
+                        except OSError:
+                            sz = 0
+                        if sz > _MAX_FILE_BYTES:     # skip large standalone files
+                            continue                 # (e.g. a 12.9 MB EDMX)
+                        rel = os.path.relpath(fp, path)
+                        if exts is not None and \
+                                ("." + f.rsplit(".", 1)[-1].lower()
+                                 if "." in f else "") not in exts:
+                            continue
+                        if rel not in out:
+                            if not budget.take(sz):
+                                break
+                            with open(fp, "r", encoding="utf-8",
+                                      errors="replace") as fh:
                                 out[rel] = fh.read()
                 except Exception:
                     continue
     elif zipfile.is_zipfile(path):
         with zipfile.ZipFile(path) as zf:
-            _read_zip(zf, out)
+            _read_zip(zf, out, budget=budget,
+                      prefix=os.path.basename(path) + "/", exts=exts)
     elif os.path.isfile(path):
         out[os.path.basename(path)] = open(
             path, "r", encoding="utf-8", errors="replace").read()
@@ -179,12 +265,71 @@ class Corpus:
         return [(m.capability.cap_id, m.score) for m in ranked[:top_n]]
 
 
+def _dir_signature(path: str) -> str:
+    """Cheap content signature of a directory: file count + total size + newest
+    mtime. Stat-only (no reads), so it's fast even on large trees and changes
+    whenever any file is added/removed/modified."""
+    n = total = 0
+    newest = 0.0
+    for root, _d, files in os.walk(path):
+        for f in files:
+            try:
+                stt = os.stat(os.path.join(root, f))
+            except OSError:
+                continue
+            n += 1
+            total += stt.st_size
+            newest = max(newest, stt.st_mtime)
+    # _CORPUS_FORMAT bumps invalidate stale disk caches when the walk's keying
+    # changes (v2: container-prefixed keys — old caches collapsed same-named
+    # files across packages)
+    key = f"v2|{os.path.abspath(path)}|{n}|{total}|{int(newest)}"
+    return hashlib.sha1(key.encode()).hexdigest()[:16]
+
+
+def _cache_file(sig: str) -> Path:
+    d = Path.home() / ".cpi_migrator" / "corpus_cache"
+    d.mkdir(parents=True, exist_ok=True)
+    return d / f"corpus_{sig}.pkl"
+
+
 def build_corpus(path: str = None, files: dict = None, packages=None,
-                 **catalog_kw) -> Corpus:
+                 use_disk_cache: bool = True, **catalog_kw) -> Corpus:
     """Build a Corpus from a path, a pre-read {name: text} dict, OR in-memory
-    upload `packages` (list of zip-bytes / dicts with 'bytes'). `catalog_kw` is
-    passed to per-type catalog builders (e.g. verify=True for xslt). The single
-    entry point that replaces extractor.py/run_extractor."""
+    upload `packages`. For a directory `path`, the built corpus is persisted to a
+    disk cache keyed by the directory's signature, so it is built once and
+    reloaded instantly on later runs (and across app restarts) instead of
+    re-walking. `catalog_kw` is passed to per-type catalog builders."""
+    # disk cache only for the heavy, repeatable case: a directory path with no
+    # special catalog kwargs (those change the built output).
+    cache_fp = None
+    if (use_disk_cache and path is not None and files is None
+            and packages is None and not catalog_kw and os.path.isdir(path)):
+        try:
+            cache_fp = _cache_file(_dir_signature(path))
+            if cache_fp.exists():
+                with open(cache_fp, "rb") as fh:
+                    corpus = pickle.load(fh)
+                log.info("corpus: loaded from disk cache (%s)", cache_fp.name)
+                return corpus
+        except Exception:
+            cache_fp = None      # any cache problem → just build normally
+
+    corpus = _build_corpus(path=path, files=files, packages=packages, **catalog_kw)
+
+    if cache_fp is not None:
+        try:
+            with open(cache_fp, "wb") as fh:
+                pickle.dump(corpus, fh)
+            log.info("corpus: built + cached to disk (%s)", cache_fp.name)
+        except Exception:
+            pass                 # non-picklable / write error → skip caching
+    return corpus
+
+
+def _build_corpus(path: str = None, files: dict = None, packages=None,
+                  **catalog_kw) -> Corpus:
+    """The actual build (walk → group → catalogs → normalize)."""
     if files is None:
         if packages is not None:
             files = walk_corpus_bytes(packages)

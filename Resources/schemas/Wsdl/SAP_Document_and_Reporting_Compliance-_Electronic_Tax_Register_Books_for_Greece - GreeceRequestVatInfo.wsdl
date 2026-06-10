@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.example.org/eDocGreeceRequestVatInfo/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:inv="http://www.aade.gr/myDATA/invoice/v1.0"
+	name="eDocGreeceRequestVatInfo"
+	targetNamespace="http://www.aade.gr/myDATA/invoice/v1.0">
+	<wsdl:types>
+
+
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns="http://www.aade.gr/myDATA/invoice/v1.0"
+			targetNamespace="http://www.aade.gr/myDATA/invoice/v1.0"
+			elementFormDefault="qualified">
+
+			<xs:complexType name="ContinuationTokenType">
+				<xs:sequence>
+					<xs:element name="nextPartitionKey" type="xs:string"
+						minOccurs="0" />
+					<xs:element name="nextRowKey" type="xs:string"
+						minOccurs="0" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="InvoiceVatDetailType">
+				<xs:sequence>
+					<xs:element name="Mark" type="xs:string" minOccurs="0" />
+					<xs:element name="IsCancelled" type="xs:boolean"
+						minOccurs="0" />
+					<xs:element name="IssueDate" type="xs:dateTime" />
+					<xs:element name="Vat301" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat302" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat303" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat304" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat305" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat306" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat331" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat332" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat333" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat334" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat335" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat336" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat361" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat362" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat363" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat364" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat365" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat366" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat381" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat382" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat383" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat384" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat385" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat386" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat342" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat345" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat348" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat349" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat310" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat402" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat407" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat411" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat423" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="Vat422" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="VatUnclassified361" type="xs:decimal"
+						minOccurs="0" />
+					<xs:element name="VatUnclassified381" type="xs:decimal"
+						minOccurs="0" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="RequestedVatInfoType">
+				<xs:sequence>
+					<xs:element name="continuationToken"
+						type="ContinuationTokenType" minOccurs="0" />
+					<xs:element name="VatInfo" type="InvoiceVatDetailType"
+						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element name="errors" maxOccurs="unbounded" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Λίστα Σφαλμάτων</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="error" type="ErrorType"
+									maxOccurs="unbounded" />
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="statusCode" type="xs:string" maxOccurs="1" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Κωδικός αποτελέσματος</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="RequestedVatInfo"
+				type="RequestedVatInfoType" />
+			<xs:complexType name="ErrorType">
+				<xs:sequence>
+					<xs:element name="message" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>Μήνυμα Σφάλματος</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="code" type="xs:int">
+						<xs:annotation>
+							<xs:documentation>Κωδικός Σφάλαματος</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+
+			<!-- above is from myDATA -->
+
+
+			<xs:complexType name="VatInfoRequest">
+				<xs:sequence>
+					<xs:element name="entityVatNumber" type="xs:string"
+						maxOccurs="1" minOccurs="0"></xs:element>
+					<xs:element name="dateFrom" type="xs:date" maxOccurs="1"
+						minOccurs="1"></xs:element>
+					<xs:element name="dateTo" type="xs:date" maxOccurs="1"
+						minOccurs="1"></xs:element>
+					<xs:element name="GroupedPerDay" type="xs:boolean"
+						maxOccurs="1" minOccurs="0"></xs:element>
+					<xs:element name="nextPartitionKey" type="xs:string"
+						maxOccurs="1" minOccurs="0"></xs:element>
+					<xs:element name="nextRowKey" type="xs:string"
+						maxOccurs="1" minOccurs="0"></xs:element>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:element name="GetVatInfoRequest" type="VatInfoRequest"></xs:element>
+
+
+		</xs:schema>
+
+	</wsdl:types>
+
+	<wsdl:message name="VatInfoRequest">
+		<wsdl:part element="inv:GetVatInfoRequest"
+			name="vatInfoRequestParameter" />
+	</wsdl:message>
+
+	<wsdl:message name="VatInfoResponse">
+		<wsdl:part element="inv:RequestedVatInfo"
+			name="vatInfoResponseParameter" />
+	</wsdl:message>
+
+	<wsdl:portType name="eDocGreeceRequestVatInfo">
+		<wsdl:operation name="RequestVatInfo">
+			<wsdl:input message="inv:VatInfoRequest" />
+			<wsdl:output message="inv:VatInfoResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding name="eDocGreeceRequestVatInfo"
+		type="inv:eDocGreeceRequestVatInfo">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="RequestVatInfo">
+			<soap:operation
+				soapAction="http://www.aade.gr/myDATA/requestVatInfo/v1.0/RequestVatInfo" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<wsdl:service name="eDocGreeceRequestVatInfo">
+		<wsdl:port binding="inv:eDocGreeceRequestVatInfo"
+			name="eDocGreeceRequestVatInfo">
+			<soap:address location="http://www.sap.com/" />
+		</wsdl:port>
+	</wsdl:service>
+
+</wsdl:definitions>

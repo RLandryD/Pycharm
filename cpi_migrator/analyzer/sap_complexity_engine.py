@@ -278,12 +278,118 @@ def extract_signals(bundle_zip: bytes) -> dict:
 # Rule firing (Mode 2)
 # ---------------------------------------------------------------------------
 
+# Construct kinds that map to a DEDICATED weighted SAP rule. Every other kind
+# is only counted generically via the step total (OMStepCount); construct_coverage
+# surfaces those as "generic_only" so the estimate's gaps are visible and
+# auditable instead of an unknown construct silently scoring as free.
+_CONSTRUCT_RULE = {
+    "Script": "GMMCustomUDFUsageCount",
+    "Mapping": "MappingType:GMM",
+    "ExternalCall": "ICOReceivers (receiver participant)",
+}
+_COVERAGE_BOUND = {"StartEvent", "StartTimerEvent", "StartMessageEvent", "EndEvent",
+                   "StartErrorEvent", "EndErrorEvent", "ErrorStartEvent",
+                   "StartConditionalEvent"}
+
+
+def construct_coverage(record) -> dict | None:
+    """Audit a real iFlow against the rule catalogue: report which construct
+    kinds map to a dedicated weighted rule vs which are only counted generically.
+    This is the 'what we found vs what we have a rule for' comparison — an
+    unknown construct shows up under 'generic_only' (honestly flagged) rather
+    than being guessed at zero weight. Returns None when no real iFlow is present."""
+    xml = getattr(record, "source_iflow_xml", None)
+    if not xml:
+        return None
+    try:
+        from extractor.iflow_parser import parse_iflow
+        m = parse_iflow(xml, getattr(record, "name", "iflow") or "iflow")
+    except Exception:                                                # noqa
+        return None
+    from collections import Counter
+    kinds = Counter(s.kind for s in m.steps.values()
+                    if s.kind not in _COVERAGE_BOUND)
+    matched, generic = {}, {}
+    for k, c in kinds.items():
+        if k in _CONSTRUCT_RULE:
+            matched[k] = {"count": c, "rule": _CONSTRUCT_RULE[k]}
+        else:
+            generic[k] = c
+    return {
+        "matched": matched,            # construct -> {count, dedicated rule}
+        "generic_only": generic,       # construct -> count (no dedicated weight)
+        "total_middle_steps": sum(kinds.values()),
+        "processes": len(getattr(m, "processes", []) or []),
+        "routes": len(getattr(m, "routes", []) or []),
+    }
+
+
+def _signals_from_iflow_xml(xml: str, record) -> dict | None:
+    """Build the engine signal dict from a real parsed iFlow. Counts scale with
+    actual topology so size reflects what the flow does. Returns None on parse
+    failure so the caller falls back to the keyword approximation."""
+    _BOUND = {"StartEvent", "StartTimerEvent", "StartMessageEvent", "EndEvent",
+              "StartErrorEvent", "EndErrorEvent", "ErrorStartEvent",
+              "StartConditionalEvent"}
+    try:
+        from extractor.iflow_parser import parse_iflow, extract_endpoints
+        m = parse_iflow(xml, getattr(record, "name", "iflow") or "iflow")
+    except Exception:                                                # noqa
+        return None
+    mids = [s.kind for s in m.steps.values() if s.kind not in _BOUND]
+    scripts = sum(1 for k in mids if k == "Script")
+    mappings = sum(1 for k in mids if k == "Mapping")
+    n_recv = sum(1 for e in m.endpoints if getattr(e, "direction", "") == "receiver")
+    routes = len(getattr(m, "routes", []) or [])
+    extra_proc = max(len(getattr(m, "processes", []) or []) - 1, 0)
+    # Steps in local sub-processes are real work too; multi-process topology adds
+    # routing/handoff overhead, so fold extra processes + routes into the
+    # operation-step count the OMStepCount rule scores.
+    om_steps = len(mids) + extra_proc * 3 + routes
+    try:
+        eps = extract_endpoints(xml)
+    except Exception:                                                # noqa
+        eps = {}
+    sig = {
+        "groovy_scripts": scripts, "js_scripts": 0, "xslt": 0,
+        "value_mappings": 0, "message_mappings": mappings,
+        "call_activities": om_steps,
+        "service_tasks": routes,
+        "participants": max(n_recv, 1),
+        "message_flows": max(len(m.endpoints), 1),
+        "rfc_lookups": 0, "jdbc_lookups": 0,
+        "sender_adapter": eps.get("sender_adapter", "")
+        or (getattr(record, "sender_adapter", "") or ""),
+        "receiver_adapter": eps.get("receiver_adapter", "")
+        or (getattr(record, "receiver_adapter", "") or ""),
+        "has_bpm": bool(getattr(record, "has_bpm", False)),
+        "is_ccbpm": bool(getattr(record, "has_bpm", False)),
+        "is_javabpm": False,
+        "mapping_types": set(),
+    }
+    if mappings:
+        sig["mapping_types"].add("GMM")
+    sig["mapping_types"] = sorted(sig["mapping_types"])
+    return sig
+
+
 def signals_from_interface(record) -> dict:
     """Approximate the engine's signal dict from an InterfaceRecord (Tab-1, when
     no bundle exists yet) by counting structural cues in the description plus the
     record's flags/adapters. Same keys as extract_signals, so it feeds fire_rules
     identically — giving a true MA weight/size/effort per interface, scaling with
     how much the interface actually does (so a 'monster' outweighs an 'XL')."""
+    # When the record carries a real parsed iFlow, derive signals from the ACTUAL
+    # topology (steps across all processes, scripts, mappings, receivers, routes)
+    # instead of keyword-counting a thin description. Uploaded iFlow records have
+    # no rich description, so the keyword path collapsed every flow to "S"; the
+    # real structure is what makes a 9-process/112-step monster outweigh a
+    # 2-step passthrough.
+    src_xml = getattr(record, "source_iflow_xml", None)
+    if src_xml:
+        sig = _signals_from_iflow_xml(src_xml, record)
+        if sig is not None:
+            return sig
     desc = (getattr(record, "description", "") or "").lower()
 
     def cnt(*words):
@@ -313,6 +419,13 @@ def signals_from_interface(record) -> dict:
         "sender_adapter": getattr(record, "sender_adapter", "") or "",
         "receiver_adapter": getattr(record, "receiver_adapter", "") or "",
         "has_bpm": bool(getattr(record, "has_bpm", False)),
+        # The authoritative has_bpm flag (from the PI/PO export or a parsed MA
+        # result) fires SAP's ccBPM rule. This is an EXPLICIT source signal, not
+        # a guess inferred from an already-migrated iFlow's structure — so it's
+        # consistent with fire_rules' rule that ccBPM never be guessed from flow
+        # shape. Without this the flag was extracted but never weighted, so BPM
+        # interfaces scored identically to non-BPM ones.
+        "is_ccbpm": bool(getattr(record, "has_bpm", False)),
         "mapping_types": set(),
     }
     if mmaps:

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="NegotiateAndAccessAssetRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="counterPartyId" type="xs:string"/>
+                <xs:element name="counterPartyAddress" type="xs:string"/>
+                <xs:element name="catalogFilterProperties" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="name" type="xs:string"/>
+                            <xs:element name="value" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="forceNegotiation" type="xs:boolean" minOccurs="0"/>
+                <xs:element name="contractAgreementId" type="xs:string" minOccurs="0"/>
+                <xs:choice minOccurs="0" maxOccurs="1">
+                    <xs:element name="httpDataPlaneRequest" minOccurs="1" maxOccurs="1">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="httpMethod" type="xs:string"/>
+                                <xs:element name="path" type="xs:string"/>
+                                <xs:element name="query" type="xs:string" minOccurs="0"/>
+                                <xs:element name="httpBody" minOccurs="0">
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element name="characterEncoding" type="xs:string"/>
+                                            <xs:element name="contentType" type="xs:string"/>
+                                            <xs:choice>
+                                                <xs:element name="bodyAsBytes" type="xs:string"/>
+                                                <xs:element name="body" type="xs:anyType"/>
+                                            </xs:choice>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="azureStoragePushDataPlaneRequest" minOccurs="1" maxOccurs="1">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="accountName" type="xs:string"/>
+                                <xs:element name="containerName" type="xs:string"/>
+                                <xs:element name="folderName" type="xs:string" minOccurs="0"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="amazonS3PushDataPlaneRequest" minOccurs="1" maxOccurs="1">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="aliasName" type="xs:string"/>
+                                <xs:element name="bucketName" type="xs:string"/>
+                                <xs:element name="folderName" type="xs:string"/>
+                                <xs:element name="objectName" type="xs:string" minOccurs="0"/>
+                                <xs:element name="regionCode" type="xs:string"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

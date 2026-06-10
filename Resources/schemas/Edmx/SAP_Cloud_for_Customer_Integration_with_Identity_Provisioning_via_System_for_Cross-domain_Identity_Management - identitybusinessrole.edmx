@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+    <edmx:DataServices m:DataServiceVersion="2.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+        <Schema Namespace="http://sap.com/xi/AP/PC/IdentityManagement/Global" xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:sap="http://www.sap.com/Protocols/SAPData" xmlns:c4c="http://www.sap.com/Protocols/C4CData">
+            <EntityType Name="IdentityBusinessRoleAssignedBusinessUser">
+                <Key>
+                    <PropertyRef Name="BusinessRoleUUID"/>
+                    <PropertyRef Name="BusinessRoleID"/>
+                    <PropertyRef Name="UserUUID"/>
+                    <PropertyRef Name="UserID"/>
+                    <PropertyRef Name="ParentObjectID"/>
+                    <PropertyRef Name="EmployeeUUID"/>
+                </Key>
+                <Property Name="BusinessRoleUUID" Type="Edm.String" Nullable="true" FixedLength="false" sap:creatable="true" sap:updatable="true" sap:filterable="true"/>
+                <Property Name="BusinessRoleID" Type="Edm.String" Nullable="true" MaxLength="255" FixedLength="false" sap:creatable="true" sap:updatable="true" sap:filterable="true"/>
+                <Property Name="UserUUID" Type="Edm.String" Nullable="true" FixedLength="false" sap:creatable="true" sap:updatable="true" sap:filterable="false"/>
+                <Property Name="UserID" Type="Edm.String" Nullable="true" FixedLength="false" sap:creatable="true" sap:updatable="true" sap:filterable="true"/>
+                <Property Name="UserName" Type="Edm.String" Nullable="false" FixedLength="false" sap:creatable="false" sap:updatable="false" sap:filterable="true"/>
+                <Property Name="ParentObjectID" Type="Edm.String" Nullable="false" MaxLength="70" FixedLength="true" sap:creatable="false" sap:updatable="false" sap:filterable="false"/>
+                <Property Name="EmployeeUUID" Type="Edm.String" Nullable="true" FixedLength="false" sap:creatable="true" sap:updatable="true" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="IdentityBusinessRoleBusinessUserAssignment">
+                <Key>
+                    <PropertyRef Name="BusinessRoleUUID"/>
+                    <PropertyRef Name="UserUUID"/>
+                </Key>
+                <Property Name="BusinessRoleUUID" Type="Edm.String" Nullable="true" FixedLength="false" sap:creatable="true" sap:updatable="true" sap:filterable="true"/>
+                <Property Name="BusinessRoleID" Type="Edm.String" Nullable="true" MaxLength="255" FixedLength="false" sap:creatable="true" sap:updatable="true" sap:filterable="true"/>
+                <Property Name="UserUUID" Type="Edm.String" Nullable="true" FixedLength="false" sap:creatable="true" sap:updatable="true" sap:filterable="false"/>
+                <Property Name="UserID" Type="Edm.String" Nullable="true" FixedLength="false" sap:creatable="true" sap:updatable="true" sap:filterable="true"/>
+                <Property Name="UserName" Type="Edm.String" Nullable="false" FixedLength="false" sap:creatable="false" sap:updatable="false" sap:filterable="true"/>
+                <Property Name="ParentObjectID" Type="Edm.String" Nullable="false" MaxLength="70" FixedLength="true" sap:creatable="false" sap:updatable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="IdentityBusinessRole">
+                <Key>
+                    <PropertyRef Name="ObjectID"/>
+                </Key>
+                <Property Name="ObjectID" Type="Edm.String" Nullable="false" MaxLength="70" FixedLength="true" sap:creatable="false" sap:updatable="false" sap:filterable="true"/>
+                <Property Name="ETag" Type="Edm.DateTimeOffset" Nullable="true" Precision="7" ConcurrencyMode="Fixed" sap:creatable="false" sap:updatable="false" sap:filterable="false"/>
+                <Property Name="ID" Type="Edm.String" Nullable="true" MaxLength="40" FixedLength="true" sap:creatable="false" sap:updatable="false" sap:filterable="true"/>
+                <Property Name="Description" Type="Edm.String" Nullable="true" MaxLength="255" FixedLength="true" sap:creatable="false" sap:updatable="false" sap:filterable="true"/>
+                <Property Name="languageCode" Type="Edm.String" Nullable="true" MaxLength="2" FixedLength="true" sap:creatable="false" sap:updatable="false" sap:filterable="true" sap:text="languageCodeText" c4c:value-help="IdentityBusinessRolelanguageCodeCollection"/>
+                <Property Name="languageCodeText" Type="Edm.String" Nullable="true" sap:creatable="false" sap:updatable="false" sap:filterable="true"/>
+                <Property Name="Name" Type="Edm.String" Nullable="true" MaxLength="40" FixedLength="true" sap:creatable="false" sap:updatable="false" sap:filterable="true"/>
+                <Property Name="languageCode1" Type="Edm.String" Nullable="true" MaxLength="2" FixedLength="true" sap:creatable="false" sap:updatable="false" sap:filterable="true" sap:text="languageCode1Text" c4c:value-help="IdentityBusinessRolelanguageCode1Collection"/>
+                <Property Name="languageCode1Text" Type="Edm.String" Nullable="true" sap:creatable="false" sap:updatable="false" sap:filterable="true"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Nullable="true" Precision="7" sap:creatable="false" sap:updatable="false" sap:filterable="true"/>
+                <Property Name="CurrentVersionNumberID" Type="Edm.String" Nullable="true" MaxLength="32" FixedLength="true" sap:creatable="false" sap:updatable="false" sap:filterable="true"/>
+                <Property Name="EntityLastChangedOn" Type="Edm.DateTimeOffset" Nullable="true" Precision="7" sap:creatable="false" sap:updatable="false" sap:filterable="true"/>
+                <NavigationProperty Name="IdentityBusinessRoleAssignedBusinessUser" Relationship="http://sap.com/xi/AP/PC/IdentityManagement/Global.IdentityBusinessRole_IdentityBusinessRoleAssignedBusinessUser" FromRole="IdentityBusinessRole" ToRole="IdentityBusinessRoleAssignedBusinessUser"/>
+                <NavigationProperty Name="IdentityBusinessRoleBusinessUserAssignment" Relationship="http://sap.com/xi/AP/PC/IdentityManagement/Global.IdentityBusinessRole_IdentityBusinessRoleBusinessUserAssignment" FromRole="IdentityBusinessRole" ToRole="IdentityBusinessRoleBusinessUserAssignment"/>
+            </EntityType>
+            <EntityType Name="CodeList">
+                <Key>
+                    <PropertyRef Name="Code"/>
+                </Key>
+                <Property Name="Code" Type="Edm.String" Nullable="false" FixedLength="false" sap:creatable="false" sap:updatable="false" sap:filterable="true"/>
+                <Property Name="Description" Type="Edm.String" Nullable="false" FixedLength="false" sap:creatable="false" sap:updatable="false" sap:filterable="true"/>
+            </EntityType>
+            <Association Name="IdentityBusinessRole_IdentityBusinessRoleAssignedBusinessUser">
+                <End Type="http://sap.com/xi/AP/PC/IdentityManagement/Global.IdentityBusinessRole" Multiplicity="1" Role="IdentityBusinessRole"/>
+                <End Type="http://sap.com/xi/AP/PC/IdentityManagement/Global.IdentityBusinessRoleAssignedBusinessUser" Multiplicity="*" Role="IdentityBusinessRoleAssignedBusinessUser"/>
+            </Association>
+            <Association Name="IdentityBusinessRole_IdentityBusinessRoleBusinessUserAssignment">
+                <End Type="http://sap.com/xi/AP/PC/IdentityManagement/Global.IdentityBusinessRole" Multiplicity="1" Role="IdentityBusinessRole"/>
+                <End Type="http://sap.com/xi/AP/PC/IdentityManagement/Global.IdentityBusinessRoleBusinessUserAssignment" Multiplicity="*" Role="IdentityBusinessRoleBusinessUserAssignment"/>
+            </Association>
+            <EntityContainer Name="identitybusinessrole" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="IdentityBusinessRoleAssignedBusinessUserCollection" EntityType="http://sap.com/xi/AP/PC/IdentityManagement/Global.IdentityBusinessRoleAssignedBusinessUser" sap:creatable="true" sap:updatable="true" sap:deletable="true"/>
+                <EntitySet Name="IdentityBusinessRoleBusinessUserAssignmentCollection" EntityType="http://sap.com/xi/AP/PC/IdentityManagement/Global.IdentityBusinessRoleBusinessUserAssignment" sap:creatable="true" sap:updatable="true" sap:deletable="true"/>
+                <EntitySet Name="IdentityBusinessRoleCollection" EntityType="http://sap.com/xi/AP/PC/IdentityManagement/Global.IdentityBusinessRole" sap:creatable="false" sap:updatable="false" sap:deletable="false"/>
+                <EntitySet Name="IdentityBusinessRolelanguageCode1Collection" EntityType="http://sap.com/xi/AP/PC/IdentityManagement/Global.CodeList" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:semantics="fixed-values"/>
+                <EntitySet Name="IdentityBusinessRolelanguageCodeCollection" EntityType="http://sap.com/xi/AP/PC/IdentityManagement/Global.CodeList" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:semantics="fixed-values"/>
+                <AssociationSet Name="IdentityBusinessRoleCollection_IdentityBusinessRoleAssignedBusinessUserCollection" Association="http://sap.com/xi/AP/PC/IdentityManagement/Global.IdentityBusinessRole_IdentityBusinessRoleAssignedBusinessUser">
+                    <End EntitySet="IdentityBusinessRoleCollection" Role="IdentityBusinessRole"/>
+                    <End EntitySet="IdentityBusinessRoleAssignedBusinessUserCollection" Role="IdentityBusinessRoleAssignedBusinessUser"/>
+                </AssociationSet>
+                <AssociationSet Name="IdentityBusinessRoleCollection_IdentityBusinessRoleBusinessUserAssignmentCollection" Association="http://sap.com/xi/AP/PC/IdentityManagement/Global.IdentityBusinessRole_IdentityBusinessRoleBusinessUserAssignment">
+                    <End EntitySet="IdentityBusinessRoleCollection" Role="IdentityBusinessRole"/>
+                    <End EntitySet="IdentityBusinessRoleBusinessUserAssignmentCollection" Role="IdentityBusinessRoleBusinessUserAssignment"/>
+                </AssociationSet>
+                <FunctionImport Name="DeleteBRFromAllUsers" ReturnType="Edm.Boolean" EntitySet="IdentityBusinessRoleCollection" m:HttpMethod="POST">
+                    <Parameter Name="ObjectID" Type="Edm.String" Mode="In"/>
+                </FunctionImport>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

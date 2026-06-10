@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://sureaddress.net/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://sureaddress.net/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://sureaddress.net/">
+      <s:element name="PostRequest">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PostRequestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PostRequestResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SoapRequest">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:AddressRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AddressRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ClientNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BusinessUnit" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FirmName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ValidationKey" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PrimaryAddressLine" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecondaryAddressLine" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Urbanization" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="County" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZIPCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZIPPlus4" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClientTracking" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="MatchCount" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ResponseType" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SoapRequestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SoapRequestResult" type="tns:AddressResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AddressResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ClientNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BusinessUnit" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClientTracking" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReturnCode" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Score" type="s:float" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FirmName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PrimaryAddressLine" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecondaryAddressLine" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="County" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZIPCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZIPPlus4" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Latitude" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Longitude" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="TimeZone" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="DayLightSaving" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsMatchLimitExceed" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="ResultList" type="tns:ArrayOfAddressRecord" />
+          <s:element minOccurs="0" maxOccurs="1" name="GeoCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TopMatchUnique" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfAddressRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="AddressRecord" nillable="true" type="tns:AddressRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AddressRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ZIPCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UpdateKeyNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RecordTypeCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CarrierRouterID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StreetPreDirectional" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StreetName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StreetSuffix" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StreetPostDirectional" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressPrimaryLow" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressPrimaryHigh" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressPrimaryEvenOddCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FirmName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressSecondary" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressSecondaryLow" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressSecondaryHigh" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressSecondaryEvenOddCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Plus4Low" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Plus4High" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BaseAlternateCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LACSStatusIndicator" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GovernmentBuildingIndicator" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FinanceNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CongressionalDistrictNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Urbanization" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="County" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZipClassCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AliasStreetPreDirectional" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AliasStreetSuffix" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AliasAddressLow" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AliasAddressHigh" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AliasStreetPostDirectional" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AliasAddressEvenOddCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AliasStreetName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CityAbbreviation" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CountyFIPSCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DeliveryPointBarCodeDigits" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Score" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="SeqNumber" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="PLLCityStateName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Latitude" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Longitude" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="TimeZone" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="DayLightSaving" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="CityStates" type="tns:ArrayOfCityState" />
+          <s:element minOccurs="0" maxOccurs="1" name="MatchScores" type="tns:ArrayOfMatchScore" />
+          <s:element minOccurs="0" maxOccurs="1" name="GeoCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZIPPlus4" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CountyFIPS" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PlaceFeatureID" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCityState">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CityState" nillable="true" type="tns:CityState" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CityState">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="SeqNumber" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZIPCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CityStateName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PLLCityStateName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CityStateNameAbbr" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PLLCityStateKey" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CityStateKey" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfMatchScore">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="MatchScore" nillable="true" type="tns:MatchScore" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="MatchScore">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="FieldName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="InputValue" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MatchValue" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Score" type="s:float" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Weight" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="Similarity" type="s:float" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetZIPsWithinDistance">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetZIPsWithinDistanceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetZIPsWithinDistanceResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetZIPsWithinDistanceSoap">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:ZIPRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ZIPRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ClientNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BusinessUnit" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ValidationKey" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClientTracking" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZIPCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Radius" type="s:float" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetZIPsWithinDistanceSoapResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetZIPsWithinDistanceSoapResult" type="tns:ZIPResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ZIPResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ClientNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BusinessUnit" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClientTracking" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReturnCode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ResultList" type="tns:ArrayOfString" />
+          <s:element minOccurs="1" maxOccurs="1" name="SentTime" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetZIPsWithinDistanceSimple">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ClientNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ValidationKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ZIPCode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="Radius" type="s:float" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetZIPsWithinDistanceSimpleResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetZIPsWithinDistanceSimpleResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="VerifyAddress">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ClientNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ValidationKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PrimaryAddressLine" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SecondaryAddressLine" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ZIPCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="VerifyAddressResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VerifyAddressResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SoapRequestBatch">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:ArrayOfAddressRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfAddressRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="AddressRequest" nillable="true" type="tns:AddressRequest" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SoapRequestBatchResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SoapRequestBatchResult" type="tns:ArrayOfAddressResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfAddressResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="AddressResponse" nillable="true" type="tns:AddressResponse" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PostRequestBatch">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PostRequestBatchResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PostRequestBatchResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="PostRequestSoapIn">
+    <wsdl:part name="parameters" element="tns:PostRequest" />
+  </wsdl:message>
+  <wsdl:message name="PostRequestSoapOut">
+    <wsdl:part name="parameters" element="tns:PostRequestResponse" />
+  </wsdl:message>
+  <wsdl:message name="SoapRequestSoapIn">
+    <wsdl:part name="parameters" element="tns:SoapRequest" />
+  </wsdl:message>
+  <wsdl:message name="SoapRequestSoapOut">
+    <wsdl:part name="parameters" element="tns:SoapRequestResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetZIPsWithinDistanceSoapIn">
+    <wsdl:part name="parameters" element="tns:GetZIPsWithinDistance" />
+  </wsdl:message>
+  <wsdl:message name="GetZIPsWithinDistanceSoapOut">
+    <wsdl:part name="parameters" element="tns:GetZIPsWithinDistanceResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetZIPsWithinDistanceSoapSoapIn">
+    <wsdl:part name="parameters" element="tns:GetZIPsWithinDistanceSoap" />
+  </wsdl:message>
+  <wsdl:message name="GetZIPsWithinDistanceSoapSoapOut">
+    <wsdl:part name="parameters" element="tns:GetZIPsWithinDistanceSoapResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetZIPsWithinDistanceSimpleSoapIn">
+    <wsdl:part name="parameters" element="tns:GetZIPsWithinDistanceSimple" />
+  </wsdl:message>
+  <wsdl:message name="GetZIPsWithinDistanceSimpleSoapOut">
+    <wsdl:part name="parameters" element="tns:GetZIPsWithinDistanceSimpleResponse" />
+  </wsdl:message>
+  <wsdl:message name="VerifyAddressSoapIn">
+    <wsdl:part name="parameters" element="tns:VerifyAddress" />
+  </wsdl:message>
+  <wsdl:message name="VerifyAddressSoapOut">
+    <wsdl:part name="parameters" element="tns:VerifyAddressResponse" />
+  </wsdl:message>
+  <wsdl:message name="SoapRequestBatchSoapIn">
+    <wsdl:part name="parameters" element="tns:SoapRequestBatch" />
+  </wsdl:message>
+  <wsdl:message name="SoapRequestBatchSoapOut">
+    <wsdl:part name="parameters" element="tns:SoapRequestBatchResponse" />
+  </wsdl:message>
+  <wsdl:message name="PostRequestBatchSoapIn">
+    <wsdl:part name="parameters" element="tns:PostRequestBatch" />
+  </wsdl:message>
+  <wsdl:message name="PostRequestBatchSoapOut">
+    <wsdl:part name="parameters" element="tns:PostRequestBatchResponse" />
+  </wsdl:message>
+  <wsdl:message name="PostRequestHttpPostIn">
+    <wsdl:part name="request" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PostRequestHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetZIPsWithinDistanceHttpPostIn">
+    <wsdl:part name="request" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetZIPsWithinDistanceHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetZIPsWithinDistanceSimpleHttpPostIn">
+    <wsdl:part name="ClientNumber" type="s:string" />
+    <wsdl:part name="ValidationKey" type="s:string" />
+    <wsdl:part name="ZIPCode" type="s:string" />
+    <wsdl:part name="Radius" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetZIPsWithinDistanceSimpleHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="VerifyAddressHttpPostIn">
+    <wsdl:part name="ClientNumber" type="s:string" />
+    <wsdl:part name="ValidationKey" type="s:string" />
+    <wsdl:part name="PrimaryAddressLine" type="s:string" />
+    <wsdl:part name="SecondaryAddressLine" type="s:string" />
+    <wsdl:part name="City" type="s:string" />
+    <wsdl:part name="State" type="s:string" />
+    <wsdl:part name="ZIPCode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="VerifyAddressHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="PostRequestBatchHttpPostIn">
+    <wsdl:part name="request" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PostRequestBatchHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:portType name="SureAddressSoap">
+    <wsdl:operation name="PostRequest">
+      <wsdl:input message="tns:PostRequestSoapIn" />
+      <wsdl:output message="tns:PostRequestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SoapRequest">
+      <wsdl:input message="tns:SoapRequestSoapIn" />
+      <wsdl:output message="tns:SoapRequestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetZIPsWithinDistance">
+      <wsdl:input message="tns:GetZIPsWithinDistanceSoapIn" />
+      <wsdl:output message="tns:GetZIPsWithinDistanceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetZIPsWithinDistanceSoap">
+      <wsdl:input message="tns:GetZIPsWithinDistanceSoapSoapIn" />
+      <wsdl:output message="tns:GetZIPsWithinDistanceSoapSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetZIPsWithinDistanceSimple">
+      <wsdl:input message="tns:GetZIPsWithinDistanceSimpleSoapIn" />
+      <wsdl:output message="tns:GetZIPsWithinDistanceSimpleSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="VerifyAddress">
+      <wsdl:input message="tns:VerifyAddressSoapIn" />
+      <wsdl:output message="tns:VerifyAddressSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SoapRequestBatch">
+      <wsdl:input message="tns:SoapRequestBatchSoapIn" />
+      <wsdl:output message="tns:SoapRequestBatchSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PostRequestBatch">
+      <wsdl:input message="tns:PostRequestBatchSoapIn" />
+      <wsdl:output message="tns:PostRequestBatchSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="SureAddressHttpPost">
+    <wsdl:operation name="PostRequest">
+      <wsdl:input message="tns:PostRequestHttpPostIn" />
+      <wsdl:output message="tns:PostRequestHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetZIPsWithinDistance">
+      <wsdl:input message="tns:GetZIPsWithinDistanceHttpPostIn" />
+      <wsdl:output message="tns:GetZIPsWithinDistanceHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetZIPsWithinDistanceSimple">
+      <wsdl:input message="tns:GetZIPsWithinDistanceSimpleHttpPostIn" />
+      <wsdl:output message="tns:GetZIPsWithinDistanceSimpleHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="VerifyAddress">
+      <wsdl:input message="tns:VerifyAddressHttpPostIn" />
+      <wsdl:output message="tns:VerifyAddressHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PostRequestBatch">
+      <wsdl:input message="tns:PostRequestBatchHttpPostIn" />
+      <wsdl:output message="tns:PostRequestBatchHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SureAddressSoap" type="tns:SureAddressSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="PostRequest">
+      <soap:operation soapAction="http://sureaddress.net/PostRequest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SoapRequest">
+      <soap:operation soapAction="http://sureaddress.net/SoapRequest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetZIPsWithinDistance">
+      <soap:operation soapAction="http://sureaddress.net/GetZIPsWithinDistance" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetZIPsWithinDistanceSoap">
+      <soap:operation soapAction="http://sureaddress.net/GetZIPsWithinDistanceSoap" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetZIPsWithinDistanceSimple">
+      <soap:operation soapAction="http://sureaddress.net/GetZIPsWithinDistanceSimple" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VerifyAddress">
+      <soap:operation soapAction="http://sureaddress.net/VerifyAddress" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SoapRequestBatch">
+      <soap:operation soapAction="http://sureaddress.net/SoapRequestBatch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PostRequestBatch">
+      <soap:operation soapAction="http://sureaddress.net/PostRequestBatch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SureAddressSoap12" type="tns:SureAddressSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="PostRequest">
+      <soap12:operation soapAction="http://sureaddress.net/PostRequest" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SoapRequest">
+      <soap12:operation soapAction="http://sureaddress.net/SoapRequest" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetZIPsWithinDistance">
+      <soap12:operation soapAction="http://sureaddress.net/GetZIPsWithinDistance" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetZIPsWithinDistanceSoap">
+      <soap12:operation soapAction="http://sureaddress.net/GetZIPsWithinDistanceSoap" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetZIPsWithinDistanceSimple">
+      <soap12:operation soapAction="http://sureaddress.net/GetZIPsWithinDistanceSimple" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VerifyAddress">
+      <soap12:operation soapAction="http://sureaddress.net/VerifyAddress" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SoapRequestBatch">
+      <soap12:operation soapAction="http://sureaddress.net/SoapRequestBatch" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PostRequestBatch">
+      <soap12:operation soapAction="http://sureaddress.net/PostRequestBatch" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SureAddressHttpPost" type="tns:SureAddressHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="PostRequest">
+      <http:operation location="/PostRequest" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetZIPsWithinDistance">
+      <http:operation location="/GetZIPsWithinDistance" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetZIPsWithinDistanceSimple">
+      <http:operation location="/GetZIPsWithinDistanceSimple" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VerifyAddress">
+      <http:operation location="/VerifyAddress" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PostRequestBatch">
+      <http:operation location="/PostRequestBatch" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SureAddress">
+    <wsdl:port name="SureAddressSoap" binding="tns:SureAddressSoap">
+      <soap:address location="https://testapi.sureaddress.net/sureaddress.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SureAddressSoap12" binding="tns:SureAddressSoap12">
+      <soap12:address location="https://testapi.sureaddress.net/sureaddress.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SureAddressHttpPost" binding="tns:SureAddressHttpPost">
+      <http:address location="https://testapi.sureaddress.net/sureaddress.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

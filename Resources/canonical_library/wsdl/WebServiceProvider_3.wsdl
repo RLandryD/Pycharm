@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://alert.successfactors.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:tns="http://alert.successfactors.com" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<wsdl:types>
+		<xs:schema elementFormDefault="qualified" targetNamespace="http://alert.successfactors.com" version="1.0" xmlns:ns3="com.successfactors.alert" xmlns:tns="http://alert.successfactors.com" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+			<xs:import namespace="com.successfactors.alert"/>
+			<xs:element name="AssessmentResult" type="tns:AssessmentResult"/>
+			<xs:complexType name="AssessmentResult">
+				<xs:sequence>
+					<xs:element maxOccurs="1" minOccurs="0" name="LoginKey" type="xs:string"/>
+					<xs:element maxOccurs="1" minOccurs="0" name="Password" type="xs:string"/>
+					<xs:element maxOccurs="1" minOccurs="0" name="ClientId" type="xs:string"/>
+					<xs:element maxOccurs="1" minOccurs="0" name="ClientOrderId" type="xs:string"/>
+					<xs:element maxOccurs="1" minOccurs="0" name="ReceiptId" type="xs:string"/>
+					<xs:element maxOccurs="1" minOccurs="0" name="AssessmentStatus">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element maxOccurs="1" minOccurs="0" name="Status" type="xs:string"/>
+								<xs:element maxOccurs="1" minOccurs="0" name="Details" type="xs:string"/>
+								<xs:element maxOccurs="1" minOccurs="0" name="StatusDate" type="xs:dateTime"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element maxOccurs="1" minOccurs="0" name="Results">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element maxOccurs="1" minOccurs="0" name="OverallResult">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element maxOccurs="1" minOccurs="0" name="Comments" type="xs:string"/>
+											<xs:element maxOccurs="unbounded" minOccurs="0" name="Score">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:string">
+
+															<xs:attribute name="type" type="xs:string"/>
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+											<xs:element maxOccurs="1" minOccurs="0" name="Band">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:string">
+
+															<xs:attribute name="type" type="xs:string"/>
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element maxOccurs="1" minOccurs="0" name="FullReportURL" type="xs:string"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="AssessmentResultAcknowledgement" type="tns:AssessmentResultAcknowledgement"/>
+			<xs:complexType name="AssessmentResultAcknowledgement">
+				<xs:sequence>
+					<xs:element maxOccurs="1" minOccurs="0" name="status" type="xs:string"/>
+					<xs:element maxOccurs="1" minOccurs="0" name="details" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="createAssessmentResult" type="tns:createAssessmentResult"/>
+			<xs:complexType name="createAssessmentResult">
+				<xs:sequence>
+					<xs:element minOccurs="0" ref="tns:AssessmentResult"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="createAssessmentResultResponse" type="tns:createAssessmentResultResponse"/>
+			<xs:complexType name="createAssessmentResultResponse">
+				<xs:sequence>
+					<xs:element minOccurs="0" ref="tns:AssessmentResultAcknowledgement"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="createRcmAssessmentRequest" type="tns:createRcmAssessmentRequest"/>
+			<xs:complexType name="createRcmAssessmentRequest">
+				<xs:sequence>
+					<xs:element minOccurs="0" ref="ns3:rcmAssessmentRequest"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="createRcmAssessmentRequestResponse" type="tns:createRcmAssessmentRequestResponse"/>
+			<xs:complexType name="createRcmAssessmentRequestResponse">
+				<xs:sequence>
+					<xs:element minOccurs="0" ref="ns3:rcmAssessmentResponse"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:schema>
+		<xs:schema elementFormDefault="qualified" targetNamespace="com.successfactors.alert" version="1.0" xmlns:tns="com.successfactors.alert" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+			<xs:element name="rcmAssessmentRequest" type="tns:rcmAssessmentRequest"/>
+			<xs:complexType name="rcmAssessmentRequest">
+				<xs:sequence>
+					<xs:element maxOccurs="1" minOccurs="1" name="entityName" type="xs:string"/>
+					<xs:element maxOccurs="1" minOccurs="1" name="entityId" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="rcmAssessmentResponse" type="tns:rcmAssessmentResponse"/>
+			<xs:complexType name="rcmAssessmentResponse">
+				<xs:sequence>
+					<xs:element maxOccurs="1" minOccurs="0" name="entityId" type="xs:string"/>
+					<xs:element maxOccurs="1" minOccurs="0" name="status" type="xs:string"/>
+					<xs:element maxOccurs="1" minOccurs="0" name="statusDate" type="xs:dateTime"/>
+					<xs:element maxOccurs="1" minOccurs="0" name="statusDetails" type="xs:string"/>
+					<xs:element maxOccurs="1" minOccurs="0" name="assessmentUrl" type="xs:string"/>
+					<xs:element maxOccurs="1" minOccurs="0" name="receiptId" type="xs:string"/>
+					<xs:element maxOccurs="1" minOccurs="0" name="errorCode" type="xs:string"/>
+					<xs:element maxOccurs="1" minOccurs="0" name="errorMessage" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="createAssessmentResult">
+		<wsdl:part name="parameters" element="tns:createAssessmentResult">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="createRcmAssessmentRequestResponse">
+		<wsdl:part name="parameters" element="tns:createRcmAssessmentRequestResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="createRcmAssessmentRequest">
+		<wsdl:part name="parameters" element="tns:createRcmAssessmentRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="createAssessmentResultResponse">
+		<wsdl:part name="parameters" element="tns:createAssessmentResultResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="WebServiceProviderPortType">
+		<wsdl:operation name="createAssessmentResult">
+			<wsdl:input message="tns:createAssessmentResult">
+			</wsdl:input>
+			<wsdl:output message="tns:createAssessmentResultResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createRcmAssessmentRequest">
+			<wsdl:input message="tns:createRcmAssessmentRequest">
+			</wsdl:input>
+			<wsdl:output message="tns:createRcmAssessmentRequestResponse">
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="WebServiceProviderPortBinding" type="tns:WebServiceProviderPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+			<wsp:PolicyReference URI="#BN__binding"/>
+		</wsp:Policy>
+		<wsdl:operation name="createAssessmentResult">
+			<soap:operation soapAction="createAssessmentResult"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="createRcmAssessmentRequest">
+			<soap:operation soapAction="createRcmAssessmentRequest"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="WebServiceProvider">
+		<wsdl:port name="WebServiceProviderPort" binding="tns:WebServiceProviderPortBinding">
+			<soap:address location="https://p250035-iflmap.hcisbp.us3.hana.ondemand.com:443/cxf/ws/simple/shl/createRcmAssessmentRequest"/>
+		</wsdl:port>
+	</wsdl:service>
+	<wsp:UsingPolicy required="true" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+	<wsp:Policy wsu:Id="BN__binding" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+		<wsp:ExactlyOne>
+			<wsp:All>
+				<sp:TransportBinding xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702">
+					<wsp:Policy>
+						<sp:TransportToken>
+							<wsp:Policy>
+								<sp:HttpsToken>
+									<wsp:Policy>
+										<wsp:ExactlyOne>
+											<sp:HttpBasicAuthentication/>
+											<sp:RequireClientCertificate/>
+										</wsp:ExactlyOne>
+									</wsp:Policy>
+								</sp:HttpsToken>
+							</wsp:Policy>
+						</sp:TransportToken>
+						<sp:AlgorithmSuite>
+							<wsp:Policy>
+								<wsp:ExactlyOne>
+									<sp:Basic256/>
+									<sp:Basic192/>
+									<sp:Basic128/>
+									<sp:TripleDes/>
+									<sp:Basic256Rsa15/>
+									<sp:Basic192Rsa15/>
+									<sp:Basic128Rsa15/>
+									<sp:TripleDesRsa15/>
+									<sp:Basic256Sha256/>
+									<sp:Basic192Sha256/>
+									<sp:Basic128Sha256/>
+									<sp:TripleDesSha256/>
+									<sp:Basic256Sha256Rsa15/>
+									<sp:Basic192Sha256Rsa15/>
+									<sp:Basic128Sha256Rsa15/>
+									<sp:TripleDesSha256Rsa15/>
+								</wsp:ExactlyOne>
+							</wsp:Policy>
+						</sp:AlgorithmSuite>
+						<sp:Layout>
+							<wsp:Policy>
+								<sp:Strict/>
+							</wsp:Policy>
+						</sp:Layout>
+					</wsp:Policy>
+				</sp:TransportBinding>
+			</wsp:All>
+		</wsp:ExactlyOne>
+	</wsp:Policy>
+</wsdl:definitions>

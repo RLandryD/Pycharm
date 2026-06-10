@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PIPELINE STEP 3: Interface Separation iFlow
+  Package  : 1_Sender_Receiver1_Hr
+  Purpose  : Routes to the correct scenario-specific iFlow
+             based on SAP_InterfaceName header set by Receiver Determination.
+  Internal : ProcessDirect address /pd/InterfaceSeparation_1_Sender_Receiver1_H
+-->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+             id="Interface_Separation_1_Sender_Receiver1_H"
+             name="Interface_Separation_1_Sender_Receiver1_H">
+  <process id="IfaceSep_1_Sender_Receiver1_H_process" ifl:type="IntegrationFlow">
+
+    <startEvent id="Start_IS" name="From Receiver Determination">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/pd/InterfaceSeparation_1_Sender_Receiver1_H</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </startEvent>
+
+    <!-- ROUTER: Branch to scenario-specific iFlow -->
+    <exclusiveGateway id="Router_1" name="Route by Interface Name"/>
+
+    <sequenceFlow id="route_0" sourceRef="Router_1"
+      targetRef="Call_Employee_Services_Te_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Employee Services - Terminate' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Employee_Services_Te_1"
+      name="→ Employee Services - Terminate" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Employee_Services_Te</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_1" sourceRef="Router_1"
+      targetRef="Call_OAUTH_Token_Revoke_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'OAUTH Token Revoke' -->
+    </sequenceFlow>
+    <serviceTask id="Call_OAUTH_Token_Revoke_1"
+      name="→ OAUTH Token Revoke" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/OAUTH_Token_Revoke</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_2" sourceRef="Router_1"
+      targetRef="Call_OAUTH_Token_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'OAUTH Token' -->
+    </sequenceFlow>
+    <serviceTask id="Call_OAUTH_Token_1"
+      name="→ OAUTH Token" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/OAUTH_Token</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_3" sourceRef="Router_1"
+      targetRef="Call_Employee_Services_Cr_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Employee Services - Create' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Employee_Services_Cr_1"
+      name="→ Employee Services - Create" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Employee_Services_Cr</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_4" sourceRef="Router_1"
+      targetRef="Call_Employment_Informati_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Employment Information - Pay Date File' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Employment_Informati_1"
+      name="→ Employment Information - Pay Date File" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Employment_Informati</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_5" sourceRef="Router_1"
+      targetRef="Call_OAUTH_Token_Validati_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'OAUTH Token Validation Backend' -->
+    </sequenceFlow>
+    <serviceTask id="Call_OAUTH_Token_Validati_1"
+      name="→ OAUTH Token Validation Backend" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/OAUTH_Token_Validati</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_6" sourceRef="Router_1"
+      targetRef="Call_Employee_Services_Up_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Employee Services - Update' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Employee_Services_Up_1"
+      name="→ Employee Services - Update" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Employee_Services_Up</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+
+    <endEvent id="End_IS"/>
+    <sequenceFlow sourceRef="Start_IS" targetRef="Router_1"/>
+  </process>
+</definitions>

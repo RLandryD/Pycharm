@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:nyw="urn:com.netyourwork/aod" xmlns:wd="urn:com.workday/bsvc" xmlns:wd-wsdl="urn:com.workday/bsvc/Recruiting" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="urn:com.workday/bsvc">
+    <xsd:element name="Get_Interviews_Request" type="wd:Get_Interviews_RequestType"/>
+    <xsd:simpleType name="Job_Requisition_EnabledReferenceEnumeration">
+        <xsd:restriction base="xsd:string">
+            <xsd:annotation>
+                <xsd:appinfo>
+                    <wd:enumeration value="WID"/>
+                    <wd:enumeration value="Job_Requisition_ID"/>
+                </xsd:appinfo>
+            </xsd:annotation>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="CandidateObjectType">
+        <xsd:annotation wd:Is_Reference_ID="1"/>
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:CandidateObjectIDType"/>
+        </xsd:sequence>
+        <xsd:attribute name="Descriptor" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="Interview_Request_CriteriaType">
+        <xsd:annotation>
+            <xsd:documentation>Criteria used to determine which interview to return.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:choice>
+                <xsd:element name="Job_Application_Reference" type="wd:Job_ApplicationObjectType">
+                    <xsd:annotation>
+                        <xsd:documentation>A reference to the Job Application associated to the interview.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="Candidate_Interview_Criteria_Data" type="wd:Move_Candidate_CriteriaType">
+                    <xsd:annotation>
+                        <xsd:documentation>A Candidate and Job Requisition reference associated with the interview.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="Job_ApplicationObjectType">
+        <xsd:annotation wd:Is_Reference_ID="1"/>
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Job_ApplicationObjectIDType"/>
+        </xsd:sequence>
+        <xsd:attribute name="Descriptor" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="Interview_Response_GroupType">
+        <xsd:annotation>
+            <xsd:documentation>Element containing Interview response group options.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element maxOccurs="1" minOccurs="0" name="Include_Reference" type="xsd:boolean">
+                <xsd:annotation>
+                    <xsd:documentation>Boolean flag to include Reference in response.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="Job_Requisition_EnabledObjectType">
+        <xsd:annotation wd:Is_Reference_ID="1"/>
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Job_Requisition_EnabledObjectIDType"/>
+        </xsd:sequence>
+        <xsd:attribute name="Descriptor" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="Job_ApplicationObjectIDType">
+        <xsd:annotation>
+            <xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="type" type="wd:Job_ApplicationReferenceEnumeration" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:attribute name="version" type="xsd:string" wd:fixed="v34.2"/>
+    <xsd:complexType name="Job_Requisition_EnabledObjectIDType">
+        <xsd:annotation>
+            <xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="type" type="wd:Job_Requisition_EnabledReferenceEnumeration" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Response_FilterType">
+        <xsd:annotation>
+            <xsd:documentation>Parameters that let you filter the data returned in the response. You can filter returned data by dates and page attributes.</xsd:documentation>
+            <xsd:appinfo>
+                <wd:Validation>
+                    <xsd:documentation>Page number cannot be zero.</xsd:documentation>
+                    <wd:Validation_Message>Page Number cannot be zero.</wd:Validation_Message>
+                </wd:Validation>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element maxOccurs="1" minOccurs="0" name="As_Of_Effective_Date" type="xsd:date">
+                <xsd:annotation>
+                    <xsd:documentation>Indicates the date when application data, such as benefits and compensation, become effective (Also referred to as the Effective Moment). If you don't specify a date, this date defaults to today.{+4}</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element maxOccurs="1" minOccurs="0" name="As_Of_Entry_DateTime" type="xsd:dateTime">
+                <xsd:annotation>
+                    <xsd:documentation>The date and time the data was entered into the system. (This field is also referred to as the Entry Moment). If the date isn't specified, the default date is the current date and time.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element maxOccurs="1" minOccurs="0" name="Page">
+                <xsd:annotation>
+                    <xsd:documentation>The numbered page of data Workday returns in the response. The default page is the first page(Page = 1). For responses that contain more than one page of data, use this parameter to retrieve the additional pages of data. For example, set Page = 2 to retrieve the second page of data.
+
+Note: If you set the page parameter, you must also specify the "As_Of_Entry_Date" to ensure that the result set remains the same between your requests.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:decimal">
+                        <xsd:totalDigits value="12"/>
+                        <xsd:minInclusive value="0"/>
+                        <xsd:fractionDigits value="0"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element maxOccurs="1" minOccurs="0" name="Count">
+                <xsd:annotation>
+                    <xsd:documentation>Sets the number of objects to return within each response page. Set a value between 1 and 999. The default value is 100.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:decimal">
+                        <xsd:totalDigits value="3"/>
+                        <xsd:minInclusive value="0"/>
+                        <xsd:fractionDigits value="0"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="Job_ApplicationReferenceEnumeration">
+        <xsd:restriction base="xsd:string">
+            <xsd:annotation>
+                <xsd:appinfo>
+                    <wd:enumeration value="WID"/>
+                    <wd:enumeration value="Job_Application_ID"/>
+                </xsd:appinfo>
+            </xsd:annotation>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="Interview_Request_ReferencesType">
+        <xsd:annotation>
+            <xsd:documentation>Contains the interview reference.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="Interview_Reference" type="wd:Unique_IdentifierObjectType">
+                <xsd:annotation>
+                    <xsd:documentation>Interview Request Reference.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="Unique_IdentifierReferenceEnumeration">
+        <xsd:restriction base="xsd:string">
+            <xsd:annotation>
+                <xsd:appinfo>
+                    <wd:enumeration value="IID"/>
+                    <wd:enumeration value="WID"/>
+                </xsd:appinfo>
+            </xsd:annotation>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="CandidateReferenceEnumeration">
+        <xsd:restriction base="xsd:string">
+            <xsd:annotation>
+                <xsd:appinfo>
+                    <wd:enumeration value="WID"/>
+                    <wd:enumeration value="Candidate_ID"/>
+                </xsd:appinfo>
+            </xsd:annotation>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="Unique_IdentifierObjectType">
+        <xsd:annotation wd:Is_Reference_ID="1"/>
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Unique_IdentifierObjectIDType"/>
+        </xsd:sequence>
+        <xsd:attribute name="Descriptor" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="Move_Candidate_CriteriaType">
+        <xsd:annotation>
+            <xsd:documentation>Collects the Candidate reference and Job Requisition reference</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="Candidate_Reference" type="wd:CandidateObjectType">
+                <xsd:annotation>
+                    <xsd:documentation>A reference to the Candidate.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Requisition_Reference" type="wd:Job_Requisition_EnabledObjectType">
+                <xsd:annotation>
+                    <xsd:documentation>A reference to a Requisition</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="Unique_IdentifierObjectIDType">
+        <xsd:annotation>
+            <xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="type" type="wd:Unique_IdentifierReferenceEnumeration" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="CandidateObjectIDType">
+        <xsd:annotation>
+            <xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="type" type="wd:CandidateReferenceEnumeration" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="Get_Interviews_RequestType">
+        <xsd:annotation>
+            <xsd:documentation>Contains request reference, criteria, filter and response group for getting interview data.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:choice>
+                <xsd:element minOccurs="0" name="Request_References" type="wd:Interview_Request_ReferencesType">
+                    <xsd:annotation>
+                        <xsd:documentation>Wrapper element containing references to a specific interview.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element minOccurs="0" name="Request_Criteria" type="wd:Interview_Request_CriteriaType"/>
+            </xsd:choice>
+            <xsd:element minOccurs="0" name="Response_Filter" type="wd:Response_FilterType"/>
+            <xsd:element minOccurs="0" name="Response_Group" type="wd:Interview_Response_GroupType">
+                <xsd:annotation>
+                    <xsd:documentation>Element containing Interview response group options.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute ref="wd:version"/>
+    </xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+ </edmx:Reference>
+ <edmx:DataServices m:DataServiceVersion="2.0">
+  <Schema Namespace="API_STANDARD_VALUE_KEY" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+    <EntityType Name="ValueKeyType" sap:label="ValueKeyType" sap:content-version="1">
+      <Key>
+        <PropertyRef Name="LanguageKey"/>
+        <PropertyRef Name="ValueKey"/>
+        <PropertyRef Name="ActivityNo"/>
+      </Key>
+      <Property Name="LanguageKey" Type="Edm.String" Nullable="false" MaxLength="2" sap:display-format="UpperCase" sap:label="LanguageKey" sap:quickinfo="Standard Value Language Key"/>
+      <Property Name="ValueKey" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="ValueKey" sap:quickinfo="Standard Value Key"/>
+      <Property Name="SvkDescription" Type="Edm.String" MaxLength="30" sap:label="SvkDescription" sap:quickinfo="Standard Value Key Description"/>
+      <Property Name="ActivityNo" Type="Edm.Int32" Nullable="false"/>
+      <Property Name="ParamterID" Type="Edm.String" MaxLength="6" sap:label="ParamterID" sap:quickinfo="Parameter ID"/>
+      <Property Name="ParDescription" Type="Edm.String" MaxLength="20" sap:label="ParDescription" sap:quickinfo="Keyword for Parameter ID"/>
+      <Property Name="Dimension" Type="Edm.String" MaxLength="6" sap:label="Dimension" sap:quickinfo="Dimension Key"/>
+      <Property Name="UnitISO" Type="Edm.String" MaxLength="3" sap:label="UnitISO" sap:quickinfo="ISO Code For Unit Of Measurement"/>
+    </EntityType>
+    <EntityContainer Name="API_STANDARD_VALUE_KEY_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+      <EntitySet Name="A_StandardValueKey" EntityType="API_STANDARD_VALUE_KEY.ValueKeyType" sap:deletable="false" sap:content-version="1"/>
+    </EntityContainer>
+    <Annotations Target="API_STANDARD_VALUE_KEY.API_STANDARD_VALUE_KEY_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+    <Annotation Term="Aggregation.ApplySupported">
+     <Record>
+      <PropertyValue Property="Transformations">
+       <Collection>
+        <String>aggregate</String>
+        <String>groupby</String>
+        <String>filter</String>
+       </Collection>
+      </PropertyValue>
+      <PropertyValue Property="Rollup" EnumMember="None"/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <atom:link rel="self" href="https://host:port/sap/opu/odata/sap/API_STANDARD_VALUE_KEY_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+   <atom:link rel="latest-version" href="https://host:port/sap/opu/odata/sap/API_STANDARD_VALUE_KEY_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+  </Schema>
+ </edmx:DataServices>
+</edmx:Edmx>

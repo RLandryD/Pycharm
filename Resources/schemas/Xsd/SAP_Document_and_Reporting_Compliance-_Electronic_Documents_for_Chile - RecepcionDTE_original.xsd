@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xs:schema targetNamespace="http://www.sii.cl/SiiDte"
+	xmlns:SiiDte="http://www.sii.cl/SiiDte" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+	<xs:include schemaLocation="SiiTypes_v10.xsd" />
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
+		schemaLocation="xmldsignature_v10.xsd" />
+	<!-- Fecha ultima actualización : 10-03-05 -->
+	<xs:element name="RecepcionDTE">
+		<xs:annotation>
+			<xs:documentation>Resultados de Recepcion de los Documentos Incluidos
+				en el Envio</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="TipoDTE" type="SiiDte:DTEType" maxOccurs="1" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>Tipo de DTE</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Folio" type="SiiDte:FolioType" maxOccurs="1" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							Folio del DTE
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="FchEmis" type="xs:date" maxOccurs="1" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							Fecha Emision Contable del DTE (AAAA-MM-DD)
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="RUTEmisor" type="SiiDte:RUTType" maxOccurs="1" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							RUT Emisor del DTE
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="RUTRecep" type="SiiDte:RUTType" maxOccurs="1" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							RUT Receptor del DTE
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="MntTotal" type="SiiDte:MontoType" maxOccurs="1" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							Monto Total del DTE
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="EstadoRecepDTE" maxOccurs="1" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							Estado de Recepcion del DTE
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:nonNegativeInteger">
+							<xs:totalDigits value="2" />
+							<xs:enumeration value="0">
+								<xs:annotation>
+									<xs:documentation>
+										DTE Recibido OK
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="1">
+								<xs:annotation>
+									<xs:documentation>
+										DTE No Recibido - Error de Firma
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="2">
+								<xs:annotation>
+									<xs:documentation>
+										DTE No Recibido - Error en RUT
+										Emisor
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="3">
+								<xs:annotation>
+									<xs:documentation>
+										DTE No Recibido - Error en RUT
+										Receptor
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="4">
+								<xs:annotation>
+									<xs:documentation>
+										DTE No Recibido - DTE Repetido
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="99">
+								<xs:annotation>
+									<xs:documentation>
+										DTE No Recibido - Otros
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+
+				<xs:element name="RecepDTEGlosa" maxOccurs="1" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							Informacion Adicional para el Estado de
+							Recepcion del DTE
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="256" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

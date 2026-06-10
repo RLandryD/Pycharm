@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="http://sap.com/xi/FotETaxUS" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://sap.com/xi/FotETaxUS" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:n1="http://sap.com/xi/SAPGlobal20/Global">
+ <wsdl:documentation>
+  <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+ </wsdl:documentation>
+ <wsp:UsingPolicy wsdl:required="true"/>
+ <wsp:Policy wsu:Id="IF_IF_Tax_Juri_Deter">
+  <sapsession:Session xmlns:sapsession="http://www.sap.com/webas/630/soap/features/session/">
+   <sapsession:enableSession>true</sapsession:enableSession>
+  </sapsession:Session>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_TaxJurisdictionCodeDetermination">
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsdl:types>
+  <xsd:schema targetNamespace="http://sap.com/xi/FotETaxUS" xmlns="http://sap.com/xi/FotETaxUS" xmlns:xi0="http://sap.com/xi/SAPGlobal20/Global">
+   <xsd:element name="TAX_JURISDICTION_RECEIVE" type="TAX_JURISDICTION_RECEIVE"/>
+   <xsd:element name="TAX_JURISDICTION_SEND" type="TAX_JURISDICTION_SEND"/>
+   <xsd:complexType name="ExchangeFaultData">
+    <xsd:sequence>
+     <xsd:element name="faultText" type="xsd:string"/>
+     <xsd:element name="faultUrl" minOccurs="0" type="xsd:string"/>
+     <xsd:element name="faultDetail" minOccurs="0" maxOccurs="unbounded" type="ExchangeLogData"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="ExchangeLogData">
+    <xsd:sequence>
+     <xsd:element name="severity" minOccurs="0" type="xsd:string"/>
+     <xsd:element name="text" type="xsd:string"/>
+     <xsd:element name="url" minOccurs="0" type="xsd:string"/>
+     <xsd:element name="id" minOccurs="0" type="xsd:string"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="LOCATION_DATA">
+    <xsd:sequence>
+     <xsd:element name="API_VERSION" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="10"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="JCD_UNIFY_IND" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="1"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="COUNTRY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="3"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="STATE" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="3"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="COUNTY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="35"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="CITY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="35"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="ZIPCODE" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="10"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="TXJCD_L1" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="2"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="TXJCD_L2" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="2"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="TXJCD_L3" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="2"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="TXJCD_L4" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="2"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="TXJCD" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="15"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="OUTOF_CITY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="1"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="STREET_ADDRESS" minOccurs="0" type="STREET_ADDRESS_SIMPLE"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="LOCATION_HEADER">
+    <xsd:sequence>
+     <xsd:element name="RETCODE" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="1"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="ERRCODE" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="4"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="ERRMSG" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="72"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="LOCATION_RESULTS">
+    <xsd:sequence>
+     <xsd:element name="COUNTRY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="3"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="STATE" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="3"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="COUNTY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="35"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="CITY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="35"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="ZIPCODE" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="10"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="TXJCD_L1" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="2"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="TXJCD_L2" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="2"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="TXJCD_L3" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="2"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="TXJCD_L4" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="2"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="TXJCD" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="15"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="OUTOF_CITY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="1"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="REF_INFO" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="20"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="STREET_ADDRESS" minOccurs="0" type="STREET_ADDRESS_SIMPLE"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="STREET_ADDRESS_SIMPLE">
+    <xsd:sequence>
+     <xsd:element name="STREET" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="60"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="STREET1" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TAX_JURISDICTION_RECEIVE">
+    <xsd:sequence>
+     <xsd:element name="LOCATION_HEADER" minOccurs="0" type="LOCATION_HEADER"/>
+     <xsd:element name="LOCATION_RESULTS" minOccurs="0" maxOccurs="unbounded" type="LOCATION_RESULTS"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TAX_JURISDICTION_SEND">
+    <xsd:sequence>
+     <xsd:element name="LOCATION_DATA" type="LOCATION_DATA"/>
+    </xsd:sequence>
+   </xsd:complexType>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://sap.com/xi/SAPGlobal20/Global" xmlns="http://sap.com/xi/SAPGlobal20/Global" xmlns:xi0="http://sap.com/xi/SAPGlobal20/Global">
+   <xsd:import namespace="http://sap.com/xi/FotETaxUS"/>
+   <xsd:element name="StandardMessageFault">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="standard" type="tns:ExchangeFaultData"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="TAX_JURISDICTION_SEND">
+  <wsdl:part name="TAX_JURISDICTION_SEND" element="tns:TAX_JURISDICTION_SEND"/>
+ </wsdl:message>
+ <wsdl:message name="TAX_JURISDICTION_RECEIVE">
+  <wsdl:part name="TAX_JURISDICTION_RECEIVE" element="tns:TAX_JURISDICTION_RECEIVE"/>
+ </wsdl:message>
+ <wsdl:message name="StandardMessageFault">
+  <wsdl:part name="StandardMessageFault" element="n1:StandardMessageFault"/>
+ </wsdl:message>
+ <wsdl:portType name="Tax_Juri_Deter">
+  <wsdl:documentation>
+   <sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+    <sapdoc:docitem applicationComponent="FI-GL-GL-F"/>
+   </sapdoc:sapdoc>
+  </wsdl:documentation>
+  <wsp:Policy>
+   <wsp:PolicyReference URI="#IF_IF_Tax_Juri_Deter"/>
+  </wsp:Policy>
+  <wsdl:operation name="TaxJurisdictionCodeDetermination">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_TaxJurisdictionCodeDetermination"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:TAX_JURISDICTION_SEND"/>
+   <wsdl:output message="tns:TAX_JURISDICTION_RECEIVE"/>
+   <wsdl:fault name="StandardMessageFault" message="tns:StandardMessageFault"/>
+  </wsdl:operation>
+ </wsdl:portType>
+</wsdl:definitions>

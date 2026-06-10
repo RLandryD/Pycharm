@@ -1,0 +1,666 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2007 sp2 (http://www.altova.com) by Tadej Poljsak (ZZZS Informacijski center) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://zzzs.si/b2b/noz/globalTypes" targetNamespace="http://zzzs.si/b2b/noz/globalTypes" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:simpleType name="CehStevilkaPrilogeType">
+		<xs:annotation>
+			<xs:documentation>CEH številka dokumenta</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="30"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DatumType">
+		<xs:annotation>
+			<xs:documentation>Poljubni datum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:date"/>
+		<!-- zaradi lazjega spreminjanja tipa datuma -->
+	</xs:simpleType>
+	<xs:simpleType name="DavcnaStevilkaType">
+		<xs:annotation>
+			<xs:documentation>Davčna številka</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="10"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+		<!-- zaradi lazjega spreminjanja tipa datuma -->
+	</xs:simpleType>
+	<xs:simpleType name="DejavnostType">
+		<xs:annotation>
+			<xs:documentation>Šifra dejavnosti</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="6"/>
+			<xs:pattern value="([0-9]{2})\.([0-9]{3})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DelovniZavarovalniCasType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="42"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DelovnoRazmerjeType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DelovnoDovoljenjeType">
+		<xs:annotation>
+			<xs:documentation>Številka delovnega dovoljenja</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="11"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DrzavljanstvoType">
+		<xs:annotation>
+			<xs:documentation>Šifra državljanstva</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EmsoType">
+		<xs:annotation>
+			<xs:documentation>Matična številka osebe</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="13"/>
+			<xs:pattern value="[0-9]{13}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImeType">
+		<xs:annotation>
+			<xs:documentation>Ime osebe</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="35"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Ime71Type">
+		<xs:annotation>
+			<xs:documentation>Ime osebe dolžine 71 znakov</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="71"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="IzmenskoDeloType">
+		<xs:annotation>
+			<xs:documentation>Izmensko delo</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MatStevPRSType">
+		<xs:annotation>
+			<xs:documentation>Matična številka PRS</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="10"/>
+			<xs:pattern value="[1-9]{1}[0-9]{6}[A-Za-z0-9]{3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MatStevPRSZaposType">
+		<xs:annotation>
+			<xs:documentation>Matična številka zaposlovalca</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="10"/>
+			<xs:pattern value="[1-9]{1}[0-9]{6}[A-Za-z0-9]{3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NapakaType">
+		<xs:annotation>
+			<xs:documentation>Opis napake</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="240"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NaslovType">
+		<xs:annotation>
+			<xs:documentation>Podatki naslova</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Ulica">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="2"/>
+						<xs:maxLength value="50"/>
+						<xs:whiteSpace value="collapse"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SifraPoste" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1000"/>
+						<xs:maxInclusive value="9999"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="KrajPoste">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="2"/>
+						<xs:maxLength value="50"/>
+						<xs:whiteSpace value="collapse"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SifraObcine" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="999"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ImeObcine" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="2"/>
+						<xs:maxLength value="50"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SifraDrzave">
+				<xs:simpleType>
+					<xs:restriction base="SifraDrzaveType">
+						<xs:minInclusive value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ImeDrzave" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="2"/>
+						<xs:maxLength value="50"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="NazivDelovnegaMestaType">
+		<xs:annotation>
+			<xs:documentation>Naziv delovnega mesta</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="5"/>
+			<xs:maxLength value="30"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NazivZavezancaType">
+		<xs:annotation>
+			<xs:documentation>Naziv zavezanca</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="250"/>
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="OpisDelaType">
+		<xs:annotation>
+			<xs:documentation>Opis dela</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="60"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="OpombaZavezancaType">
+		<xs:annotation>
+			<xs:documentation>Opombe zavezanca</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="60"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PodlagaType">
+		<xs:annotation>
+			<xs:documentation>Šifra podlage zavarovanja</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PodrocjeIzobrazbeType">
+		<xs:annotation>
+			<xs:documentation>Področje izobrazbe po šifrantu KLASIUS-P</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="4"/>
+		</xs:restriction>
+		<!-- za obrazce M1, M2 in M3 -->
+	</xs:simpleType>
+	<xs:simpleType name="PoklicnaStrokovnaIzobrazbaType">
+		<xs:annotation>
+			<xs:documentation>Šifra poklicne strokovne izobrazbe</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Za-z0-9]{5}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PoklicOpravljaType">
+		<xs:annotation>
+			<xs:documentation>Poklic, ki ga opravlja</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="4"/>
+			<xs:maxLength value="7"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PravicaOdobrenaType">
+		<xs:annotation>
+			<xs:documentation>Oznaka, ali je pravica socialno ogroženim odobrena ali odvzeta (D/N)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="D"/>
+			<xs:enumeration value="N"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PriimekType">
+		<xs:annotation>
+			<xs:documentation>Priimek osebe</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="35"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Priimek71Type">
+		<xs:annotation>
+			<xs:documentation>Priimek osebe dolžine 71 znakov</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="71"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ProstovoljnoPokojninskoZavarovanjeType">
+		<xs:union memberTypes="ProstovoljnoPokojninskoZavarovanje1Type ProstovoljnoPokojninskoZavarovanje2Type"/>
+	</xs:simpleType>
+	<xs:simpleType name="ProstovoljnoPokojninskoZavarovanje1Type">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="101"/>
+			<xs:maxInclusive value="199"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ProstovoljnoPokojninskoZavarovanje2Type">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="201"/>
+			<xs:maxInclusive value="299"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PrevzemnaStevilkaZZZSType">
+		<xs:annotation>
+			<xs:documentation>Prevzemna številka ZZZS</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="20"/>
+			<xs:maxLength value="30"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ReferentZZZSType">
+		<xs:annotation>
+			<xs:documentation>ZZZS referent</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="5"/>
+			<xs:maxLength value="70"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="RegistrskaStevilkaType">
+		<xs:annotation>
+			<xs:documentation>Registrska številka zavezanca</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:long">
+			<xs:minInclusive value="1000000000"/>
+			<xs:maxInclusive value="9999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="RegStevPrijavePotrebePoDelavcuType">
+		<xs:restriction base="xs:string">
+			<xs:length value="7"/>
+			<xs:pattern value="[A-Za-z0-9]{7}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SeznamNapakZZZSType">
+		<xs:sequence>
+			<xs:element name="Napaka" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="NapakaType">
+							<xs:attribute name="sifra" use="required">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="6"/>
+										<xs:maxLength value="12"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="SifraCSDType">
+		<xs:annotation>
+			<xs:documentation>Šifra CSD</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="SifraDrzaveType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SifraPosteType">
+		<xs:annotation>
+			<xs:documentation>Poštna številka</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1000"/>
+			<xs:maxInclusive value="9999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SifraStatusaIzmenjavePodatkovType">
+		<xs:annotation>
+			<xs:documentation>Šifra statusa izmenjave podatkov</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="2"/>
+			<xs:pattern value="(0[0-1]{1})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SifraPzzZavarovalniceType">
+		<xs:annotation>
+			<xs:documentation>Šifra PZZ zavarovalnice v sistemu ON-LINE ZZ (2 - AS, 3 - Vzajemna, 4 - Triglav)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/>
+			<xs:enumeration value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SolskaIzobrazbaType">
+		<xs:annotation>
+			<xs:documentation>Šolska izobrazba</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-9]{3}[\s]{3})|(([0-9]{3})\.([0-9]{2}))"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SorodstvoType">
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="StevilkaDelovnegaDovoljenjaType">
+		<xs:annotation>
+			<xs:documentation>Številka delovnega dovoljenja</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="11"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StevilkaOdlocbeCsdType">
+		<xs:annotation>
+			<xs:documentation>Stevilka odločbe CSD</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="StevilkaVlogeType">
+		<xs:annotation>
+			<xs:documentation>Številka e-VEM vloge</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="30"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StopnjaSolskeIzobrazbeType">
+		<xs:annotation>
+			<xs:documentation>Stopnja šolske izobrazbe</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="99"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StopnjaStrokovneIzobrazbeType">
+		<xs:annotation>
+			<xs:documentation>Stopnja strokovne izobrazbe</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StopnjaStrokovneUsposobljenostiType">
+		<xs:annotation>
+			<xs:documentation>Stopnja strokovne usposobljenosti</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UlicaType">
+		<xs:annotation>
+			<xs:documentation>Ulica s hišno številko</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="50"/>
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="VerzijaSporocilaType">
+		<xs:annotation>
+			<xs:documentation>Verzija XML sporočila</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="4"/>
+			<xs:pattern value="0007"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="VezajType">
+		<xs:annotation>
+			<xs:documentation>Vezaj med imenoma ali priimkoma</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="1"/>
+			<xs:enumeration value="-"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Vrsta123Type">
+		<xs:annotation>
+			<xs:documentation>Vrsta obrazca (M-1, M-2 ali M-3)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="M-1"/>
+			<xs:enumeration value="M-2"/>
+			<xs:enumeration value="M-3"/>
+		</xs:restriction>
+		<!-- za obrazce M1, M2 in M3 -->
+	</xs:simpleType>
+	<xs:simpleType name="VpisPotrdilaOSolanjuType">
+		<xs:annotation>
+			<xs:documentation>Oznaka vpisa potrdila o šolanju</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="1"/>
+		</xs:restriction>
+		<!-- za obrazce M1, M2 in M3 -->
+	</xs:simpleType>
+	<xs:simpleType name="VrstaObrazcaType">
+		<xs:annotation>
+			<xs:documentation>Vrsta obrazca (M-1, M-2, M-3 ali MDČ)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="M-1"/>
+			<xs:enumeration value="M-2"/>
+			<xs:enumeration value="M-3"/>
+			<xs:enumeration value="MDČ"/>
+		</xs:restriction>
+		<!-- za obrazce M1, M2 in M3 -->
+	</xs:simpleType>
+	<xs:simpleType name="VrstaDCType">
+		<xs:annotation>
+			<xs:documentation>Vrsta obrazca (MDČ)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MDČ"/>
+		</xs:restriction>
+		<!-- za obrazec MDC -->
+	</xs:simpleType>
+	<xs:simpleType name="VrstaDogodkaType">
+		<xs:annotation>
+			<xs:documentation>Vrsta dogodka</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="VrstaIzobrazbeType">
+		<xs:annotation>
+			<xs:documentation>Vrsta izobrazbe po šifrantu KLASIUS-SRV</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="5"/>
+		</xs:restriction>
+		<!-- za obrazce M1, M2 in M3 -->
+	</xs:simpleType>
+	<xs:simpleType name="VrstaInvalidnostiType">
+		<xs:annotation>
+			<xs:documentation>Vrsta invalidnosti</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="99"/>
+		</xs:restriction>
+		<!-- za obrazce M1, M2 in M3 -->
+	</xs:simpleType>
+	<xs:simpleType name="VzrokPrenehanjaType">
+		<xs:annotation>
+			<xs:documentation>Vzrok prenehanja zavarovanja</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="99"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="VzrokSpremembeType">
+		<xs:annotation>
+			<xs:documentation>Vzrok spremembe zavarovanja</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="99"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ZacasniNaslovType">
+		<xs:annotation>
+			<xs:documentation>Podatki začasnega naslova</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Ulica">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="2"/>
+						<xs:maxLength value="50"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SifraPoste" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1000"/>
+						<xs:maxInclusive value="9999"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="KrajPoste">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="2"/>
+						<xs:maxLength value="50"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SifraObcine" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="999"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ImeObcine" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="2"/>
+						<xs:maxLength value="50"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SifraDrzave">
+				<xs:simpleType>
+					<xs:restriction base="SifraDrzaveType">
+						<xs:minInclusive value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ImeDrzave">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="2"/>
+						<xs:maxLength value="50"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DatumIztekaZacasniNaslovRS" type="DatumType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ZavarovalniCasType">
+		<xs:annotation>
+			<xs:documentation>Zavarovalni čas</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="42"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ZzzsStevilkaZavarovancaType">
+		<xs:annotation>
+			<xs:documentation>ZZZS številka zavarovancaType</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="20000000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ZzzsStevilkaType">
+		<xs:annotation>
+			<xs:documentation>ZZZS številka splošno</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+</xs:schema>

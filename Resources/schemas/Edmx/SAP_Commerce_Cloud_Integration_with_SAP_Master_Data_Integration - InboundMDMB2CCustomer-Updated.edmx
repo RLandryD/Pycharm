@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+   <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="1.0">
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:s="http://schemas.sap.com/commerce" Namespace="HybrisCommerceOData" s:schema-version="1">
+         <EntityType Name="Address">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="postalcode" Type="Edm.String" Nullable="true" />
+            <Property Name="contactAddress" Type="Edm.Boolean" Nullable="true" />
+            <Property Name="shippingAddress" Type="Edm.Boolean" Nullable="true" />
+            <Property Name="firstname" Type="Edm.String" Nullable="true" />
+            <Property Name="lastname" Type="Edm.String" Nullable="true" />
+            <Property Name="pobox" Type="Edm.String" Nullable="true" />
+            <Property Name="building" Type="Edm.String" Nullable="true" />
+            <Property Name="town" Type="Edm.String" Nullable="true" />
+            <Property Name="district" Type="Edm.String" Nullable="true" />
+            <Property Name="publicKey" Type="Edm.String" Nullable="true" />
+            <Property Name="sapAddressUsage" Type="Edm.String" Nullable="true" />
+            <Property Name="sapAddressUUID" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="billingAddress" Type="Edm.Boolean" Nullable="true" />
+            <Property Name="dateOfBirth" Type="Edm.DateTime" Nullable="true" />
+            <Property Name="streetnumber" Type="Edm.String" Nullable="true" />
+            <Property Name="sapCustomerID" Type="Edm.String" Nullable="true" />
+            <Property Name="duplicate" Type="Edm.Boolean" Nullable="true" />
+            <Property Name="email" Type="Edm.String" Nullable="true" />
+            <Property Name="phone1" Type="Edm.String" Nullable="true" />
+            <Property Name="cellphone" Type="Edm.String" Nullable="true" />
+            <Property Name="line2" Type="Edm.String" Nullable="true" />
+            <Property Name="middlename" Type="Edm.String" Nullable="true" />
+            <Property Name="phone2" Type="Edm.String" Nullable="true" />
+            <Property Name="line1" Type="Edm.String" Nullable="true" />
+            <Property Name="appartment" Type="Edm.String" Nullable="true" />
+            <Property Name="company" Type="Edm.String" Nullable="true" />
+            <Property Name="streetname" Type="Edm.String" Nullable="true" />
+            <Property Name="department" Type="Edm.String" Nullable="true" />
+            <Property Name="fax" Type="Edm.String" Nullable="true" />
+            <Property Name="sapAddressUsageCounter" Type="Edm.String" Nullable="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Address_sapAddressUUID" />
+            <NavigationProperty Name="gender" Relationship="HybrisCommerceOData.FK_Address_gender" FromRole="Address" ToRole="Gender" Nullable="true" />
+            <NavigationProperty Name="title" Relationship="HybrisCommerceOData.FK_Address_title" FromRole="Address" ToRole="Title" Nullable="true" />
+            <NavigationProperty Name="region" Relationship="HybrisCommerceOData.FK_Address_region" FromRole="Address" ToRole="Region" Nullable="true" />
+            <NavigationProperty Name="country" Relationship="HybrisCommerceOData.FK_Address_country" FromRole="Address" ToRole="Country" Nullable="true" />
+         </EntityType>
+         <EntityType Name="Language">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="isocode" Type="Edm.String" Nullable="false" s:IsUnique="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Language_isocode" />
+         </EntityType>
+         <EntityType Name="Customer">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="sapIsReplicated" Type="Edm.Boolean" Nullable="true" />
+            <Property Name="uid" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+            <Property Name="loginDisabled" Type="Edm.Boolean" Nullable="true" />
+            <Property Name="sapConsumerID" Type="Edm.String" Nullable="true" />
+            <Property Name="contactEmail" Type="Edm.String" Nullable="true" />
+            <Property Name="name" Type="Edm.String" Nullable="true" />
+            <Property Name="sapContactID" Type="Edm.String" Nullable="true" />
+            <Property Name="customerID" Type="Edm.String" Nullable="true" s:IsUnique="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Customer_customerID" />
+            <NavigationProperty Name="addresses" Relationship="HybrisCommerceOData.FK_Customer_addresses" FromRole="Customer" ToRole="Address" Nullable="true" s:IsPartOf="true" s:IsAutoCreate="true" />
+            <NavigationProperty Name="title" Relationship="HybrisCommerceOData.FK_Customer_title" FromRole="Customer" ToRole="Title" Nullable="true" />
+            <NavigationProperty Name="sessionLanguage" Relationship="HybrisCommerceOData.FK_Customer_sessionLanguage" FromRole="Customer" ToRole="Language" Nullable="true" />
+         </EntityType>
+         <EntityType Name="Region">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="isocode" Type="Edm.String" Nullable="false" s:IsUnique="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Region_isocode" />
+         </EntityType>
+         <EntityType Name="Country">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="isocode" Type="Edm.String" Nullable="false" s:IsUnique="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Country_isocode" />
+         </EntityType>
+         <EntityType Name="Title">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="code" Type="Edm.String" Nullable="false" s:IsUnique="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Title_code" />
+         </EntityType>
+         <EntityType Name="Gender">
+            <Key>
+               <PropertyRef Name="integrationKey" />
+            </Key>
+            <Property Name="code" Type="Edm.String" Nullable="false" s:IsUnique="true" />
+            <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Gender_code" />
+         </EntityType>
+         <Association Name="FK_Address_gender">
+            <End Type="HybrisCommerceOData.Address" Multiplicity="0..1" Role="Address" />
+            <End Type="HybrisCommerceOData.Gender" Multiplicity="0..1" Role="Gender" />
+         </Association>
+         <Association Name="FK_Address_title">
+            <End Type="HybrisCommerceOData.Address" Multiplicity="0..1" Role="Address" />
+            <End Type="HybrisCommerceOData.Title" Multiplicity="0..1" Role="Title" />
+         </Association>
+         <Association Name="FK_Address_region">
+            <End Type="HybrisCommerceOData.Address" Multiplicity="0..1" Role="Address" />
+            <End Type="HybrisCommerceOData.Region" Multiplicity="0..1" Role="Region" />
+         </Association>
+         <Association Name="FK_Address_country">
+            <End Type="HybrisCommerceOData.Address" Multiplicity="0..1" Role="Address" />
+            <End Type="HybrisCommerceOData.Country" Multiplicity="0..1" Role="Country" />
+         </Association>
+         <Association Name="FK_Customer_addresses">
+            <End Type="HybrisCommerceOData.Customer" Multiplicity="0..1" Role="Customer" />
+            <End Type="HybrisCommerceOData.Address" Multiplicity="*" Role="Address" />
+         </Association>
+         <Association Name="FK_Customer_title">
+            <End Type="HybrisCommerceOData.Customer" Multiplicity="0..1" Role="Customer" />
+            <End Type="HybrisCommerceOData.Title" Multiplicity="0..1" Role="Title" />
+         </Association>
+         <Association Name="FK_Customer_sessionLanguage">
+            <End Type="HybrisCommerceOData.Customer" Multiplicity="0..1" Role="Customer" />
+            <End Type="HybrisCommerceOData.Language" Multiplicity="0..1" Role="Language" />
+         </Association>
+         <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+            <EntitySet Name="Addresses" EntityType="HybrisCommerceOData.Address" />
+            <EntitySet Name="Languages" EntityType="HybrisCommerceOData.Language" />
+            <EntitySet Name="Customers" EntityType="HybrisCommerceOData.Customer" />
+            <EntitySet Name="Regions" EntityType="HybrisCommerceOData.Region" />
+            <EntitySet Name="Countries" EntityType="HybrisCommerceOData.Country" />
+            <EntitySet Name="Titles" EntityType="HybrisCommerceOData.Title" />
+            <EntitySet Name="Genders" EntityType="HybrisCommerceOData.Gender" />
+            <AssociationSet Name="Address_Genders" Association="HybrisCommerceOData.FK_Address_gender">
+               <End EntitySet="Addresses" Role="Address" />
+               <End EntitySet="Genders" Role="Gender" />
+            </AssociationSet>
+            <AssociationSet Name="Address_Titles" Association="HybrisCommerceOData.FK_Address_title">
+               <End EntitySet="Addresses" Role="Address" />
+               <End EntitySet="Titles" Role="Title" />
+            </AssociationSet>
+            <AssociationSet Name="Address_Regions" Association="HybrisCommerceOData.FK_Address_region">
+               <End EntitySet="Addresses" Role="Address" />
+               <End EntitySet="Regions" Role="Region" />
+            </AssociationSet>
+            <AssociationSet Name="Address_Countries" Association="HybrisCommerceOData.FK_Address_country">
+               <End EntitySet="Addresses" Role="Address" />
+               <End EntitySet="Countries" Role="Country" />
+            </AssociationSet>
+            <AssociationSet Name="Customer_Addresses" Association="HybrisCommerceOData.FK_Customer_addresses">
+               <End EntitySet="Customers" Role="Customer" />
+               <End EntitySet="Addresses" Role="Address" />
+            </AssociationSet>
+            <AssociationSet Name="Customer_Titles" Association="HybrisCommerceOData.FK_Customer_title">
+               <End EntitySet="Customers" Role="Customer" />
+               <End EntitySet="Titles" Role="Title" />
+            </AssociationSet>
+            <AssociationSet Name="Customer_Languages" Association="HybrisCommerceOData.FK_Customer_sessionLanguage">
+               <End EntitySet="Customers" Role="Customer" />
+               <End EntitySet="Languages" Role="Language" />
+            </AssociationSet>
+         </EntityContainer>
+      </Schema>
+   </edmx:DataServices>
+</edmx:Edmx>

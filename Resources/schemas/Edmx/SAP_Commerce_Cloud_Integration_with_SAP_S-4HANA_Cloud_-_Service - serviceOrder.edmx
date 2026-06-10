@@ -1,0 +1,42 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:s="http://schemas.sap.com/commerce" Namespace="HybrisCommerceOData" s:schema-version="1">
+            <EntityType Name="SAPCpiOutboundServiceOrder">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="responseMessage" Nullable="true" Type="Edm.String"/>
+                <Property Name="creationDate" Nullable="true" Type="Edm.String"/>
+                <Property Name="cancelReason" Nullable="true" Type="Edm.String"/>
+                <Property Name="commerceOrderId" Nullable="true" Type="Edm.String"/>
+                <Property Name="orderId" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="transactionType" Nullable="true" Type="Edm.String"/>
+                <Property Name="serviceOrderId" Nullable="true" Type="Edm.String"/>
+                <Property Name="responseStatus" Nullable="true" Type="Edm.String"/>
+                <Property Name="languageIsoCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="SAPCpiOutboundServiceOrder_orderId"/>
+                <NavigationProperty FromRole="SAPCpiOutboundServiceOrder" Name="sapCpiConfig" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundServiceOrder_sapCpiConfig" ToRole="SAPCpiOutboundConfig"/>
+            </EntityType>
+            <EntityType Name="SAPCpiOutboundConfig">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="url" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="username" Nullable="true" Type="Edm.String"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="SAPCpiOutboundConfig_url"/>
+            </EntityType>
+            <Association Name="FK_SAPCpiOutboundServiceOrder_sapCpiConfig">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundServiceOrder" Type="HybrisCommerceOData.SAPCpiOutboundServiceOrder"/>
+                <End Multiplicity="0..1" Role="SAPCpiOutboundConfig" Type="HybrisCommerceOData.SAPCpiOutboundConfig"/>
+            </Association>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundServiceOrder" Name="SAPCpiOutboundServiceOrders"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundConfig" Name="SAPCpiOutboundConfigs"/>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundServiceOrder_sapCpiConfig" Name="SAPCpiOutboundServiceOrder_SAPCpiOutboundConfigs">
+                    <End EntitySet="SAPCpiOutboundServiceOrders" Role="SAPCpiOutboundServiceOrder"/>
+                    <End EntitySet="SAPCpiOutboundConfigs" Role="SAPCpiOutboundConfig"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

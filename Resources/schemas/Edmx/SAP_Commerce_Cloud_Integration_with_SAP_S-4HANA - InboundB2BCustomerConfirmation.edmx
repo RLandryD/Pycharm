@@ -1,0 +1,27 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:s="http://schemas.sap.com/commerce" Namespace="HybrisCommerceOData" s:schema-version="1">
+            <EntityType Name="Customer">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="customerID" Nullable="true" Type="Edm.String"/>
+                <Property Name="uid" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="sapBusinessPartnerID" Nullable="true" Type="Edm.String"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="Customer_uid"/>
+            </EntityType>
+            <EntityType Name="B2BCustomer">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="sapBusinessPartnerID" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="customerID" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="B2BCustomer_customerID|B2BCustomer_sapBusinessPartnerID"/>
+            </EntityType>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet EntityType="HybrisCommerceOData.Customer" Name="Customers"/>
+                <EntitySet EntityType="HybrisCommerceOData.B2BCustomer" Name="B2BCustomers"/>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

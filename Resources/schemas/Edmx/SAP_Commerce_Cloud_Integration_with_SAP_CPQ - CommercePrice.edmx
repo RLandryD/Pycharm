@@ -1,0 +1,139 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:s="http://schemas.sap.com/commerce" Namespace="HybrisCommerceOData" s:schema-version="1">
+            <EntityType Name="PriceRow">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="price" Nullable="false" Type="Edm.Double"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="Currency_isocode"/>
+                <NavigationProperty FromRole="PriceRow" Name="currency" Nullable="false" Relationship="HybrisCommerceOData.FK_PriceRow_currency" ToRole="Currency" s:IsUnique="true"/>
+                <NavigationProperty FromRole="PriceRow" Name="product" Nullable="true" Relationship="HybrisCommerceOData.FK_PriceRow_product" ToRole="Product"/>
+                <NavigationProperty FromRole="PriceRow" Name="catalogVersion" Nullable="true" Relationship="HybrisCommerceOData.FK_PriceRow_catalogVersion" ToRole="CatalogVersion"/>
+            </EntityType>
+            <EntityType Name="BaseStore">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="uid" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="BaseStore_uid"/>
+                <NavigationProperty FromRole="BaseStore" Name="SAPConfiguration" Nullable="true" Relationship="HybrisCommerceOData.FK_BaseStore_SAPConfiguration" ToRole="SAPConfiguration"/>
+                <NavigationProperty FromRole="BaseStore" Name="defaultCurrency" Nullable="true" Relationship="HybrisCommerceOData.FK_BaseStore_defaultCurrency" ToRole="Currency"/>
+            </EntityType>
+            <EntityType Name="SAPConfiguration">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="sapcommon_distributionChannel" Nullable="true" Type="Edm.String"/>
+                <Property Name="sapcommon_salesOrganization" Nullable="true" Type="Edm.String"/>
+                <Property Name="core_name" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="saporderexchange_itemPriceConditionType" Nullable="true" Type="Edm.String"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="SAPConfiguration_core_name"/>
+            </EntityType>
+            <EntityType Name="Currency">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="isocode" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="Currency_isocode"/>
+            </EntityType>
+            <EntityType Name="CatalogVersion">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="version" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CatalogVersion_version|Catalog_id"/>
+                <NavigationProperty FromRole="CatalogVersion" Name="catalog" Nullable="false" Relationship="HybrisCommerceOData.FK_CatalogVersion_catalog" ToRole="Catalog" s:IsUnique="true"/>
+            </EntityType>
+            <EntityType Name="Product">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CatalogVersion_version|Catalog_id|Product_code"/>
+                <NavigationProperty FromRole="Product" Name="catalogVersion" Nullable="false" Relationship="HybrisCommerceOData.FK_Product_catalogVersion" ToRole="CatalogVersion" s:IsUnique="true"/>
+            </EntityType>
+            <EntityType Name="Catalog">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="id" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="Catalog_id"/>
+                <NavigationProperty FromRole="Catalog" Name="baseStores" Nullable="true" Relationship="HybrisCommerceOData.FK_Catalog_baseStores" ToRole="BaseStore"/>
+            </EntityType>
+            <Association Name="FK_Product_catalogVersion">
+                <End Multiplicity="0..1" Role="Product" Type="HybrisCommerceOData.Product"/>
+                <End Multiplicity="0..1" Role="CatalogVersion" Type="HybrisCommerceOData.CatalogVersion"/>
+            </Association>
+            <Association Name="FK_CatalogVersion_catalog">
+                <End Multiplicity="0..1" Role="CatalogVersion" Type="HybrisCommerceOData.CatalogVersion"/>
+                <End Multiplicity="0..1" Role="Catalog" Type="HybrisCommerceOData.Catalog"/>
+            </Association>
+            <Association Name="FK_PriceRow_currency">
+                <End Multiplicity="0..1" Role="PriceRow" Type="HybrisCommerceOData.PriceRow"/>
+                <End Multiplicity="0..1" Role="Currency" Type="HybrisCommerceOData.Currency"/>
+            </Association>
+            <Association Name="FK_PriceRow_product">
+                <End Multiplicity="0..1" Role="PriceRow" Type="HybrisCommerceOData.PriceRow"/>
+                <End Multiplicity="0..1" Role="Product" Type="HybrisCommerceOData.Product"/>
+            </Association>
+            <Association Name="FK_PriceRow_catalogVersion">
+                <End Multiplicity="0..1" Role="PriceRow" Type="HybrisCommerceOData.PriceRow"/>
+                <End Multiplicity="0..1" Role="CatalogVersion" Type="HybrisCommerceOData.CatalogVersion"/>
+            </Association>
+            <Association Name="FK_Catalog_baseStores">
+                <End Multiplicity="0..1" Role="Catalog" Type="HybrisCommerceOData.Catalog"/>
+                <End Multiplicity="*" Role="BaseStore" Type="HybrisCommerceOData.BaseStore"/>
+            </Association>
+            <Association Name="FK_BaseStore_SAPConfiguration">
+                <End Multiplicity="0..1" Role="BaseStore" Type="HybrisCommerceOData.BaseStore"/>
+                <End Multiplicity="0..1" Role="SAPConfiguration" Type="HybrisCommerceOData.SAPConfiguration"/>
+            </Association>
+            <Association Name="FK_BaseStore_defaultCurrency">
+                <End Multiplicity="0..1" Role="BaseStore" Type="HybrisCommerceOData.BaseStore"/>
+                <End Multiplicity="0..1" Role="Currency" Type="HybrisCommerceOData.Currency"/>
+            </Association>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet EntityType="HybrisCommerceOData.PriceRow" Name="PriceRows"/>
+                <EntitySet EntityType="HybrisCommerceOData.BaseStore" Name="BaseStores"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPConfiguration" Name="SAPConfigurations"/>
+                <EntitySet EntityType="HybrisCommerceOData.Currency" Name="Currencies"/>
+                <EntitySet EntityType="HybrisCommerceOData.CatalogVersion" Name="CatalogVersions"/>
+                <EntitySet EntityType="HybrisCommerceOData.Product" Name="Products"/>
+                <EntitySet EntityType="HybrisCommerceOData.Catalog" Name="Catalogs"/>
+                <AssociationSet Association="HybrisCommerceOData.FK_Product_catalogVersion" Name="Product_CatalogVersions">
+                    <End EntitySet="Products" Role="Product"/>
+                    <End EntitySet="CatalogVersions" Role="CatalogVersion"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_CatalogVersion_catalog" Name="CatalogVersion_Catalogs">
+                    <End EntitySet="CatalogVersions" Role="CatalogVersion"/>
+                    <End EntitySet="Catalogs" Role="Catalog"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_PriceRow_currency" Name="PriceRow_Currencies">
+                    <End EntitySet="PriceRows" Role="PriceRow"/>
+                    <End EntitySet="Currencies" Role="Currency"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_PriceRow_product" Name="PriceRow_Products">
+                    <End EntitySet="PriceRows" Role="PriceRow"/>
+                    <End EntitySet="Products" Role="Product"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_PriceRow_catalogVersion" Name="PriceRow_CatalogVersions">
+                    <End EntitySet="PriceRows" Role="PriceRow"/>
+                    <End EntitySet="CatalogVersions" Role="CatalogVersion"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_Catalog_baseStores" Name="Catalog_BaseStores">
+                    <End EntitySet="Catalogs" Role="Catalog"/>
+                    <End EntitySet="BaseStores" Role="BaseStore"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BaseStore_SAPConfiguration" Name="BaseStore_SAPConfigurations">
+                    <End EntitySet="BaseStores" Role="BaseStore"/>
+                    <End EntitySet="SAPConfigurations" Role="SAPConfiguration"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BaseStore_defaultCurrency" Name="BaseStore_Currencies">
+                    <End EntitySet="BaseStores" Role="BaseStore"/>
+                    <End EntitySet="Currencies" Role="Currency"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

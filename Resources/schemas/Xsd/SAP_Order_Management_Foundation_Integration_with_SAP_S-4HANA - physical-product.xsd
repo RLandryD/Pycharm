@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0">
+  <xsd:element name="products">
+    <xsd:annotation>
+      <xsd:documentation>Information about the physical products to be transferred from the SAP back-end system to SAP Cloud Platform.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="product" minOccurs="1" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="id" minOccurs="0" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>The unique identifier for the product.</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="displayId" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>Product displayId</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <!-- TODO: enum type for productType -->
+              <xsd:element name="productType" minOccurs="0" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>Product type</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="soldElectronically" minOccurs="0" type="xsd:boolean">
+                <xsd:annotation>
+                  <xsd:documentation>Product sold electronically</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <!-- TODO Check how to handle published-->
+              <xsd:element name="published" minOccurs="0" type="xsd:boolean">
+                <xsd:annotation>
+                  <xsd:documentation>Product published</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="markedForDeletion" minOccurs="0" type="xsd:boolean">
+                <xsd:annotation>
+                  <xsd:documentation>Product markedForDeletion flag</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="information" minOccurs="1" maxOccurs="unbounded">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="languageCode" type="xsd:string" />
+                    <xsd:element name="name" type="xsd:string" />
+                    <xsd:element name="description" type="xsd:string" />
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="externalSystemReferences" minOccurs="1" maxOccurs="unbounded">
+                <xsd:annotation>
+                  <xsd:documentation>Refers to the products ID's and the Systems ID's from S4.</xsd:documentation>
+                </xsd:annotation>                
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="externalSystemId" type="xsd:string" />
+                    <xsd:element name="externalId" type="xsd:string" />
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>              
+              <xsd:element name="aspectsData">
+                <xsd:annotation>
+                  <xsd:documentation>Lists the aspectsData services used to transfer products from the SAP back-end system to SAP Cloud Platform.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="physicalProduct">
+                      <xsd:annotation>
+                        <xsd:documentation>The name of the aspectsData service for the Physical Product Aspect service.</xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:complexType>
+                        <xsd:sequence>
+                          <xsd:element name="physicalProductCategory" minOccurs="0">
+                            <xsd:annotation>
+                              <xsd:documentation>The material category assigned to a retail product (article) in the back-end system, for example, single material. **Currently, only single materials are supported.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                              <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="2" />
+                              </xsd:restriction>
+                            </xsd:simpleType>
+                          </xsd:element>
+                          <xsd:element name="physicalProductItemCategory" minOccurs="0">
+                            <xsd:annotation>
+                              <xsd:documentation>The product item category of the physical product.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                              <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="4" />
+                              </xsd:restriction>
+                            </xsd:simpleType>
+                          </xsd:element>
+                          <xsd:element name="physicalProductType" minOccurs="0">
+                            <xsd:annotation>
+                              <xsd:documentation>The classification assigned to the product in the SAP back-end system, for example, food or apparel.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                              <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="4" />
+                              </xsd:restriction>
+                            </xsd:simpleType>
+                          </xsd:element>
+                          <xsd:element name="physicalProductGroup" minOccurs="0">
+                            <xsd:annotation>
+                              <xsd:documentation>The product group assigned to the product in the SAP back-end system. The product group represents a group of related products assembled for a particular purpose, for example, for a promotion.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                              <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="9" />
+                              </xsd:restriction>
+                            </xsd:simpleType>
+                          </xsd:element>
+                          <xsd:element name="baseUnitOfMeasure" minOccurs="0">
+                                  <xsd:annotation>
+                                    <xsd:documentation>The ISO code for the unit of measure in which the stock of a product is typically managed. This value must be between 1 and 3 characters.</xsd:documentation>
+                                  </xsd:annotation>
+                                  <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                      <xsd:maxLength value="3" />
+                                    </xsd:restriction>
+                                  </xsd:simpleType>
+                          </xsd:element>
+                          <xsd:element name="salesAreaData" minOccurs="0" maxOccurs="9999">
+                            <xsd:complexType>
+                              <xsd:sequence>
+                                <xsd:element name="salesOrganization" minOccurs="0" type="xsd:string" />
+                                <xsd:element name="distributionChannel" minOccurs="0" type="xsd:string" />
+                                <xsd:element name="productPricingGroup" minOccurs="0">
+                                  <xsd:annotation>
+                                    <xsd:documentation>A group that includes products to which the same pricing conditions apply. For example, if a quantity-based discount applies to several products, these products can be assigned to a product pricing group that specifies the discount conditions. Note that in the SAP back-end system, this field is material pricing group.</xsd:documentation>
+                                  </xsd:annotation>
+                                  <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                      <xsd:maxLength value="2" />
+                                    </xsd:restriction>
+                                  </xsd:simpleType>
+                                </xsd:element>
+                                <xsd:element name="pricingReferenceProduct" minOccurs="0">
+                                  <xsd:annotation>
+                                    <xsd:documentation>A product that the SAP back-end system uses as a reference for determining pricing conditions. When you assign a pricing reference product to your product, the pricing conditions for the pricing reference product are then applied to your product. For example, if Products B, C, and D require the same pricing conditions as Product A, Product A can be assigned as the pricing reference product in Products B, C, and D. Note that in the SAP back-end system, this field is pricing reference material.</xsd:documentation>
+                                  </xsd:annotation>
+                                  <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                      <xsd:maxLength value="40" />
+                                    </xsd:restriction>
+                                  </xsd:simpleType>
+                                </xsd:element>
+                                <xsd:element name="active" minOccurs="0" type="xsd:boolean">
+                                  <xsd:annotation>
+                                    <xsd:documentation>Flag material for deletion at distribution chain level. The default value is true. When the value is X in back end, set to false on cloud</xsd:documentation>
+                                  </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="division" minOccurs="0">
+                                  <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                      <xsd:maxLength value="2" />
+                                    </xsd:restriction>
+                                  </xsd:simpleType>
+                                </xsd:element>
+                              </xsd:sequence>
+                            </xsd:complexType>
+                          </xsd:element>
+                          <xsd:element name="unitOfMeasures" minOccurs="0" maxOccurs="999">
+                            <xsd:annotation>
+                              <xsd:documentation>Information related the units of measure for the product in the SAP back-end system.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:complexType>
+                              <xsd:sequence>
+                                <xsd:element name="alternativeUnitOfMeasure" minOccurs="0">
+                                  <xsd:annotation>
+                                    <xsd:documentation>The ISO code for the alternative unit of measure, which is a unit of measure defined in the SAP system in addition to the base unit of measure. For example, the base unit of measure might be "pallet" while the alternative unit might be "carton".</xsd:documentation>
+                                  </xsd:annotation>
+                                  <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                      <xsd:maxLength value="3" />
+                                    </xsd:restriction>
+                                  </xsd:simpleType>
+                                </xsd:element>
+                                <xsd:element name="numerator" minOccurs="0">
+                                  <xsd:annotation>
+                                    <xsd:documentation>The numerator used to convert the alternative unit of measure to the base unit of measure.</xsd:documentation>
+                                  </xsd:annotation>
+                                  <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                      <xsd:maxLength value="6" />
+                                    </xsd:restriction>
+                                  </xsd:simpleType>
+                                </xsd:element>
+                                <xsd:element name="denominator" minOccurs="0">
+                                  <xsd:annotation>
+                                    <xsd:documentation>The denominator used to convert the alternative unit of measure to the base unit of measure.</xsd:documentation>
+                                  </xsd:annotation>
+                                  <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                      <xsd:maxLength value="6" />
+                                    </xsd:restriction>
+                                  </xsd:simpleType>
+                                </xsd:element>
+                              </xsd:sequence>
+                            </xsd:complexType>
+                          </xsd:element>
+                        </xsd:sequence>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

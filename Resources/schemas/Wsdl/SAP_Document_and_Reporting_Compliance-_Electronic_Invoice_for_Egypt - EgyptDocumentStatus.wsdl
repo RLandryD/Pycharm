@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+                  xmlns:tns="http://www/sap.com/eDocument/Egypt/eInvoice" 
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+                  name="EgyptDocumentStatus" 
+                  targetNamespace="http://www/sap.com/eDocument/Egypt/eInvoice"
+                  xmlns:einv="http://www.sap.com/eDocument/Egypt/eInvoice/v1.0">
+  <wsdl:types>
+  <xsd:schema
+			targetNamespace="http://www.sap.com/eDocument/Egypt/eInvoice/v1.0"
+			xmlns:einv="http://www.sap.com/eDocument/Egypt/eInvoice/v1.0">	
+			<xsd:import schemaLocation="eInvoiceEgypt.xsd"
+				        namespace="http://www.sap.com/eDocument/Egypt/eInvoice/v1.0" />
+   </xsd:schema>
+   <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:import
+	               			namespace="http://www.sap.com/eDocument/Egypt/eInvoice/v1.0"
+	 			         schemaLocation="eInvoiceEgypt.xsd">
+			</xsd:import>
+		</xsd:schema>	
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+                targetNamespace="http://www/sap.com/eDocument/Egypt/eInvoice">
+      <xsd:element name="getStatus">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="in" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getStatusResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="out" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="getStatusRequest">
+    <wsdl:part element="einv:getStatusRequest" name="request"/>
+  </wsdl:message>
+  <wsdl:message name="getStatusResponse">
+    <wsdl:part element="einv:getStatusResponse" name="response"/>
+  </wsdl:message>
+  <wsdl:portType name="EgyptDocumentStatusPortEG">
+    <wsdl:operation name="getStatus">
+      <wsdl:input message="tns:getStatusRequest"/>
+      <wsdl:output message="tns:getStatusResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="EgyptDocumentStatusSOAP" type="tns:EgyptDocumentStatusPortEG">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getStatus">
+      <soap:operation soapAction="http://www/sap.com/eDocument/Egypt/eInvoice/NewOperation"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="EgyptDocumentStatus">
+    <wsdl:port binding="tns:EgyptDocumentStatusSOAP" name="EgyptDocumentStatusPortEG">
+      <soap:address location="http://www.example.org/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

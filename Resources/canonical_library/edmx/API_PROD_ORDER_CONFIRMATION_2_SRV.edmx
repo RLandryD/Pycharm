@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+		<edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+	</edmx:Reference>
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="API_PROD_ORDER_CONFIRMATION_2_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="ProdnOrdConfMatlDocItmType" sap:label="Material Movements for Confirmation" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="ConfirmationGroup"/>
+					<PropertyRef Name="ConfirmationCount"/>
+					<PropertyRef Name="MaterialDocument"/>
+					<PropertyRef Name="MaterialDocumentItem"/>
+					<PropertyRef Name="MaterialDocumentYear"/>
+				</Key>
+				<Property Name="ConfirmationGroup" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Confirmation Group" sap:quickinfo="Collective ID of Order Confirmations"/>
+				<Property Name="ConfirmationCount" Type="Edm.String" Nullable="false" MaxLength="8" sap:display-format="NonNegative" sap:label="Order Confirmation" sap:quickinfo="Identifier of Single Order Confirmation"/>
+				<Property Name="MaterialDocument" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Material Document" sap:quickinfo="Number of Material Document"/>
+				<Property Name="MaterialDocumentItem" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="NonNegative" sap:label="Material Doc.Item" sap:quickinfo="Item in Material Document"/>
+				<Property Name="MaterialDocumentYear" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="NonNegative" sap:label="Material Doc. Year" sap:quickinfo="Material Document Year"/>
+				<Property Name="OrderType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Order Type" sap:quickinfo="Manufacturing Order Type"/>
+				<Property Name="OrderID" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Manufacturing Order" sap:quickinfo="Manufacturing Order ID"/>
+				<Property Name="OrderItem" Type="Edm.String" MaxLength="4" sap:display-format="NonNegative" sap:label="Order Item"/>
+				<Property Name="ManufacturingOrderCategory" Type="Edm.String" MaxLength="2" sap:display-format="NonNegative" sap:label="Order Category" sap:quickinfo="Manufacturing Order Category"/>
+				<Property Name="Material" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number for Order"/>
+				<Property Name="Plant" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Plant"/>
+				<Property Name="Reservation" Type="Edm.String" MaxLength="10" sap:display-format="NonNegative" sap:label="Reservation" sap:quickinfo="Number of reservation/dependent requirements"/>
+				<Property Name="ReservationItem" Type="Edm.String" MaxLength="4" sap:display-format="NonNegative" sap:label="Reservation Item" sap:quickinfo="Item Number of Reservation / Dependent Requirements"/>
+				<Property Name="StorageLocation" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Storage Location"/>
+				<Property Name="ProductionSupplyArea" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Prodn Supply Area" sap:quickinfo="Production Supply Area"/>
+				<Property Name="Batch" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Batch" sap:quickinfo="Batch Number"/>
+				<Property Name="InventoryValuationType" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Valuation Type" sap:quickinfo="Inventory Valuation Type"/>
+				<Property Name="GoodsMovementType" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Goods Movement Type"/>
+				<Property Name="GoodsMovementRefDocType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Reference Doc. Type" sap:quickinfo="Goods movement ref doc type"/>
+				<Property Name="InventoryUsabilityCode" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Inventory Usability" sap:quickinfo="Inventory Usability Code"/>
+				<Property Name="InventorySpecialStockType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Special Stock Type" sap:quickinfo="Inventory Special Stock Type"/>
+				<Property Name="SalesOrder" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Order"/>
+				<Property Name="SalesOrderItem" Type="Edm.String" MaxLength="6" sap:display-format="NonNegative" sap:label="Sales Order Item"/>
+				<Property Name="WBSElementExternalID" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label="WBS Element" sap:quickinfo="Work Breakdown Structure Element (WBS Element) Edited"/>
+				<Property Name="Supplier" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Supplier" sap:quickinfo="Supplier's Account Number"/>
+				<Property Name="Customer" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer" sap:quickinfo="Account number of customer"/>
+				<Property Name="ReservationIsFinallyIssued" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Res Final Issue" sap:quickinfo="Final Issue for Reservation"/>
+				<Property Name="IsCompletelyDelivered" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Delivery Completed" sap:quickinfo="&quot;Delivery Completed&quot; Indicator"/>
+				<Property Name="ShelfLifeExpirationDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="SLED/BBD" sap:quickinfo="Shelf Life Expiration or Best-Before Date"/>
+				<Property Name="ManufactureDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date of Manufacture"/>
+				<Property Name="StorageType" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Storage Type"/>
+				<Property Name="StorageBin" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Storage Bin"/>
+				<Property Name="MaterialDocumentItemText" Type="Edm.String" MaxLength="50" sap:label="Text" sap:quickinfo="Item Text"/>
+				<Property Name="EntryUnit" Type="Edm.String" MaxLength="3" sap:label="Unit of Entry" sap:quickinfo="Unit of entry"/>
+				<Property Name="EntryUnitISOCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="ISO code" sap:quickinfo="ISO code for unit of measurement"/>
+				<Property Name="EntryUnitSAPCode" Type="Edm.String" MaxLength="3" sap:label="Internal SAP Code" sap:quickinfo="Unit of Measurement, Internal SAP Code (No Conversion)" sap:semantics="unit-of-measure"/>
+				<Property Name="QuantityInEntryUnit" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="EntryUnit" sap:label="Quantity in Unit of Entry"/>
+				<NavigationProperty Name="DataFields" Relationship="API_PROD_ORDER_CONFIRMATION_2_SRV.RS_itemToDataFields" FromRole="FromRole_RS_itemToDataFields" ToRole="ToRole_RS_itemToDataFields"/>
+			</EntityType>
+			 <!-- Start of DataFields -->
+			<EntityType Name="DataField" sap:label="Data Fields" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="MaterialDocument"/>
+					<PropertyRef Name="MaterialDocumentItem"/>
+				</Key>
+				<Property Name="MaterialDocument" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Material Document" sap:quickinfo="Number of Material Document"/>
+				<Property Name="MaterialDocumentItem" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="NonNegative" sap:label="Material Doc.Item" sap:quickinfo="Item in Material Document"/>
+				<Property Name="FieldName" Type="Edm.String" MaxLength="128" sap:label="Data Field Name" sap:quickinfo="Name of data field item"/>
+				<Property Name="FieldValue" Type="Edm.String" MaxLength="1024" sap:label="Data Field Value" sap:quickinfo="Value of data field item"/>
+			</EntityType>
+			<!-- End of DataFields -->
+			<EntityType Name="ProdnOrdConf2Type" sap:label="Production Order Confirmation" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="ConfirmationGroup"/>
+					<PropertyRef Name="ConfirmationCount"/>
+				</Key>
+				<Property Name="ConfirmationGroup" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Confirmation Group" sap:quickinfo="Collective ID of Order Confirmations"/>
+				<Property Name="ConfirmationCount" Type="Edm.String" Nullable="false" MaxLength="8" sap:display-format="NonNegative" sap:label="Order Confirmation" sap:quickinfo="Identifier of Single Order Confirmation"/>
+				<Property Name="OrderID" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Manufacturing Order" sap:quickinfo="Manufacturing Order ID"/>
+				<Property Name="Sfc" Type="Edm.String" MaxLength="128" sap:display-format="UpperCase" sap:label="SFC"/>
+        <Property Name="ApprovedByUser" Type="Edm.String" MaxLength="128" sap:display-format="UpperCase" sap:label="ApprovedByUser"/>
+				<Property Name="Sequence" Type="Edm.String" MaxLength="6" sap:display-format="UpperCase" sap:label="Sequence" sap:quickinfo="Manufacturing Order Sequence"/>
+				<Property Name="OrderOperation" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Operation" sap:quickinfo="Manufacturing Order Operation"/>
+				<Property Name="OrderSuboperation" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Suboperation" sap:quickinfo="Manufacturing Order Suboperation"/>
+				<Property Name="OrderType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Order Type" sap:quickinfo="Manufacturing Order Type"/>
+				<Property Name="OrderOperationInternalID" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:label="Operation Internal ID" sap:quickinfo="Internal Identifier of an Operation or Activity"/>
+				<Property Name="ConfirmationText" Type="Edm.String" MaxLength="40" sap:label="Confirmation Text"/>
+				<Property Name="Language" Type="Edm.String" MaxLength="2" sap:label="Language Key"/>
+				<Property Name="Material" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number for Order"/>
+				<Property Name="OrderPlannedTotalQty" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="ProductionUnit" sap:label="Total Quantity" sap:quickinfo="Manufacturing Order Planned Total Quantity"/>
+				<Property Name="ProductionUnit" Type="Edm.String" MaxLength="3" sap:label="Production Unit" sap:quickinfo="Production Unit of Measure" sap:semantics="unit-of-measure"/>
+				<Property Name="FinalConfirmationType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Final Confirmation Type"/>
+				<Property Name="IsFinalConfirmation" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Final Confirmation" sap:quickinfo="Activation of Final Confirmation"/>
+				<Property Name="OpenReservationsIsCleared" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Clear Open Reservs." sap:quickinfo="Clear Open Reservations"/>
+				<Property Name="IsReversed" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Reversed" sap:quickinfo="Indicator: Document was reversed"/>
+				<Property Name="IsReversal" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Is a Cancellation" sap:quickinfo="Confirmation record is a Cancellation"/>
+				<Property Name="APIConfHasNoGoodsMovements" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="No Goods Movement" sap:quickinfo="Confirmation: No Goods Movement via API"/>
+				<Property Name="OrderConfirmationRecordType" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Record Type" sap:quickinfo="Record Type for Confirmation"/>
+				<Property Name="ConfirmationEntryDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Entry Date" sap:quickinfo="Entry Date of Confirmation"/>
+				<Property Name="ConfirmationEntryTime" Type="Edm.Time" Precision="0" sap:label="Entry Time" sap:quickinfo="Confirmation Entry Time"/>
+				<Property Name="EnteredByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Entered by User" sap:quickinfo="User who Entered the Confirmation"/>
+				<Property Name="LastChangeDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Last Change" sap:quickinfo="Date of Last Change"/>
+				<Property Name="LastChangedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Changed By" sap:quickinfo="Name of Person who Changed Object"/>
+				<Property Name="ConfirmationExternalEntryDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Created on" sap:quickinfo="External date of entry for confirmation"/>
+				<Property Name="ConfirmationExternalEntryTime" Type="Edm.Time" Precision="0" sap:label="Time" sap:quickinfo="External time of entry for confirmation"/>
+				<Property Name="EnteredByExternalUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Created by" sap:quickinfo="External creator of confirmation"/>
+				<Property Name="ExternalSystemConfirmation" Type="Edm.Guid" sap:label="External Key" sap:quickinfo="External Key for Confirmation (for example, from PDC System)"/>
+				<Property Name="Plant" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Plant"/>
+				<Property Name="WorkCenterTypeCode" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Resource Object Type" sap:quickinfo="Object Type of the Resource"/>
+				<Property Name="WorkCenter" Type="Edm.String" MaxLength="8" sap:display-format="UpperCase" sap:label="Work Center"/>
+				<Property Name="CapacityCategoryCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Capacity Category"/>
+				<Property Name="CapacityRequirementSplit" Type="Edm.Byte" sap:label="Split Number" sap:quickinfo="Capacity Split Number"/>
+				<Property Name="Personnel" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:label="Personnel" sap:quickinfo="Personnel Number"/>
+				<Property Name="TimeRecording" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:label="Time Recording" sap:quickinfo="Time Recording ID"/>
+				<Property Name="EmployeeWageType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Employee Wage Type"/>
+				<Property Name="EmployeeWageGroup" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Employee Wage Group"/>
+				<Property Name="BreakDurationUnit" Type="Edm.String" MaxLength="3" sap:label="Break Time Unit" sap:quickinfo="Unit for a Break Time" sap:semantics="unit-of-measure"/>
+				<Property Name="BreakDurationUnitISOCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="ISO code" sap:quickinfo="ISO code for unit of measurement"/>
+				<Property Name="ConfirmedBreakDuration" Type="Edm.Decimal" Precision="9" Scale="3" sap:label="Confirmed Break Time"/>
+				<Property Name="EmployeeSuitability" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Employee Suitability"/>
+				<Property Name="NumberOfEmployees" Type="Edm.Decimal" Precision="5" Scale="2" sap:label="Number of Employees"/>
+				<Property Name="PostingDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Posting Date"/>
+				<Property Name="ConfirmedExecutionStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Execution Start Date" sap:quickinfo="Confirmed Start Date of Execution"/>
+				<Property Name="ConfirmedExecutionStartTime" Type="Edm.Time" Precision="0" sap:label="Execution Start Time" sap:quickinfo="Confirmed Start Time of Execution"/>
+				<Property Name="ConfirmedSetupEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Setup End Date" sap:quickinfo="Confirmed End Date of Setup"/>
+				<Property Name="ConfirmedSetupEndTime" Type="Edm.Time" Precision="0" sap:label="Setup End Time" sap:quickinfo="Confirmed End Time of Setup"/>
+				<Property Name="ConfirmedProcessingStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Processing Start Date" sap:quickinfo="Confirmed Start Date of Processing"/>
+				<Property Name="ConfirmedProcessingStartTime" Type="Edm.Time" Precision="0" sap:label="Processing Start Time" sap:quickinfo="Confirmed Start Time of Processing"/>
+				<Property Name="ConfirmedProcessingEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Processing End Date" sap:quickinfo="Confirmed End Date of Processing"/>
+				<Property Name="ConfirmedProcessingEndTime" Type="Edm.Time" Precision="0" sap:label="Processing End Time" sap:quickinfo="Confirmed End Time of Processing"/>
+				<Property Name="ConfirmedTeardownStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Teardown Start Date" sap:quickinfo="Confirmed Start Date of Teardown"/>
+				<Property Name="ConfirmedTeardownStartTime" Type="Edm.Time" Precision="0" sap:label="Teardown Start Time" sap:quickinfo="Confirmed Start Time of Teardown"/>
+				<Property Name="ConfirmedExecutionEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Execution End Date" sap:quickinfo="Confirmed End Date of Execution"/>
+				<Property Name="ConfirmedExecutionEndTime" Type="Edm.Time" Precision="0" sap:label="Execution End Time" sap:quickinfo="Confirmed End Time of Execution"/>
+				<Property Name="ConfirmationUnit" Type="Edm.String" MaxLength="3" sap:label="Confirmation Unit" sap:quickinfo="Confirmation Unit of Measure"/>
+                <Property Name="ConfirmationUnitSAPCode" Type="Edm.String" MaxLength="3" sap:label="Internal SAP Code" sap:quickinfo="Unit of Measurement, Internal SAP Code (No Conversion)" sap:semantics="unit-of-measure"/>
+				<Property Name="ConfirmationUnitISOCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="ISO code" sap:quickinfo="ISO code for unit of measurement"/>
+				<Property Name="ConfirmationYieldQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="ConfirmationUnitSAPCode" sap:label="Yield Quantity" sap:quickinfo="Yield to be Confirmed"/>
+				<Property Name="ConfirmationScrapQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="ConfirmationUnitSAPCode" sap:label="Scrap Quantity" sap:quickinfo="Scrap to Be Confirmed"/>
+				<Property Name="ConfirmationReworkQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="ConfirmationUnitSAPCode" sap:label="Rework Quantity" sap:quickinfo="Current Confirmation Rework Quantity"/>
+				<Property Name="VarianceReasonCode" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Variance Reason" sap:quickinfo="Reason for Variance"/>
+				<Property Name="ReasonCode" Type="Edm.String" MaxLength="128" sap:display-format="UpperCase" sap:label="Reason Code" sap:quickinfo="Reason Code"/>
+				<Property Name="OpWorkQuantityUnit1" Type="Edm.String" MaxLength="3" sap:label="Confirmed Work Quantity Unit 1" sap:quickinfo="Unit of Measure for Confirmed Work Quantity 1" sap:semantics="unit-of-measure"/>
+				<Property Name="WorkQuantityUnit1ISOCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="ISO code" sap:quickinfo="ISO code for unit of measurement"/>
+				<Property Name="OpConfirmedWorkQuantity1" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="OpWorkQuantityUnit1" sap:label="Confirmed Work Quantity 1" sap:quickinfo="Already Confirmed Work Quantity (Activity) 1"/>
+				<Property Name="NoFurtherOpWorkQuantity1IsExpd" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="No Remaining Act." sap:quickinfo="Indicator: No Remaining Activity Expected"/>
+				<Property Name="OpWorkQuantityUnit2" Type="Edm.String" MaxLength="3" sap:label="Confirmed Work Quantity Unit 2" sap:quickinfo="Unit of Measure for Confirmed Work Quantity 2" sap:semantics="unit-of-measure"/>
+				<Property Name="WorkQuantityUnit2ISOCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="ISO code" sap:quickinfo="ISO code for unit of measurement"/>
+				<Property Name="OpConfirmedWorkQuantity2" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="OpWorkQuantityUnit2" sap:label="Confirmed Work Quantity 2" sap:quickinfo="Already Confirmed Work Quantity (Activity) 2"/>
+				<Property Name="NoFurtherOpWorkQuantity2IsExpd" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="No Remaining Act." sap:quickinfo="Indicator: No Remaining Activity Expected"/>
+				<Property Name="OpWorkQuantityUnit3" Type="Edm.String" MaxLength="3" sap:label="Confirmed Work Quantity Unit 3" sap:quickinfo="Unit of Measure for Confirmed Work Quantity 3" sap:semantics="unit-of-measure"/>
+				<Property Name="WorkQuantityUnit3ISOCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="ISO code" sap:quickinfo="ISO code for unit of measurement"/>
+				<Property Name="OpConfirmedWorkQuantity3" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="OpWorkQuantityUnit3" sap:label="Confirmed Work Quantity 3" sap:quickinfo="Already Confirmed Work Quantity (Activity) 3"/>
+				<Property Name="NoFurtherOpWorkQuantity3IsExpd" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="No Remaining Act." sap:quickinfo="Indicator: No Remaining Activity Expected"/>
+				<Property Name="OpWorkQuantityUnit4" Type="Edm.String" MaxLength="3" sap:label="Confirmed Work Quantity Unit 4" sap:quickinfo="Unit of Measure for Confirmed Work Quantity 4" sap:semantics="unit-of-measure"/>
+				<Property Name="WorkQuantityUnit4ISOCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="ISO code" sap:quickinfo="ISO code for unit of measurement"/>
+				<Property Name="OpConfirmedWorkQuantity4" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="OpWorkQuantityUnit4" sap:label="Confirmed Work Quantity 4" sap:quickinfo="Already Confirmed Work Quantity (Activity) 4"/>
+				<Property Name="NoFurtherOpWorkQuantity4IsExpd" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="No Remaining Act." sap:quickinfo="Indicator: No Remaining Activity Expected"/>
+				<Property Name="OpWorkQuantityUnit5" Type="Edm.String" MaxLength="3" sap:label="Confirmed Work Quantity Unit 5" sap:quickinfo="Unit of Measure for Confirmed Work Quantity 5" sap:semantics="unit-of-measure"/>
+				<Property Name="WorkQuantityUnit5ISOCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="ISO code" sap:quickinfo="ISO code for unit of measurement"/>
+				<Property Name="OpConfirmedWorkQuantity5" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="OpWorkQuantityUnit5" sap:label="Confirmed Work Quantity 5" sap:quickinfo="Already Confirmed Work Quantity (Activity) 5"/>
+				<Property Name="NoFurtherOpWorkQuantity5IsExpd" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="No Remaining Act." sap:quickinfo="Indicator: No Remaining Activity Expected"/>
+				<Property Name="OpWorkQuantityUnit6" Type="Edm.String" MaxLength="3" sap:label="Confirmed Work Quantity Unit 6" sap:quickinfo="Unit of Measure for Confirmed Work Quantity 6" sap:semantics="unit-of-measure"/>
+				<Property Name="WorkQuantityUnit6ISOCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="ISO code" sap:quickinfo="ISO code for unit of measurement"/>
+				<Property Name="OpConfirmedWorkQuantity6" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="OpWorkQuantityUnit6" sap:label="Confirmed Work Quantity 6" sap:quickinfo="Already Confirmed Work Quantity (Activity) 6"/>
+				<Property Name="NoFurtherOpWorkQuantity6IsExpd" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="No Remaining Act." sap:quickinfo="Indicator: No Remaining Activity Expected"/>
+				<Property Name="BusinessProcessEntryUnit" Type="Edm.String" MaxLength="3" sap:label="Process Unit" sap:quickinfo="Unit of Measure for Business Process Quantity" sap:semantics="unit-of-measure"/>
+				<Property Name="BusProcessEntrUnitISOCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="ISO code" sap:quickinfo="ISO code for unit of measurement"/>
+				<Property Name="BusinessProcessConfirmedQty" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="BusinessProcessEntryUnit" sap:label="Process Quantity" sap:quickinfo="Current Quantity for Business Process"/>
+				<Property Name="NoFurtherBusinessProcQtyIsExpd" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="No Remaining Act." sap:quickinfo="No Remaining Quantity Expected for Business Process"/>
+				<Property Name="ProposeBackflush" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Propose backflush" sap:quickinfo="Propose backflush"/>
+				<NavigationProperty Name="to_ProdnOrdConfMatlDocItm" Relationship="API_PROD_ORDER_CONFIRMATION_2_SRV.assoc_C58E778F73F5B9CA51CFBEF46D8979F8" FromRole="FromRole_assoc_C58E778F73F5B9CA51CFBEF46D8979F8" ToRole="ToRole_assoc_C58E778F73F5B9CA51CFBEF46D8979F8"/>
+				<NavigationProperty Name="to_MatlDocItmSerialNumber" Relationship="API_PROD_ORDER_CONFIRMATION_2_SRV.assoc_custom_1" FromRole="FromRole_assoc_custom_1" ToRole="ToRole_assoc_custom_1"/>
+			</EntityType>
+			<EntityType Name="MatlDocItmSerialNumberType" sap:label="Serial Number for Material Movements" sap:content-version="1">
+				<Key>
+					<PropertyRef Name="MatDocItm"/>
+					<PropertyRef Name="SerialNo"/>
+				</Key>
+				<Property Name="MatDocItm" Type="Edm.String" MaxLength="4" sap:label="Item in Material Document"/>
+				<Property Name="SerialNo" Type="Edm.String" MaxLength="18" sap:label="Serial Number"/>
+				<Property Name="Uii" Type="Edm.String" MaxLength="72" sap:label="Unique Item Identifier"/>
+			</EntityType>
+			<ComplexType Name="AProdordconfmatldocitem">
+				<Property Name="Batch" Type="Edm.String" MaxLength="10" sap:label="Batch" sap:quickinfo="Batch Number">
+					<Documentation>
+						<Summary>Assigns a material that is manufactured in batches or production lots to a specific batch.</Summary>
+						<LongDescription />
+					</Documentation>
+				</Property>
+				<Property Name="ConfirmationCount" Type="Edm.String" MaxLength="8" sap:label="Order Confirmation" sap:quickinfo="Identifier of Single Order Confirmation" />
+				<Property Name="ConfirmationGroup" Type="Edm.String" MaxLength="10" sap:label="Confirmation Group" sap:quickinfo="Collective ID of Order Confirmations" />
+				<Property Name="Customer" Type="Edm.String" MaxLength="10" sap:label="Customer" sap:quickinfo="Account Number of Customer">
+					<Documentation>
+						<Summary>Uniquely identifies a customer.</Summary>
+						<LongDescription>This customer number is used for managing customer special stocks.</LongDescription>
+					</Documentation>
+				</Property>
+				<Property Name="EntryUnit" Type="Edm.String" MaxLength="3" sap:label="Unit of Entry" sap:heading="EUn" sap:semantics="unit-of-measure">
+					<Documentation>
+						<Summary>Specifies the unit of measure in which the goods movement or inventory count is entered.</Summary>
+						<LongDescription>Enter a unit of measure here only if it differs from the default unit of measure.There are the following default units of measure:the order unit for goods receipts with reference to purchase ordersthe production unit for goods receipts with reference to production ordersthe unit of issue for other goods movementsIf the default unit of measure has not been defined in the material master record, the system will suggest the stockkeeping unit.</LongDescription>
+					</Documentation>
+				</Property>
+				<Property Name="EntryUnitISOCode" Type="Edm.String" MaxLength="3" sap:label="ISO code" sap:heading="ISO" sap:quickinfo="ISO code for unit of measurement">
+					<Documentation>
+						<Summary>ISO code for measurement units. An ISO code can be assigned to several internal measurement units of a dimension.</Summary>
+						<LongDescription>The ISO code is important for EDI. It is used to convert the internal SAP measurement units into standard measurement units. Data exchange via EDI requires internal measurement units to be converted into standard measurement units.A list of the current internationally agreed ISO codes can be ordered from the UN commission responsible (WP.4 Trade Facilitation Recommendations, Recommendation 20):UN Economic Commission for EuropeInformation OfficePalais des Nations1211 GenevaSwitzerlande-mail: info.ece@unece.orgor viewed directly on the Internet:http://www.unece.org/cefact/codesfortrade/codes_index.htmFor more information, see SAP Note 69063.</LongDescription>
+					</Documentation>
+				</Property>
+				<Property Name="EntryUnitSAPCode" Type="Edm.String" MaxLength="3" sap:label="Internal SAP Code" sap:quickinfo="Unit of Measurement, Internal SAP Code (No Conversion)" />
+				<Property Name="GoodsMovementRefDocType" Type="Edm.String" MaxLength="1" sap:label="Reference Doc. Type" sap:heading="Goods Movement Reference Document Type" sap:quickinfo="Goods movement ref doc type" />
+				<Property Name="GoodsMovementType" Type="Edm.String" MaxLength="3" sap:label="Goods Movement Type" />
+				<Property Name="InventorySpecialStockType" Type="Edm.String" MaxLength="1" sap:label="Special Stock Type" sap:heading="Sp. Stock" sap:quickinfo="Inventory Special Stock Type" />
+				<Property Name="InventoryUsabilityCode" Type="Edm.String" MaxLength="1" sap:label="Inventory Usability" sap:quickinfo="Inventory Usability Code" />
+				<Property Name="InventoryValuationType" Type="Edm.String" MaxLength="10" sap:label="Valuation Type" sap:quickinfo="Inventory Valuation Type" />
+				<Property Name="IsCompletelyDelivered" Type="Edm.Boolean" sap:label="Delivery Completed" sap:heading="DCI" sap:quickinfo="&quot;Delivery Completed&quot; Indicator">
+					<Documentation>
+						<Summary>Indicates that the item is to be regarded as closed.</Summary>
+						<LongDescription />
+					</Documentation>
+				</Property>
+				<Property Name="ManufactureDate" Type="Edm.DateTime" Precision="0" sap:label="Date of Manufacture" sap:heading="Manuf. Dte" />
+				<Property Name="ManufacturingOrderCategory" Type="Edm.String" MaxLength="2" sap:label="Order Category" sap:quickinfo="Manufacturing Order Category" />
+				<Property Name="Material" Type="Edm.String" MaxLength="40" sap:label="Material" sap:quickinfo="Material Number for Order">
+					<Documentation>
+						<Summary>Number of the material that is to be produced with this order.</Summary>
+						<LongDescription />
+					</Documentation>
+				</Property>
+				<Property Name="MaterialDocument" Type="Edm.String" MaxLength="10" sap:label="Material Document" sap:heading="Mat. Doc." sap:quickinfo="Number of Material Document">
+					<Documentation>
+						<Summary>Alphanumeric key uniquely identifying the document.</Summary>
+						<LongDescription>Number of the material document with which a goods movement was posted.Together with the material document year, the document number constitutes the key via which a material document is accessed.</LongDescription>
+					</Documentation>
+				</Property>
+				<Property Name="MaterialDocumentItem" Type="Edm.String" MaxLength="4" sap:label="Material Doc.Item" sap:heading="Item" sap:quickinfo="Item in Material Document">
+					<Documentation>
+						<Summary>Specifies the number that uniquely identifies an item in .</Summary>
+						<LongDescription />
+					</Documentation>
+				</Property>
+				<Property Name="MaterialDocumentItemText" Type="Edm.String" MaxLength="50" sap:label="Text" sap:quickinfo="Item Text">
+					<Documentation>
+						<Summary>Contains an explanatory text on the line item.</Summary>
+						<LongDescription>Line item texts can be used internally and externally. To be able to distinguish between these, you must begin texts for external use with "*". These texts can then be printed on all correspondence, dunning notices, payment advice notes, etc. The asterisk is removed when the text is printed.This function is only available in the FI component. It cannot be used in Materials Management.</LongDescription>
+					</Documentation>
+				</Property>
+				<Property Name="MaterialDocumentYear" Type="Edm.String" MaxLength="4" sap:label="Material Doc. Year" sap:heading="MatYr" sap:quickinfo="Material Document Year">
+					<Documentation>
+						<Summary>Calendar year in which the material document was posted.</Summary>
+						<LongDescription>In conjunction with the document number, the material document year constitutes the key via which a material document is accessed.</LongDescription>
+					</Documentation>
+				</Property>
+				<Property Name="OrderID" Type="Edm.String" MaxLength="12" sap:label="Manufacturing Order" sap:quickinfo="Manufacturing Order ID" />
+				<Property Name="OrderItem" Type="Edm.String" MaxLength="4" sap:label="Order Item" />
+				<Property Name="OrderType" Type="Edm.String" MaxLength="4" sap:label="Order Type" sap:quickinfo="Manufacturing Order Type" />
+				<Property Name="Plant" Type="Edm.String" MaxLength="4" sap:label="Plant" sap:heading="Plnt">
+					<Documentation>
+						<Summary>Key uniquely identifying a plant.</Summary>
+						<LongDescription />
+					</Documentation>
+				</Property>
+				<Property Name="ProductionSupplyArea" Type="Edm.String" MaxLength="10" sap:label="Prodn Supply Area" sap:heading="PSA" sap:quickinfo="Production Supply Area">
+					<Documentation>
+						<Summary>The production supply area (PSA) serves as a place for interim storage on the shop floor and is used to make material directly available for production purposes.</Summary>
+						<LongDescription>The PSA is used in Kanban and JIT Outbound processing and in Extended Warehouse Management.</LongDescription>
+					</Documentation>
+				</Property>
+				<Property Name="QuantityInEntryUnit" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="EntryUnit" sap:label="Quantity in Unit of Entry" />
+				<Property Name="Reservation" Type="Edm.String" MaxLength="10" sap:label="Reservation" sap:heading="Reserv.No." sap:quickinfo="Number of Reservation/Dependent Requirement">
+					<Documentation>
+						<Summary>Alphanumeric key uniquely identifying the document.</Summary>
+						<LongDescription />
+					</Documentation>
+				</Property>
+				<Property Name="ReservationIsFinallyIssued" Type="Edm.Boolean" sap:label="Res Final Issue" sap:heading="Reservation is Finally Issued" sap:quickinfo="Final Issue for Reservation" />
+				<Property Name="ReservationItem" Type="Edm.String" MaxLength="4" sap:label="Reservation Item" sap:quickinfo="Item Number of Reservation / Dependent Requirements" />
+				<Property Name="SalesOrder" Type="Edm.String" MaxLength="10" sap:label="Sales Order" sap:heading="SO No.">
+					<Documentation>
+						<Summary>Number of the sales order to which the order is to be settled.</Summary>
+						<LongDescription />
+					</Documentation>
+				</Property>
+				<Property Name="SalesOrderItem" Type="Edm.String" MaxLength="6" sap:label="Sales Order Item" sap:heading="SO Itm">
+					<Documentation>
+						<Summary>Item in the sales order to which the order is to be settled.</Summary>
+						<LongDescription />
+					</Documentation>
+				</Property>
+				<Property Name="ShelfLifeExpirationDate" Type="Edm.DateTime" Precision="0" sap:label="SLED/BBD" sap:quickinfo="Shelf Life Expiration or Best-Before Date">
+					<Documentation>
+						<Summary>The date is set upon goods receipt in one of the following ways:</Summary>
+						<LongDescription>You enter it yourself.You enter a date of production, and the system calculates the shelf life expiration date from the date of production plus the shelf life in days (from the material master record).NoteThis date can still be changed upon receipt of the usage decision for an inspection lot.</LongDescription>
+					</Documentation>
+				</Property>
+				<Property Name="StorageBin" Type="Edm.String" MaxLength="10" sap:label="Storage Bin" sap:heading="Stor. Bin">
+					<Documentation>
+						<Summary>The storage bin (sometimes referred to as a "slot") is the smallest addressable unit in a warehouse. It identifies the exact location in the warehouse where goods can be stored.</Summary>
+						<LongDescription>A storage bin can be further sub-divided into bin sections. Several different materials (quants) can be stored in one bin at the same time.</LongDescription>
+					</Documentation>
+				</Property>
+				<Property Name="StorageLocation" Type="Edm.String" MaxLength="4" sap:label="Storage Location" />
+				<Property Name="StorageType" Type="Edm.String" MaxLength="3" sap:label="Storage Type" sap:heading="Typ">
+					<Documentation>
+						<Summary>The storage type is a subdivision of a complex, physical warehouse. Different storage types are identified by their warehousing technique, form of organization, or their function.</Summary>
+						<LongDescription>A typical warehouse could have the following storage types:Goods receipt areaPicking areaHigh-rack storage areaBulk storage areaOpen storage areaGoods issue area</LongDescription>
+					</Documentation>
+				</Property>
+				<Property Name="Supplier" Type="Edm.String" MaxLength="10" sap:label="Supplier" sap:quickinfo="Account Number of the Vendor">
+					<Documentation>
+						<Summary>Alphanumeric key uniquely identifying the document.</Summary>
+						<LongDescription>With the supplier number, information from the supplier master record (such as the supplier's address and bank details) is copied into a purchasing document (such as a request for quotation or a purchase order).You can use the supplier number to keep track of requests for quotation, purchase orders and outline agreements.</LongDescription>
+					</Documentation>
+				</Property>
+				<Property Name="WBSElementExternalID" Type="Edm.String" MaxLength="24" sap:label="WBS Element" sap:quickinfo="Work Breakdown Structure Element (WBS Element) Edited">
+					<Documentation>
+						<Summary>External 24-character name of an operative WBS element without a conversion routine stored in the domain.</Summary>
+						<LongDescription />
+					</Documentation>
+				</Property>
+			</ComplexType>
+			<Association Name="RS_itemToDataFields">
+				<End Type="API_PROD_ORDER_CONFIRMATION_2_SRV.ProdnOrdConfMatlDocItmType" Multiplicity="1" Role="FromRole_RS_itemToDataFields"/>
+				<End Type="API_PROD_ORDER_CONFIRMATION_2_SRV.DataField" Multiplicity="*" Role="ToRole_RS_itemToDataFields"/>
+			</Association>
+			<Association Name="assoc_C58E778F73F5B9CA51CFBEF46D8979F8" sap:content-version="1">
+				<End Type="API_PROD_ORDER_CONFIRMATION_2_SRV.ProdnOrdConf2Type" Multiplicity="1" Role="FromRole_assoc_C58E778F73F5B9CA51CFBEF46D8979F8">
+					<OnDelete Action="Cascade"/>
+				</End>
+				<End Type="API_PROD_ORDER_CONFIRMATION_2_SRV.ProdnOrdConfMatlDocItmType" Multiplicity="*" Role="ToRole_assoc_C58E778F73F5B9CA51CFBEF46D8979F8"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_assoc_C58E778F73F5B9CA51CFBEF46D8979F8">
+						<PropertyRef Name="ConfirmationCount"/>
+						<PropertyRef Name="ConfirmationGroup"/>
+					</Principal>
+					<Dependent Role="ToRole_assoc_C58E778F73F5B9CA51CFBEF46D8979F8">
+						<PropertyRef Name="ConfirmationCount"/>
+						<PropertyRef Name="ConfirmationGroup"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="assoc_custom_1" sap:content-version="1">
+				<End Type="API_PROD_ORDER_CONFIRMATION_2_SRV.ProdnOrdConf2Type" Multiplicity="1" Role="FromRole_assoc_custom_1">
+					<OnDelete Action="Cascade"/>
+				</End>
+				<End Type="API_PROD_ORDER_CONFIRMATION_2_SRV.MatlDocItmSerialNumberType" Multiplicity="*" Role="ToRole_assoc_custom_1"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_assoc_custom_1">
+						<PropertyRef Name="ConfirmationCount"/>
+						<PropertyRef Name="ConfirmationGroup"/>
+					</Principal>
+					<Dependent Role="ToRole_assoc_custom_1">
+						<PropertyRef Name="ConfirmationCount"/>
+						<PropertyRef Name="ConfirmationGroup"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<EntityContainer Name="API_PROD_ORDER_CONFIRMATION_2_SRV_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+				<EntitySet Name="ProdnOrdConfMatlDocItm" EntityType="API_PROD_ORDER_CONFIRMATION_2_SRV.ProdnOrdConfMatlDocItmType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+				<EntitySet Name="MatlDocItmSerialNumber" EntityType="API_PROD_ORDER_CONFIRMATION_2_SRV.MatlDocItmSerialNumberType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+				<EntitySet Name="ProdnOrdConf2" EntityType="API_PROD_ORDER_CONFIRMATION_2_SRV.ProdnOrdConf2Type" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+				<EntitySet Name="DataFields" EntityType="API_PROD_ORDER_CONFIRMATION_2_SRV.DataField" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+				<AssociationSet Name="assoc_C58E778F73F5B9CA51CFBEF46D8979F8" Association="API_PROD_ORDER_CONFIRMATION_2_SRV.assoc_C58E778F73F5B9CA51CFBEF46D8979F8" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+					<End EntitySet="ProdnOrdConf2" Role="FromRole_assoc_C58E778F73F5B9CA51CFBEF46D8979F8"/>
+					<End EntitySet="ProdnOrdConfMatlDocItm" Role="ToRole_assoc_C58E778F73F5B9CA51CFBEF46D8979F8"/>
+				</AssociationSet>
+				<AssociationSet Name="assoc_custom_1" Association="API_PROD_ORDER_CONFIRMATION_2_SRV.assoc_custom_1" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+					<End EntitySet="ProdnOrdConf2" Role="FromRole_assoc_custom_1"/>
+					<End EntitySet="MatlDocItmSerialNumber" Role="ToRole_assoc_custom_1"/>
+				</AssociationSet>
+				<AssociationSet Name="RS_itemToDataFields" Association="API_PROD_ORDER_CONFIRMATION_2_SRV.RS_itemToDataFields" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+					<End EntitySet="ProdnOrdConfMatlDocItm" Role="FromRole_RS_itemToDataFields"/>
+					<End EntitySet="DataFields" Role="ToRole_RS_itemToDataFields"/>
+				</AssociationSet>
+				<FunctionImport Name="CancelProdnOrdConf" ReturnType="API_PROD_ORDER_CONFIRMATION_2_SRV.ProdnOrdConf2Type" EntitySet="ProdnOrdConf2" m:HttpMethod="POST" sap:action-for="API_PROD_ORDER_CONFIRMATION_2_SRV.ProdnOrdConf2Type">
+					<Parameter Name="ConfirmationGroup" Type="Edm.String" Mode="In" MaxLength="10"/>
+					<Parameter Name="ConfirmationCount" Type="Edm.String" Mode="In" MaxLength="8"/>
+					<Parameter Name="PostingDate" Type="Edm.DateTime" Mode="In" Precision="0" Nullable="true" sap:display-format="Date"/>
+					<Parameter Name="ConfirmationText" Type="Edm.String" Mode="In" MaxLength="40" Nullable="true"/>
+					<Parameter Name="ExternalSystemConfirmation" Type="Edm.Guid" Mode="In" Nullable="true"/>
+					<Parameter Name="Sfc" Type="Edm.String" Mode="In" MaxLength="128" Nullable="true"/>
+				</FunctionImport>
+				<FunctionImport Name="GetGdsMvtProposal" ReturnType="Collection(API_PROD_ORDER_CONFIRMATION_2_SRV.AProdordconfmatldocitem)" m:HttpMethod="POST">
+                	<Parameter Name="ConfirmationGroup" Type="Edm.String" Mode="In" MaxLength="10" Nullable="true">
+                		<Documentation>
+                			<Summary>Confirmation Group</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="OrderID" Type="Edm.String" Mode="In" MaxLength="12" Nullable="true">
+                		<Documentation>
+                			<Summary>Manufacturing Order</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="OrderOperation" Type="Edm.String" Mode="In" MaxLength="4" Nullable="true">
+                		<Documentation>
+                			<Summary>Operation</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="Sequence" Type="Edm.String" Mode="In" MaxLength="6" Nullable="true">
+                		<Documentation>
+                			<Summary>Sequence</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="OrderSuboperation" Type="Edm.String" Mode="In" MaxLength="4" Nullable="true">
+                		<Documentation>
+                			<Summary>Suboperation</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="OrderConfirmationRecordType" Type="Edm.String" Mode="In" MaxLength="3" Nullable="true">
+                		<Documentation>
+                			<Summary>Record Type</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="ConfirmationUnit" Type="Edm.String" Mode="In" MaxLength="3" Nullable="true">
+                		<Documentation>
+                			<Summary>Display Unit/Measure</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="ConfirmationUnitISOCode" Type="Edm.String" Mode="In" MaxLength="3" Nullable="true">
+                		<Documentation>
+                			<Summary>ISO code</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="ConfirmationUnitSAPCode" Type="Edm.String" Mode="In" MaxLength="3" Nullable="true">
+                		<Documentation>
+                			<Summary>Internal SAP Code</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="ConfirmationYieldQuantity" Type="Edm.Decimal" Mode="In" Precision="13" Scale="3" Nullable="true">
+                		<Documentation>
+                			<Summary>Yield Quantity</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="ConfirmationScrapQuantity" Type="Edm.Decimal" Mode="In" Precision="13" Scale="3" Nullable="true">
+                		<Documentation>
+                			<Summary>Scrap Quantity</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="ConfirmationReworkQuantity" Type="Edm.Decimal" Mode="In" Precision="13" Scale="3" Nullable="true">
+                		<Documentation>
+                			<Summary>Rework Quantity</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="QuantityIsToBeProposed" Type="Edm.Boolean" Mode="In" Nullable="true">
+                		<Documentation>
+                			<Summary>Propose Quantities</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="ActivityIsToBeProposed" Type="Edm.Boolean" Mode="In" Nullable="true">
+                		<Documentation>
+                			<Summary>Propose Activities</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="DateAndTimeIsToBeProposed" Type="Edm.Boolean" Mode="In" Nullable="true">
+                		<Documentation>
+                			<Summary>Propose Dates</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                	<Parameter Name="PersonnelIsToBeProposed" Type="Edm.Boolean" Mode="In" Nullable="true">
+                		<Documentation>
+                			<Summary>Propose Personnel</Summary>
+                			<LongDescription />
+                		</Documentation>
+                	</Parameter>
+                </FunctionImport>
+			</EntityContainer>
+			<Annotations Target="API_PROD_ORDER_CONFIRMATION_2_SRV.API_PROD_ORDER_CONFIRMATION_2_SRV_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+				<Annotation Term="Aggregation.ApplySupported">
+					<Record>
+						<PropertyValue Property="Transformations">
+							<Collection>
+								<String>aggregate</String>
+								<String>groupby</String>
+								<String>filter</String>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Rollup" EnumMember="None"/>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="API_PROD_ORDER_CONFIRMATION_2_SRV.API_PROD_ORDER_CONFIRMATION_2_SRV_Entities/GetGdsMvtProposal" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+			    <Annotation Term="Core.Description" String="Fetches proposal data for goods movements of a confirmation."/>
+			    <Annotation Term="Core.LongDescription" String="Fetches proposal data for goods movements of a confirmation that you specify using the necessary properties depending on the type of confirmation."/>
+            </Annotations>
+			<atom:link rel="self" href="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/sap/API_PROD_ORDER_CONFIRMATION_2_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+			<atom:link rel="latest-version" href="https://my300470-api.s4hana.ondemand.com/sap/opu/odata/sap/API_PROD_ORDER_CONFIRMATION_2_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

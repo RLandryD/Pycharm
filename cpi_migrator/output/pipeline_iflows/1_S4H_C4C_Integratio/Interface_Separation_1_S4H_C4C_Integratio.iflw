@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PIPELINE STEP 3: Interface Separation iFlow
+  Package  : 1_S4H_C4C_Integration
+  Purpose  : Routes to the correct scenario-specific iFlow
+             based on SAP_InterfaceName header set by Receiver Determination.
+  Internal : ProcessDirect address /pd/InterfaceSeparation_1_S4H_C4C_Integratio
+-->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+             id="Interface_Separation_1_S4H_C4C_Integratio"
+             name="Interface_Separation_1_S4H_C4C_Integratio">
+  <process id="IfaceSep_1_S4H_C4C_Integratio_process" ifl:type="IntegrationFlow">
+
+    <startEvent id="Start_IS" name="From Receiver Determination">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/pd/InterfaceSeparation_1_S4H_C4C_Integratio</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </startEvent>
+
+    <!-- ROUTER: Branch to scenario-specific iFlow -->
+    <exclusiveGateway id="Router_1" name="Route by Interface Name"/>
+
+    <sequenceFlow id="route_0" sourceRef="Router_1"
+      targetRef="Call_BPEM_Case_Confirmati_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'BPEM Case Confirmation' -->
+    </sequenceFlow>
+    <serviceTask id="Call_BPEM_Case_Confirmati_1"
+      name="→ BPEM Case Confirmation" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/BPEM_Case_Confirmati</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_1" sourceRef="Router_1"
+      targetRef="Call_Switch_Document_Crea_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Switch Document Create Notification from SAP S4H' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Switch_Document_Crea_1"
+      name="→ Switch Document Create Notification from SAP S4H" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Switch_Document_Crea</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_2" sourceRef="Router_1"
+      targetRef="Call_BPEM_Status_Replicat_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'BPEM Status Replication' -->
+    </sequenceFlow>
+    <serviceTask id="Call_BPEM_Status_Replicat_1"
+      name="→ BPEM Status Replication" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/BPEM_Status_Replicat</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_3" sourceRef="Router_1"
+      targetRef="Call_Deprecated_Replicati_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Deprecated - Replication-Contract Account' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Deprecated_Replicati_1"
+      name="→ Deprecated - Replication-Contract Account" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Deprecated_Replicati</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="route_4" sourceRef="Router_1"
+      targetRef="Call_Replication_Utilitie_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'Replication Utilities Technical Master Data' -->
+    </sequenceFlow>
+    <serviceTask id="Call_Replication_Utilitie_1"
+      name="→ Replication Utilities Technical Master Data" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/Replication_Utilitie</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+
+    <endEvent id="End_IS"/>
+    <sequenceFlow sourceRef="Start_IS" targetRef="Router_1"/>
+  </process>
+</definitions>

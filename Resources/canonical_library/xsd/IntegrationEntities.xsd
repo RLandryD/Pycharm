@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:integration-inbound="http://www.zycus.com/integration/schemas/IntegrationInbound" targetNamespace="http://www.zycus.com/integration/schemas/IntegrationInbound" version="1.0">
+  <xs:element name="IntegrationEntities" type="integration-inbound:IntegrationEntities"/>
+  <xs:complexType name="IntegrationEntities">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="1" name="integrationEntity" type="integration-inbound:integrationEntity"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="integrationEntity">
+    <xs:all>
+      <xs:element name="integrationEntityHeader" type="integration-inbound:APIIntegrationHeader"/>
+      <xs:element minOccurs="1" name="integrationEntityDetails" type="integration-inbound:integrationEntityDetails"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="APIIntegrationHeader">
+    <xs:all>
+      <xs:element name="integrationTrackingNumber" type="xs:string"/>
+      <xs:element minOccurs="1" name="referenceCodeForEntity" type="xs:string"/>
+      <xs:element minOccurs="0" name="additionalInfo" type="xs:string"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="integrationEntityDetails">
+    <xs:choice>
+      <xs:element maxOccurs="1" minOccurs="1" name="costCenter" type="integration-inbound:costCenter"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="costCenter">
+    <xs:sequence>
+      <xs:element minOccurs="1" name="id" type="xs:string"/>
+      <xs:element minOccurs="0" name="status" type="xs:string"/>
+      <xs:element minOccurs="1" name="costCenterName" type="xs:string"/>
+      <xs:element minOccurs="0" name="description" type="xs:string"/>
+      <xs:element minOccurs="1" name="costCenterCode" type="xs:string"/>
+      <xs:element minOccurs="1" name="orgUnits">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="orgUnitAssignment">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element maxOccurs="2" minOccurs="2" name="orgUnitDetails">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element minOccurs="1" name="orgUnitLevel" type="xs:string"/>
+                        <xs:element minOccurs="1" name="orgUnitCode" type="xs:string"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="erpId" type="xs:string"/>
+      <xs:element minOccurs="0" name="createdBy" type="xs:string"/>
+      <xs:element minOccurs="0" name="createdOn" type="xs:long"/>
+      <xs:element minOccurs="0" name="updatedBy" type="xs:string"/>
+      <xs:element minOccurs="0" name="updatedOn" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

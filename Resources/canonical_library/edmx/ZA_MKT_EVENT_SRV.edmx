@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="https://ldciabd.wdf.sap.corp:44300/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://ldciabd.wdf.sap.corp:44300/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://ldciabd.wdf.sap.corp:44300/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://ldciabd.wdf.sap.corp:44300/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZA_MKT_EVENT_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="EventsType" sap:label="Event table (Root Node)" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="EventUUID"/>
+                </Key>
+                <Property Name="EventUUID" Type="Edm.Guid" Nullable="false" sap:label="GUID 16" sap:quickinfo="GUID in 'RAW' format"/>
+                <Property Name="EventID" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Char20" sap:quickinfo="Char 20"/>
+                <Property Name="EventName" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
+                <Property Name="EventDescription" Type="Edm.String" MaxLength="50" sap:label="c" sap:quickinfo="Comment"/>
+                <Property Name="EvnetType" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Char20" sap:quickinfo="Char 20"/>
+                <Property Name="EventPartner" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Char20" sap:quickinfo="Char 20"/>
+                <Property Name="EventStatus" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="" sap:quickinfo="Character Field with Length 10"/>
+                <Property Name="EventStartDateTime" Type="Edm.DateTimeOffset" Precision="0" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Short Form (YYYYMMDDhhmmss)"/>
+                <Property Name="EventEndDateTime" Type="Edm.DateTimeOffset" Precision="0" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Short Form (YYYYMMDDhhmmss)"/>
+                <Property Name="EventTimeZone" Type="Edm.String" MaxLength="6" sap:display-format="UpperCase" sap:label="System Time Zone"/>
+                <Property Name="EventMarketingArea" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Marketing Area ID"/>
+                <NavigationProperty Name="to_Participant" Relationship="ZA_MKT_EVENT_SRV.assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3" FromRole="FromRole_assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3" ToRole="ToRole_assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3"/>
+            </EntityType>
+            <EntityType Name="ParticipantsType" sap:label="Event Participant" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ParticipantUUID"/>
+                </Key>
+                <Property Name="ParticipantUUID" Type="Edm.Guid" Nullable="false" sap:label="GUID 16" sap:quickinfo="GUID in 'RAW' format"/>
+                <Property Name="EventUUID" Type="Edm.Guid" sap:label="GUID 16" sap:quickinfo="GUID in 'RAW' format" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
+                <Property Name="ParticipantID" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Char20" sap:quickinfo="Char 20"/>
+                <Property Name="ParticipantFirstName" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
+                <Property Name="ParticipantLastName" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
+                <Property Name="ParticipantEmail" Type="Edm.String" MaxLength="50" sap:label="c" sap:quickinfo="Comment"/>
+                <Property Name="ParticipantMobile" Type="Edm.String" MaxLength="10" sap:display-format="NonNegative" sap:label="Field length 10" sap:quickinfo="Numeric Character Field, Length 10"/>
+                <NavigationProperty Name="to_Event" Relationship="ZA_MKT_EVENT_SRV.assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3" FromRole="ToRole_assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3" ToRole="FromRole_assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3"/>
+            </EntityType>
+            <Association Name="assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3" sap:content-version="1">
+                <End Type="ZA_MKT_EVENT_SRV.EventsType" Multiplicity="1" Role="FromRole_assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3">
+                    <OnDelete Action="Cascade"/>
+                </End>
+                <End Type="ZA_MKT_EVENT_SRV.ParticipantsType" Multiplicity="*" Role="ToRole_assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3">
+                        <PropertyRef Name="EventUUID"/>
+                    </Principal>
+                    <Dependent Role="ToRole_assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3">
+                        <PropertyRef Name="EventUUID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <EntityContainer Name="ZA_MKT_EVENT_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="Events" EntityType="ZA_MKT_EVENT_SRV.EventsType" sap:content-version="1"/>
+                <EntitySet Name="Participants" EntityType="ZA_MKT_EVENT_SRV.ParticipantsType" sap:content-version="1"/>
+                <AssociationSet Name="assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3" Association="ZA_MKT_EVENT_SRV.assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="Events" Role="FromRole_assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3"/>
+                    <End EntitySet="Participants" Role="ToRole_assoc_B14CD46CB168E9DE6FFE17A1CB1D03E3"/>
+                </AssociationSet>
+            </EntityContainer>
+            <Annotations Target="ZA_MKT_EVENT_SRV.ParticipantsType/EventUUID" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Event table (Root Node) "/>
+                        <PropertyValue Property="CollectionPath" String="Events"/>
+                        <PropertyValue Property="SearchSupported" Bool="false"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="EventUUID"/>
+                                    <PropertyValue Property="ValueListProperty" String="EventUUID"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZA_MKT_EVENT_SRV.ZA_MKT_EVENT_SRV_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Aggregation.ApplySupported">
+                    <Record>
+                        <PropertyValue Property="Transformations">
+                            <Collection>
+                                <String>aggregate</String>
+                                <String>groupby</String>
+                                <String>filter</String>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Rollup" EnumMember="None"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZA_MKT_EVENT_SRV.EventsType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.SemanticKey">
+                    <Collection>
+                        <PropertyPath>EventID</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZA_MKT_EVENT_SRV.ParticipantsType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.SemanticKey">
+                    <Collection>
+                        <PropertyPath>ParticipantID</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <atom:link rel="self" href="https://ldciabd.wdf.sap.corp:44300/sap/opu/odata/SAP/ZA_MKT_EVENT_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="https://ldciabd.wdf.sap.corp:44300/sap/opu/odata/SAP/ZA_MKT_EVENT_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

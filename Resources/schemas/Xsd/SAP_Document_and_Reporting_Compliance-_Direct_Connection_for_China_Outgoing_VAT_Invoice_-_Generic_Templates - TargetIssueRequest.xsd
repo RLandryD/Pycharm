@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified" vc:minVersion="1.1">
+    <xs:element name="GoldenTax" type="GoldenTaxType"/>
+    <xs:complexType name="GoldenTaxType">
+        <xs:all>
+            <xs:element maxOccurs="1" minOccurs="1" name="Control" type="ControlType"/>
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="ControlType">
+        <xs:all>
+            <xs:element maxOccurs="1" minOccurs="1" name="TaxNumber" type="TaxNumberType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="TerminalID" type="TerminalIDType"/>            
+            <xs:element maxOccurs="1" minOccurs="1" name="SourceSystem" type="SourceSystemType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="APIVersion" type="APIVersionType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="CompliantVersionFlag" type="CompliantVersionFlagType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="Action" type="ActionType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="ParkingIssueFlag" type="ParkingIssueFlagType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="InvoiceIssuer" type="InvoiceIssuerType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="InvoiceReviewer" type="InvoiceReviewerType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="InvoicePayee" type="InvoicePayeeType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="TaxClassificationNumberVersion" type="TaxClassificationNumberVersionType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="TotalNetAmount" type="TotalNetAmountType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="TotalNumberOfInvoices" type="TotalInvoiceNumberType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="GTDocument" type="GTDocumentType"/>
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="GTDocumentType">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="GTHeader" type="GTHeaderType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType mixed="true" name="GTHeaderType">
+        <xs:sequence> 
+            <xs:element maxOccurs="1" minOccurs="1" name="GoldenTaxNumber" type="GoldenTaxNumberType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="InvoiceType" type="InvoiceTypeType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="InvoiceMedium" type="InvoiceMediumType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="InvoiceMediumAddition" type="InvoiceMediumAdditionType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="Note" type="NoteType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="RefInvoiceCode" type="RefInvoiceCodeType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="RefInvoiceNumber" type="RefInvoiceNumberType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="RedInfoNo" type="RedInfoNoType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="GoodsList" type="GoodsListType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="BuyerTaxNumber" type="BuyerTaxNumberType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="BuyerID" type="BuyerIDType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="BuyerName" type="BuyerNameType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="BuyerAddress" type="BuyerAddressType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="BuyerBankInfo" type="BuyerBankInfoType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="BuyerMobileNumber" type="BuyerMobileNumberType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="BuyerProvince" type="BuyerProvinceType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="BuyerPhoneNumber" type="BuyerPhoneNumberType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="BuyerMail" type="BuyerMailType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="CarbonCopyEmail" type="CarbonCopyEmailType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="NetAmount" type="NetAmountType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="TaxAmount" type="TaxAmountType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="DiscountAmount" type="NullabledAmountType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="DiscountTax" type="TaxAmountType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="DeductionAmount" type="NullabledAmountType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="RedInvoiceReason" type="RedInvoiceReasonType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="RedInvoiceReasonDescription" type="RedInvoiceReasonDescriptionType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="HeaderAdditional" type="HeaderAdditionalType"/>       
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="GTItem" type="GTItemType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType mixed="true" name="GTItemType">
+        <xs:all>
+            <xs:element maxOccurs="1" minOccurs="1" name="GoldenTaxItemNumber" type="GoldenTaxItemNumberType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="GoodsID" type="GoodsIDType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="GoodsName" type="GoodsNameType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="GoodsSpecification" type="GoodsSpecificationType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="Quantity" type="QuantityType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="UoM" type="UoMType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="NetAmount" type="NetAmountType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="TaxAmount" type="TaxAmountType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="DiscountAmount" type="NullabledAmountType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="DiscountTax" type="TaxAmountType"/>          
+            <xs:element maxOccurs="1" minOccurs="0" name="DeductionAmount" type="NullabledAmountType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="UnitPrice" type="UnitPriceType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="TaxRate" type="TaxRateType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="TaxClassificationNumber" type="TaxClassificationNumberType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="TaxClassificationNumberDescription" type="TaxClassificationNumberDescriptionType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="PreferentialTreatment" type="PreferentialTreatmentType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="PreferentialTreatmentDescription" type="PreferentialTreatmentDescriptionType"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="ZeroTaxIndentify" type="ZeroTaxIndentifyType"/>            
+            <xs:element maxOccurs="1" minOccurs="0" name="ItemAdditional" type="ItemAdditionalType"/>
+        </xs:all>
+    </xs:complexType>
+    <xs:simpleType name="TaxNumberType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value=".{15}|.{18}|.{20}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TerminalIDType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="16"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SourceSystemType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="APIVersionType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CompliantVersionFlagType">
+        <xs:restriction base="xs:string">
+            <!-- Incompatible change -->
+            <xs:enumeration value=""/>
+            <!-- Compatible change -->
+            <xs:enumeration value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ActionType">
+        <xs:restriction base="xs:string">
+            <!-- Issue -->
+            <xs:enumeration value="I"/>
+            <!-- Cancel -->
+            <xs:enumeration value="C"/>
+            <!-- Query -->
+            <xs:enumeration value="Q"/>
+            <!-- Revert -->
+            <xs:enumeration value="R"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ParkingIssueFlagType">
+        <xs:restriction base="xs:string">
+            <!-- Parking Issue -->
+            <xs:enumeration value="X"/>
+            <!-- Direct Issue -->
+            <xs:enumeration value=""/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="InvoicePayeeType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="12"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="InvoiceReviewerType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="12"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="InvoiceIssuerType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="12"/>
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TaxClassificationNumberVersionType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="7"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TotalNetAmountType">
+      <xs:restriction base="xs:decimal">
+        <xs:totalDigits value="17"/>
+        <xs:fractionDigits value="2"/>
+      </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TotalInvoiceNumberType">
+        <xs:restriction base="xs:short">
+            <xs:minExclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GoldenTaxNumberType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="20"/>
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="InvoiceTypeType">
+        <xs:restriction base="xs:string">
+            <!-- Special Invoice -->
+            <xs:enumeration value="S"/>
+            <!-- Normal Invoice -->
+            <xs:enumeration value="N"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="InvoiceMediumType">
+        <xs:restriction base="xs:string">
+            <!-- Paper Invoice -->
+            <xs:enumeration value="P"/>
+            <!-- E-invoice -->
+            <xs:enumeration value="E"/>
+            <!-- Fully Digitalized E-invoice -->
+            <xs:enumeration value="F"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="InvoiceMediumAdditionType">
+        <xs:restriction base="xs:string">
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="NoteType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="630"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RefInvoiceCodeType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="20"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RefInvoiceNumberType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RedInfoNoType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="20"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GoodsListType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="BuyerTaxNumberType">
+      <xs:restriction base="xs:string">
+        <xs:pattern value="|0|.{15}|.{18}|.{20}"/>
+      </xs:restriction>
+    </xs:simpleType>    
+    <xs:simpleType name="BuyerIDType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="BuyerNameType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="BuyerAddressType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="BuyerBankInfoType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="BuyerMobileNumberType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="40"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="BuyerProvinceType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="BuyerPhoneNumberType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="40"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="BuyerMailType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CarbonCopyEmailType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="NetAmountType">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:decimal">
+                    <xs:totalDigits value="17"/>
+                    <xs:fractionDigits value="2"/>
+                    <xs:maxInclusive value="-0.01"/> 
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:decimal">
+                    <xs:totalDigits value="17"/>
+                    <xs:fractionDigits value="2"/>
+                    <xs:minInclusive value="0.01"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="TaxAmountType">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:length value="0"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:decimal">
+                    <xs:totalDigits value="14"/>
+                    <xs:fractionDigits value="2"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="NullabledAmountType">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:length value="0"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:decimal">
+                    <xs:totalDigits value="17"/>
+                    <xs:fractionDigits value="2"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="RedInvoiceReasonType">
+        <xs:restriction base="xs:string">
+            <!-- Other -->
+            <xs:enumeration value="R00"/>
+            <!-- Wrong Information -->
+            <xs:enumeration value="R01"/>
+            <!-- Return Order -->
+            <xs:enumeration value="R02"/>
+            <!-- Service Terminated -->
+            <xs:enumeration value="R03"/>
+            <!-- Discount/Rebate in Sales -->
+            <xs:enumeration value="R04"/>
+            <!-- Empty -->
+            <xs:enumeration value=""/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RedInvoiceReasonDescriptionType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="60"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="HeaderAdditionalType">
+        <xs:restriction base="xs:string">
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GoldenTaxItemNumberType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="20"/>
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GoodsIDType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="20"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GoodsNameType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="60"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GoodsSpecificationType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="40"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="QuantityType">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:length value="0"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:decimal">
+                    <xs:totalDigits value="18"/>
+                    <xs:fractionDigits value="6"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="UoMType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="16"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="UnitPriceType">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:length value="0"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:decimal">
+                    <xs:totalDigits value="15"/>
+                    <xs:fractionDigits value="2"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType> 
+    <xs:simpleType name="TaxRateType">
+        <xs:restriction base="xs:decimal">
+            <xs:totalDigits value="9"/>
+            <xs:fractionDigits value="2"/>
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TaxClassificationNumberType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TaxClassificationNumberDescriptionType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="200"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PreferentialTreatmentType">
+        <xs:restriction base="xs:string">
+            <!-- Disqualified -->
+            <xs:enumeration value="0"/>
+            <!-- Qualified -->
+            <xs:enumeration value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PreferentialTreatmentDescriptionType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ZeroTaxIndentifyType">
+        <xs:restriction base="xs:string">
+            <!-- Non-Zero Tax Rate -->
+            <xs:enumeration value=""/>
+            <!-- Export Tax Rebate -->
+            <xs:enumeration value="0"/>
+            <!-- Tax Exemption -->
+            <xs:enumeration value="1"/>
+            <!-- Not Levied -->
+            <xs:enumeration value="2"/>
+            <!-- Normal Zero Tax Rate -->
+            <xs:enumeration value="3"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ItemAdditionalType">
+        <xs:restriction base="xs:string">
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

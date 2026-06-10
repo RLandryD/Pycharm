@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.sap.com/eDocument/Peru/SummaryDocumentsTransmission/v1.0"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#" name="eDocPeruSummaryDocumentsTransmission"
+	xmlns:sd="urn:sunat:names:specification:ubl:peru:schema:xsd:SummaryDocuments-1"
+	targetNamespace="http://www.sap.com/eDocument/Peru/SummaryDocumentsTransmission/v1.0">
+	<wsdl:types>
+
+
+		<!-- SummaryDocumentsTransmission -->
+		<xsd:schema
+			targetNamespace="http://www.sap.com/eDocument/Peru/SummaryDocumentsTransmission/v1.0">
+			<xsd:element name="SendSummaryDocumentsResponse" type="tns:SendSummaryDocumentsResponseType">
+			</xsd:element>
+			<xsd:complexType name="SendSummaryDocumentsResponseType">
+				<xsd:sequence>
+					<xsd:any namespace='http://www.w3.org/1999/xhtml'
+						minOccurs='1' maxOccurs='unbounded' processContents='lax' />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+		
+		<xsd:schema
+			targetNamespace="urn:sunat:names:specification:ubl:peru:schema:xsd:SummaryDocuments-1"
+			xmlns="urn:sunat:names:specification:ubl:peru:schema:xsd:SummaryDocuments-1"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+			<xsd:element name="SummaryDocuments" type="SummaryDocumentsType">
+				<xsd:annotation>
+					<xsd:documentation>This simplified WSDL contains no message
+						structures, this improves memory consumption in HCI
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+
+			<xsd:complexType name="SummaryDocumentsType">
+				<xsd:sequence>
+					<xsd:any namespace='http://www.w3.org/1999/xhtml'
+						minOccurs='1' maxOccurs='unbounded' processContents='lax' />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+
+	</wsdl:types>
+
+
+	<wsdl:message name="SendSummaryDocumentsRequest">
+		<wsdl:part element="sd:SummaryDocuments" name="SendSummaryDocumentsRequestParameters" />
+	</wsdl:message>
+	<wsdl:message name="SendSummaryDocumentsResponse">
+		<wsdl:part element="tns:SendSummaryDocumentsResponse" name="SendSummaryDocumentsResponseParameters" />
+	</wsdl:message>
+	<wsdl:portType name="eDocPeruSummaryDocumentsTransmission">
+		<wsdl:operation name="SendSummaryDocuments">
+			<wsdl:input message="tns:SendSummaryDocumentsRequest" />
+			<wsdl:output message="tns:SendSummaryDocumentsResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="eDocPeruSummaryDocumentsTransmissionSOAP"
+		type="tns:eDocPeruSummaryDocumentsTransmission">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="SendSummaryDocuments">
+			<soap:operation
+				soapAction="http://www.sap.com/eDocument/Peru/SummaryDocumentsTransmission/v1.0/NewOperation" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="eDocPeruSummaryDocumentsTransmission">
+		<wsdl:port binding="tns:eDocPeruSummaryDocumentsTransmissionSOAP"
+			name="eDocPeruSummaryDocumentsTransmissionSOAP">
+			<soap:address location="http://endpointaddress" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
+

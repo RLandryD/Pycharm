@@ -1,0 +1,622 @@
+<wsdl:definitions name="WcfDianCustomerServices" targetNamespace="http://wcf.dian.colombia"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+	xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex"
+	xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy"
+	xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract"
+	xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+	xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:tns="http://wcf.dian.colombia"
+	xmlns:wsa10="http://www.w3.org/2005/08/addressing"
+	xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+	<wsp:Policy wsu:Id="WSHttpBinding_IWcfDianCustomerServices_policy">
+		<wsp:ExactlyOne>
+			<wsp:All>
+				<sp:TransportBinding
+					xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+					<wsp:Policy>
+						<sp:TransportToken>
+							<wsp:Policy>
+								<sp:HttpsToken RequireClientCertificate="false"/>
+							</wsp:Policy>
+						</sp:TransportToken>
+						<sp:AlgorithmSuite>
+							<wsp:Policy>
+								<sp:Basic256Sha256Rsa15/>
+							</wsp:Policy>
+						</sp:AlgorithmSuite>
+						<sp:Layout>
+							<wsp:Policy>
+								<sp:Strict/>
+							</wsp:Policy>
+						</sp:Layout>
+						<sp:IncludeTimestamp/>
+					</wsp:Policy>
+				</sp:TransportBinding>
+				<sp:EndorsingSupportingTokens
+					xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+					<wsp:Policy>
+						<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+							<wsp:Policy>
+								<sp:RequireThumbprintReference/>
+								<sp:WssX509V3Token10/>
+							</wsp:Policy>
+						</sp:X509Token>
+						<sp:SignedParts>
+							<sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing"/>
+						</sp:SignedParts>
+					</wsp:Policy>
+				</sp:EndorsingSupportingTokens>
+				<sp:Wss11
+					xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+					<wsp:Policy>
+						<sp:MustSupportRefThumbprint/>
+					</wsp:Policy>
+				</sp:Wss11>
+				<sp:Trust10
+					xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+					<wsp:Policy>
+						<sp:MustSupportIssuedTokens/>
+						<sp:RequireClientEntropy/>
+						<sp:RequireServerEntropy/>
+					</wsp:Policy>
+				</sp:Trust10>
+				<wsaw:UsingAddressing/>
+			</wsp:All>
+		</wsp:ExactlyOne>
+	</wsp:Policy>
+	<wsdl:types>
+		<xs:schema elementFormDefault="qualified" targetNamespace="http://wcf.dian.colombia"
+			xmlns:xs="http://www.w3.org/2001/XMLSchema">
+			<xs:import namespace="http://schemas.datacontract.org/2004/07/ExchangeEmailResponse"/>
+			<xs:import namespace="http://schemas.datacontract.org/2004/07/DianResponse"/>
+			<xs:import namespace="http://schemas.datacontract.org/2004/07/UploadDocumentResponse"/>
+			<xs:import namespace="http://schemas.datacontract.org/2004/07/EventResponse"/>
+			<xs:import namespace="http://schemas.datacontract.org/2004/07/NumberRangeResponseList"/>
+			<xs:element name="GetExchangeEmails">
+				<xs:complexType>
+					<xs:sequence/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetExchangeEmailsResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="GetExchangeEmailsResult" nillable="true" type="q1:ExchangeEmailResponse"
+							xmlns:q1="http://schemas.datacontract.org/2004/07/ExchangeEmailResponse"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="GetStatus">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element minOccurs="0" name="trackId" nillable="true" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="GetStatusResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element minOccurs="0" name="GetStatusResult" nillable="true" type="q2:DianResponse"
+								xmlns:q2="http://schemas.datacontract.org/2004/07/DianResponse"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="GetStatusZip">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element minOccurs="0" name="trackId" nillable="true" type="xs:string"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="GetStatusZipResponse">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element minOccurs="0" name="GetStatusZipResult" nillable="true" type="q3:ArrayOfDianResponse"
+									xmlns:q3="http://schemas.datacontract.org/2004/07/DianResponse"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="SendBillAsync">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string"/>
+									<xs:element minOccurs="0" name="contentFile" nillable="true" type="xs:base64Binary"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="SendBillAsyncResponse">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element minOccurs="0" name="SendBillAsyncResult" nillable="true" type="q4:UploadDocumentResponse"
+										xmlns:q4="http://schemas.datacontract.org/2004/07/UploadDocumentResponse"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="SendTestSetAsync">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string"/>
+										<xs:element minOccurs="0" name="contentFile" nillable="true" type="xs:base64Binary"/>
+										<xs:element minOccurs="0" name="testSetId" nillable="true" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="SendTestSetAsyncResponse">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element minOccurs="0" name="SendTestSetAsyncResult" nillable="true" type="q5:UploadDocumentResponse"
+											xmlns:q5="http://schemas.datacontract.org/2004/07/UploadDocumentResponse"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="SendBillSync">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string"/>
+											<xs:element minOccurs="0" name="contentFile" nillable="true" type="xs:base64Binary"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="SendBillSyncResponse">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element minOccurs="0" name="SendBillSyncResult" nillable="true" type="q6:DianResponse"
+												xmlns:q6="http://schemas.datacontract.org/2004/07/DianResponse"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="SendBillAttachmentAsync">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string"/>
+												<xs:element minOccurs="0" name="contentFile" nillable="true" type="xs:base64Binary"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="SendBillAttachmentAsyncResponse">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element minOccurs="0" name="SendBillAttachmentAsyncResult" nillable="true" type="q7:UploadDocumentResponse"
+													xmlns:q7="http://schemas.datacontract.org/2004/07/UploadDocumentResponse"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="SendEventUpdateStatus">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element minOccurs="0" name="contentFile" nillable="true" type="xs:base64Binary"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="SendEventUpdateStatusResponse">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element minOccurs="0" name="SendEventUpdateStatusResult" nillable="true" type="q8:ArrayOfEventResponse"
+														xmlns:q8="http://schemas.datacontract.org/2004/07/EventResponse"/>
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="GetNumberingRange">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element minOccurs="0" name="accountCode" nillable="true" type="xs:string"/>
+														<xs:element minOccurs="0" name="accountCodeT" nillable="true" type="xs:string"/>
+														<xs:element minOccurs="0" name="softwareCode" nillable="true" type="xs:string"/>
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="GetNumberingRangeResponse">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element minOccurs="0" name="GetNumberingRangeResult" nillable="true" type="q9:NumberRangeResponseList"
+															xmlns:q9="http://schemas.datacontract.org/2004/07/NumberRangeResponseList"/>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+												<xs:element name="GetXmlByDocumentKey">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element minOccurs="0" name="trackId" nillable="true" type="xs:string"/>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+												<xs:element name="GetXmlByDocumentKeyResponse">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element minOccurs="0" name="GetXmlByDocumentKeyResult" nillable="true" type="q10:EventResponse"
+																xmlns:q10="http://schemas.datacontract.org/2004/07/EventResponse"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:schema>
+												<xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/"
+													xmlns:xs="http://www.w3.org/2001/XMLSchema"
+													xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/">
+													<xs:element name="anyType" nillable="true" type="xs:anyType"/>
+													<xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
+													<xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
+													<xs:element name="boolean" nillable="true" type="xs:boolean"/>
+													<xs:element name="byte" nillable="true" type="xs:byte"/>
+													<xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+													<xs:element name="decimal" nillable="true" type="xs:decimal"/>
+													<xs:element name="double" nillable="true" type="xs:double"/>
+													<xs:element name="float" nillable="true" type="xs:float"/>
+													<xs:element name="int" nillable="true" type="xs:int"/>
+													<xs:element name="long" nillable="true" type="xs:long"/>
+													<xs:element name="QName" nillable="true" type="xs:QName"/>
+													<xs:element name="short" nillable="true" type="xs:short"/>
+													<xs:element name="string" nillable="true" type="xs:string"/>
+													<xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
+													<xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
+													<xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
+													<xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
+													<xs:element name="char" nillable="true" type="tns:char"/>
+													<xs:simpleType name="char">
+														<xs:restriction base="xs:int"/>
+													</xs:simpleType>
+													<xs:element name="duration" nillable="true" type="tns:duration"/>
+													<xs:simpleType name="duration">
+														<xs:restriction base="xs:duration">
+															<xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
+															<xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
+															<xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
+														</xs:restriction>
+													</xs:simpleType>
+													<xs:element name="guid" nillable="true" type="tns:guid"/>
+													<xs:simpleType name="guid">
+														<xs:restriction base="xs:string">
+															<xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/>
+														</xs:restriction>
+													</xs:simpleType>
+													<xs:attribute name="FactoryType" type="xs:QName"/>
+													<xs:attribute name="Id" type="xs:ID"/>
+													<xs:attribute name="Ref" type="xs:IDREF"/>
+												</xs:schema>
+												<xs:schema elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/ExchangeEmailResponse"
+													xmlns:xs="http://www.w3.org/2001/XMLSchema"
+													xmlns:tns="http://schemas.datacontract.org/2004/07/ExchangeEmailResponse">
+													<xs:complexType name="ExchangeEmailResponse">
+														<xs:sequence>
+															<xs:element minOccurs="0" name="CsvBase64Bytes" nillable="true" type="xs:base64Binary"/>
+															<xs:element minOccurs="0" name="Message" nillable="true" type="xs:string"/>
+															<xs:element minOccurs="0" name="StatusCode" nillable="true" type="xs:string"/>
+															<xs:element minOccurs="0" name="Success" type="xs:boolean"/>
+														</xs:sequence>
+													</xs:complexType>
+													<xs:element name="ExchangeEmailResponse" nillable="true" type="tns:ExchangeEmailResponse"/>
+												</xs:schema>
+												<xs:schema elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/DianResponse"
+													xmlns:xs="http://www.w3.org/2001/XMLSchema"
+													xmlns:tns="http://schemas.datacontract.org/2004/07/DianResponse">
+													<xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+													<xs:complexType name="DianResponse">
+														<xs:sequence>
+															<xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="q1:ArrayOfstring"
+																xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+																<xs:element minOccurs="0" name="IsValid" type="xs:boolean"/>
+																<xs:element minOccurs="0" name="StatusCode" nillable="true" type="xs:string"/>
+																<xs:element minOccurs="0" name="StatusDescription" nillable="true" type="xs:string"/>
+																<xs:element minOccurs="0" name="StatusMessage" nillable="true" type="xs:string"/>
+																<xs:element minOccurs="0" name="XmlBase64Bytes" nillable="true" type="xs:base64Binary"/>
+																<xs:element minOccurs="0" name="XmlBytes" nillable="true" type="xs:base64Binary"/>
+																<xs:element minOccurs="0" name="XmlDocumentKey" nillable="true" type="xs:string"/>
+																<xs:element minOccurs="0" name="XmlFileName" nillable="true" type="xs:string"/>
+															</xs:sequence>
+														</xs:complexType>
+														<xs:element name="DianResponse" nillable="true" type="tns:DianResponse"/>
+														<xs:complexType name="ArrayOfDianResponse">
+															<xs:sequence>
+																<xs:element minOccurs="0" maxOccurs="unbounded" name="DianResponse" nillable="true" type="tns:DianResponse"/>
+															</xs:sequence>
+														</xs:complexType>
+														<xs:element name="ArrayOfDianResponse" nillable="true" type="tns:ArrayOfDianResponse"/>
+													</xs:schema>
+													<xs:schema elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"
+														xmlns:xs="http://www.w3.org/2001/XMLSchema"
+														xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+														<xs:complexType name="ArrayOfstring">
+															<xs:sequence>
+																<xs:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="xs:string"/>
+															</xs:sequence>
+														</xs:complexType>
+														<xs:element name="ArrayOfstring" nillable="true" type="tns:ArrayOfstring"/>
+													</xs:schema>
+													<xs:schema elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/UploadDocumentResponse"
+														xmlns:xs="http://www.w3.org/2001/XMLSchema"
+														xmlns:tns="http://schemas.datacontract.org/2004/07/UploadDocumentResponse">
+														<xs:import namespace="http://schemas.datacontract.org/2004/07/XmlParamsResponseTrackId"/>
+														<xs:complexType name="UploadDocumentResponse">
+															<xs:sequence>
+																<xs:element minOccurs="0" name="ErrorMessageList" nillable="true" type="q1:ArrayOfXmlParamsResponseTrackId"
+																	xmlns:q1="http://schemas.datacontract.org/2004/07/XmlParamsResponseTrackId"/>
+																	<xs:element minOccurs="0" name="ZipKey" nillable="true" type="xs:string"/>
+																</xs:sequence>
+															</xs:complexType>
+															<xs:element name="UploadDocumentResponse" nillable="true" type="tns:UploadDocumentResponse"/>
+														</xs:schema>
+														<xs:schema elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/XmlParamsResponseTrackId"
+															xmlns:xs="http://www.w3.org/2001/XMLSchema"
+															xmlns:tns="http://schemas.datacontract.org/2004/07/XmlParamsResponseTrackId">
+															<xs:complexType name="ArrayOfXmlParamsResponseTrackId">
+																<xs:sequence>
+																	<xs:element minOccurs="0" maxOccurs="unbounded" name="XmlParamsResponseTrackId" nillable="true" type="tns:XmlParamsResponseTrackId"/>
+																</xs:sequence>
+															</xs:complexType>
+															<xs:element name="ArrayOfXmlParamsResponseTrackId" nillable="true" type="tns:ArrayOfXmlParamsResponseTrackId"/>
+															<xs:complexType name="XmlParamsResponseTrackId">
+																<xs:sequence>
+																	<xs:element minOccurs="0" name="DocumentKey" nillable="true" type="xs:string"/>
+																	<xs:element minOccurs="0" name="ProcessedMessage" nillable="true" type="xs:string"/>
+																	<xs:element minOccurs="0" name="SenderCode" nillable="true" type="xs:string"/>
+																	<xs:element minOccurs="0" name="Success" type="xs:boolean"/>
+																	<xs:element minOccurs="0" name="XmlFileName" nillable="true" type="xs:string"/>
+																</xs:sequence>
+															</xs:complexType>
+															<xs:element name="XmlParamsResponseTrackId" nillable="true" type="tns:XmlParamsResponseTrackId"/>
+														</xs:schema>
+														<xs:schema elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/EventResponse"
+															xmlns:xs="http://www.w3.org/2001/XMLSchema"
+															xmlns:tns="http://schemas.datacontract.org/2004/07/EventResponse">
+															<xs:complexType name="ArrayOfEventResponse">
+																<xs:sequence>
+																	<xs:element minOccurs="0" maxOccurs="unbounded" name="EventResponse" nillable="true" type="tns:EventResponse"/>
+																</xs:sequence>
+															</xs:complexType>
+															<xs:element name="ArrayOfEventResponse" nillable="true" type="tns:ArrayOfEventResponse"/>
+															<xs:complexType name="EventResponse">
+																<xs:sequence>
+																	<xs:element minOccurs="0" name="Code" nillable="true" type="xs:string"/>
+																	<xs:element minOccurs="0" name="Message" nillable="true" type="xs:string"/>
+																	<xs:element minOccurs="0" name="XmlBytesBase64" nillable="true" type="xs:string"/>
+																</xs:sequence>
+															</xs:complexType>
+															<xs:element name="EventResponse" nillable="true" type="tns:EventResponse"/>
+														</xs:schema>
+														<xs:schema elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/NumberRangeResponseList"
+															xmlns:xs="http://www.w3.org/2001/XMLSchema"
+															xmlns:tns="http://schemas.datacontract.org/2004/07/NumberRangeResponseList">
+															<xs:import namespace="http://schemas.datacontract.org/2004/07/NumberRangeResponse"/>
+															<xs:complexType name="NumberRangeResponseList">
+																<xs:sequence>
+																	<xs:element minOccurs="0" name="OperationCode" nillable="true" type="xs:string"/>
+																	<xs:element minOccurs="0" name="OperationDescription" nillable="true" type="xs:string"/>
+																	<xs:element minOccurs="0" name="ResponseList" nillable="true" type="q1:ArrayOfNumberRangeResponse"
+																		xmlns:q1="http://schemas.datacontract.org/2004/07/NumberRangeResponse"/>
+																	</xs:sequence>
+																</xs:complexType>
+																<xs:element name="NumberRangeResponseList" nillable="true" type="tns:NumberRangeResponseList"/>
+															</xs:schema>
+															<xs:schema elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/NumberRangeResponse"
+																xmlns:xs="http://www.w3.org/2001/XMLSchema"
+																xmlns:tns="http://schemas.datacontract.org/2004/07/NumberRangeResponse">
+																<xs:complexType name="ArrayOfNumberRangeResponse">
+																	<xs:sequence>
+																		<xs:element minOccurs="0" maxOccurs="unbounded" name="NumberRangeResponse" nillable="true" type="tns:NumberRangeResponse"/>
+																	</xs:sequence>
+																</xs:complexType>
+																<xs:element name="ArrayOfNumberRangeResponse" nillable="true" type="tns:ArrayOfNumberRangeResponse"/>
+																<xs:complexType name="NumberRangeResponse">
+																	<xs:sequence>
+																		<xs:element minOccurs="0" name="ResolutionNumber" nillable="true" type="xs:string"/>
+																		<xs:element minOccurs="0" name="ResolutionDate" nillable="true" type="xs:string"/>
+																		<xs:element minOccurs="0" name="Prefix" nillable="true" type="xs:string"/>
+																		<xs:element minOccurs="0" name="FromNumber" type="xs:long"/>
+																		<xs:element minOccurs="0" name="ToNumber" type="xs:long"/>
+																		<xs:element minOccurs="0" name="ValidDateFrom" nillable="true" type="xs:string"/>
+																		<xs:element minOccurs="0" name="ValidDateTo" nillable="true" type="xs:string"/>
+																		<xs:element minOccurs="0" name="TechnicalKey" nillable="true" type="xs:string"/>
+																	</xs:sequence>
+																</xs:complexType>
+																<xs:element name="NumberRangeResponse" nillable="true" type="tns:NumberRangeResponse"/>
+															</xs:schema>
+														</wsdl:types>
+														<wsdl:message name="IWcfDianCustomerServices_GetExchangeEmails_InputMessage">
+															<wsdl:part name="parameters" element="tns:GetExchangeEmails"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_GetExchangeEmails_OutputMessage">
+															<wsdl:part name="parameters" element="tns:GetExchangeEmailsResponse"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_GetStatus_InputMessage">
+															<wsdl:part name="parameters" element="tns:GetStatus"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_GetStatus_OutputMessage">
+															<wsdl:part name="parameters" element="tns:GetStatusResponse"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_GetStatusZip_InputMessage">
+															<wsdl:part name="parameters" element="tns:GetStatusZip"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_GetStatusZip_OutputMessage">
+															<wsdl:part name="parameters" element="tns:GetStatusZipResponse"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_SendBillAsync_InputMessage">
+															<wsdl:part name="parameters" element="tns:SendBillAsync"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_SendBillAsync_OutputMessage">
+															<wsdl:part name="parameters" element="tns:SendBillAsyncResponse"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_SendTestSetAsync_InputMessage">
+															<wsdl:part name="parameters" element="tns:SendTestSetAsync"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_SendTestSetAsync_OutputMessage">
+															<wsdl:part name="parameters" element="tns:SendTestSetAsyncResponse"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_SendBillSync_InputMessage">
+															<wsdl:part name="parameters" element="tns:SendBillSync"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_SendBillSync_OutputMessage">
+															<wsdl:part name="parameters" element="tns:SendBillSyncResponse"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_SendBillAttachmentAsync_InputMessage">
+															<wsdl:part name="parameters" element="tns:SendBillAttachmentAsync"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_SendBillAttachmentAsync_OutputMessage">
+															<wsdl:part name="parameters" element="tns:SendBillAttachmentAsyncResponse"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_SendEventUpdateStatus_InputMessage">
+															<wsdl:part name="parameters" element="tns:SendEventUpdateStatus"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_SendEventUpdateStatus_OutputMessage">
+															<wsdl:part name="parameters" element="tns:SendEventUpdateStatusResponse"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_GetNumberingRange_InputMessage">
+															<wsdl:part name="parameters" element="tns:GetNumberingRange"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_GetNumberingRange_OutputMessage">
+															<wsdl:part name="parameters" element="tns:GetNumberingRangeResponse"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_GetXmlByDocumentKey_InputMessage">
+															<wsdl:part name="parameters" element="tns:GetXmlByDocumentKey"/>
+														</wsdl:message>
+														<wsdl:message name="IWcfDianCustomerServices_GetXmlByDocumentKey_OutputMessage">
+															<wsdl:part name="parameters" element="tns:GetXmlByDocumentKeyResponse"/>
+														</wsdl:message>
+														<wsdl:portType name="IWcfDianCustomerServices">
+															<wsdl:operation name="GetExchangeEmails">
+																<wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetExchangeEmails" message="tns:IWcfDianCustomerServices_GetExchangeEmails_InputMessage"/>
+																<wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetExchangeEmailsResponse" message="tns:IWcfDianCustomerServices_GetExchangeEmails_OutputMessage"/>
+															</wsdl:operation>
+															<wsdl:operation name="GetStatus">
+																<wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatus" message="tns:IWcfDianCustomerServices_GetStatus_InputMessage"/>
+																<wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusResponse" message="tns:IWcfDianCustomerServices_GetStatus_OutputMessage"/>
+															</wsdl:operation>
+															<wsdl:operation name="GetStatusZip">
+																<wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusZip" message="tns:IWcfDianCustomerServices_GetStatusZip_InputMessage"/>
+																<wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusZipResponse" message="tns:IWcfDianCustomerServices_GetStatusZip_OutputMessage"/>
+															</wsdl:operation>
+															<wsdl:operation name="SendBillAsync">
+																<wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillAsync" message="tns:IWcfDianCustomerServices_SendBillAsync_InputMessage"/>
+																<wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillAsyncResponse" message="tns:IWcfDianCustomerServices_SendBillAsync_OutputMessage"/>
+															</wsdl:operation>
+															<wsdl:operation name="SendTestSetAsync">
+																<wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendTestSetAsync" message="tns:IWcfDianCustomerServices_SendTestSetAsync_InputMessage"/>
+																<wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendTestSetAsyncResponse" message="tns:IWcfDianCustomerServices_SendTestSetAsync_OutputMessage"/>
+															</wsdl:operation>
+															<wsdl:operation name="SendBillSync">
+																<wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillSync" message="tns:IWcfDianCustomerServices_SendBillSync_InputMessage"/>
+																<wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillSyncResponse" message="tns:IWcfDianCustomerServices_SendBillSync_OutputMessage"/>
+															</wsdl:operation>
+															<wsdl:operation name="SendBillAttachmentAsync">
+																<wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillAttachmentAsync" message="tns:IWcfDianCustomerServices_SendBillAttachmentAsync_InputMessage"/>
+																<wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillAttachmentAsyncResponse" message="tns:IWcfDianCustomerServices_SendBillAttachmentAsync_OutputMessage"/>
+															</wsdl:operation>
+															<wsdl:operation name="SendEventUpdateStatus">
+																<wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendEventUpdateStatus" message="tns:IWcfDianCustomerServices_SendEventUpdateStatus_InputMessage"/>
+																<wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendEventUpdateStatusResponse" message="tns:IWcfDianCustomerServices_SendEventUpdateStatus_OutputMessage"/>
+															</wsdl:operation>
+															<wsdl:operation name="GetNumberingRange">
+																<wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetNumberingRange" message="tns:IWcfDianCustomerServices_GetNumberingRange_InputMessage"/>
+																<wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetNumberingRangeResponse" message="tns:IWcfDianCustomerServices_GetNumberingRange_OutputMessage"/>
+															</wsdl:operation>
+															<wsdl:operation name="GetXmlByDocumentKey">
+																<wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetXmlByDocumentKey" message="tns:IWcfDianCustomerServices_GetXmlByDocumentKey_InputMessage"/>
+																<wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetXmlByDocumentKeyResponse" message="tns:IWcfDianCustomerServices_GetXmlByDocumentKey_OutputMessage"/>
+															</wsdl:operation>
+														</wsdl:portType>
+														<wsdl:binding name="WSHttpBinding_IWcfDianCustomerServices" type="tns:IWcfDianCustomerServices">
+															<wsp:PolicyReference URI="#WSHttpBinding_IWcfDianCustomerServices_policy"/>
+															<soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+															<wsdl:operation name="GetExchangeEmails">
+																<soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetExchangeEmails" style="document"/>
+																<wsdl:input>
+																	<soap12:body use="literal"/>
+																</wsdl:input>
+																<wsdl:output>
+																	<soap12:body use="literal"/>
+																</wsdl:output>
+															</wsdl:operation>
+															<wsdl:operation name="GetStatus">
+																<soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatus" style="document"/>
+																<wsdl:input>
+																	<soap12:body use="literal"/>
+																</wsdl:input>
+																<wsdl:output>
+																	<soap12:body use="literal"/>
+																</wsdl:output>
+															</wsdl:operation>
+															<wsdl:operation name="GetStatusZip">
+																<soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusZip" style="document"/>
+																<wsdl:input>
+																	<soap12:body use="literal"/>
+																</wsdl:input>
+																<wsdl:output>
+																	<soap12:body use="literal"/>
+																</wsdl:output>
+															</wsdl:operation>
+															<wsdl:operation name="SendBillAsync">
+																<soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillAsync" style="document"/>
+																<wsdl:input>
+																	<soap12:body use="literal"/>
+																</wsdl:input>
+																<wsdl:output>
+																	<soap12:body use="literal"/>
+																</wsdl:output>
+															</wsdl:operation>
+															<wsdl:operation name="SendTestSetAsync">
+																<soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/SendTestSetAsync" style="document"/>
+																<wsdl:input>
+																	<soap12:body use="literal"/>
+																</wsdl:input>
+																<wsdl:output>
+																	<soap12:body use="literal"/>
+																</wsdl:output>
+															</wsdl:operation>
+															<wsdl:operation name="SendBillSync">
+																<soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillSync" style="document"/>
+																<wsdl:input>
+																	<soap12:body use="literal"/>
+																</wsdl:input>
+																<wsdl:output>
+																	<soap12:body use="literal"/>
+																</wsdl:output>
+															</wsdl:operation>
+															<wsdl:operation name="SendBillAttachmentAsync">
+																<soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillAttachmentAsync" style="document"/>
+																<wsdl:input>
+																	<soap12:body use="literal"/>
+																</wsdl:input>
+																<wsdl:output>
+																	<soap12:body use="literal"/>
+																</wsdl:output>
+															</wsdl:operation>
+															<wsdl:operation name="SendEventUpdateStatus">
+																<soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/SendEventUpdateStatus" style="document"/>
+																<wsdl:input>
+																	<soap12:body use="literal"/>
+																</wsdl:input>
+																<wsdl:output>
+																	<soap12:body use="literal"/>
+																</wsdl:output>
+															</wsdl:operation>
+															<wsdl:operation name="GetNumberingRange">
+																<soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetNumberingRange" style="document"/>
+																<wsdl:input>
+																	<soap12:body use="literal"/>
+																</wsdl:input>
+																<wsdl:output>
+																	<soap12:body use="literal"/>
+																</wsdl:output>
+															</wsdl:operation>
+															<wsdl:operation name="GetXmlByDocumentKey">
+																<soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetXmlByDocumentKey" style="document"/>
+																<wsdl:input>
+																	<soap12:body use="literal"/>
+																</wsdl:input>
+																<wsdl:output>
+																	<soap12:body use="literal"/>
+																</wsdl:output>
+															</wsdl:operation>
+														</wsdl:binding>
+														<wsdl:service name="WcfDianCustomerServices">
+															<wsdl:port name="WSHttpBinding_IWcfDianCustomerServices" binding="tns:WSHttpBinding_IWcfDianCustomerServices">
+																<soap12:address location="https://vpfe.dian.gov.co/WcfDianCustomerServices.svc"/>
+																<wsa10:EndpointReference>
+																	<wsa10:Address>https://vpfe.dian.gov.co/WcfDianCustomerServices.svc</wsa10:Address>
+																</wsa10:EndpointReference>
+															</wsdl:port>
+														</wsdl:service>
+													</wsdl:definitions>

@@ -1,0 +1,46 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="GroupsOperations">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="schemas" minOccurs="0">
+          <xs:simpleType >
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="urn:ietf:params:scim:api:messages:2.0:PatchOp"/>
+            </xs:restriction>
+          </xs:simpleType >
+        </xs:element>
+        <xs:element type="xs:string" name="id" minOccurs="0"/>
+        <xs:element type="xs:string" name="displayName" minOccurs="0"/>
+        <xs:element name="Operations" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" name="op">
+                <xs:simpleType >
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="remove"/>
+                     <xs:enumeration value="add"/>
+                  </xs:restriction>
+                </xs:simpleType >
+              </xs:element>
+              <xs:element minOccurs="0" name="path">
+                <xs:simpleType >
+                  <xs:restriction base="xs:string">
+                   <xs:pattern value="members|members\[value eq.*"/>
+                  </xs:restriction>
+                </xs:simpleType >
+              </xs:element>
+              <xs:element name="value" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" minOccurs="0" name="display"/>
+                    <xs:element type="xs:string" minOccurs="0" name="value"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

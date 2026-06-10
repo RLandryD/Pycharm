@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Created with Liquid XML Studio Developer Edition (Trial) 8.1.7.2743 (http://www.liquid-technologies.com)-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="RequestAdmon">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="Emisor">
+					<xs:annotation>
+						<xs:documentation>
+              Datos del Emisor del CFD a Cancelar, Refacturar, Consultar o Reenviar
+            </xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="rfc" type="t_RFC" use="required">
+							<xs:annotation>
+								<xs:documentation>
+                  RFC del Emisor
+                </xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Transaccion">
+					<xs:complexType>
+						<xs:attribute name="id" use="required">
+							<xs:annotation>
+								<xs:documentation>Número de transaccion (Generado por el sistema que realiza la solicitud)</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="1"/>
+									<xs:whiteSpace value="collapse"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="tipo" use="required">
+							<xs:annotation>
+								<xs:documentation>
+                  Tipo de transacción solicitada
+                </xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:NMTOKEN">
+									<xs:enumeration value="CANCELACION"/>
+									<xs:enumeration value="REEMISION"/>
+									<xs:enumeration value="CONSULTA"/>
+									<xs:enumeration value="REENVIO"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Receptor" minOccurs="0">
+					<xs:complexType>
+						<xs:attribute name="rfc" type="t_RFC" use="required">
+							<xs:annotation>
+								<xs:documentation>
+                  RFC del Receptor
+                </xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="emailReceptor" use="optional">
+							<xs:annotation>
+								<xs:documentation>
+                  Correo electrónico del Receptor
+                </xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="1"/>
+									<xs:whiteSpace value="collapse"/>
+									<xs:pattern value="[A-Za-z0-9_]+([\-+\.][A-Za-z0-9_]+)*@[A-Za-z0-9_]+([\-\.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([\-\.][A-Za-z0-9_]+)*"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="codigoReceptor" use="optional">
+							<xs:annotation>
+								<xs:documentation>Atributo opcional del codigo del receptor.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="1"/>
+									<xs:whiteSpace value="collapse"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="CFD" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+              Datos del CFD a Cancelar, Refacturar, Consultar ó Reenviar.
+            </xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="serie" use="optional">
+							<xs:annotation>
+								<xs:documentation>
+                  Serie a la que corresponde el CFD
+                </xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="1"/>
+									<xs:maxLength value="10"/>
+									<xs:whiteSpace value="collapse"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="folio" use="optional">
+							<xs:annotation>
+								<xs:documentation>
+                  Folio del CFD
+                </xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="1"/>
+									<xs:maxLength value="20"/>
+									<xs:whiteSpace value="collapse"/>
+									<xs:pattern value="[0-9]+"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="UUID" use="optional" id="UUID">
+							<xs:annotation>
+								<xs:documentation>Atributo opcional para expresar los 36 caracteres del UUID del Timbre Fiscal Digital (en caso de que el comprobante sea versión 3)</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:whiteSpace value="collapse"/>
+									<xs:length value="36"/>
+									<xs:pattern value="[a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{12}"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="fechaCancelacion" use="optional">
+							<xs:annotation>
+								<xs:documentation>
+                  Fecha y hora de cancelación del CFD, solo aplicable en la solicitud de cancelación
+                </xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+			<xs:attribute name="version" default="3.0">
+				<xs:annotation>
+					<xs:documentation>Atributo que indica la versión bajo el que se encuentra expresado el documento.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="collapse"/>
+						<xs:minLength value="3"/>
+						<xs:maxLength value="4"/>
+						<xs:pattern value="\d{1}.\d{1,2}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="t_RFC">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="12"/>
+			<xs:maxLength value="13"/>
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

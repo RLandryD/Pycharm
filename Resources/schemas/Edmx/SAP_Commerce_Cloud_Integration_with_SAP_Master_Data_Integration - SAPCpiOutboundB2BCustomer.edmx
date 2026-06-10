@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+	<edmx:DataServices m:DataServiceVersion="1.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+		<Schema Namespace="HybrisCommerceOData" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="SAPCpiOutboundB2BContact">
+				<Key>
+					<PropertyRef Name="integrationKey"/>
+				</Key>
+				<Property IsUnique="true" Name="customerId" Nullable="false" Type="Edm.String"/>
+				<Property IsUnique="true" Name="email" Nullable="false" Type="Edm.String"/>
+				<Property IsUnique="true" Name="uid" Nullable="false" Type="Edm.String"/>
+				<Property Name="town" Nullable="true" Type="Edm.String"/>
+				<Property Name="sessionLanguage" Nullable="true" Type="Edm.String"/>
+				<Property Name="country" Nullable="true" Type="Edm.String"/>
+				<Property Name="firstName" Nullable="true" Type="Edm.String"/>
+				<Property Name="groups" Nullable="true" Type="Edm.String"/>
+				<Property Name="responseMessage" Nullable="true" Type="Edm.String"/>
+				<Property Name="postalCode" Nullable="true" Type="Edm.String"/>
+				<Property Name="defaultB2BUnit" Nullable="true" Type="Edm.String"/>
+				<Property Name="objType" Nullable="true" Type="Edm.String"/>
+				<Property Name="phone" Nullable="true" Type="Edm.String"/>
+				<Property Name="streetNumber" Nullable="true" Type="Edm.String"/>
+				<Property Name="fax" Nullable="true" Type="Edm.String"/>
+				<Property Name="street" Nullable="true" Type="Edm.String"/>
+				<Property Name="title" Nullable="true" Type="Edm.String"/>
+				<Property Name="lastName" Nullable="true" Type="Edm.String"/>
+				<Property Name="region" Nullable="true" Type="Edm.String"/>
+				<Property Name="responseStatus" Nullable="true" Type="Edm.String"/>
+				<Property Alias="SAPCpiOutboundB2BContact_customerId|SAPCpiOutboundB2BContact_email|SAPCpiOutboundB2BContact_uid" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+			</EntityType>
+			<EntityType Name="SAPCpiOutboundConfig">
+				<Key>
+					<PropertyRef Name="integrationKey"/>
+				</Key>
+				<Property Name="senderName" Nullable="true" Type="Edm.String"/>
+				<Property IsUnique="true" Name="url" Nullable="false" Type="Edm.String"/>
+				<Property Name="client" Nullable="true" Type="Edm.String"/>
+				<Property Name="senderPort" Nullable="true" Type="Edm.String"/>
+				<Property Name="receiverName" Nullable="true" Type="Edm.String"/>
+				<Property IsUnique="true" Name="username" Nullable="false" Type="Edm.String"/>
+				<Property Name="receiverPort" Nullable="true" Type="Edm.String"/>
+				<Property Alias="SAPCpiOutboundConfig_url|SAPCpiOutboundConfig_username" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+			</EntityType>
+			<EntityType Name="SAPCpiOutboundB2BCustomer">
+				<Key>
+					<PropertyRef Name="integrationKey"/>
+				</Key>
+				<Property Name="responseMessage" Nullable="true" Type="Edm.String"/>
+				<Property Name="street" Nullable="true" Type="Edm.String"/>
+				<Property Name="town" Nullable="true" Type="Edm.String"/>
+				<Property IsUnique="true" Name="email" Nullable="false" Type="Edm.String"/>
+				<Property Name="phone" Nullable="true" Type="Edm.String"/>
+				<Property Name="groups" Nullable="true" Type="Edm.String"/>
+				<Property Name="region" Nullable="true" Type="Edm.String"/>
+				<Property Name="sessionLanguage" Nullable="true" Type="Edm.String"/>
+				<Property Name="title" Nullable="true" Type="Edm.String"/>
+				<Property Name="firstName" Nullable="true" Type="Edm.String"/>
+				<Property Name="country" Nullable="true" Type="Edm.String"/>
+				<Property IsUnique="true" Name="customerId" Nullable="false" Type="Edm.String"/>
+				<Property Name="objType" Nullable="true" Type="Edm.String"/>
+				<Property Name="lastName" Nullable="true" Type="Edm.String"/>
+				<Property Name="streetNumber" Nullable="true" Type="Edm.String"/>
+				<Property IsUnique="true" Name="uid" Nullable="false" Type="Edm.String"/>
+				<Property Name="fax" Nullable="true" Type="Edm.String"/>
+				<Property Name="postalCode" Nullable="true" Type="Edm.String"/>
+				<Property Name="defaultB2BUnit" Nullable="true" Type="Edm.String"/>
+				<Property Name="responseStatus" Nullable="true" Type="Edm.String"/>
+				<Property Name="addressUUID" Nullable="true" Type="Edm.String"/>
+				<Property Alias="SAPCpiOutboundB2BCustomer_customerId|SAPCpiOutboundB2BCustomer_email|SAPCpiOutboundB2BCustomer_uid" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+				<NavigationProperty FromRole="SAPCpiOutboundB2BCustomer" IsPartOf="true" Name="sapCpiOutboundB2BContacts" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundB2BCustomer_sapCpiOutboundB2BContacts" ToRole="SAPCpiOutboundB2BContact"/>
+				<NavigationProperty FromRole="SAPCpiOutboundB2BCustomer" Name="sapCpiConfig" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundB2BCustomer_sapCpiConfig" ToRole="SAPCpiOutboundConfig"/>
+			</EntityType>
+			<Association Name="FK_SAPCpiOutboundB2BCustomer_sapCpiOutboundB2BContacts">
+				<End Multiplicity="0..1" Role="SAPCpiOutboundB2BCustomer" Type="HybrisCommerceOData.SAPCpiOutboundB2BCustomer"/>
+				<End Multiplicity="*" Role="SAPCpiOutboundB2BContact" Type="HybrisCommerceOData.SAPCpiOutboundB2BContact"/>
+			</Association>
+			<Association Name="FK_SAPCpiOutboundB2BCustomer_sapCpiConfig">
+				<End Multiplicity="0..1" Role="SAPCpiOutboundB2BCustomer" Type="HybrisCommerceOData.SAPCpiOutboundB2BCustomer"/>
+				<End Multiplicity="0..1" Role="SAPCpiOutboundConfig" Type="HybrisCommerceOData.SAPCpiOutboundConfig"/>
+			</Association>
+			<EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+				<EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundB2BContact" Name="SAPCpiOutboundB2BContacts"/>
+				<EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundConfig" Name="SAPCpiOutboundConfigs"/>
+				<EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundB2BCustomer" Name="SAPCpiOutboundB2BCustomers"/>
+				<AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundB2BCustomer_sapCpiOutboundB2BContacts" Name="SAPCpiOutboundB2BCustomer_SAPCpiOutboundB2BContacts">
+					<End EntitySet="SAPCpiOutboundB2BCustomers" Role="SAPCpiOutboundB2BCustomer"/>
+					<End EntitySet="SAPCpiOutboundB2BContacts" Role="SAPCpiOutboundB2BContact"/>
+				</AssociationSet>
+				<AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundB2BCustomer_sapCpiConfig" Name="SAPCpiOutboundB2BCustomer_SAPCpiOutboundConfigs">
+					<End EntitySet="SAPCpiOutboundB2BCustomers" Role="SAPCpiOutboundB2BCustomer"/>
+					<End EntitySet="SAPCpiOutboundConfigs" Role="SAPCpiOutboundConfig"/>
+				</AssociationSet>
+			</EntityContainer>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,3729 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="supplier">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="account-number" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Account number</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="255"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="allow-change-requests" type="xs:integer" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Allows suppliers to create change requests from CSP</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="allow-csp-access-without-two-factor" type="xs:boolean" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Allows supplier to access Customer's data from CSP without Two Factor</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="allow-cxml-invoicing" type="xs:boolean" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Allow cXML invoicing for Supplier</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="allow-inv-choose-billing-account" type="xs:boolean" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>allow_inv_choose_billing_account</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="allow-inv-from-connect" type="xs:boolean" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>If yes, then the supplier can create invoices against their POs or Contracts in CSP</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="allow-inv-no-backing-doc-from-connect" type="xs:boolean" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>If yes, then the supplier can create invoices without a backing PO or Contract in CSP.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="allow-inv-unbacked-lines-from-connect" type="xs:boolean" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>If yes, then the supplier can create unbacked invoices without a backing PO or Contract in CSP.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="business-entity-id" type="xs:integer" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Business Entity</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="buyer-hold" type="xs:boolean" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Hold all POs for buyer review</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="commodity" type="Commodity" minOccurs="0"/>
+                <xs:element name="contacts" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="contact" minOccurs="0" maxOccurs="unbounded" type="Contact"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="content-groups" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="content-group" minOccurs="0" maxOccurs="unbounded" type="BusinessGroup"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="corporate-url" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>corporate_url</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="255"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="coupa-pay-financing-only" type="xs:boolean" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Only pay financed invoices via Coupa Pay</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+                <xs:element name="customer-support-contacts" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="customer-support-contact" minOccurs="0" maxOccurs="unbounded" type="CustomerSupportContact"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="cxml-domain" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>"From" , our domain</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cxml-http-password" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Password required to access the Supplier's online store</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="255"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="cxml-http-username" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>User name required to access the Supplier's online store</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cxml-identity" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>"From", our identity</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cxml-invoice-buyer-domain" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Buyer Domain for cXML Invoicing</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cxml-invoice-buyer-identity" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Buyer Identity for cXML Invoicing</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cxml-invoice-secret" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Secret Key for cXML Invoicing Authentication</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cxml-invoice-supplier-domain" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Supplier Domain for cXML Invoicing</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cxml-invoice-supplier-identity" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Supplier Identity for cXML Invoicing</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cxml-protocol" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Transmission protocol</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cxml-secret" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Shared secret</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cxml-ssl-version" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Specify the SSL version used for cXML communication with the supplier</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cxml-supplier-domain" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>"To", supplier domain</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cxml-supplier-identity" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>"To", supplier identity</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cxml-url" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>URL where POs are sent if PO transmission is "cxml"</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="dd-settings" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Dynamic Discounting Settings whitelisted for supplier</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="default-locale" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Default Locale for sending emails to this supplier</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="255"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="disable-cert-verify" type="xs:boolean" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Specify whether to ignore SSL certificate mismatch errors</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="display-name" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>display_name</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="255"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="diversities" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="diversity" minOccurs="0" maxOccurs="unbounded" type="DiversityAssociation"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="duns" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Supplier DUNS number</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="enterprise" type="Enterprise" minOccurs="0"/>
+                <xs:element name="hold-invoices-for-ap-review" type="xs:boolean" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Prevent invoices from this supplier from being approved before AP reviews them.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="inventory-organization" type="InventoryOrganization" minOccurs="0"/>
+                <xs:element name="invoice-emails" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="invoice-email" minOccurs="0" maxOccurs="unbounded" type="InvoiceEmail"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="invoice-matching-level" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Invoice matching level</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="2-way"/>
+                            <xs:enumeration value="3-way"/>
+                            <xs:enumeration value="3-way-direct"/>
+                            <xs:enumeration value="none"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="name" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Supplier name</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="100"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="number" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Supplier number</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="255"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="on-hold" type="xs:boolean" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Supplier On Hold</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="online-store" type="OnlineStore" minOccurs="0"/>
+                <xs:element name="parent" type="Supplier" minOccurs="0"/>
+                <xs:element name="payment-method" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Default payment method, selectable from drop down</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="255"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="payment-term" type="PaymentTerm" minOccurs="0"/>
+                <xs:element name="payment-term-id" type="xs:integer" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Payment Term ID</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="payment-terms" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="payment-term" minOccurs="0" maxOccurs="unbounded" type="PaymentTerm"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="po-change-method" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Purchase order change transmission method</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="cxml"/>
+                            <xs:enumeration value="xml"/>
+                            <xs:enumeration value="email"/>
+                            <xs:enumeration value="prompt"/>
+                            <xs:enumeration value="mark_as_sent"/>
+                            <xs:enumeration value="buy_online"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="po-email" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Email where POs are sent if PO transmission is "email"</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="255"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="po-method" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Purchase order transmission method</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="cxml"/>
+                            <xs:enumeration value="xml"/>
+                            <xs:enumeration value="email"/>
+                            <xs:enumeration value="prompt"/>
+                            <xs:enumeration value="mark_as_sent"/>
+                            <xs:enumeration value="buy_online"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="preferred-commodities" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="preferred-commodity" minOccurs="0" maxOccurs="unbounded" type="Commodity"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="primary-address" type="SupplierAddress" minOccurs="0"/>
+                <xs:element name="primary-contact" type="Contact" minOccurs="0"/>
+                <xs:element name="remit-to-addresses" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="remit-to-address" minOccurs="0" maxOccurs="unbounded" type="RemitToAddress"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="restricted-account-types" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="restricted-account-type" minOccurs="0" maxOccurs="unbounded" type="AccountType"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="savings-pct" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Savings for using this supplier</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:decimal">
+                            <xs:totalDigits value="8"/>
+                            <xs:fractionDigits value="2"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="scf-configs" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Supply Chain Finance Configurations whitelisted for supplier</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="send-invoices-to-approvals" type="xs:boolean" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>If yes, then invoices will all be sent thru approvals, regardless of total amount.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="shipping-term" type="ShippingTerm" minOccurs="0"/>
+                <xs:element name="status" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Supplier status</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="20"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="storefront-url" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Supplier website</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="255"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="supplier-addresses" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="supplier-address" minOccurs="0" maxOccurs="unbounded" type="SupplierAddress"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="supplier-sites" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="supplier-site" minOccurs="0" maxOccurs="unbounded" type="SupplierSite"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="taggings" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="tagging" minOccurs="0" maxOccurs="unbounded" type="Tagging"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="tax-code" type="TaxCode" minOccurs="0"/>
+                <xs:element name="tax-id" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Supplier DUNS number</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="255"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+                <xs:element name="website" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Supplier website</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="255"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="whitelist-dd" type="xs:boolean" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Whitelist suppliers for Dynamic Discounting</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="custom-fields" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="prepaid_supplier" type="xs:boolean" minOccurs="0"/>
+                            <xs:element name="national_provider_identifier" type="xs:string" minOccurs="0"/>
+                            <xs:element name="jurisdiction" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="jurisdiction" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="id" type="xs:string"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="type" type="xs:string" fixed="array"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="supplier_type" minOccurs="0">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="1099"/>
+                                        <xs:enumeration value="T4A"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="company_code" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="company_code" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="id" type="xs:string"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="type" type="xs:string" fixed="array"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="purchaseorg" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="purchaseorg" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="id" type="xs:string"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="type" type="xs:string" fixed="array"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="purchase_org" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="purchase_org" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="id" type="xs:string"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="type" type="xs:string" fixed="array"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="influence" type="xs:boolean" minOccurs="0"/>
+                            <xs:element name="supplierscustomfield" type="xs:string" minOccurs="0"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="Commodity">
+        <xs:sequence>
+            <xs:element name="active" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>A false value will inactivate the account making it no longer available to users. A true value will make it active and available to users.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="true"/>
+                        <xs:enumeration value="false"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="category" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Category</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="goods"/>
+                        <xs:enumeration value="services"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="deductibility" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Deductibility</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="fully_deductible"/>
+                        <xs:enumeration value="partially_deductible"/>
+                        <xs:enumeration value="not_deductible"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="parent" type="Commodity" minOccurs="0"/>
+            <xs:element name="subcategory" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Subcategory</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="raw_materials"/>
+                        <xs:enumeration value="investment_goods"/>
+                        <xs:enumeration value="services_exceptions"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="custom-fields" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="gl" type="xs:string" minOccurs="0"/>
+                        <xs:element name="common_gl_acct" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="id" type="xs:string"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="commoditiescustomfield" type="xs:string" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="UserSimple">
+        <xs:sequence>
+            <xs:element name="account-groups" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="account-group" minOccurs="0" maxOccurs="unbounded" type="AccountGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="account-security-type" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>account_security_type</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="active" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>A false value will inactivate the account making it no longer available to users. A true value will make it active and available to users.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="aic-user" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Does the user have an AI Classification License?</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="allow-employee-payment-account-creation" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Allow the user to create an Employee Payment Account, regardless of the Employee Payment Channel.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="analytics-user" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Does the user have an Analytics License?</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="approval-groups" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="approval-group" minOccurs="0" maxOccurs="unbounded" type="UserGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="authentication-method" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>What Authentication Method will be used (Coupa_Credentials, LDAP, SAML)?</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="business-function" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>The employee's main job role in your company, e.g. Sales, Executive, Administrative, Managerial, etc.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="business-group-security-type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>business_group_security_type</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="0"/>
+                        <xs:enumeration value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="ccw-user" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Does the user have a Contingent Workforce License?</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="clm-advanced-user" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Does the user have a Contract Lifecycle Management Advanced License?</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="content-groups" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="content-group" minOccurs="0" maxOccurs="unbounded" type="BusinessGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="contracts-user" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Does the user have a Contracts License?</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="default-locale" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Default locale</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="10"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="edit-invoice-on-quick-entry" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Edit invoice button routes user to fast entry screen</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="email" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>email</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="employee-number" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>employee number</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="employee-payment-channel" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Determine how expenses will be paid to the employee. 'ERP' per default and can be switched to 'CoupaPay' if instance allows it.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="expense-user" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Does the user have a Expense License?</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="firstname" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>first name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="40"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="generate-password-and-notify" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Set to Yes if you want the system to invite the user to the system and have them set up their password</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="Yes"/>
+                        <xs:enumeration value="No"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="inventory-organizations" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="inventory-organization" minOccurs="0" maxOccurs="unbounded" type="InventoryOrganization"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="inventory-user" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Does the user have a Inventory License?</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="lastname" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>last name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="40"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="login" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>login</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="mention-name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Mention Name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="middlename" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>middle name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="password" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Changed password</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="purchasing-user" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Does the user have a Purchasing License?</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="risk-assess-user" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Does the user have a Risk Assess License?</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="roles" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="role" minOccurs="0" maxOccurs="unbounded" type="Role"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="salesforce-enabled" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>salesforce_enabled</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="salesforce-id" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>salesforce_id</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="seniority-level" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>The employee's job grade or band in your company's hierarchy.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="sourcing-user" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Does the user have a Sourcing License?</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="spend-guard-user" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Does the user have a Spend Guard License?</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="sso-identifier" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>User's Single Sign-on ID (SSO ID)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="supply-chain-user" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Does the user have a Supply Chain License?</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="travel-user" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Does the user have a Travel License?</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="user-groups" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="user-group" minOccurs="0" maxOccurs="unbounded" type="UserGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="working-warehouses" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="working-warehouse" minOccurs="0" maxOccurs="unbounded" type="Warehouse"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="custom-fields" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="assignee" type="xs:string" minOccurs="0"/>
+                        <xs:element name="userscustomfield" type="xs:string" minOccurs="0"/>
+                        <xs:element name="tri_test_field" type="xs:string" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AccountGroup">
+        <xs:sequence>
+            <xs:element name="account-group-type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Type</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="1"/>
+                        <xs:enumeration value="2"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="account-type" type="AccountType" minOccurs="0"/>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="80"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-10-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_10_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-10-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_10_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-10-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_10_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-11-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_11_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-11-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_11_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-11-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_11_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-12-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_12_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-12-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_12_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-12-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_12_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-13-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_13_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-13-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_13_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-13-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_13_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-14-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_14_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-14-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_14_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-14-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_14_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-15-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_15_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-15-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_15_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-15-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_15_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-16-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_16_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-16-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_16_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-16-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_16_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-17-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_17_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-17-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_17_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-17-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_17_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-18-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_18_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-18-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_18_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-18-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_18_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-19-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_19_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-19-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_19_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-19-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_19_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-1-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_1_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-1-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_1_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-1-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_1_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-20-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_20_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-20-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_20_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-20-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_20_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-2-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_2_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-2-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_2_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-2-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_2_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-3-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_3_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-3-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_3_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-3-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_3_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-4-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_4_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-4-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_4_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-4-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_4_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-5-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_5_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-5-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_5_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-5-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_5_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-6-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_6_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-6-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_6_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-6-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_6_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-7-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_7_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-7-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_7_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-7-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_7_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-8-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_8_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-8-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_8_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-8-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_8_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-9-col" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_9_col</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-9-op" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_9_op</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="segment-9-val" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>segment_9_val</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AccountType">
+        <xs:sequence>
+            <xs:element name="active" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>A false value will inactivate the chart of account making it no longer available to users. A true value will make it active and available to users.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="currency" type="Currency" minOccurs="0"/>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="primary-address" type="Address" minOccurs="0"/>
+            <xs:element name="primary-contact" type="Contact" minOccurs="0"/>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Currency">
+        <xs:sequence>
+            <xs:element name="code" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="6"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="created-by" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="enabled" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Enabled</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="100"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="symbol" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>symbol</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="10"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="updated-by" type="xs:anyType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Address">
+        <xs:sequence>
+            <xs:element name="active" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>A no value will make the address inactive making it no longer available to users. A yes value will make it active and available to users.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="attention" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address Default Attention Line</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="business-group-name" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Content Group Name for Address</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="city" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>City Name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="content-groups" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="country" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="created-by" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="local-tax-number" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Local Tax Number</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="location-code" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>location_code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address 'Nickname'</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="postal-code" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Postal Code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="purposes" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="state" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>State Abbreviation</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="street1" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address Line 1</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="street2" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address Line 2</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="street3" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address Line 3</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="street4" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address Line 4</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="tax-registrations" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="updated-by" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="vat-country" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="vat-number" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>VAT identification number used for value added tax purposes</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="custom-fields" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="addressescustomfield" type="xs:string" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Contact">
+        <xs:sequence>
+            <xs:element name="created-by" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="email" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>email</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name-additional" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name_additional</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name-family" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name_family</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name-given" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name_given</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name-prefix" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name_prefix</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name-suffix" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name_suffix</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="notes" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>notes</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="phone-fax" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="phone-mobile" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="phone-work" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="photo" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>photo</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="purposes" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="updated-by" type="xs:anyType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="UserGroup">
+        <xs:sequence>
+            <xs:element name="active" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Active</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="can-approve" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>User group has the ability to be an approver</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="content-groups" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="content-group" minOccurs="0" maxOccurs="unbounded" type="BusinessGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="description" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Description</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="open" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>User group is open for everyone to join or owner must invite others</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="owner" type="UserGroup" minOccurs="0"/>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="users" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="user" minOccurs="0" maxOccurs="unbounded" type="UserSimple"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BusinessGroup">
+        <xs:sequence>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="description" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>description</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="100"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InventoryOrganization">
+        <xs:sequence>
+            <xs:element name="currency" type="Currency" minOccurs="0"/>
+            <xs:element name="fulfillment-type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Fulfillment type</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="manual"/>
+                        <xs:enumeration value="automatic"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="warehouses" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="warehouse" minOccurs="0" maxOccurs="unbounded" type="Warehouse"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Warehouse">
+        <xs:sequence>
+            <xs:element name="active-flag" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>active_flag</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="address" type="Address" minOccurs="0"/>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="currency" type="Currency" minOccurs="0"/>
+            <xs:element name="description" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>description</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="warehouse-locations" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="warehouse-location" minOccurs="0" maxOccurs="unbounded" type="WarehouseLocation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="warehouse-type" type="WarehouseType" minOccurs="0"/>
+            <xs:element name="custom-fields" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="warehousescustomfield" type="xs:string" minOccurs="0"/>
+                        <xs:element name="asset_tracking_location" type="xs:boolean" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="WarehouseLocation">
+        <xs:sequence>
+            <xs:element name="aisle" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>aisle</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="bin" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>bin</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="created-by" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="level" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>level</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="updated-by" type="xs:anyType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="WarehouseType">
+        <xs:sequence>
+            <xs:element name="created-by" type="xs:anyType" minOccurs="0"/>
+            <xs:element name="description" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>description</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="updated-by" type="xs:anyType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Role">
+        <xs:sequence>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="description" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>description</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="omnipotent" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>omnipotent</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="system-role" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>system_role</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="CustomerSupportContact">
+        <xs:sequence>
+            <xs:element name="active" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Active</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="purposes" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="purpose" minOccurs="0" maxOccurs="unbounded" type="Purpose"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="user" type="UserSimple" minOccurs="0"/>
+            <xs:element name="user-id" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>User</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Purpose">
+        <xs:sequence>
+            <xs:element name="kind" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Kind</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DiversityAssociation">
+        <xs:sequence>
+            <xs:element name="country" type="Country" minOccurs="0"/>
+            <xs:element name="country-id" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Country</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="diversity-category" type="DiversityCategory" minOccurs="0"/>
+            <xs:element name="diversity-category-id" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Diversity category</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="id" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Diversity Association ID</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Country">
+        <xs:sequence>
+            <xs:element name="code" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="4"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="100"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DiversityCategory">
+        <xs:sequence>
+            <xs:element name="code" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="id" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Coupa unique identifier</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SimDiversityCertificateArtifact">
+        <xs:sequence>
+            <xs:element name="agency" type="DiversityCertificationAgency" minOccurs="0"/>
+            <xs:element name="agency-id" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Agency</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="description" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Description</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="effective-date" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Attachment Effective Date</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="expiry-date" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Attachment Expiration Date</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DiversityCertificationAgency">
+        <xs:sequence/>
+    </xs:complexType>
+    <xs:complexType name="Enterprise">
+        <xs:sequence>
+            <xs:element name="active-flag" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Active</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="code" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="6"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="description" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Description</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="100"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="tax-coding-enabled" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Tax Coding Enabled</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="vendor-remit-to-required" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Vendor Remit-To Required</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InvoiceEmail">
+        <xs:sequence>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="email" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>email</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="send-notification" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Send Email added notification to supplier</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="OnlineStore">
+        <xs:sequence>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="login" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>login</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="password" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>password</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="url" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>url</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Supplier">
+        <xs:sequence>
+            <xs:element name="account-number" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Account number</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="allow-change-requests" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Allows suppliers to create change requests from CSP</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="allow-csp-access-without-two-factor" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Allows supplier to access Customer's data from CSP without Two Factor</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="allow-cxml-invoicing" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Allow cXML invoicing for Supplier</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="allow-inv-choose-billing-account" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>allow_inv_choose_billing_account</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="allow-inv-from-connect" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>If yes, then the supplier can create invoices against their POs or Contracts in CSP</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="allow-inv-no-backing-doc-from-connect" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>If yes, then the supplier can create invoices without a backing PO or Contract in CSP.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="allow-inv-unbacked-lines-from-connect" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>If yes, then the supplier can create unbacked invoices without a backing PO or Contract in CSP.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="business-entity-id" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Business Entity</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="buyer-hold" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Hold all POs for buyer review</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="commodity" type="Commodity" minOccurs="0"/>
+            <xs:element name="contacts" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="contact" minOccurs="0" maxOccurs="unbounded" type="Contact"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="content-groups" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="content-group" minOccurs="0" maxOccurs="unbounded" type="BusinessGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="corporate-url" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>corporate_url</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="coupa-pay-financing-only" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Only pay financed invoices via Coupa Pay</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="customer-support-contacts" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="customer-support-contact" minOccurs="0" maxOccurs="unbounded" type="CustomerSupportContact"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="cxml-domain" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>"From" , our domain</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cxml-http-password" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Password required to access the Supplier's online store</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cxml-http-username" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>User name required to access the Supplier's online store</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cxml-identity" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>"From", our identity</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cxml-invoice-buyer-domain" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Buyer Domain for cXML Invoicing</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cxml-invoice-buyer-identity" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Buyer Identity for cXML Invoicing</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cxml-invoice-secret" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Secret Key for cXML Invoicing Authentication</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cxml-invoice-supplier-domain" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Supplier Domain for cXML Invoicing</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cxml-invoice-supplier-identity" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Supplier Identity for cXML Invoicing</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cxml-protocol" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Transmission protocol</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cxml-secret" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Shared secret</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cxml-ssl-version" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Specify the SSL version used for cXML communication with the supplier</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cxml-supplier-domain" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>"To", supplier domain</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cxml-supplier-identity" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>"To", supplier identity</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cxml-url" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>URL where POs are sent if PO transmission is "cxml"</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dd-settings" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Dynamic Discounting Settings whitelisted for supplier</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="default-locale" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Default Locale for sending emails to this supplier</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="disable-cert-verify" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Specify whether to ignore SSL certificate mismatch errors</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="display-name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>display_name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="diversities" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="diversity" minOccurs="0" maxOccurs="unbounded" type="DiversityAssociation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="duns" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Supplier DUNS number</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="enterprise" type="Enterprise" minOccurs="0"/>
+            <xs:element name="hold-invoices-for-ap-review" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Prevent invoices from this supplier from being approved before AP reviews them.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="inventory-organization" type="InventoryOrganization" minOccurs="0"/>
+            <xs:element name="invoice-emails" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="invoice-email" minOccurs="0" maxOccurs="unbounded" type="InvoiceEmail"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="invoice-matching-level" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Invoice matching level</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="2-way"/>
+                        <xs:enumeration value="3-way"/>
+                        <xs:enumeration value="3-way-direct"/>
+                        <xs:enumeration value="none"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Supplier name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="100"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="number" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Supplier number</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="on-hold" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Supplier On Hold</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="online-store" type="OnlineStore" minOccurs="0"/>
+            <xs:element name="parent" type="Supplier" minOccurs="0"/>
+            <xs:element name="payment-method" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Default payment method, selectable from drop down</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="payment-term" type="PaymentTerm" minOccurs="0"/>
+            <xs:element name="payment-term-id" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Payment Term ID</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="payment-terms" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="payment-term" minOccurs="0" maxOccurs="unbounded" type="PaymentTerm"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="po-change-method" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Purchase order change transmission method</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="cxml"/>
+                        <xs:enumeration value="xml"/>
+                        <xs:enumeration value="email"/>
+                        <xs:enumeration value="prompt"/>
+                        <xs:enumeration value="mark_as_sent"/>
+                        <xs:enumeration value="buy_online"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="po-email" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Email where POs are sent if PO transmission is "email"</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="po-method" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Purchase order transmission method</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="cxml"/>
+                        <xs:enumeration value="xml"/>
+                        <xs:enumeration value="email"/>
+                        <xs:enumeration value="prompt"/>
+                        <xs:enumeration value="mark_as_sent"/>
+                        <xs:enumeration value="buy_online"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="preferred-commodities" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="preferred-commodity" minOccurs="0" maxOccurs="unbounded" type="Commodity"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="primary-address" type="SupplierAddress" minOccurs="0"/>
+            <xs:element name="primary-contact" type="Contact" minOccurs="0"/>
+            <xs:element name="remit-to-addresses" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="remit-to-address" minOccurs="0" maxOccurs="unbounded" type="RemitToAddress"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="restricted-account-types" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="restricted-account-type" minOccurs="0" maxOccurs="unbounded" type="AccountType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="savings-pct" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Savings for using this supplier</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:totalDigits value="8"/>
+                        <xs:fractionDigits value="2"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="scf-configs" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Supply Chain Finance Configurations whitelisted for supplier</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="send-invoices-to-approvals" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>If yes, then invoices will all be sent thru approvals, regardless of total amount.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="shipping-term" type="ShippingTerm" minOccurs="0"/>
+            <xs:element name="status" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Supplier status</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="20"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="storefront-url" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Supplier website</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="supplier-addresses" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="supplier-address" minOccurs="0" maxOccurs="unbounded" type="SupplierAddress"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="supplier-sites" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="supplier-site" minOccurs="0" maxOccurs="unbounded" type="SupplierSite"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="taggings" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="tagging" minOccurs="0" maxOccurs="unbounded" type="Tagging"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="tax-code" type="TaxCode" minOccurs="0"/>
+            <xs:element name="tax-id" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Supplier DUNS number</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="website" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Supplier website</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="whitelist-dd" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Whitelist suppliers for Dynamic Discounting</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="custom-fields" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="prepaid_supplier" type="xs:boolean" minOccurs="0"/>
+                        <xs:element name="national_provider_identifier" type="xs:string" minOccurs="0"/>
+                        <xs:element name="jurisdiction" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="jurisdiction" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="id" type="xs:string"/>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attribute name="type" type="xs:string" fixed="array"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="supplier_type" minOccurs="0">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="1099"/>
+                                    <xs:enumeration value="T4A"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="company_code" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="company_code" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="id" type="xs:string"/>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attribute name="type" type="xs:string" fixed="array"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="purchaseorg" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="purchaseorg" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="id" type="xs:string"/>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attribute name="type" type="xs:string" fixed="array"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="purchase_org" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="purchase_org" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="id" type="xs:string"/>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attribute name="type" type="xs:string" fixed="array"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="influence" type="xs:boolean" minOccurs="0"/>
+                        <xs:element name="supplierscustomfield" type="xs:string" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PaymentTerm">
+        <xs:sequence>
+            <xs:element name="active" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>A false value will inactivate the account making it no longer available to users. A true value will make it active and available to users.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="true"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="code" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="content-groups" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="content-group" minOccurs="0" maxOccurs="unbounded" type="BusinessGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="days-for-discount-payment" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>days_for_discount_payment</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="days-for-net-payment" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>days_for_net_payment</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="description" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>description</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="discount-cutoff-day" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Document before this day are eligible for discount else they will fall into the next month</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="discount-due-day" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>This field is used to calculate the document's discount due date.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="discount-due-month" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>This field is used to calculate the document's discount due date along with the discount due day.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="discount-rate" type="xs:decimal" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>discount_rate</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="net-cutoff-day" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>This helps to determine payment due date if the document should be counted against this month or next</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="net-due-day" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>This helps to determine the document's payment due date</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="net-due-month" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>This helps to determine the document's payment due date</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Type can be either DaysAfterNetPaymentTerm or SpecificDayPaymentTerm</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="DaysAfterNetPaymentTerm"/>
+                        <xs:enumeration value="SpecificDayPaymentTerm"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SupplierAddress">
+        <xs:sequence>
+            <xs:element name="active" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>A no value will make the address inactive making it no longer available to users. A yes value will make it active and available to users.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="attention" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address Default Attention Line</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="business-group-name" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Content Group Name for Address</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="city" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>City Name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="content-groups" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="content-group" minOccurs="0" maxOccurs="unbounded" type="BusinessGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="country" type="Country" minOccurs="0"/>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="local-tax-number" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Local Tax Number</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="location-code" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>location_code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address 'Nickname'</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="postal-code" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Postal Code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="purposes" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="purpose" minOccurs="0" maxOccurs="unbounded" type="Purpose"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="state" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>State Abbreviation</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="street1" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address Line 1</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="street2" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address Line 2</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="street3" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address Line 3</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="street4" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address Line 4</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="tax-registrations" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="tax-registration" minOccurs="0" maxOccurs="unbounded" type="TaxRegistration"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="vat-country" type="Country" minOccurs="0"/>
+            <xs:element name="vat-number" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>VAT identification number used for value added tax purposes</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TaxRegistration">
+        <xs:sequence>
+            <xs:element name="active" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Tax code is enabled or disabled</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="country" type="Country" minOccurs="0"/>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="local" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>True if tax registration cannot be used for cross-border invoices</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="number" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Tax Registration number</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="47"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="owner-id" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Coupa unique identifier of the object associated with this tax registration</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="owner-type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Type of the owning object</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="RemitToAddress">
+        <xs:sequence>
+            <xs:element name="active" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>A no value will make the address inactive making it no longer available to users. A yes value will make it active and available to users.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="city" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>City Name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="country" type="Country" minOccurs="0"/>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="external-src-name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Name of the source system.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="external-src-ref" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Reference number from source system.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="local-tax-number" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Local Tax Number</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address 'Nickname'</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="postal-code" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Postal Code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="remit-to-code" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Remit To Code (if a Supplier address)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="state" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>State Abbreviation</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="street1" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address Line 1</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="street2" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Address Line 2</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="tax-registrations" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="tax-registration" minOccurs="0" maxOccurs="unbounded" type="TaxRegistration"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="vat-country" type="Country" minOccurs="0"/>
+            <xs:element name="vat-number" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>VAT identification number used for value added tax purposes</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ShippingTerm">
+        <xs:sequence>
+            <xs:element name="active" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>A false value will inactivate the account making it no longer available to users. A true value will make it active and available to users.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="true"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="code" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="content-groups" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="content-group" minOccurs="0" maxOccurs="unbounded" type="BusinessGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="description" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>description</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SupplierSite">
+        <xs:sequence>
+            <xs:element name="active" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>true if the site is active</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="allow-change-requests" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Allows suppliers to create change requests from CSP</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="buyer-hold" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Hold all POs for buyer review</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="code" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>supplier_code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="20"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="contacts" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="contact" minOccurs="0" maxOccurs="unbounded" type="Contact"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="content-groups" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="content-group" minOccurs="0" maxOccurs="unbounded" type="BusinessGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="cxml-domain" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>"From" , our domain</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cxml-http-username" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>User name required to access the Supplier's online store</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cxml-identity" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>"From", our identity</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cxml-protocol" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Transmission protocol</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cxml-secret" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Shared secret</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cxml-ssl-version" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Specify the SSL version used for cXML communication with the supplier</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cxml-supplier-domain" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>"To", supplier domain</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cxml-supplier-identity" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>"To", supplier identity</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cxml-url" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>URL where POs are sent if PO transmission is "cxml"</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="default-locale" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Default Locale for sending emails to this supplier site</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="disable-cert-verify" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Specify whether to ignore SSL certificate mismatch errors</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Supplier name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="payment-term" type="PaymentTerm" minOccurs="0"/>
+            <xs:element name="po-change-method" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Purchase order change transmission method</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="cxml"/>
+                        <xs:enumeration value="xml"/>
+                        <xs:enumeration value="email"/>
+                        <xs:enumeration value="prompt"/>
+                        <xs:enumeration value="mark_as_sent"/>
+                        <xs:enumeration value="buy_online"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="po-email" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Email where POs are sent if PO transmission is "email"</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="po-method" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Purchase order transmission method</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="cxml"/>
+                        <xs:enumeration value="xml"/>
+                        <xs:enumeration value="email"/>
+                        <xs:enumeration value="prompt"/>
+                        <xs:enumeration value="mark_as_sent"/>
+                        <xs:enumeration value="buy_online"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="shipping-term" type="ShippingTerm" minOccurs="0"/>
+            <xs:element name="supplier-id" type="xs:integer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Supplier id</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="custom-fields" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="purchase_group" type="xs:string" minOccurs="0"/>
+                        <xs:element name="suppliersitescustomfield" type="xs:string" minOccurs="0"/>
+                        <xs:element name="purchase_org" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="purchase_org" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="id" type="xs:string"/>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attribute name="type" type="xs:string" fixed="array"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Tagging">
+        <xs:sequence>
+            <xs:element name="active" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Tagging active state</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="description" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Description on the Tag on an Object (Tags on different objects can have different descriptions)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="tag" type="Tag" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Tag">
+        <xs:sequence>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="name" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="30"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="system-tag" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>System tag</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TaxCode">
+        <xs:sequence>
+            <xs:element name="active" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Tax code is enabled or disabled</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="code" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="country" type="Country" minOccurs="0"/>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="description" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>description</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="effective-date" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date when tax code is become active</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="percentage" type="xs:decimal" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>percentage</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="tax-rate" type="TaxRate" minOccurs="0"/>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TaxRate">
+        <xs:sequence>
+            <xs:element name="active" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Tax rate is enabled or disabled</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="country" type="Country" minOccurs="0"/>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="customer-accounting" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Customer accounting</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="effective-date" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date when tax rate is become active</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="exempt" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Whether Tax Rate is exempt or not</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="expiration-date" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date when tax rate is expiring</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="out-of-scope" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Out of scope</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="percentage" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Tax Rate percentage</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:totalDigits value="30"/>
+                        <xs:fractionDigits value="6"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="reverse-charge" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Whether Tax Rate is Reverse Charge or not</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="tax-description" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Tax Rate Description</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="tax-rate-type" type="TaxRateType" minOccurs="0"/>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TaxRateType">
+        <xs:sequence>
+            <xs:element name="country" type="Country" minOccurs="0"/>
+            <xs:element name="created-by" type="UserSimple" minOccurs="0"/>
+            <xs:element name="description" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Description of the tax rate type</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="updated-by" type="UserSimple" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,837 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="http://sap.com/xi/APPL/Global2" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:rfc="urn:sap-com:sap:rfc:functions" xmlns:tns="http://sap.com/xi/APPL/Global2" xmlns:n1="http://sap.com/xi/SAPGlobal/Global">
+	<wsdl:documentation>
+		<sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+	</wsdl:documentation>
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://sap.com/xi/APPL/Global2" xmlns:xi0="http://sap.com/xi/APPL/Global2" xmlns:xi1="http://sap.com/xi/SAPGlobal/Global" xmlns="http://sap.com/xi/APPL/Global2">
+			<xsd:simpleType name="AgencyIdentificationCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="3"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="Amount">
+				<xsd:simpleContent>
+					<xsd:extension base="Amount.Content">
+						<xsd:attribute name="currencyCode" use="required" type="CurrencyCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="Amount.Content">
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="28"/>
+					<xsd:fractionDigits value="6"/>
+					<xsd:maxInclusive value="9999999999999999999999.999999"/>
+					<xsd:minInclusive value="-9999999999999999999999.999999"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="BlockingStatusCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="1"/>
+					<xsd:enumeration value="2"/>
+					<xsd:enumeration value="3"/>
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="BusinessTransactionDocumentCreditCheckExecutionResultCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="BusinessTransactionDocumentID">
+				<xsd:simpleContent>
+					<xsd:extension base="BusinessTransactionDocumentID.Content">
+						<xsd:attribute name="schemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="schemeAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="schemeAgencySchemeAgencyID" type="AgencyIdentificationCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="BusinessTransactionDocumentID.Content">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="35"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="BusinessTransactionDocumentProcessingTypeCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="4"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="BusinessTransactionDocumentTypeCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="5"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CalendarUnitCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="3"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CurrencyCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="3"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQryMsg_s">
+				<xsd:sequence>
+					<xsd:element name="CustomerQuoteSelectionByElements" type="CustQteERPBscDataByElmntsQry_sSelByElmnt"/>
+					<xsd:element name="ProcessingConditions" type="CustQteERPBscDataByElmntsQry_sProcgCndns" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQry_sProcgCndns">
+				<xsd:sequence>
+					<xsd:element name="QueryHitsMaximumNumberValue" type="NumberValue"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQry_sSelByBuyrDocID">
+				<xsd:sequence>
+					<xsd:element name="InclusionExclusionCode" type="InclusionExclusionCode" minOccurs="0"/>
+					<xsd:element name="IntervalBoundaryTypeCode" type="IntervalBoundaryTypeCode"/>
+					<xsd:element name="LowerBoundaryBuyerDocumentID" type="BusinessTransactionDocumentID" minOccurs="0"/>
+					<xsd:element name="UpperBoundaryBuyerDocumentID" type="BusinessTransactionDocumentID" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQry_sSelByBuyrPtyIntID">
+				<xsd:sequence>
+					<xsd:element name="InclusionExclusionCode" type="InclusionExclusionCode" minOccurs="0"/>
+					<xsd:element name="IntervalBoundaryTypeCode" type="IntervalBoundaryTypeCode"/>
+					<xsd:element name="LowerBoundaryBuyerPartyInternalID" type="PartyInternalID" minOccurs="0"/>
+					<xsd:element name="UpperBoundaryBuyerPartyInternalID" type="PartyInternalID" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQry_sSelByCrtnDte">
+				<xsd:sequence>
+					<xsd:element name="InclusionExclusionCode" type="InclusionExclusionCode" minOccurs="0"/>
+					<xsd:element name="IntervalBoundaryTypeCode" type="IntervalBoundaryTypeCode"/>
+					<xsd:element name="LowerBoundaryCreationDate" type="Date" minOccurs="0"/>
+					<xsd:element name="UpperBoundaryCreationDate" type="Date" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQry_sSelByCrtnUsrAcctID">
+				<xsd:sequence>
+					<xsd:element name="InclusionExclusionCode" type="InclusionExclusionCode" minOccurs="0"/>
+					<xsd:element name="IntervalBoundaryTypeCode" type="IntervalBoundaryTypeCode"/>
+					<xsd:element name="LowerBoundaryCreationUserAccountID" type="UserAccountID" minOccurs="0"/>
+					<xsd:element name="UpperBoundaryCreationUserAccountID" type="UserAccountID" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQry_sSelByDistrChnlCode">
+				<xsd:sequence>
+					<xsd:element name="InclusionExclusionCode" type="InclusionExclusionCode" minOccurs="0"/>
+					<xsd:element name="IntervalBoundaryTypeCode" type="IntervalBoundaryTypeCode"/>
+					<xsd:element name="LowerBoundaryDistributionChannelCode" type="DistributionChannelCode" minOccurs="0"/>
+					<xsd:element name="UpperBoundaryDistributionChannelCode" type="DistributionChannelCode" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQry_sSelByDivnCode">
+				<xsd:sequence>
+					<xsd:element name="InclusionExclusionCode" type="InclusionExclusionCode" minOccurs="0"/>
+					<xsd:element name="IntervalBoundaryTypeCode" type="IntervalBoundaryTypeCode"/>
+					<xsd:element name="LowerBoundaryDivisionCode" type="DivisionCode" minOccurs="0"/>
+					<xsd:element name="UpperBoundaryDivisionCode" type="DivisionCode" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQry_sSelByElmnt">
+				<xsd:sequence>
+					<xsd:element name="SelectionByID" type="CustQteERPBscDataByElmntsQry_sSelByID" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="SelectionByBuyerDocumentID" type="CustQteERPBscDataByElmntsQry_sSelByBuyrDocID" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="SelectionByBuyerPartyInternalID" type="CustQteERPBscDataByElmntsQry_sSelByBuyrPtyIntID" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="SelectionBySalesOrganisationID" type="CustQteERPBscDataByElmntsQry_sSelBySlsOrgID" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="SelectionBySalesOfficeID" type="CustQteERPBscDataByElmntsQry_sSelBySlsOffcID" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="SelectionBySalesGroupID" type="CustQteERPBscDataByElmntsQry_sSelBySlsGrpID" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="SelectionByCreationUserAccountID" type="CustQteERPBscDataByElmntsQry_sSelByCrtnUsrAcctID" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="SelectionByItemProductInternalID" type="CustQteERPBscDataByElmntsQry_sSelByItmProdIntID" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="SelectionByProcessingTypeCode" type="CustQteERPBscDataByElmntsQry_sSelByProcgTypeCode" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="SelectionByDistributionChannelCode" type="CustQteERPBscDataByElmntsQry_sSelByDistrChnlCode" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="SelectionByDivisionCode" type="CustQteERPBscDataByElmntsQry_sSelByDivnCode" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="SelectionByCreationDate" type="CustQteERPBscDataByElmntsQry_sSelByCrtnDte" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="ValidityStartDate" type="Date" minOccurs="0"/>
+					<xsd:element name="ValidityEndDate" type="Date" minOccurs="0"/>
+					<xsd:element name="DeliveryBlockedIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="InvoicingBlockedIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="CreditBlockedIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="NotCompleteIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="LifeCycleStatusNotCompletedIndicator" type="Indicator" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQry_sSelByID">
+				<xsd:sequence>
+					<xsd:element name="InclusionExclusionCode" type="InclusionExclusionCode" minOccurs="0"/>
+					<xsd:element name="IntervalBoundaryTypeCode" type="IntervalBoundaryTypeCode"/>
+					<xsd:element name="LowerBoundaryID" type="CustomerQuoteID" minOccurs="0"/>
+					<xsd:element name="UpperBoundaryID" type="CustomerQuoteID" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQry_sSelByItmProdIntID">
+				<xsd:sequence>
+					<xsd:element name="InclusionExclusionCode" type="InclusionExclusionCode" minOccurs="0"/>
+					<xsd:element name="IntervalBoundaryTypeCode" type="IntervalBoundaryTypeCode"/>
+					<xsd:element name="LowerBoundaryItemProductInternalID" type="ProductInternalID" minOccurs="0"/>
+					<xsd:element name="UpperBoundaryItemProductInternalID" type="ProductInternalID" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQry_sSelByProcgTypeCode">
+				<xsd:sequence>
+					<xsd:element name="InclusionExclusionCode" type="InclusionExclusionCode" minOccurs="0"/>
+					<xsd:element name="IntervalBoundaryTypeCode" type="IntervalBoundaryTypeCode"/>
+					<xsd:element name="LowerBoundaryProcessingTypeCode" type="BusinessTransactionDocumentTypeCode" minOccurs="0"/>
+					<xsd:element name="UpperBoundaryProcessingTypeCode" type="BusinessTransactionDocumentTypeCode" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQry_sSelBySlsGrpID">
+				<xsd:sequence>
+					<xsd:element name="InclusionExclusionCode" type="InclusionExclusionCode" minOccurs="0"/>
+					<xsd:element name="IntervalBoundaryTypeCode" type="IntervalBoundaryTypeCode"/>
+					<xsd:element name="LowerBoundarySalesGroupID" type="OrganisationalCentreID" minOccurs="0"/>
+					<xsd:element name="UpperBoundarySalesGroupID" type="OrganisationalCentreID" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQry_sSelBySlsOffcID">
+				<xsd:sequence>
+					<xsd:element name="InclusionExclusionCode" type="InclusionExclusionCode" minOccurs="0"/>
+					<xsd:element name="IntervalBoundaryTypeCode" type="IntervalBoundaryTypeCode"/>
+					<xsd:element name="LowerBoundarySalesOfficeID" type="OrganisationalCentreID" minOccurs="0"/>
+					<xsd:element name="UpperBoundarySalesOfficeID" type="OrganisationalCentreID" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsQry_sSelBySlsOrgID">
+				<xsd:sequence>
+					<xsd:element name="InclusionExclusionCode" type="InclusionExclusionCode" minOccurs="0"/>
+					<xsd:element name="IntervalBoundaryTypeCode" type="IntervalBoundaryTypeCode"/>
+					<xsd:element name="LowerBoundarySalesOrganisationID" type="OrganisationalCentreID" minOccurs="0"/>
+					<xsd:element name="UpperBoundarySalesOrganisationID" type="OrganisationalCentreID" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsRspMsg_s">
+				<xsd:sequence>
+					<xsd:element name="CustomerQuote" type="CustQteERPBscDataByElmntsRsp_sCustQte" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="ProcessingConditions" type="CustQteERPBscDataByElmntsRsp_sProcgCndns" minOccurs="0"/>
+					<xsd:element name="Log" type="Log"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsRsp_sBusTransacDocRef">
+				<xsd:sequence>
+					<xsd:element name="ID" type="BusinessTransactionDocumentID"/>
+					<xsd:element name="TypeCode" type="BusinessTransactionDocumentTypeCode" minOccurs="0"/>
+					<xsd:element name="TypeName" type="MEDIUM_Name" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsRsp_sBuyrDoc">
+				<xsd:sequence>
+					<xsd:element name="ID" type="BusinessTransactionDocumentID" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsRsp_sBuyrPty">
+				<xsd:sequence>
+					<xsd:element name="InternalID" type="PartyInternalID"/>
+					<xsd:element name="FormattedName" type="LONG_Name" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsRsp_sCustQte">
+				<xsd:sequence>
+					<xsd:element name="ID" type="CustomerQuoteID"/>
+					<xsd:element name="ProcessingTypeCode" type="BusinessTransactionDocumentProcessingTypeCode"/>
+					<xsd:element name="ProcessingTypeName" type="LEN20_Name" minOccurs="0"/>
+					<xsd:element name="BuyerDocument" type="CustQteERPBscDataByElmntsRsp_sBuyrDoc" minOccurs="0"/>
+					<xsd:element name="SystemAdministrativeData" type="CustQteERPBscDataByElmntsRsp_sSystAdminvData"/>
+					<xsd:element name="Status" type="CustQteERPBscDataByElmntsRsp_sSts" minOccurs="0"/>
+					<xsd:element name="SalesAndServiceBusinessArea" type="CustQteERPBscDataByElmntsRsp_sSlsSrvcBusArea"/>
+					<xsd:element name="BuyerParty" type="CustQteERPBscDataByElmntsRsp_sBuyrPty"/>
+					<xsd:element name="DateTerms" type="CustQteERPBscDataByElmntsRsp_sDteTrms" minOccurs="0"/>
+					<xsd:element name="DeliveryTerms" type="CustQteERPBscDataByElmntsRsp_sDelivTrms" minOccurs="0"/>
+					<xsd:element name="InvoiceTerms" type="CustQteERPBscDataByElmntsRsp_sInvcTrms" minOccurs="0"/>
+					<xsd:element name="TotalValues" type="CustQteERPBscDataByElmntsRsp_sTotVals" minOccurs="0"/>
+					<xsd:element name="BusinessTransactionDocumentReference" type="CustQteERPBscDataByElmntsRsp_sBusTransacDocRef" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsRsp_sDelivTrms">
+				<xsd:sequence>
+					<xsd:element name="DeliveryBlockingReasonCode" type="DeliveryBlockingReasonCode" minOccurs="0"/>
+					<xsd:element name="DeliveryBlockingReasonName" type="MEDIUM_Name" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsRsp_sDteTrms">
+				<xsd:sequence>
+					<xsd:element name="RequestDate" type="Date" minOccurs="0"/>
+					<xsd:element name="RequestCalendarUnitCode" type="CalendarUnitCode" minOccurs="0"/>
+					<xsd:element name="RequestCalendarUnitName" type="LEN20_Name" minOccurs="0"/>
+					<xsd:element name="ValidityStartDate" type="Date" minOccurs="0"/>
+					<xsd:element name="ValidityEndDate" type="Date" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsRsp_sInvcTrms">
+				<xsd:sequence>
+					<xsd:element name="InvoicingBlockingReasonCode" type="InvoicingBlockingReasonCode" minOccurs="0"/>
+					<xsd:element name="InvoicingBlockingReasonName" type="MEDIUM_Name" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsRsp_sProcgCndns">
+				<xsd:sequence>
+					<xsd:element name="ReturnedQueryHitsNumberValue" type="NumberValue"/>
+					<xsd:element name="MoreElementsAvailableIndicator" type="Indicator"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsRsp_sSlsSrvcBusArea">
+				<xsd:sequence>
+					<xsd:element name="SalesOrganisationID" type="OrganisationalCentreID"/>
+					<xsd:element name="SalesOrganisationName" type="LEN20_Name" minOccurs="0"/>
+					<xsd:element name="DistributionChannelCode" type="DistributionChannelCode"/>
+					<xsd:element name="DistributionChannelName" type="LEN20_Name" minOccurs="0"/>
+					<xsd:element name="DivisionCode" type="DivisionCode"/>
+					<xsd:element name="DivisionName" type="LEN20_Name" minOccurs="0"/>
+					<xsd:element name="SalesOfficeID" type="OrganisationalCentreID" minOccurs="0"/>
+					<xsd:element name="SalesOfficeName" type="LEN20_Name" minOccurs="0"/>
+					<xsd:element name="SalesGroupID" type="OrganisationalCentreID" minOccurs="0"/>
+					<xsd:element name="SalesGroupName" type="LEN20_Name" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsRsp_sSts">
+				<xsd:sequence>
+					<xsd:element name="CustomerQuoteLifeCycleStatusCode" type="CustomerQuoteLifeCycleStatusCode" minOccurs="0"/>
+					<xsd:element name="CustomerQuoteLifeCycleStatusName" type="MEDIUM_Name" minOccurs="0"/>
+					<xsd:element name="RejectionStatusCode" type="RejectionStatusCode" minOccurs="0"/>
+					<xsd:element name="RejectionStatusName" type="MEDIUM_Name" minOccurs="0"/>
+					<xsd:element name="CreditCheckExecutionResultCode" type="BusinessTransactionDocumentCreditCheckExecutionResultCode" minOccurs="0"/>
+					<xsd:element name="CreditCheckExecutionResultName" type="LONG_Name" minOccurs="0"/>
+					<xsd:element name="InvoicingBlockingStatusCode" type="BlockingStatusCode" minOccurs="0"/>
+					<xsd:element name="InvoicingBlockingStatusName" type="MEDIUM_Name" minOccurs="0"/>
+					<xsd:element name="DeliveryBlockingStatusCode" type="BlockingStatusCode" minOccurs="0"/>
+					<xsd:element name="DeliveryBlockingStatusName" type="MEDIUM_Name" minOccurs="0"/>
+					<xsd:element name="DeliveryProcessingStatusCode" type="ProcessingStatusCode" minOccurs="0"/>
+					<xsd:element name="DeliveryProcessingStatusName" type="MEDIUM_Name" minOccurs="0"/>
+					<xsd:element name="GeneralDataCompletenessStatusCode" type="DataCompletenessStatusCode" minOccurs="0"/>
+					<xsd:element name="GeneralDataCompletenessStatusName" type="MEDIUM_Name" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsRsp_sSystAdminvData">
+				<xsd:sequence>
+					<xsd:element name="CreationDate" type="Date"/>
+					<xsd:element name="CreationUserAccountID" type="UserAccountID"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustQteERPBscDataByElmntsRsp_sTotVals">
+				<xsd:sequence>
+					<xsd:element name="NetAmount" type="Amount" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="CustomerQuoteID">
+				<xsd:simpleContent>
+					<xsd:extension base="CustomerQuoteID.Content">
+						<xsd:attribute name="schemeAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="CustomerQuoteID.Content">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="10"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CustomerQuoteLifeCycleStatusCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="1"/>
+					<xsd:enumeration value="2"/>
+					<xsd:enumeration value="3"/>
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="DataCompletenessStatusCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="1"/>
+					<xsd:enumeration value="2"/>
+					<xsd:enumeration value="3"/>
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="Date">
+				<xsd:restriction base="xsd:date">
+					<xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="DeliveryBlockingReasonCode">
+				<xsd:simpleContent>
+					<xsd:extension base="DeliveryBlockingReasonCode.Content">
+						<xsd:attribute name="listID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listVersionID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="15"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencySchemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencySchemeAgencyID" type="AgencyIdentificationCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="DeliveryBlockingReasonCode.Content">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="DistributionChannelCode">
+				<xsd:simpleContent>
+					<xsd:extension base="DistributionChannelCode.Content">
+						<xsd:attribute name="listID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listVersionID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="15"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencySchemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencySchemeAgencyID" type="AgencyIdentificationCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="DistributionChannelCode.Content">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="DivisionCode">
+				<xsd:simpleContent>
+					<xsd:extension base="DivisionCode.Content">
+						<xsd:attribute name="listID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listVersionID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="15"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencySchemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencySchemeAgencyID" type="AgencyIdentificationCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="DivisionCode.Content">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="ExchangeFaultData">
+				<xsd:sequence>
+					<xsd:element name="faultText" type="xsd:string"/>
+					<xsd:element name="faultUrl" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="faultDetail" type="ExchangeLogData" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ExchangeLogData">
+				<xsd:sequence>
+					<xsd:element name="severity" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="text" type="xsd:string"/>
+					<xsd:element name="url" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="id" type="xsd:string" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:simpleType name="InclusionExclusionCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="Indicator">
+				<xsd:restriction base="xsd:boolean"/>
+			</xsd:simpleType>
+			<xsd:simpleType name="IntervalBoundaryTypeCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="InvoicingBlockingReasonCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="LEN20_Name">
+				<xsd:simpleContent>
+					<xsd:extension base="LEN20_Name.Content">
+						<xsd:attribute name="languageCode" type="LanguageCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="LEN20_Name.Content">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="20"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="LONG_Name">
+				<xsd:simpleContent>
+					<xsd:extension base="LONG_Name.Content">
+						<xsd:attribute name="languageCode" type="LanguageCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="LONG_Name.Content">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="80"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LanguageCode">
+				<xsd:restriction base="xsd:language">
+					<xsd:maxLength value="9"/>
+					<xsd:minLength value="2"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="Log">
+				<xsd:sequence>
+					<xsd:element name="BusinessDocumentProcessingResultCode" type="ProcessingResultCode" minOccurs="0"/>
+					<xsd:element name="MaximumLogItemSeverityCode" type="LogItemSeverityCode" minOccurs="0"/>
+					<xsd:element name="Item" type="LogItem" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="LogItem">
+				<xsd:sequence>
+					<xsd:element name="TypeID" type="LogItemTypeID" minOccurs="0"/>
+					<xsd:element name="CategoryCode" type="LogItemCategoryCode" minOccurs="0"/>
+					<xsd:element name="SeverityCode" type="LogItemSeverityCode" minOccurs="0"/>
+					<xsd:element name="Note" type="LogItemNote"/>
+					<xsd:element name="WebURI" type="WebURI" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="LogItemCategoryCode">
+				<xsd:simpleContent>
+					<xsd:extension base="LogItemCategoryCode.Content">
+						<xsd:attribute name="listID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listVersionID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="15"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencySchemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencySchemeAgencyID" type="AgencyIdentificationCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="LogItemCategoryCode.Content">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="15"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LogItemNote">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="200"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LogItemSeverityCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LogItemTypeID">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="40"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="MEDIUM_Name">
+				<xsd:simpleContent>
+					<xsd:extension base="MEDIUM_Name.Content">
+						<xsd:attribute name="languageCode" type="LanguageCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="MEDIUM_Name.Content">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="40"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NumberValue">
+				<xsd:restriction base="xsd:int">
+					<xsd:maxInclusive value="999999999"/>
+					<xsd:minInclusive value="0"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="OrganisationalCentreID">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="20"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="PartyInternalID">
+				<xsd:simpleContent>
+					<xsd:extension base="PartyInternalID.Content">
+						<xsd:attribute name="schemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="schemeAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="PartyInternalID.Content">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="32"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ProcessingResultCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ProcessingStatusCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="1"/>
+					<xsd:enumeration value="2"/>
+					<xsd:enumeration value="3"/>
+					<xsd:enumeration value="4"/>
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="ProductInternalID">
+				<xsd:simpleContent>
+					<xsd:extension base="ProductInternalID.Content">
+						<xsd:attribute name="schemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="schemeAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="ProductInternalID.Content">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="60"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="RejectionStatusCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="1"/>
+					<xsd:enumeration value="2"/>
+					<xsd:enumeration value="3"/>
+					<xsd:maxLength value="2"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="UserAccountID">
+				<xsd:simpleContent>
+					<xsd:extension base="UserAccountID.Content">
+						<xsd:attribute name="schemeAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:maxLength value="60"/>
+									<xsd:minLength value="1"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="schemeAgencySchemeAgencyID" type="AgencyIdentificationCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:simpleType name="UserAccountID.Content">
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="255"/>
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="WebURI">
+				<xsd:restriction base="xsd:anyURI"/>
+			</xsd:simpleType>
+			<xsd:element name="CustomerQuoteERPBasicDataByElementsQuery_sync" type="CustQteERPBscDataByElmntsQryMsg_s"/>
+			<xsd:element name="CustomerQuoteERPBasicDataByElementsResponse_sync" type="CustQteERPBscDataByElmntsRspMsg_s"/>
+		</xsd:schema>
+		<xsd:schema targetNamespace="http://sap.com/xi/SAPGlobal/Global" xmlns:xi0="http://sap.com/xi/APPL/Global2" xmlns:xi1="http://sap.com/xi/SAPGlobal/Global" xmlns="http://sap.com/xi/SAPGlobal/Global">
+			<xsd:import namespace="http://sap.com/xi/APPL/Global2"/>
+			<xsd:element name="StandardMessageFault">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="standard" type="xi0:ExchangeFaultData"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="CustomerQuoteERPBasicDataByElementsQuery_sync">
+		<wsdl:part name="CustomerQuoteERPBasicDataByElementsQuery_sync" element="tns:CustomerQuoteERPBasicDataByElementsQuery_sync"/>
+	</wsdl:message>
+	<wsdl:message name="CustomerQuoteERPBasicDataByElementsResponse_sync">
+		<wsdl:part name="CustomerQuoteERPBasicDataByElementsResponse_sync" element="tns:CustomerQuoteERPBasicDataByElementsResponse_sync"/>
+	</wsdl:message>
+	<wsdl:message name="StandardMessageFault">
+		<wsdl:part name="StandardMessageFault" element="n1:StandardMessageFault"/>
+	</wsdl:message>
+	<wsdl:portType name="CustomerQuoteERPBasicDataByElementsQueryResponse_In">
+		<wsdl:documentation>
+			<sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+				<sapdoc:docitem applicationComponent="LOD-CRM-OPP"/>
+			</sapdoc:sapdoc>
+		</wsdl:documentation>
+		<wsdl:operation name="CustomerQuoteERPBasicDataByElementsQueryResponse_In">
+			<wsdl:input message="tns:CustomerQuoteERPBasicDataByElementsQuery_sync"/>
+			<wsdl:output message="tns:CustomerQuoteERPBasicDataByElementsResponse_sync"/>
+			<wsdl:fault name="StandardMessageFault" message="tns:StandardMessageFault"/>
+		</wsdl:operation>
+	</wsdl:portType>
+<wsdl:binding name="CustomerQuoteERPBasicDataByElementsQueryResponse_In.Binding" type="tns:CustomerQuoteERPBasicDataByElementsQueryResponse_In">
+  <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+  <wsdl:operation name="CustomerQuoteERPBasicDataByElementsQueryResponse_In">
+   <soap:operation soapAction="CustomerQuoteERPBasicDataByElementsQueryResponse_In" />
+   <wsdl:input>
+    <soap:body use="literal" />
+   </wsdl:input>
+  </wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="CustomerQuoteERPBasicDataByElementsQueryResponse_In.Service">
+  <wsdl:port name="CustomerQuoteERPBasicDataByElementsQueryResponse_In.Port" binding="tns:CustomerQuoteERPBasicDataByElementsQueryResponse_In.Binding">
+   <soap:address location="/CustomerQuoteERPBasicDataByElementsQueryResponse_In" />
+  </wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

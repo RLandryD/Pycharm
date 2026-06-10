@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+            targetNamespace="http://www.sap.com/eDocument/Egypt/eInvoice/v1.0" 
+            xmlns:tns="http://www.sap.com/eDocument/Egypt/eInvoice/v1.0" 
+            elementFormDefault="qualified" xmlns:Q1="http://www.sap.com/eDocument/Egypt/eInvoice/v1.0">
+
+    <xsd:element name="submission" type="tns:submissionType"></xsd:element>
+    <xsd:complexType name="submitDocRequestType">
+    	<xsd:sequence>
+    		<xsd:element name="documents" type="tns:documentsType"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="documentsType">
+    	<xsd:sequence>
+    		<xsd:element name="document" type="tns:documentType" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="documentType">
+    	<xsd:sequence>
+    		<xsd:element name="issuer" type="tns:issuerType"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="receiver" type="tns:receiverType"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="documentType" type="xsd:string"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="documentTypeVersion" type="xsd:string"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="dateTimeIssued" type="xsd:dateTime"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="taxpayerActivityCode" type="xsd:string"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="internalID" type="xsd:string"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="purchaseOrderReference" type="xsd:string"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="purchaseOrderDescription"
+    			type="xsd:string" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="salesOrderReference" type="xsd:string"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="salesOrderDescription" type="xsd:string"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="proformaInvoiceNumber" type="xsd:string"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="references" type="tns:referencesType"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="payment" type="tns:paymentType"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="delivery" type="tns:deliveryType"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="invoiceLines" type="tns:invoiceLinesType"
+    			minOccurs="1" maxOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="totalSalesAmount" type="xsd:decimal"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="totalDiscountAmount" type="xsd:decimal"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="netAmount" type="xsd:decimal"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="taxTotals" type="tns:taxTotalsType"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="extraDiscountAmount" type="xsd:decimal"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="totalItemsDiscountAmount"
+    			type="xsd:decimal" maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="totalAmount" type="xsd:decimal"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="signatures" type="tns:signaturesType"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="issuerType">
+    	<xsd:sequence>
+    		<xsd:element name="id" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="type" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="address" type="tns:issuerAddressType" maxOccurs="1" minOccurs="1"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="receiverType">
+    	<xsd:sequence>
+    		<xsd:element name="id" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="type" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="address" type="tns:receiverAddressType" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="paymentType">
+    	<xsd:sequence>
+    		<xsd:element name="bankName" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="bankAddress" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="bankAccountNo" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="bankAccountIBAN" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="swiftCode" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="terms" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="deliveryType">
+    	<xsd:sequence>
+    		<xsd:element name="approach" type="xsd:string" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="packaging" type="xsd:string"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="dateValidity" type="xsd:string"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="exportPort" type="xsd:string"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="countryOfOrigin" type="xsd:string"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="grossWeight" type="xsd:decimal"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="netWeight" type="xsd:decimal"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="terms" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="invoiceLinesType">
+    	<xsd:sequence>
+    		<xsd:element name="invoiceLine" type="tns:invoiceLineType"
+    			maxOccurs="unbounded" minOccurs="1">
+    		</xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="taxTotalsType">
+    	<xsd:sequence>
+    		<xsd:element name="taxTotal" type="tns:taxTotalType" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="signaturesType">
+    	<xsd:sequence>
+    		<xsd:element name="signature" type="tns:signatureType"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="issuerAddressType">
+    	<xsd:sequence>    		
+    		<xsd:element name="branchId" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="country" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="governate" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="regionCity" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="street" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="buildingNumber" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="postalCode" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="floor" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="room" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="landmark" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="additionalInformation" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>    	
+    	</xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="receiverAddressType">
+    	<xsd:sequence>
+    		<xsd:element name="country" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="governate" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="regionCity" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="street" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="buildingNumber" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="postalCode" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="floor" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="room" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="landmark" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="additionalInformation" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="unitValueType">
+    	<xsd:sequence>
+    		<xsd:element name="currencySold" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="amountEGP" type="xsd:decimal" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="amountSold" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="currencyExchangeRate" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="discountType">
+    	<xsd:sequence>
+    		<xsd:element name="rate" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="amount" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+
+    <xsd:complexType name="taxableItemsType">
+    	<xsd:sequence>
+    		<xsd:element name="taxableItem" type="tns:taxableItemType"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="submitDocumentResponse" type="tns:submitDocResponseType">
+    </xsd:element>
+    
+    <xsd:complexType name="submitDocResponseType">
+    	<xsd:sequence>
+    		<xsd:element name="submissionUUID" type="xsd:string"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="acceptedDocuments"
+    			type="tns:acceptedDocumentsType" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="rejectedDocuments" type="tns:rejectedDocumentsType" maxOccurs="1" minOccurs="0"></xsd:element>
+            <xsd:element name="error" type="tns:errorType3" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:element name="getStatusRequest" type="tns:getStatusRequest"></xsd:element>
+
+    <xsd:complexType name="getStatusRequest">
+    	<xsd:sequence>
+    		<xsd:element name="Id" type="xsd:string" maxOccurs="1"
+    			minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="uuid" type="xsd:string" maxOccurs="1"
+    			minOccurs="1">
+    		</xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:element name="getStatusResponse" type="tns:getStatusResponse"></xsd:element>
+
+    <xsd:complexType name="getStatusResponse">
+    	<xsd:sequence>
+    		<xsd:element name="UUID" type="xsd:string" maxOccurs="1"
+    			minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="dateTimeReceived" type="xsd:dateTime"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="Status" type="xsd:string" maxOccurs="1"
+    			minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="cancelRequestDate" type="xsd:dateTime"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="rejectRequestDate" type="xsd:dateTime"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="cancelRequestDelayedDate"
+    			type="xsd:dateTime" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="rejectRequestDelayedDate"
+    			type="xsd:dateTime" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="declineCancelRequestDate"
+    			type="xsd:dateTime" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="declineRejectRequestDate"
+    			type="xsd:dateTime" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="canbeCancelledUntil" type="xsd:dateTime"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="canbeRejectedUntil" type="xsd:dateTime"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="internalID" type="xsd:string"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="dateTimeIssued" type="xsd:dateTime"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="documentType" type="xsd:string"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="documentTypeVersion" type="xsd:string"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="purchaseOrderReference" type="xsd:string"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="EncodedZipResponse"
+    			type="xsd:base64Binary" maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="issuerId" type="xsd:string" maxOccurs="1"
+    			minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="receiverId" type="xsd:string"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="error" type="tns:errorType3" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="validationResultsType">
+    	<xsd:sequence>
+    		<xsd:element name="status" type="xsd:string" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="validationSteps"
+    			type="tns:validationStepsType" maxOccurs="unbounded"
+    			minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="error" type="tns:errorType2" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="validationStepsType">
+    	<xsd:sequence>
+    		<xsd:element name="stepName" type="xsd:string" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="status" type="xsd:string" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="error" type="tns:errorType1" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="stepID" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="errorType">
+    	<xsd:sequence>
+    		<xsd:element name="code" type="xsd:string" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="message" type="xsd:string" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="target" type="xsd:string" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+            <xsd:element name="propertyPath" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+            <xsd:element name="details" type="tns:errorDetailsType"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="acceptedDocumentsType">
+    	<xsd:sequence>
+    		<xsd:element name="uuid" type="xsd:string" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="longId" type="xsd:string" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="internalId" type="xsd:string"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="hashKey" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="rejectedDocumentsType">
+    	<xsd:sequence>
+    		<xsd:element name="internalId" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="error" type="tns:errorType" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:element name="cancelDocumentRequest" type="tns:canRejDocReqType">
+    </xsd:element>
+
+    <xsd:element name="cancelDocumentResponse" type="tns:actionDocRespType">
+    </xsd:element>
+
+    <xsd:element name="rejectDocumentRequest"
+    	type="tns:canRejDocReqType">
+    </xsd:element>
+
+    <xsd:element name="rejectDocumentResponse" type="tns:actionDocRespType">
+    </xsd:element>
+
+    <xsd:element name="declineCancellationRequest" type="tns:declineCancelReqType">
+    </xsd:element>
+
+    <xsd:element name="declineCancellationResponse" type="tns:actionDocRespType">
+    </xsd:element>
+
+    <xsd:element name="cancelRejectionRequest" type="tns:cancelRejectionReqType">
+    </xsd:element>
+    
+    <xsd:element name="cancelRejectionResponse" type="tns:actionDocRespType">
+    </xsd:element>
+
+    <xsd:complexType name="canRejDocReqType">
+    	<xsd:sequence>
+    		<xsd:element name="id" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="uuid" type="xsd:string" maxOccurs="1"
+    			minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="status" type="xsd:string" maxOccurs="1"
+    			minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="reason" type="xsd:string" maxOccurs="1"
+    			minOccurs="1">
+    		</xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="actionDocRespType">
+    	<xsd:sequence>
+    		<xsd:element name="success" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="validationError" type="tns:errorType" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="Error" type="tns:errorType3" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="cancelRejectionReqType">
+    	<xsd:sequence>
+    		<xsd:element name="uuid" type="xsd:string"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="declineCancelReqType">
+    	<xsd:sequence>
+    		<xsd:element name="uuid" type="xsd:string"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="rejectDocReqType">
+    	<xsd:sequence>
+    		<xsd:element name="uuid" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="status" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="reason" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="errorDetailsType">
+    	<xsd:sequence>
+    		<xsd:element name="code" type="xsd:string" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="message" type="xsd:string" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="target" type="xsd:string" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="propertyPath" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="details" type="xsd:string" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="getDocumentRequest" type="tns:getDocReqType"></xsd:element>
+    
+    <xsd:complexType name="getDocReqType">
+    	<xsd:sequence>
+    		<xsd:element name="id" type="xsd:int" maxOccurs="1" minOccurs="1"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:element name="getDocumentResponse" type="tns:getDocRespType"></xsd:element>
+    
+    <xsd:complexType name="getDocRespType">
+    	<xsd:sequence>
+    		<xsd:element name="id" type="xsd:int" maxOccurs="1"
+    			minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="name" type="xsd:string" maxOccurs="1"
+    			minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="description" type="xsd:string"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="activeFrom" type="xsd:dateTime"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="activeTo" type="xsd:dateTime"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="documentTypeVersions"
+    			type="tns:docTypeVersType" maxOccurs="unbounded" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="workflowParameters"
+    			type="tns:wfParametersType" maxOccurs="unbounded"
+    			minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="error" type="tns:errorType" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="docTypeVersType">
+    	<xsd:sequence>
+    		<xsd:element name="id" type="xsd:int" maxOccurs="1"
+    			minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="versionNumber" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="status" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="activeFrom" type="xsd:dateTime" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="activeTo" type="xsd:dateTime" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="wfParametersType">
+    	<xsd:sequence>
+    		<xsd:element name="id" type="xsd:int" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="parameter" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="value" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="activeFrom" type="xsd:dateTime" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="activeTo" type="xsd:dateTime" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="errorType1">
+    	<xsd:sequence>
+    		<xsd:element name="propertyName" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="propertyPath" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="errorCode" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="error" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="innerError" type="tns:errorType1" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="errorType2">
+    	<xsd:sequence>
+    		<xsd:element name="code" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="message" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="target" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="invoiceLinesType1">
+    	<xsd:sequence>
+    		<xsd:element name="itemPrimaryName" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="itemPrimaryDescription"
+    			type="xsd:string" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="itemSecondaryName" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="itemSecondaryDescription"
+    			type="xsd:string" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="unitTypePrimaryName" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="unitTypePrimaryDescription"
+    			type="xsd:string" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="unitTypeSecondaryName"
+    			type="xsd:string" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="unitTypeSecondaryDescription"
+    			type="xsd:string" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="salesTotalForeign" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="netTotalForeign" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="totalForeign" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="totalTaxableFeesForeign"
+    			type="xsd:decimal" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="itemsDiscountForeign"
+    			type="xsd:decimal" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="valueDifferenceForeign"
+    			type="xsd:decimal" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="discountForeign"
+    			type="tns:discountForeignType" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="lineTaxableItems" type="tns:lineTaxableItemsType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    		<xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="itemType" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="itemCode" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="unitType" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="quantity" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="unitValue" type="tns:unitValueType" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="factoryUnitValue" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="salesTotal" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="discount" type="tns:discountType" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="taxableItems" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="internalCode" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="itemsDiscount" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="netTotal" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="totalTaxableFees" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="valueDifference" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="total" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+
+    </xsd:complexType>
+
+    <xsd:complexType name="discountForeignType">
+    	<xsd:sequence>
+    		<xsd:element name="amountForeign" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="rate" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="amount" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="lineTaxableItemsType">
+    	<xsd:sequence>
+    		<xsd:element name="amountForeign" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="taxType" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="amount" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="subType" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="rate" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="currencySegmentsType">
+    	<xsd:sequence>
+    		<xsd:element name="currency" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="currencyExchangeRate"
+    			type="xsd:decimal" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="totalItemsDiscountAmount"
+    			type="xsd:decimal" maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="totalAmount" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="taxTotals" type="tns:taxTotalsType"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="netAmount" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="totalDiscount" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="totalSales" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="extraDiscountAmount" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="totalTaxableFees" type="xsd:decimal" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="invoiceLineType">
+    	<xsd:sequence>
+    		<xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="itemType" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="itemCode" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="unitType" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="quantity" type="xsd:decimal" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="unitValue" type="tns:unitValueType" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="salesTotal" type="xsd:decimal" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="total" type="xsd:decimal" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="valueDifference" type="xsd:decimal" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="totalTaxableFees" type="xsd:decimal" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="netTotal" type="xsd:decimal" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="itemsDiscount" type="xsd:decimal" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="discount" type="tns:discountType" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="taxableItems" type="tns:taxableItemsType"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="internalCode" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="taxableItemType">
+    	<xsd:sequence>
+    		<xsd:element name="taxType" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="amount" type="xsd:decimal" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    		<xsd:element name="subType" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="rate" type="xsd:decimal" maxOccurs="1"
+    			minOccurs="0">
+    		</xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="taxTotalType">
+    	<xsd:sequence>
+    		<xsd:element name="taxType" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="amount" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="signatureType">
+    	<xsd:sequence>
+    		<xsd:element name="signatureType" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="value" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="headerType">
+    	<xsd:sequence>
+    		<xsd:element name="thumbprint" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="pin" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    		<xsd:element name="secretKey" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="referencesType">
+    	<xsd:sequence>
+    		<xsd:element name="reference" type="xsd:string" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="errorType3">
+    	<xsd:sequence>
+    		<xsd:element name="statusCode" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    		<xsd:element name="errorMessage" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="submissionType">
+    	<xsd:sequence>
+    		<xsd:element name="documents" type="tns:documentsType" maxOccurs="1" minOccurs="1"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

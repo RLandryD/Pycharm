@@ -1,0 +1,188 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="MessageHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="ID"/>
+        <xs:element type="xs:string" name="UUID"/>
+        <xs:element type="xs:string" name="CreationDateTime"/>
+        <xs:element type="xs:string" name="SenderBusinessSystemID"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ServiceContract">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="ServiceContract" maxOccurs="1" minOccurs="0"/>
+        <xs:element type="xs:string" name="ServiceContractType" maxOccurs="1" minOccurs="0"/>
+        <xs:element name="SrvcContrBillingStatus" type="xs:string" minOccurs="0"/>
+        <xs:element name="ServiceContractStatus" type="xs:string" minOccurs="0"/>
+        <xs:element name="ServiceContractCanclnSts" type="xs:string" minOccurs="0"/>
+        <xs:element name="SrvcDocRejectionStatus" type="xs:string" minOccurs="0"/>
+        <xs:element name="ServiceContractDescription" maxOccurs="1" minOccurs="0">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="languageCode"/>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="OrgUnitInService" maxOccurs="1" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="SalesOrganizationOrgUnitID" maxOccurs="1" minOccurs="0"/>
+              <xs:element type="xs:string" name="DistributionChannel" maxOccurs="1" minOccurs="0"/>
+              <xs:element type="xs:string" name="Division" maxOccurs="1" minOccurs="0"/>
+              <xs:element type="xs:string" name="ServiceOrganization" maxOccurs="1" minOccurs="0"/>
+              <xs:element type="xs:string" name="SalesOfficeOrgUnitID" maxOccurs="1" minOccurs="0"/>
+              <xs:element type="xs:string" name="SalesGroupOrgUnitID" maxOccurs="1" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Partners" maxOccurs="1" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="SoldToParty" maxOccurs="1" minOccurs="0"/>
+              <xs:element type="xs:string" name="ShipToParty" maxOccurs="1" minOccurs="0"/>
+              <xs:element name="PersonResponsible" maxOccurs="1" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="PersonResponsible" maxOccurs="1" minOccurs="0"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element type="xs:string" name="BillToParty" maxOccurs="1" minOccurs="0"/>
+              <xs:element type="xs:string" name="PayerParty" maxOccurs="1" minOccurs="0"/>
+              <xs:element type="xs:string" name="ContactPerson" maxOccurs="1" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element type="xs:string" name="ServiceContractStartDateTime" maxOccurs="1" minOccurs="0"/>
+        <xs:element type="xs:string" name="ServiceContractEndDateTime" maxOccurs="1" minOccurs="0"/>
+        <xs:element name="ServiceDocGrossAmount" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+              <xs:simpleContent>
+                <xs:extension base="xs:string">
+                  <xs:attribute name="currencyCode" type="xs:string" use="optional"/>
+                </xs:extension>
+              </xs:simpleContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="ServiceDocNetAmount" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:simpleContent>
+                <xs:extension base="xs:string">
+                  <xs:attribute name="currencyCode" type="xs:string" use="optional"/>
+                </xs:extension>
+              </xs:simpleContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="ServiceDocTaxAmount" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:simpleContent>
+                <xs:extension base="xs:string">
+                  <xs:attribute name="currencyCode" type="xs:string" use="optional"/>
+                </xs:extension>
+              </xs:simpleContent>
+            </xs:complexType>
+          </xs:element>
+         <xs:element name="Item" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="ServiceContractItem" maxOccurs="1" minOccurs="0"/>
+              <xs:element type="xs:string" name="ServiceContractItemCategory" maxOccurs="1" minOccurs="0"/>
+              <xs:element name="ServiceContractItemStatus" type="xs:string" minOccurs="0"/>
+              <xs:element name="SalesOrganization" type="xs:string" maxOccurs="1" minOccurs="0"/>
+              <xs:element name="DistributionChannel" type="xs:string" maxOccurs="1" minOccurs="0"/>
+              <xs:element name="Division" type="xs:string" maxOccurs="1" minOccurs="0"/>
+              <xs:element name="SalesOffice" type="xs:string" maxOccurs="1" minOccurs="0"/>
+              <xs:element name="SalesGroup" type="xs:string" maxOccurs="1" minOccurs="0"/>
+              <xs:element type="xs:string" name="Product" maxOccurs="1" minOccurs="0"/>
+              <xs:element name="Quantity" maxOccurs="1" minOccurs="0">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:string" name="unitCode"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ServiceContractItemDescription" maxOccurs="1" minOccurs="0">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:string" name="languageCode"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element type="xs:string" name="ServiceContrItemStartDateTime" maxOccurs="1" minOccurs="0"/>
+              <xs:element type="xs:string" name="ServiceContrItemEndDateTime" maxOccurs="1" minOccurs="0"/>
+              <xs:element name="Partners" maxOccurs="1" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="SoldToParty" maxOccurs="1" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ShipToParty" maxOccurs="1" minOccurs="0"/>
+                    <xs:element name="PersonResponsible" maxOccurs="1" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="PersonResponsible" maxOccurs="1" minOccurs="0"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element type="xs:string" name="BillToParty" maxOccurs="1" minOccurs="0"/>
+                    <xs:element type="xs:string" name="PayerParty" maxOccurs="1" minOccurs="0"/>
+                    <xs:element type="xs:string" name="ContactPerson" maxOccurs="1" minOccurs="0"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ServiceDocItemGrossAmount" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="currencyCode" type="xs:string" use="optional"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ServiceDocumentItemNetAmount" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="currencyCode" type="xs:string" use="optional"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ServiceDocumentItemTaxAmount" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="currencyCode" type="xs:string" use="optional"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ServiceContractObjectList" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Equipment" type="xs:string" minOccurs="0"/>
+                    <xs:element name="Product" type="xs:string" minOccurs="0"/>
+                    <xs:element name="ServiceRefFunctionalLocation" type="xs:string" minOccurs="0"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ServiceContractProductList" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Product" type="xs:string" minOccurs="0"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

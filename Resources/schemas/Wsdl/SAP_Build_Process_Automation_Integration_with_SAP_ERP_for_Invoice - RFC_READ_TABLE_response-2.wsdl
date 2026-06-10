@@ -1,0 +1,1456 @@
+
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns0="urn:sap-com:document:sap:rfc:functions" name="RFC_READ_TABLE" targetNamespace="urn:sap-com:document:sap:rfc:functions">
+   <wsdl:types>
+      <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:sap-com:document:sap:rfc:functions" targetNamespace="urn:sap-com:document:sap:rfc:functions">
+         <xsd:element name="RFC_READ_TABLE.Response">
+            <xsd:complexType>
+               <xsd:all>
+                  <xsd:element name="DATA">
+                     <xsd:annotation>
+                        <xsd:documentation>
+                        Data read (out)
+                        </xsd:documentation>
+                     </xsd:annotation>
+                     <xsd:complexType>
+                        <xsd:sequence>
+                           <xsd:element name="item" type="TAB512" minOccurs="0" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                     </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element name="FIELDS">
+                     <xsd:annotation>
+                        <xsd:documentation>
+                        Names (in) and structure (out) of fields read
+                        </xsd:documentation>
+                     </xsd:annotation>
+                     <xsd:complexType>
+                        <xsd:sequence>
+                           <xsd:element name="item" type="RFC_DB_FLD" minOccurs="0" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                     </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element name="OPTIONS">
+                     <xsd:annotation>
+                        <xsd:documentation>
+                        Selection entries, &quot;WHERE clauses&quot; (in)
+                        </xsd:documentation>
+                     </xsd:annotation>
+                     <xsd:complexType>
+                        <xsd:sequence>
+                           <xsd:element name="item" type="RFC_DB_OPT" minOccurs="0" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:all>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="RFC_READ_TABLE.Exception">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="Name">
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                           <xsd:enumeration value="DATA_BUFFER_EXCEEDED" />
+                           <xsd:enumeration value="FIELD_NOT_VALID" />
+                           <xsd:enumeration value="NOT_AUTHORIZED" />
+                           <xsd:enumeration value="OPTION_NOT_VALID" />
+                           <xsd:enumeration value="TABLE_NOT_AVAILABLE" />
+                           <xsd:enumeration value="TABLE_WITHOUT_DATA" />
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                  </xsd:element>
+                  <xsd:element name="Text" type="xsd:string" minOccurs="0" />
+                  <xsd:element name="Message" minOccurs="0">
+                     <xsd:complexType>
+                        <xsd:sequence>
+                           <xsd:element name="ID">
+                              <xsd:simpleType>
+                                 <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="20" />
+                                 </xsd:restriction>
+                              </xsd:simpleType>
+                           </xsd:element>
+                           <xsd:element name="Number">
+                              <xsd:simpleType>
+                                 <xsd:restriction base="xsd:string">
+                                    <xsd:pattern value="\d+" />
+                                    <xsd:maxLength value="3" />
+                                 </xsd:restriction>
+                              </xsd:simpleType>
+                           </xsd:element>
+                        </xsd:sequence>
+                     </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element name="Attributes" minOccurs="0">
+                     <xsd:complexType>
+                        <xsd:sequence>
+                           <xsd:element name="V1" minOccurs="0">
+                              <xsd:simpleType>
+                                 <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="50" />
+                                 </xsd:restriction>
+                              </xsd:simpleType>
+                           </xsd:element>
+                           <xsd:element name="V2" minOccurs="0">
+                              <xsd:simpleType>
+                                 <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="50" />
+                                 </xsd:restriction>
+                              </xsd:simpleType>
+                           </xsd:element>
+                           <xsd:element name="V3" minOccurs="0">
+                              <xsd:simpleType>
+                                 <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="50" />
+                                 </xsd:restriction>
+                              </xsd:simpleType>
+                           </xsd:element>
+                           <xsd:element name="V4" minOccurs="0">
+                              <xsd:simpleType>
+                                 <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="50" />
+                                 </xsd:restriction>
+                              </xsd:simpleType>
+                           </xsd:element>
+                        </xsd:sequence>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="RFC_READ_TABLE">
+            <xsd:complexType>
+               <xsd:all>
+                  <xsd:element name="DELIMITER" minOccurs="0">
+                     <xsd:annotation>
+                        <xsd:documentation>
+                        Sign for indicating field limits in DATA
+                        </xsd:documentation>
+                     </xsd:annotation>
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                           <xsd:maxLength value="1" />
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                  </xsd:element>
+                  <xsd:element name="NO_DATA" minOccurs="0">
+                     <xsd:annotation>
+                        <xsd:documentation>
+                        If &lt;&gt; SPACE, only FIELDS is filled
+                        </xsd:documentation>
+                     </xsd:annotation>
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                           <xsd:maxLength value="1" />
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                  </xsd:element>
+                  <xsd:element name="QUERY_TABLE">
+                     <xsd:annotation>
+                        <xsd:documentation>
+                        Table read
+                        </xsd:documentation>
+                     </xsd:annotation>
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                           <xsd:maxLength value="30" />
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                  </xsd:element>
+                  <xsd:element name="ROWCOUNT" type="xsd:integer" minOccurs="0" />
+                  <xsd:element name="ROWSKIPS" type="xsd:integer" minOccurs="0" />
+                  <xsd:element name="DATA">
+                     <xsd:annotation>
+                        <xsd:documentation>
+                        Data read (out)
+                        </xsd:documentation>
+                     </xsd:annotation>
+                     <xsd:complexType>
+                        <xsd:sequence>
+                           <xsd:element name="item" type="TAB512" minOccurs="0" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                     </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element name="FIELDS">
+                     <xsd:annotation>
+                        <xsd:documentation>
+                        Names (in) and structure (out) of fields read
+                        </xsd:documentation>
+                     </xsd:annotation>
+                     <xsd:complexType>
+                        <xsd:sequence>
+                           <xsd:element name="item" type="RFC_DB_FLD" minOccurs="0" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                     </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element name="OPTIONS">
+                     <xsd:annotation>
+                        <xsd:documentation>
+                        Selection entries, &quot;WHERE clauses&quot; (in)
+                        </xsd:documentation>
+                     </xsd:annotation>
+                     <xsd:complexType>
+                        <xsd:sequence>
+                           <xsd:element name="item" type="RFC_DB_OPT" minOccurs="0" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:all>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:complexType name="TAB512">
+            <xsd:annotation>
+               <xsd:documentation>
+               Table with a 512 byte field
+               </xsd:documentation>
+            </xsd:annotation>
+            <xsd:sequence>
+               <xsd:element name="WA" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:documentation>
+                     Character field length 512
+                     </xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:simpleType>
+                     <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="512" />
+                     </xsd:restriction>
+                  </xsd:simpleType>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="RFC_DB_FLD">
+            <xsd:annotation>
+               <xsd:documentation>
+               RFC Table Read: Description of Fields to Retrieve
+               </xsd:documentation>
+            </xsd:annotation>
+            <xsd:sequence>
+               <xsd:element name="FIELDNAME" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:documentation>
+                     Field Name
+                     </xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:simpleType>
+                     <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="30" />
+                     </xsd:restriction>
+                  </xsd:simpleType>
+               </xsd:element>
+               <xsd:element name="OFFSET" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:documentation>
+                     Offset of a field
+                     </xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:simpleType>
+                     <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="6" />
+                        <xsd:pattern value="\d+" />
+                     </xsd:restriction>
+                  </xsd:simpleType>
+               </xsd:element>
+               <xsd:element name="LENGTH" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:documentation>
+                     Length (No. of Characters)
+                     </xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:simpleType>
+                     <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="6" />
+                        <xsd:pattern value="\d+" />
+                     </xsd:restriction>
+                  </xsd:simpleType>
+               </xsd:element>
+               <xsd:element name="TYPE" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:documentation>
+                     ABAP data type (C,D,N,...)
+                     </xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:simpleType>
+                     <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="1" />
+                     </xsd:restriction>
+                  </xsd:simpleType>
+               </xsd:element>
+               <xsd:element name="FIELDTEXT" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:documentation>
+                     Short Description of Repository Objects
+                     </xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:simpleType>
+                     <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="60" />
+                     </xsd:restriction>
+                  </xsd:simpleType>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="RFC_DB_OPT">
+            <xsd:annotation>
+               <xsd:documentation>
+               RFC Table Read: Select Options / WHERE Clause
+               </xsd:documentation>
+            </xsd:annotation>
+            <xsd:sequence>
+               <xsd:element name="TEXT" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:documentation>
+                     Text line of a message
+                     </xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:simpleType>
+                     <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="72" />
+                     </xsd:restriction>
+                  </xsd:simpleType>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:complexType>
+      </xsd:schema>
+   </wsdl:types>
+   <wsdl:message name="RFC_READ_TABLE.Input">
+      <wsdl:part name="parameters" element="ns0:RFC_READ_TABLE" />
+   </wsdl:message>
+   <wsdl:message name="RFC_READ_TABLE.Output">
+      <wsdl:part name="parameters" element="ns0:RFC_READ_TABLE.Response" />
+   </wsdl:message>
+   <wsdl:message name="RFC_READ_TABLE.Exception">
+      <wsdl:part name="parameters" element="ns0:RFC_READ_TABLE.Exception" />
+   </wsdl:message>
+   <wsdl:portType name="RFC_READ_TABLE.PortType">
+      <wsdl:operation name="RFC_READ_TABLE">
+         <wsdl:input message="ns0:RFC_READ_TABLE.Input" />
+         <wsdl:output message="ns0:RFC_READ_TABLE.Output" />
+         <wsdl:fault name="RFC_READ_TABLE.Exception" message="ns0:RFC_READ_TABLE.Exception" />
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="RFC_READ_TABLE.SAPBinding" type="ns0:RFC_READ_TABLE.PortType">
+      <ns0:binding style="rfc" />
+      <ns0:type name="RFC_DB_OPT">
+         <ifr:container xmlns:ifr="urn:sap-com:ifr:v2:metamodel" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <ifr:descriptor>
+               <ifr:description language="EN">
+               RFC Table Read: Select Options / WHERE Clause
+               </ifr:description>
+            </ifr:descriptor>
+            <ifr:properties>
+               <ifr:sourceSystem />
+               <ifr:sourceClient>
+               400
+               </ifr:sourceClient>
+               <ifr:release>
+               740
+               </ifr:release>
+               <ifr:category>
+               structure
+               </ifr:category>
+               <ifr:unicode1>
+               true
+               </ifr:unicode1>
+               <ifr:unicode2>
+               true
+               </ifr:unicode2>
+               <ifr:isFlatStructure>
+               true
+               </ifr:isFlatStructure>
+            </ifr:properties>
+            <ifr:definition>
+               <ifr:internalLength1>
+               72
+               </ifr:internalLength1>
+               <ifr:internalLength2>
+               144
+               </ifr:internalLength2>
+               <ifr:fields>
+                  <ifr:field name="TEXT" category="simple">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        Text line of a message
+                        </ifr:description>
+                        <ifr:documentation xlink:role="docu" xlink:href="/Content?TYPE=docu&amp;NAME=DE.SO_TEXT" />
+                     </ifr:descriptor>
+                     <ifr:properties>
+                        <ifr:helpValuesSupported>
+                        false
+                        </ifr:helpValuesSupported>
+                        <ifr:offset1>
+                        0
+                        </ifr:offset1>
+                        <ifr:offset2>
+                        0
+                        </ifr:offset2>
+                     </ifr:properties>
+                     <ifr:definition>
+                        <ifr:scalarType name="SO_TEXT">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:fixedValuesListDefined>
+                              false
+                              </ifr:fixedValuesListDefined>
+                              <ifr:mixedCaseSupported>
+                              true
+                              </ifr:mixedCaseSupported>
+                              <ifr:signedNumber>
+                              false
+                              </ifr:signedNumber>
+                           </ifr:properties>
+                           <ifr:definition>
+                              <ifr:type>
+                              CHAR
+                              </ifr:type>
+                              <ifr:abapType>
+                              C
+                              </ifr:abapType>
+                              <ifr:length>
+                              72
+                              </ifr:length>
+                              <ifr:internalLength1>
+                              72
+                              </ifr:internalLength1>
+                              <ifr:internalLength2>
+                              144
+                              </ifr:internalLength2>
+                              <ifr:decimals>
+                              0
+                              </ifr:decimals>
+                              <ifr:outputLength>
+                              72
+                              </ifr:outputLength>
+                           </ifr:definition>
+                        </ifr:scalarType>
+                     </ifr:definition>
+                  </ifr:field>
+               </ifr:fields>
+            </ifr:definition>
+         </ifr:container>
+      </ns0:type>
+      <ns0:type name="TAB512">
+         <ifr:container xmlns:ifr="urn:sap-com:ifr:v2:metamodel" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <ifr:descriptor>
+               <ifr:description language="EN">
+               Table with a 512 byte field
+               </ifr:description>
+            </ifr:descriptor>
+            <ifr:properties>
+               <ifr:sourceSystem />
+               <ifr:sourceClient>
+               400
+               </ifr:sourceClient>
+               <ifr:release>
+               740
+               </ifr:release>
+               <ifr:category>
+               structure
+               </ifr:category>
+               <ifr:unicode1>
+               true
+               </ifr:unicode1>
+               <ifr:unicode2>
+               true
+               </ifr:unicode2>
+               <ifr:isFlatStructure>
+               true
+               </ifr:isFlatStructure>
+            </ifr:properties>
+            <ifr:definition>
+               <ifr:internalLength1>
+               512
+               </ifr:internalLength1>
+               <ifr:internalLength2>
+               1024
+               </ifr:internalLength2>
+               <ifr:fields>
+                  <ifr:field name="WA" category="simple">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        Character field length 512
+                        </ifr:description>
+                     </ifr:descriptor>
+                     <ifr:properties>
+                        <ifr:helpValuesSupported>
+                        false
+                        </ifr:helpValuesSupported>
+                        <ifr:offset1>
+                        0
+                        </ifr:offset1>
+                        <ifr:offset2>
+                        0
+                        </ifr:offset2>
+                     </ifr:properties>
+                     <ifr:definition>
+                        <ifr:scalarType name="SYCHAR512">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:fixedValuesListDefined>
+                              false
+                              </ifr:fixedValuesListDefined>
+                              <ifr:mixedCaseSupported>
+                              true
+                              </ifr:mixedCaseSupported>
+                              <ifr:signedNumber>
+                              false
+                              </ifr:signedNumber>
+                           </ifr:properties>
+                           <ifr:definition>
+                              <ifr:type>
+                              CHAR
+                              </ifr:type>
+                              <ifr:abapType>
+                              C
+                              </ifr:abapType>
+                              <ifr:length>
+                              512
+                              </ifr:length>
+                              <ifr:internalLength1>
+                              512
+                              </ifr:internalLength1>
+                              <ifr:internalLength2>
+                              1024
+                              </ifr:internalLength2>
+                              <ifr:decimals>
+                              0
+                              </ifr:decimals>
+                              <ifr:outputLength>
+                              512
+                              </ifr:outputLength>
+                           </ifr:definition>
+                        </ifr:scalarType>
+                     </ifr:definition>
+                  </ifr:field>
+               </ifr:fields>
+            </ifr:definition>
+         </ifr:container>
+      </ns0:type>
+      <ns0:type name="RFC_DB_FLD">
+         <ifr:container xmlns:ifr="urn:sap-com:ifr:v2:metamodel" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <ifr:descriptor>
+               <ifr:description language="EN">
+               RFC Table Read: Description of Fields to Retrieve
+               </ifr:description>
+            </ifr:descriptor>
+            <ifr:properties>
+               <ifr:sourceSystem />
+               <ifr:sourceClient>
+               400
+               </ifr:sourceClient>
+               <ifr:release>
+               740
+               </ifr:release>
+               <ifr:category>
+               structure
+               </ifr:category>
+               <ifr:unicode1>
+               true
+               </ifr:unicode1>
+               <ifr:unicode2>
+               true
+               </ifr:unicode2>
+               <ifr:isFlatStructure>
+               true
+               </ifr:isFlatStructure>
+            </ifr:properties>
+            <ifr:definition>
+               <ifr:internalLength1>
+               103
+               </ifr:internalLength1>
+               <ifr:internalLength2>
+               206
+               </ifr:internalLength2>
+               <ifr:fields>
+                  <ifr:field name="FIELDNAME" category="simple">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        Field Name
+                        </ifr:description>
+                        <ifr:documentation xlink:role="docu" xlink:href="/Content?TYPE=docu&amp;NAME=DE.FIELDNAME" />
+                     </ifr:descriptor>
+                     <ifr:properties>
+                        <ifr:helpValuesSupported>
+                        false
+                        </ifr:helpValuesSupported>
+                        <ifr:offset1>
+                        0
+                        </ifr:offset1>
+                        <ifr:offset2>
+                        0
+                        </ifr:offset2>
+                     </ifr:properties>
+                     <ifr:definition>
+                        <ifr:scalarType name="FIELDNAME">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:fixedValuesListDefined>
+                              false
+                              </ifr:fixedValuesListDefined>
+                              <ifr:mixedCaseSupported>
+                              false
+                              </ifr:mixedCaseSupported>
+                              <ifr:signedNumber>
+                              false
+                              </ifr:signedNumber>
+                           </ifr:properties>
+                           <ifr:definition>
+                              <ifr:type>
+                              CHAR
+                              </ifr:type>
+                              <ifr:abapType>
+                              C
+                              </ifr:abapType>
+                              <ifr:length>
+                              30
+                              </ifr:length>
+                              <ifr:internalLength1>
+                              30
+                              </ifr:internalLength1>
+                              <ifr:internalLength2>
+                              60
+                              </ifr:internalLength2>
+                              <ifr:decimals>
+                              0
+                              </ifr:decimals>
+                              <ifr:outputLength>
+                              30
+                              </ifr:outputLength>
+                           </ifr:definition>
+                        </ifr:scalarType>
+                     </ifr:definition>
+                  </ifr:field>
+                  <ifr:field name="OFFSET" category="simple">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        Offset of a field
+                        </ifr:description>
+                     </ifr:descriptor>
+                     <ifr:properties>
+                        <ifr:helpValuesSupported>
+                        false
+                        </ifr:helpValuesSupported>
+                        <ifr:offset1>
+                        30
+                        </ifr:offset1>
+                        <ifr:offset2>
+                        60
+                        </ifr:offset2>
+                     </ifr:properties>
+                     <ifr:definition>
+                        <ifr:scalarType name="DOFFSET">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:fixedValuesListDefined>
+                              false
+                              </ifr:fixedValuesListDefined>
+                              <ifr:mixedCaseSupported>
+                              false
+                              </ifr:mixedCaseSupported>
+                              <ifr:signedNumber>
+                              false
+                              </ifr:signedNumber>
+                           </ifr:properties>
+                           <ifr:definition>
+                              <ifr:type>
+                              NUMC
+                              </ifr:type>
+                              <ifr:abapType>
+                              N
+                              </ifr:abapType>
+                              <ifr:length>
+                              6
+                              </ifr:length>
+                              <ifr:internalLength1>
+                              6
+                              </ifr:internalLength1>
+                              <ifr:internalLength2>
+                              12
+                              </ifr:internalLength2>
+                              <ifr:decimals>
+                              0
+                              </ifr:decimals>
+                              <ifr:outputLength>
+                              6
+                              </ifr:outputLength>
+                           </ifr:definition>
+                        </ifr:scalarType>
+                     </ifr:definition>
+                  </ifr:field>
+                  <ifr:field name="LENGTH" category="simple">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        Length (No. of Characters)
+                        </ifr:description>
+                        <ifr:documentation xlink:role="docu" xlink:href="/Content?TYPE=docu&amp;NAME=DE.DDLENG" />
+                     </ifr:descriptor>
+                     <ifr:properties>
+                        <ifr:helpValuesSupported>
+                        false
+                        </ifr:helpValuesSupported>
+                        <ifr:offset1>
+                        36
+                        </ifr:offset1>
+                        <ifr:offset2>
+                        72
+                        </ifr:offset2>
+                     </ifr:properties>
+                     <ifr:definition>
+                        <ifr:scalarType name="DDLENG">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:fixedValuesListDefined>
+                              false
+                              </ifr:fixedValuesListDefined>
+                              <ifr:mixedCaseSupported>
+                              false
+                              </ifr:mixedCaseSupported>
+                              <ifr:signedNumber>
+                              false
+                              </ifr:signedNumber>
+                           </ifr:properties>
+                           <ifr:definition>
+                              <ifr:type>
+                              NUMC
+                              </ifr:type>
+                              <ifr:abapType>
+                              N
+                              </ifr:abapType>
+                              <ifr:length>
+                              6
+                              </ifr:length>
+                              <ifr:internalLength1>
+                              6
+                              </ifr:internalLength1>
+                              <ifr:internalLength2>
+                              12
+                              </ifr:internalLength2>
+                              <ifr:decimals>
+                              0
+                              </ifr:decimals>
+                              <ifr:outputLength>
+                              6
+                              </ifr:outputLength>
+                           </ifr:definition>
+                        </ifr:scalarType>
+                     </ifr:definition>
+                  </ifr:field>
+                  <ifr:field name="TYPE" category="simple">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        ABAP data type (C,D,N,...)
+                        </ifr:description>
+                        <ifr:documentation xlink:role="docu" xlink:href="/Content?TYPE=docu&amp;NAME=DE.INTTYPE" />
+                     </ifr:descriptor>
+                     <ifr:properties>
+                        <ifr:helpValuesSupported>
+                        true
+                        </ifr:helpValuesSupported>
+                        <ifr:offset1>
+                        42
+                        </ifr:offset1>
+                        <ifr:offset2>
+                        84
+                        </ifr:offset2>
+                     </ifr:properties>
+                     <ifr:definition>
+                        <ifr:scalarType name="INTTYPE">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              true
+                              </ifr:helpValuesSupported>
+                              <ifr:fixedValuesListDefined>
+                              true
+                              </ifr:fixedValuesListDefined>
+                              <ifr:mixedCaseSupported>
+                              true
+                              </ifr:mixedCaseSupported>
+                              <ifr:signedNumber>
+                              false
+                              </ifr:signedNumber>
+                           </ifr:properties>
+                           <ifr:definition>
+                              <ifr:type>
+                              CHAR
+                              </ifr:type>
+                              <ifr:abapType>
+                              C
+                              </ifr:abapType>
+                              <ifr:length>
+                              1
+                              </ifr:length>
+                              <ifr:internalLength1>
+                              1
+                              </ifr:internalLength1>
+                              <ifr:internalLength2>
+                              2
+                              </ifr:internalLength2>
+                              <ifr:decimals>
+                              0
+                              </ifr:decimals>
+                              <ifr:outputLength>
+                              1
+                              </ifr:outputLength>
+                           </ifr:definition>
+                        </ifr:scalarType>
+                     </ifr:definition>
+                  </ifr:field>
+                  <ifr:field name="FIELDTEXT" category="simple">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        Short Description of Repository Objects
+                        </ifr:description>
+                        <ifr:documentation xlink:role="docu" xlink:href="/Content?TYPE=docu&amp;NAME=DE.AS4TEXT" />
+                     </ifr:descriptor>
+                     <ifr:properties>
+                        <ifr:helpValuesSupported>
+                        false
+                        </ifr:helpValuesSupported>
+                        <ifr:offset1>
+                        43
+                        </ifr:offset1>
+                        <ifr:offset2>
+                        86
+                        </ifr:offset2>
+                     </ifr:properties>
+                     <ifr:definition>
+                        <ifr:scalarType name="AS4TEXT">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:fixedValuesListDefined>
+                              false
+                              </ifr:fixedValuesListDefined>
+                              <ifr:mixedCaseSupported>
+                              true
+                              </ifr:mixedCaseSupported>
+                              <ifr:signedNumber>
+                              false
+                              </ifr:signedNumber>
+                           </ifr:properties>
+                           <ifr:definition>
+                              <ifr:type>
+                              CHAR
+                              </ifr:type>
+                              <ifr:abapType>
+                              C
+                              </ifr:abapType>
+                              <ifr:length>
+                              60
+                              </ifr:length>
+                              <ifr:internalLength1>
+                              60
+                              </ifr:internalLength1>
+                              <ifr:internalLength2>
+                              120
+                              </ifr:internalLength2>
+                              <ifr:decimals>
+                              0
+                              </ifr:decimals>
+                              <ifr:outputLength>
+                              60
+                              </ifr:outputLength>
+                           </ifr:definition>
+                        </ifr:scalarType>
+                     </ifr:definition>
+                  </ifr:field>
+               </ifr:fields>
+            </ifr:definition>
+         </ifr:container>
+      </ns0:type>
+      <wsdl:operation name="RFC_READ_TABLE">
+         <ifr:container xmlns:ifr="urn:sap-com:ifr:v2:metamodel" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <ifr:descriptor />
+            <ifr:properties>
+               <ifr:sourceSystem />
+               <ifr:sourceClient>
+               400
+               </ifr:sourceClient>
+               <ifr:release>
+               740
+               </ifr:release>
+               <ifr:package>
+               SDTI
+               </ifr:package>
+               <ifr:akhNode>
+               HLB0009015
+               </ifr:akhNode>
+               <ifr:released>
+               no
+               </ifr:released>
+               <ifr:outbound>
+               false
+               </ifr:outbound>
+               <ifr:synchronous>
+               true
+               </ifr:synchronous>
+               <ifr:asynchronous>
+               false
+               </ifr:asynchronous>
+               <ifr:unicode1>
+               true
+               </ifr:unicode1>
+               <ifr:unicode2>
+               true
+               </ifr:unicode2>
+            </ifr:properties>
+            <ifr:definition>
+               <ifr:exceptions>
+                  <ifr:exception name="DATA_BUFFER_EXCEEDED">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        Selected fields do not fit into structure DATA
+                        </ifr:description>
+                     </ifr:descriptor>
+                  </ifr:exception>
+                  <ifr:exception name="FIELD_NOT_VALID">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        Field to be read not in table
+                        </ifr:description>
+                     </ifr:descriptor>
+                  </ifr:exception>
+                  <ifr:exception name="NOT_AUTHORIZED">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        User not authorized to access QUERY_TABLE
+                        </ifr:description>
+                     </ifr:descriptor>
+                  </ifr:exception>
+                  <ifr:exception name="OPTION_NOT_VALID">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        Selection entries (e.g. syntax) incorrect
+                        </ifr:description>
+                        <ifr:documentation xlink:role="docu" xlink:href="/Content?TYPE=docu&amp;NAME=FX.RFC_READ_TABLE                OPTION_NOT_VALID" />
+                     </ifr:descriptor>
+                  </ifr:exception>
+                  <ifr:exception name="TABLE_NOT_AVAILABLE">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        QUERY_TABLE not active in Dictionary
+                        </ifr:description>
+                        <ifr:documentation xlink:role="docu" xlink:href="/Content?TYPE=docu&amp;NAME=FX.RFC_READ_TABLE                TABLE_NOT_AVAILABLE" />
+                     </ifr:descriptor>
+                  </ifr:exception>
+                  <ifr:exception name="TABLE_WITHOUT_DATA">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        QUERY_TABLE is name of structure
+                        </ifr:description>
+                        <ifr:documentation xlink:role="docu" xlink:href="/Content?TYPE=docu&amp;NAME=FX.RFC_READ_TABLE                TABLE_WITHOUT_DATA" />
+                     </ifr:descriptor>
+                  </ifr:exception>
+               </ifr:exceptions>
+               <ifr:parameters>
+                  <ifr:parameter name="DELIMITER">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        Sign for indicating field limits in DATA
+                        </ifr:description>
+                        <ifr:documentation xlink:role="docu" xlink:href="/Content?TYPE=docu&amp;NAME=FU.RFC_READ_TABLE                DELIMITER" />
+                     </ifr:descriptor>
+                     <ifr:definition>
+                     <!--  Reference to Field  -->
+                        <ifr:field name="SONV.FLAG">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:offset1>
+                              126
+                              </ifr:offset1>
+                              <ifr:offset2>
+                              248
+                              </ifr:offset2>
+                           </ifr:properties>
+                        </ifr:field>
+                     <!--  Scalar  -->
+                        <ifr:scalarType name="SO_TEXT001">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:fixedValuesListDefined>
+                              false
+                              </ifr:fixedValuesListDefined>
+                              <ifr:mixedCaseSupported>
+                              false
+                              </ifr:mixedCaseSupported>
+                              <ifr:signedNumber>
+                              false
+                              </ifr:signedNumber>
+                           </ifr:properties>
+                           <ifr:definition>
+                              <ifr:type>
+                              CHAR
+                              </ifr:type>
+                              <ifr:abapType>
+                              C
+                              </ifr:abapType>
+                              <ifr:length>
+                              1
+                              </ifr:length>
+                              <ifr:internalLength1>
+                              1
+                              </ifr:internalLength1>
+                              <ifr:internalLength2>
+                              2
+                              </ifr:internalLength2>
+                              <ifr:decimals>
+                              0
+                              </ifr:decimals>
+                              <ifr:outputLength>
+                              1
+                              </ifr:outputLength>
+                           </ifr:definition>
+                        </ifr:scalarType>
+                        <ifr:defaultDefinition>
+                        SPACE
+                        </ifr:defaultDefinition>
+                     </ifr:definition>
+                     <ifr:properties>
+                        <ifr:direction>
+                        in
+                        </ifr:direction>
+                        <ifr:class>
+                        import
+                        </ifr:class>
+                        <ifr:type>
+                        scalar
+                        </ifr:type>
+                        <ifr:optional>
+                        true
+                        </ifr:optional>
+                        <ifr:basedOnDictionaryReference>
+                        true
+                        </ifr:basedOnDictionaryReference>
+                     </ifr:properties>
+                  </ifr:parameter>
+                  <ifr:parameter name="NO_DATA">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        If &lt;&gt; SPACE, only FIELDS is filled
+                        </ifr:description>
+                        <ifr:documentation xlink:role="docu" xlink:href="/Content?TYPE=docu&amp;NAME=FU.RFC_READ_TABLE                NO_DATA" />
+                     </ifr:descriptor>
+                     <ifr:definition>
+                     <!--  Reference to Field  -->
+                        <ifr:field name="SONV.FLAG">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:offset1>
+                              126
+                              </ifr:offset1>
+                              <ifr:offset2>
+                              248
+                              </ifr:offset2>
+                           </ifr:properties>
+                        </ifr:field>
+                     <!--  Scalar  -->
+                        <ifr:scalarType name="SO_TEXT001">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:fixedValuesListDefined>
+                              false
+                              </ifr:fixedValuesListDefined>
+                              <ifr:mixedCaseSupported>
+                              false
+                              </ifr:mixedCaseSupported>
+                              <ifr:signedNumber>
+                              false
+                              </ifr:signedNumber>
+                           </ifr:properties>
+                           <ifr:definition>
+                              <ifr:type>
+                              CHAR
+                              </ifr:type>
+                              <ifr:abapType>
+                              C
+                              </ifr:abapType>
+                              <ifr:length>
+                              1
+                              </ifr:length>
+                              <ifr:internalLength1>
+                              1
+                              </ifr:internalLength1>
+                              <ifr:internalLength2>
+                              2
+                              </ifr:internalLength2>
+                              <ifr:decimals>
+                              0
+                              </ifr:decimals>
+                              <ifr:outputLength>
+                              1
+                              </ifr:outputLength>
+                           </ifr:definition>
+                        </ifr:scalarType>
+                        <ifr:defaultDefinition>
+                        SPACE
+                        </ifr:defaultDefinition>
+                     </ifr:definition>
+                     <ifr:properties>
+                        <ifr:direction>
+                        in
+                        </ifr:direction>
+                        <ifr:class>
+                        import
+                        </ifr:class>
+                        <ifr:type>
+                        scalar
+                        </ifr:type>
+                        <ifr:optional>
+                        true
+                        </ifr:optional>
+                        <ifr:basedOnDictionaryReference>
+                        true
+                        </ifr:basedOnDictionaryReference>
+                     </ifr:properties>
+                  </ifr:parameter>
+                  <ifr:parameter name="QUERY_TABLE">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        Table read
+                        </ifr:description>
+                        <ifr:documentation xlink:role="docu" xlink:href="/Content?TYPE=docu&amp;NAME=FU.RFC_READ_TABLE                QUERY_TABLE" />
+                     </ifr:descriptor>
+                     <ifr:definition>
+                     <!--  Reference to Field  -->
+                        <ifr:field name="DD02L.TABNAME">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:offset1>
+                              0
+                              </ifr:offset1>
+                              <ifr:offset2>
+                              0
+                              </ifr:offset2>
+                           </ifr:properties>
+                        </ifr:field>
+                     <!--  Scalar  -->
+                        <ifr:scalarType name="TABNAME">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:fixedValuesListDefined>
+                              false
+                              </ifr:fixedValuesListDefined>
+                              <ifr:mixedCaseSupported>
+                              false
+                              </ifr:mixedCaseSupported>
+                              <ifr:signedNumber>
+                              false
+                              </ifr:signedNumber>
+                           </ifr:properties>
+                           <ifr:definition>
+                              <ifr:type>
+                              CHAR
+                              </ifr:type>
+                              <ifr:abapType>
+                              C
+                              </ifr:abapType>
+                              <ifr:length>
+                              30
+                              </ifr:length>
+                              <ifr:internalLength1>
+                              30
+                              </ifr:internalLength1>
+                              <ifr:internalLength2>
+                              60
+                              </ifr:internalLength2>
+                              <ifr:decimals>
+                              0
+                              </ifr:decimals>
+                              <ifr:outputLength>
+                              30
+                              </ifr:outputLength>
+                           </ifr:definition>
+                        </ifr:scalarType>
+                     </ifr:definition>
+                     <ifr:properties>
+                        <ifr:direction>
+                        in
+                        </ifr:direction>
+                        <ifr:class>
+                        import
+                        </ifr:class>
+                        <ifr:type>
+                        scalar
+                        </ifr:type>
+                        <ifr:optional>
+                        false
+                        </ifr:optional>
+                        <ifr:basedOnDictionaryReference>
+                        true
+                        </ifr:basedOnDictionaryReference>
+                     </ifr:properties>
+                  </ifr:parameter>
+                  <ifr:parameter name="ROWCOUNT">
+                     <ifr:descriptor />
+                     <ifr:definition>
+                     <!--  Reference to Field  -->
+                        <ifr:field name="SOID.ACCNT">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:offset1>
+                              92
+                              </ifr:offset1>
+                              <ifr:offset2>
+                              184
+                              </ifr:offset2>
+                           </ifr:properties>
+                        </ifr:field>
+                     <!--  Scalar  -->
+                        <ifr:scalarType name="SO_INT">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:fixedValuesListDefined>
+                              false
+                              </ifr:fixedValuesListDefined>
+                              <ifr:mixedCaseSupported>
+                              false
+                              </ifr:mixedCaseSupported>
+                              <ifr:signedNumber>
+                              true
+                              </ifr:signedNumber>
+                           </ifr:properties>
+                           <ifr:definition>
+                              <ifr:type>
+                              INT4
+                              </ifr:type>
+                              <ifr:abapType>
+                              I
+                              </ifr:abapType>
+                              <ifr:length>
+                              10
+                              </ifr:length>
+                              <ifr:internalLength1>
+                              4
+                              </ifr:internalLength1>
+                              <ifr:internalLength2>
+                              4
+                              </ifr:internalLength2>
+                              <ifr:decimals>
+                              0
+                              </ifr:decimals>
+                              <ifr:outputLength>
+                              6
+                              </ifr:outputLength>
+                           </ifr:definition>
+                        </ifr:scalarType>
+                        <ifr:defaultDefinition>
+                        0
+                        </ifr:defaultDefinition>
+                     </ifr:definition>
+                     <ifr:properties>
+                        <ifr:direction>
+                        in
+                        </ifr:direction>
+                        <ifr:class>
+                        import
+                        </ifr:class>
+                        <ifr:type>
+                        scalar
+                        </ifr:type>
+                        <ifr:optional>
+                        true
+                        </ifr:optional>
+                        <ifr:basedOnDictionaryReference>
+                        true
+                        </ifr:basedOnDictionaryReference>
+                     </ifr:properties>
+                  </ifr:parameter>
+                  <ifr:parameter name="ROWSKIPS">
+                     <ifr:descriptor />
+                     <ifr:definition>
+                     <!--  Reference to Field  -->
+                        <ifr:field name="SOID.ACCNT">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:offset1>
+                              92
+                              </ifr:offset1>
+                              <ifr:offset2>
+                              184
+                              </ifr:offset2>
+                           </ifr:properties>
+                        </ifr:field>
+                     <!--  Scalar  -->
+                        <ifr:scalarType name="SO_INT">
+                           <ifr:properties>
+                              <ifr:helpValuesSupported>
+                              false
+                              </ifr:helpValuesSupported>
+                              <ifr:fixedValuesListDefined>
+                              false
+                              </ifr:fixedValuesListDefined>
+                              <ifr:mixedCaseSupported>
+                              false
+                              </ifr:mixedCaseSupported>
+                              <ifr:signedNumber>
+                              true
+                              </ifr:signedNumber>
+                           </ifr:properties>
+                           <ifr:definition>
+                              <ifr:type>
+                              INT4
+                              </ifr:type>
+                              <ifr:abapType>
+                              I
+                              </ifr:abapType>
+                              <ifr:length>
+                              10
+                              </ifr:length>
+                              <ifr:internalLength1>
+                              4
+                              </ifr:internalLength1>
+                              <ifr:internalLength2>
+                              4
+                              </ifr:internalLength2>
+                              <ifr:decimals>
+                              0
+                              </ifr:decimals>
+                              <ifr:outputLength>
+                              6
+                              </ifr:outputLength>
+                           </ifr:definition>
+                        </ifr:scalarType>
+                        <ifr:defaultDefinition>
+                        0
+                        </ifr:defaultDefinition>
+                     </ifr:definition>
+                     <ifr:properties>
+                        <ifr:direction>
+                        in
+                        </ifr:direction>
+                        <ifr:class>
+                        import
+                        </ifr:class>
+                        <ifr:type>
+                        scalar
+                        </ifr:type>
+                        <ifr:optional>
+                        true
+                        </ifr:optional>
+                        <ifr:basedOnDictionaryReference>
+                        true
+                        </ifr:basedOnDictionaryReference>
+                     </ifr:properties>
+                  </ifr:parameter>
+                  <ifr:parameter name="DATA">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        Data read (out)
+                        </ifr:description>
+                        <ifr:documentation xlink:role="docu" xlink:href="/Content?TYPE=docu&amp;NAME=FU.RFC_READ_TABLE                DATA" />
+                     </ifr:descriptor>
+                     <ifr:definition>
+                     <!--  Structure  -->
+                        <ifr:complexType name="TAB512" type="structure" xlink:role="type" xlink:href="/Content?TYPE=type&amp;NAME=TAB512" />
+                     </ifr:definition>
+                     <ifr:properties>
+                        <ifr:direction>
+                        inout
+                        </ifr:direction>
+                        <ifr:class>
+                        tables
+                        </ifr:class>
+                        <ifr:type>
+                        structure
+                        </ifr:type>
+                        <ifr:optional>
+                        false
+                        </ifr:optional>
+                        <ifr:basedOnDictionaryReference>
+                        true
+                        </ifr:basedOnDictionaryReference>
+                     </ifr:properties>
+                  </ifr:parameter>
+                  <ifr:parameter name="FIELDS">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        Names (in) and structure (out) of fields read
+                        </ifr:description>
+                        <ifr:documentation xlink:role="docu" xlink:href="/Content?TYPE=docu&amp;NAME=FU.RFC_READ_TABLE                FIELDS" />
+                     </ifr:descriptor>
+                     <ifr:definition>
+                     <!--  Structure  -->
+                        <ifr:complexType name="RFC_DB_FLD" type="structure" xlink:role="type" xlink:href="/Content?TYPE=type&amp;NAME=RFC_DB_FLD" />
+                     </ifr:definition>
+                     <ifr:properties>
+                        <ifr:direction>
+                        inout
+                        </ifr:direction>
+                        <ifr:class>
+                        tables
+                        </ifr:class>
+                        <ifr:type>
+                        structure
+                        </ifr:type>
+                        <ifr:optional>
+                        false
+                        </ifr:optional>
+                        <ifr:basedOnDictionaryReference>
+                        true
+                        </ifr:basedOnDictionaryReference>
+                     </ifr:properties>
+                  </ifr:parameter>
+                  <ifr:parameter name="OPTIONS">
+                     <ifr:descriptor>
+                        <ifr:description language="EN">
+                        Selection entries, &quot;WHERE clauses&quot; (in)
+                        </ifr:description>
+                        <ifr:documentation xlink:role="docu" xlink:href="/Content?TYPE=docu&amp;NAME=FU.RFC_READ_TABLE                OPTIONS" />
+                     </ifr:descriptor>
+                     <ifr:definition>
+                     <!--  Structure  -->
+                        <ifr:complexType name="RFC_DB_OPT" type="structure" xlink:role="type" xlink:href="/Content?TYPE=type&amp;NAME=RFC_DB_OPT" />
+                     </ifr:definition>
+                     <ifr:properties>
+                        <ifr:direction>
+                        inout
+                        </ifr:direction>
+                        <ifr:class>
+                        tables
+                        </ifr:class>
+                        <ifr:type>
+                        structure
+                        </ifr:type>
+                        <ifr:optional>
+                        false
+                        </ifr:optional>
+                        <ifr:basedOnDictionaryReference>
+                        true
+                        </ifr:basedOnDictionaryReference>
+                     </ifr:properties>
+                  </ifr:parameter>
+               </ifr:parameters>
+            </ifr:definition>
+         </ifr:container>
+      </wsdl:operation>
+   </wsdl:binding>
+</wsdl:definitions>

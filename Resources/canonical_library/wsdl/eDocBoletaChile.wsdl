@@ -1,0 +1,1638 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:tns="http://www.sap.com/eDocument/Chile/Boleta/v1.0"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="EnvioBoleta_v1"
+	targetNamespace="http://www.sap.com/eDocument/Chile/Boleta/v1.0">
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://www.sap.com/eDocument/Chile/Boleta/v1.0"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SiiDte="http://www.sii.cl/SiiDte"
+			elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+			<xsd:element name="EnvioBOLETA" type="tns:EnvioBOLETA" />
+
+			<xsd:complexType name="EnvioBOLETA">
+				<xsd:sequence>
+
+					<xsd:element name="SetDTE">
+						<xsd:annotation>
+							<xsd:documentation>Conjunto de Boletas enviadas
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="Caratula">
+									<xsd:annotation>
+										<xsd:documentation>Resumen de Informacion Enviada
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="RutEmisor">
+												<xsd:annotation>
+													<xsd:documentation>RUT Emisor de las Boletas
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="tns:RUTType" />
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="RutEnvia" type="tns:RUTType">
+												<xsd:annotation>
+													<xsd:documentation>
+														RUT que
+														envia las
+														Boletas
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="RutReceptor" type="tns:RUTType">
+												<xsd:annotation>
+													<xsd:documentation>
+														RUT al que
+														se le envian
+														las Boletas
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="FchResol" type="xsd:date">
+												<xsd:annotation>
+													<xsd:documentation>Fecha de Resolucion que Autoriza la
+														Emision de Boletas (AAAA-MM-DD)
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="NroResol">
+												<xsd:annotation>
+													<xsd:documentation>Numero de Resolucion que Autoriza la
+														Emision de Boletas
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:nonNegativeInteger">
+														<xsd:totalDigits value="6" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="TmstFirmaEnv" type="xsd:dateTime">
+												<xsd:annotation>
+													<xsd:documentation>Fecha y Hora de la Firma del Archivo
+														de
+														Envio
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="SubTotDTE" maxOccurs="2">
+												<xsd:annotation>
+													<xsd:documentation>Subtotales de Boletas Enviadas
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element name="TpoDTE" type="tns:DTEType">
+															<xsd:annotation>
+																<xsd:documentation>
+																	Tipo
+																	de
+																	Boleta
+																	Enviada
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="NroDTE" type="xsd:positiveInteger">
+															<xsd:annotation>
+																<xsd:documentation>Numero de Boletas Enviadas
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+										<xsd:attribute name="version" type="xsd:decimal"
+											use="required" fixed="1.0" />
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="DTE" type="tns:BOLETADefType"
+									maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											Boletas Electronicas
+											Enviadas
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+							</xsd:sequence>
+							<xsd:attribute name="ID" type="xsd:ID" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+				<xsd:attribute name="version" type="xsd:decimal" use="required"
+					fixed="1.0" />
+
+			</xsd:complexType>
+
+			<xsd:complexType name="BOLETADefType">
+				<xsd:annotation>
+					<xsd:documentation>Boleta Electronica</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="Documento">
+						<xsd:annotation>
+							<xsd:documentation>Informacion Tributaria de la Boleta
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="Encabezado">
+									<xsd:annotation>
+										<xsd:documentation>Identificacion y Totales del Documento
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="IdDoc">
+												<xsd:annotation>
+													<xsd:documentation>Identificacion del DTE
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element name="TipoDTE" type="tns:DTEType">
+															<xsd:annotation>
+																<xsd:documentation>
+																	Tipo
+																	de
+																	Boleta
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="Folio" type="tns:FolioType">
+															<xsd:annotation>
+																<xsd:documentation>
+																	Folio
+																	del
+																	Documento
+																	Electronico
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="FchEmis" type="xsd:date">
+															<xsd:annotation>
+																<xsd:documentation>Fecha Emision Contable del DTE
+																	(AAAA-MM-DD)
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="IndServicio">
+															<xsd:annotation>
+																<xsd:documentation>Indica el Tipo de Transaccion
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:positiveInteger">
+																	<xsd:enumeration value="1">
+																		<xsd:annotation>
+																			<xsd:documentation>Boleta de Servicios Periodicos
+																			</xsd:documentation>
+																		</xsd:annotation>
+																	</xsd:enumeration>
+																	<xsd:enumeration value="2">
+																		<xsd:annotation>
+																			<xsd:documentation>Boleta de Servicios Periodicos
+																				Domiciliarios
+																			</xsd:documentation>
+																		</xsd:annotation>
+																	</xsd:enumeration>
+																	<xsd:enumeration value="3">
+																		<xsd:annotation>
+																			<xsd:documentation>Boleta de Ventas y Servicio
+																			</xsd:documentation>
+																		</xsd:annotation>
+																	</xsd:enumeration>
+																	<xsd:enumeration value="4">
+																		<xsd:annotation>
+																			<xsd:documentation>Boleta de Espectáculo emitida por
+																				cuenta de Terceros
+																			</xsd:documentation>
+																		</xsd:annotation>
+																	</xsd:enumeration>
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="IndMntNeto" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Indica el Uso de Montos Netos en
+																	Detalle
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:integer">
+																	<xsd:enumeration value="2">
+																		<xsd:annotation>
+																			<xsd:documentation>Monto de Lineas de Detalle
+																				Corresponde a Valores Netos
+																			</xsd:documentation>
+																		</xsd:annotation>
+																	</xsd:enumeration>
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="PeriodoDesde" type="xsd:date"
+															minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Periodo de Facturacion - Desde
+																	(AAAA-MM-DD)
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="PeriodoHasta" type="xsd:date"
+															minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Periodo Facturacion - Hasta
+																	(AAAA-MM-DD)
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="FchVenc" type="xsd:date"
+															minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Fecha de Vencimiento del Pago
+																	(AAAA-MM-DD)
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+											<xsd:element name="Emisor">
+												<xsd:annotation>
+													<xsd:documentation>Datos del Emisor</xsd:documentation>
+												</xsd:annotation>
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element name="RUTEmisor" type="tns:RUTType">
+															<xsd:annotation>
+																<xsd:documentation>
+																	RUT
+																	del
+																	Emisor
+																	del
+																	DTE
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="RznSocEmisor" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Nombre o Razon Social del Emisor
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="100" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="GiroEmisor" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Giro del Emisor que Corresponde a la
+																	Transaccion
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="80" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="CdgSIISucur" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Codigo de Sucursal Entregado por el
+																	SII
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:positiveInteger">
+																	<xsd:totalDigits value="9" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="DirOrigen" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Direccion de Origen o Emision
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="70" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="CmnaOrigen" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Comuna de Origen</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="20" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="CiudadOrigen" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Ciudad de Origen</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="20" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+											<xsd:element name="Receptor">
+												<xsd:annotation>
+													<xsd:documentation>Datos del Receptor</xsd:documentation>
+												</xsd:annotation>
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element name="RUTRecep" type="tns:RUTType">
+															<xsd:annotation>
+																<xsd:documentation>RUT del Receptor del DTE
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="CdgIntRecep" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Codigo Interno del Receptor
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="20" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="RznSocRecep" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Nombre o Razon Social del Receptor
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="100" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="Contacto" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Telefono o E-mail de Contacto del
+																	Receptor
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="80" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="DirRecep" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Direccion en la Cual se Envian los
+																	Productos o se Prestan los Servicios
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="70" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="CmnaRecep" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Comuna de Recepcion
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="20" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="CiudadRecep" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Ciudad de Recepcion
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="20" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="DirPostal" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Direccion Postal</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="70" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="CmnaPostal" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Comuna Postal</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="20" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="CiudadPostal" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Ciudad Postal</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="20" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+											<xsd:element name="Totales">
+												<xsd:annotation>
+													<xsd:documentation>Montos Totales del DTE
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element name="MntNeto" type="tns:MontoType"
+															minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>
+																	Monto
+																	Neto
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="MntExe" type="tns:MontoType"
+															minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>
+																	Monto
+																	Exento
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="IVA" type="tns:MntImpType"
+															minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>
+																	Monto
+																	de
+																	IVA
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="MntTotal" type="tns:MontoType">
+															<xsd:annotation>
+																<xsd:documentation>
+																	Monto
+																	Total
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="MontoNF" type="tns:ValorType"
+															minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>
+																	Monto
+																	No
+																	Facturable
+																	-
+																	Corresponde
+																	a
+																	Bienes
+																	o
+																	Servicios
+																	Facturados
+																	Previamente
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="TotalPeriodo" type="tns:MontoType"
+															minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>
+																	Total
+																	de
+																	Ventas
+																	o
+																	Servicios
+																	del
+																	Periodo
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="SaldoAnterior" type="tns:ValorType"
+															minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>
+																	Saldo
+																	Anterior
+																	-
+																	Puede
+																	ser
+																	Negativo
+																	o
+																	Positivo
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="VlrPagar" type="tns:ValorType"
+															minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>
+																	Valor
+																	a
+																	Pagar
+																	Total
+																	del
+																	Documento
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="Detalle" maxOccurs="1000">
+									<xsd:annotation>
+										<xsd:documentation>Detalle de Itemes del Documento
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="NroLinDet" type="xsd:positiveInteger">
+												<xsd:annotation>
+													<xsd:documentation>Numero Secuencial de Linea
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="CdgItem" minOccurs="0"
+												maxOccurs="5">
+												<xsd:annotation>
+													<xsd:documentation>Codificacion del Item
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element name="TpoCodigo">
+															<xsd:annotation>
+																<xsd:documentation>Tipo de Codificacion
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="10" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="VlrCodigo">
+															<xsd:annotation>
+																<xsd:documentation>Valor del Codigo de Item, para la
+																	Codificacion Particular
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="35" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+											<xsd:element name="IndExe" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Indicador de Exencion/Facturacion
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:positiveInteger">
+														<xsd:enumeration value="1">
+															<xsd:annotation>
+																<xsd:documentation>Producto o Servicio es Exento o No
+																	Afecto
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:enumeration>
+														<xsd:enumeration value="2">
+															<xsd:annotation>
+																<xsd:documentation>El Producto o Servicio NO ES
+																	Facturable
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:enumeration>
+														<xsd:enumeration value="6" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="ItemEspectaculo" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Indica si el ítem es :
+														01: TICKET
+														02:
+														VALOR SERVICIO
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:positiveInteger">
+														<xsd:maxInclusive value="2" />
+														<xsd:totalDigits value="2" />
+														<xsd:enumeration value="01">
+															<xsd:annotation>
+																<xsd:documentation>Producto o Servicio es Exento o No
+																	Afecto
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:enumeration>
+														<xsd:enumeration value="02">
+															<xsd:annotation>
+																<xsd:documentation>El Producto o Servicio NO ES
+																	Facturable
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:enumeration>
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="RUTMandante" type="tns:RUTType"
+												minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>
+														Rut de la
+														Empresa Mandante
+														de la Boleta
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="NmbItem">
+												<xsd:annotation>
+													<xsd:documentation>Nombre del Item</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:string">
+														<xsd:maxLength value="80" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="InfoTicket" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Informacion de la entrada
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element name="FolioTicket">
+															<xsd:annotation>
+																<xsd:documentation>Corresponde a la numeración única
+																	para el evento.
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:positiveInteger">
+																	<xsd:totalDigits value="6" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="FchGenera">
+															<xsd:annotation>
+																<xsd:documentation>Corresponde a la fecha y hora de
+																	generación del ticket
+																	(AAAA-MM-DDThh:mm:ss)
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:dateTime">
+																	<xsd:minInclusive value="2010-03-10T00:00:00" />
+																	<xsd:maxInclusive value="2050-12-31T23:59:59" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="NmbEvento">
+															<xsd:annotation>
+																<xsd:documentation>Nombre del Espectáculo
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="80" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="TpoTiket">
+															<xsd:annotation>
+																<xsd:documentation>Tipo de ticket, Por ejemplo: Adulto,
+																	Niño, etc
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="10" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="CdgEvento">
+															<xsd:annotation>
+																<xsd:documentation>Código asociado al Evento
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="5" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="FchEvento">
+															<xsd:annotation>
+																<xsd:documentation>Fecha y hora de realización del
+																	evento AAAA-MM-DDThh:mm:ss)
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:dateTime">
+																	<xsd:minInclusive value="2010-03-10T00:00:00" />
+																	<xsd:maxInclusive value="2050-12-31T23:59:59" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="LugarEvento">
+															<xsd:annotation>
+																<xsd:documentation>Dirección o identificación del
+																	recinto donde se realizará el Espectáculo
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="80" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="UbicEvento">
+															<xsd:annotation>
+																<xsd:documentation>Sector/Sección de la ubicación en el
+																	evento
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="20" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="FilaUbicEvento" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>Fila correspondiente a la Ubicación
+																	en el evento
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="3" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="AsntoUbicEvento" minOccurs="0">
+															<xsd:annotation>
+																<xsd:documentation>N° de Asiento correspondiente a la
+																	Ubicación en el evento
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="3" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+											<xsd:element name="DscItem" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Descripcion del Item
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:string">
+														<xsd:maxLength value="1000" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="QtyItem" type="tns:Dec5Type"
+												minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>
+														Cantidad del
+														Item
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="UnmdItem" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Unidad de Medida</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:string">
+														<xsd:maxLength value="4" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="PrcItem" type="tns:Dec5Type"
+												minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>
+														Precio Unitario
+														del Item en
+														Pesos
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="DescuentoPct" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Porcentaje de Descuento
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="tns:PctType">
+														<xsd:minInclusive value="0.00" />
+														<xsd:maxInclusive value="100.00" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="DescuentoMonto" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Monto de Descuento</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:nonNegativeInteger">
+														<xsd:totalDigits value="18" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="RecargoPct" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Porcentaje de Recargo
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="tns:PctType">
+														<xsd:maxInclusive value="100.00" />
+														<xsd:minInclusive value="0.00" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="RecargoMonto" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Monto de Recargo</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:nonNegativeInteger">
+														<xsd:totalDigits value="18" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="MontoItem" type="tns:MontoType">
+												<xsd:annotation>
+													<xsd:documentation>
+														Monto por Linea
+														de Detalle.
+														Corresponde al
+														Monto Bruto, a
+														menos que
+														IndMntNeto
+														Indique lo
+														Contrario
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="SubTotInfo" minOccurs="0"
+									maxOccurs="20">
+									<xsd:annotation>
+										<xsd:documentation>Subtotales Informativos
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="NroSTI">
+												<xsd:annotation>
+													<xsd:documentation>Número de Subtotal </xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:positiveInteger">
+														<xsd:maxInclusive value="99" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="GlosaSTI" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Glosa</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:string">
+														<xsd:maxLength value="80" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="OrdenSTI">
+												<xsd:annotation>
+													<xsd:documentation>Ubicación para Impresión
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:positiveInteger">
+														<xsd:maxInclusive value="99" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="SubTotNetoSTI" type="tns:Dec1Type"
+												minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>
+														Valor Neto del
+														Subtotal
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="SubTotIVASTI" type="tns:Dec1Type"
+												minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>
+														Valor del IVA
+														del Subtotal
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="SubTotAdicSTI" type="tns:Dec1Type"
+												minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>
+														Valor de los
+														Impuestos
+														adicionales o
+														específicos del
+														Subtotal
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="SubTotExeSTI" type="tns:Dec1Type"
+												minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>
+														Valor no Afecto
+														o Exento del
+														Subtotal
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="ValSubtotSTI" type="tns:Dec1Type"
+												minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>
+														Valor de la
+														línea de
+														subtotal
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="LineasDeta" minOccurs="0"
+												maxOccurs="60">
+												<xsd:annotation>
+													<xsd:documentation>TABLA de Líneas de Detalle que se
+														agrupan en el Subtotal
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:positiveInteger">
+														<xsd:maxInclusive value="60" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="DscRcgGlobal" minOccurs="0"
+									maxOccurs="20">
+									<xsd:annotation>
+										<xsd:documentation>Descuentos y/o Recargos que afectan al
+											total del Documento
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="NroLinDR">
+												<xsd:annotation>
+													<xsd:documentation>Numero Secuencial de Linea
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:positiveInteger">
+														<xsd:maxInclusive value="99" />
+														<xsd:minInclusive value="1" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="TpoMov">
+												<xsd:annotation>
+													<xsd:documentation>Tipo de Movimiento</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:string">
+														<xsd:enumeration value="D">
+															<xsd:annotation>
+																<xsd:documentation>Descuento</xsd:documentation>
+															</xsd:annotation>
+														</xsd:enumeration>
+														<xsd:enumeration value="R">
+															<xsd:annotation>
+																<xsd:documentation>Recargo</xsd:documentation>
+															</xsd:annotation>
+														</xsd:enumeration>
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="GlosaDR" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Descripcion del Descuento o Recargo
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:string">
+														<xsd:maxLength value="45" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="TpoValor">
+												<xsd:annotation>
+													<xsd:documentation>Unidad en que se Expresa el Valor
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:string">
+														<xsd:enumeration value="%">
+															<xsd:annotation>
+																<xsd:documentation>El valor se Expresa como Porcentaje
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:enumeration>
+														<xsd:enumeration value="$">
+															<xsd:annotation>
+																<xsd:documentation>El Valor se Expresa en Pesos
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:enumeration>
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="ValorDR" type="tns:Dec1Type">
+												<xsd:annotation>
+													<xsd:documentation>
+														Valor del
+														Descuento o
+														Recargo
+													</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="IndExeDR" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Indica si el Descuento o Recargo Afecta
+														a Itemes Exentos o No Facturables
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:positiveInteger">
+														<xsd:enumeration value="1">
+															<xsd:annotation>
+																<xsd:documentation>Afecta a Productos Exentos o No
+																	Afectos
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:enumeration>
+														<xsd:enumeration value="2">
+															<xsd:annotation>
+																<xsd:documentation>Afecta aProductos No Facturables
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:enumeration>
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="Referencia" minOccurs="0"
+									maxOccurs="40">
+									<xsd:annotation>
+										<xsd:documentation>Identificacion de otros documentos
+											Referenciados por Documento
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="NroLinRef">
+												<xsd:annotation>
+													<xsd:documentation>Numero Secuencial de Linea de
+														Referencia
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:positiveInteger">
+														<xsd:maxInclusive value="40" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="CodRef" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Codigo Interno del Tipo de Referencia
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:string">
+														<xsd:maxLength value="18" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="RazonRef" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Razon Explicita por la que se
+														Referencia
+														el Documento
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:string">
+														<xsd:maxLength value="90" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="CodVndor" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Código del Vendedor establecido por la
+														Empresa. Puede estar asociado a INTERNET
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:string">
+														<xsd:maxLength value="8" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="CodCaja" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>Código de la caja establecido por la
+														Empresa
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:string">
+														<xsd:maxLength value="8" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="TED">
+									<xsd:annotation>
+										<xsd:documentation>Timbre Electronico de la Boleta
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="DD">
+												<xsd:annotation>
+													<xsd:documentation>Datos Basicos de Documento
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element name="RE" type="tns:RUTType">
+															<xsd:annotation>
+																<xsd:documentation>
+																	RUT
+																	Emisor
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="TD" type="tns:DTEType">
+															<xsd:annotation>
+																<xsd:documentation>
+																	Tipo
+																	DTE
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="F" type="tns:FolioType">
+															<xsd:annotation>
+																<xsd:documentation>
+																	Folio
+																	DTE
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="FE" type="xsd:date">
+															<xsd:annotation>
+																<xsd:documentation>Fecha Emision DTE en Formato
+																	AAAA-MM-DD
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="RR" type="tns:RUTType">
+															<xsd:annotation>
+																<xsd:documentation>
+																	RUT
+																	Receptor
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="RSR">
+															<xsd:annotation>
+																<xsd:documentation>Razon Sociall Receptor
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="40" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="MNT" type="xsd:unsignedLong">
+															<xsd:annotation>
+																<xsd:documentation>Monto Total DTE</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+														<xsd:element name="IT1">
+															<xsd:annotation>
+																<xsd:documentation>Descripcion Primer Item de Detalle
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:maxLength value="40" />
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:element>
+														<xsd:element name="CAF">
+															<xsd:annotation>
+																<xsd:documentation>Codigo Autorizacion Folios
+																</xsd:documentation>
+															</xsd:annotation>
+															<xsd:complexType>
+																<xsd:sequence>
+																	<xsd:element name="DA">
+																		<xsd:annotation>
+																			<xsd:documentation>Datos de Autorizacion de Folios
+																			</xsd:documentation>
+																		</xsd:annotation>
+																		<xsd:complexType>
+																			<xsd:sequence>
+																				<xsd:element name="RE" type="tns:RUTType">
+																					<xsd:annotation>
+																						<xsd:documentation>RUT Emisor</xsd:documentation>
+																					</xsd:annotation>
+																				</xsd:element>
+																				<xsd:element name="RS">
+																					<xsd:annotation>
+																						<xsd:documentation>Razon Social Emisor
+																						</xsd:documentation>
+																					</xsd:annotation>
+																					<xsd:simpleType>
+																						<xsd:restriction base="xsd:string">
+																							<xsd:maxLength value="40" />
+																						</xsd:restriction>
+																					</xsd:simpleType>
+																				</xsd:element>
+																				<xsd:element name="TD" type="tns:DTEType">
+																					<xsd:annotation>
+																						<xsd:documentation>Tipo DTE</xsd:documentation>
+																					</xsd:annotation>
+																				</xsd:element>
+																				<xsd:element name="RNG">
+																					<xsd:annotation>
+																						<xsd:documentation>Rango Autorizado de Folios
+																						</xsd:documentation>
+																					</xsd:annotation>
+																					<xsd:complexType>
+																						<xsd:sequence>
+																							<xsd:element name="D" type="tns:FolioType">
+																								<xsd:annotation>
+																									<xsd:documentation>Folio Inicial (Desde)
+																									</xsd:documentation>
+																								</xsd:annotation>
+																							</xsd:element>
+																							<xsd:element name="H" type="tns:FolioType">
+																								<xsd:annotation>
+																									<xsd:documentation>Folio Final (Hasta)
+																									</xsd:documentation>
+																								</xsd:annotation>
+																							</xsd:element>
+																						</xsd:sequence>
+																					</xsd:complexType>
+																				</xsd:element>
+																				<xsd:element name="FA" type="xsd:date">
+																					<xsd:annotation>
+																						<xsd:documentation>Fecha Autorizacion en Formato
+																							AAAA-MM-DD
+																						</xsd:documentation>
+																					</xsd:annotation>
+																				</xsd:element>
+																				<xsd:choice>
+																					<xsd:element name="RSAPK">
+																						<xsd:annotation>
+																							<xsd:documentation>Clave Publica RSA del
+																								Solicitante
+																							</xsd:documentation>
+																						</xsd:annotation>
+																						<xsd:complexType>
+																							<xsd:sequence>
+																								<xsd:element name="M" type="xsd:base64Binary">
+																									<xsd:annotation>
+																										<xsd:documentation>Modulo RSA
+																										</xsd:documentation>
+																									</xsd:annotation>
+																								</xsd:element>
+																								<xsd:element name="E" type="xsd:base64Binary">
+																									<xsd:annotation>
+																										<xsd:documentation>Exponente RSA
+																										</xsd:documentation>
+																									</xsd:annotation>
+																								</xsd:element>
+																							</xsd:sequence>
+																						</xsd:complexType>
+																					</xsd:element>
+																					<xsd:element name="DSAPK">
+																						<xsd:annotation>
+																							<xsd:documentation>Clave Publica DSA del
+																								Solicitante
+																							</xsd:documentation>
+																						</xsd:annotation>
+																						<xsd:complexType>
+																							<xsd:sequence>
+																								<xsd:element name="P" type="xsd:base64Binary">
+																									<xsd:annotation>
+																										<xsd:documentation>Modulo Primo
+																										</xsd:documentation>
+																									</xsd:annotation>
+																								</xsd:element>
+																								<xsd:element name="Q" type="xsd:base64Binary">
+																									<xsd:annotation>
+																										<xsd:documentation>Entero Divisor de P - 1
+																										</xsd:documentation>
+																									</xsd:annotation>
+																								</xsd:element>
+																								<xsd:element name="G" type="xsd:base64Binary">
+																									<xsd:annotation>
+																										<xsd:documentation>Entero f(P, Q)
+																										</xsd:documentation>
+																									</xsd:annotation>
+																								</xsd:element>
+																								<xsd:element name="Y" type="xsd:base64Binary">
+																									<xsd:annotation>
+																										<xsd:documentation>G**X mod P
+																										</xsd:documentation>
+																									</xsd:annotation>
+																								</xsd:element>
+																							</xsd:sequence>
+																						</xsd:complexType>
+																					</xsd:element>
+																				</xsd:choice>
+																				<xsd:element name="IDK" type="xsd:long">
+																					<xsd:annotation>
+																						<xsd:documentation>Identificador de Llave
+																						</xsd:documentation>
+																					</xsd:annotation>
+																				</xsd:element>
+																			</xsd:sequence>
+																		</xsd:complexType>
+																	</xsd:element>
+																	<xsd:element name="FRMA">
+																		<xsd:annotation>
+																			<xsd:documentation>Firma Digital (RSA) del SII Sobre
+																				DA
+																			</xsd:documentation>
+																		</xsd:annotation>
+																		<xsd:complexType>
+																			<xsd:simpleContent>
+																				<xsd:extension base="xsd:base64Binary">
+																					<xsd:attribute name="algoritmo" type="xsd:string"
+																						use="required" fixed="SHA1withRSA" />
+																				</xsd:extension>
+																			</xsd:simpleContent>
+																		</xsd:complexType>
+																	</xsd:element>
+																</xsd:sequence>
+																<xsd:attribute name="version" use="required"
+																	fixed="1.0" />
+															</xsd:complexType>
+														</xsd:element>
+														<xsd:element name="TSTED" type="xsd:dateTime">
+															<xsd:annotation>
+																<xsd:documentation>TimeStamp de Generacion del Timbre
+																</xsd:documentation>
+															</xsd:annotation>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+											<xsd:element name="FRMT">
+												<xsd:annotation>
+													<xsd:documentation>Valor de Firma Digital sobre DD
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:complexType>
+													<xsd:simpleContent>
+														<xsd:extension base="xsd:base64Binary">
+															<xsd:attribute name="algoritmo" use="required">
+																<xsd:simpleType>
+																	<xsd:restriction base="xsd:string">
+																		<xsd:enumeration value="SHA1withRSA" />
+																		<xsd:enumeration value="SHA1withDSA" />
+																	</xsd:restriction>
+																</xsd:simpleType>
+															</xsd:attribute>
+														</xsd:extension>
+													</xsd:simpleContent>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+										<xsd:attribute name="version" use="required"
+											fixed="1.0" />
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="TmstFirma" type="xsd:dateTime">
+									<xsd:annotation>
+										<xsd:documentation>Fecha y Hora en que se Firmo Digitalmente
+											el Documento AAAA-MM-DDTHH:MI:SS
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+							</xsd:sequence>
+							<xsd:attribute name="ID" type="xsd:ID" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+				<xsd:attribute name="version" type="xsd:decimal" use="required"
+					fixed="1.0" />
+			</xsd:complexType>
+			<xsd:simpleType name="RUTType">
+				<xsd:annotation>
+					<xsd:documentation>Rol Unico Tributario (99..99-X)
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="10" />
+					<xsd:minLength value="3" />
+					<xsd:pattern value="[0-9]+-([0-9]|K)" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="DTEType">
+				<xsd:annotation>
+					<xsd:documentation>Tipos de Documentos Tributarios Electronicos
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:positiveInteger">
+					<xsd:enumeration value="39">
+						<xsd:annotation>
+							<xsd:documentation>Boleta Electronica</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="41">
+						<xsd:annotation>
+							<xsd:documentation>Boleta Exenta Electronica</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="MntImpType">
+				<xsd:annotation>
+					<xsd:documentation>Monto de Impuesto - 18 digitos
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:positiveInteger">
+					<xsd:totalDigits value="18" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="MontoType">
+				<xsd:annotation>
+					<xsd:documentation>Monto de 18 digitos - Incluye el cero
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:nonNegativeInteger">
+					<xsd:totalDigits value="18" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ValorType">
+				<xsd:annotation>
+					<xsd:documentation>Monto de 18 digitos - Positivo o Negativo
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:integer">
+					<xsd:totalDigits value="18" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FolioType">
+				<xsd:annotation>
+					<xsd:documentation>Folio de DTE - 10 digitos</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:positiveInteger">
+					<xsd:totalDigits value="10" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="Dec1Type">
+				<xsd:annotation>
+					<xsd:documentation>Monto con 16 Digitos de Cuerpo y 2 Decimales
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="18" />
+					<xsd:fractionDigits value="2" />
+					<xsd:minExclusive value="0" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="Dec5Type">
+				<xsd:annotation>
+					<xsd:documentation>Monto con 12 Digitos de Cuerpo y 6 Decimales
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="18" />
+					<xsd:fractionDigits value="6" />
+					<xsd:minExclusive value="0" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PctType">
+				<xsd:annotation>
+					<xsd:documentation>Monto de Porcentaje ( 3 y 2)
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="5" />
+					<xsd:fractionDigits value="2" />
+					<xsd:minInclusive value="0.00" />
+					<xsd:maxInclusive value="999.99" />
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:element name="EnvioBoletaResponse" type="tns:EnvioBoletaResponse"></xsd:element>
+
+			<xsd:complexType name="EnvioBoletaResponse">
+				<xsd:sequence>
+					<xsd:element name="SignedBoleta" type="xsd:base64Binary" />
+					<xsd:element name="DigitalSeal"	 type="xsd:base64Binary" />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="SignBoletaRequest">
+		<wsdl:part name="SignBoletaRequestParameters" element="tns:EnvioBOLETA"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="SignBoletaResponse">
+		<wsdl:part name="SignBoletaResponseParameters" element="tns:EnvioBoletaResponse"></wsdl:part>
+	</wsdl:message>
+
+	<wsdl:portType name="eDocBoletaChile">
+		<wsdl:operation name="SignBoleta">
+			<wsdl:input message="tns:SignBoletaRequest" name="SignBoletaRequest" />
+			<wsdl:output message="tns:SignBoletaResponse" name="SignBoletaResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding name="eDocBoletaChileSOAP" type="tns:eDocBoletaChile">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="SignBoleta">
+			<soap:operation soapAction="http://www.example.org/SAPBoleta_v1/NewOperation" />
+			<wsdl:input name="SignBoletaRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="SignBoletaResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="eDocBoletaChile">
+		<wsdl:port binding="tns:eDocBoletaChileSOAP" name="eDocBoletaChileSOAP">
+			<soap:address location="http://endpointaddress" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

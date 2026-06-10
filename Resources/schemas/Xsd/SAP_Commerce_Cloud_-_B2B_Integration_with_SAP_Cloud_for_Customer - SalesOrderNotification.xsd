@@ -1,0 +1,42 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="SalesOrderNotification">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MessageHeader">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:short" name="ID"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="SalesOrder">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:int">
+                      <xs:attribute type="xs:string" name="schemeID"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element type="xs:byte" name="TypeCode"/>
+              <xs:element name="BusinessTransactionDocumentReference">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:short" name="ID"/>
+                    <xs:element type="xs:byte" name="TypeCode"/>
+                  </xs:sequence>
+                  <xs:attribute type="xs:byte" name="actionCode"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="businessTransactionDocumentReferenceListCompleteTransmissionIndicator"/>
+            <xs:attribute type="xs:string" name="itemListCompleteTransmissionIndicator"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

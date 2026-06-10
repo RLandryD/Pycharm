@@ -1,0 +1,2847 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:n1="http://sap.com/xi/SAPGlobal20/Global" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://sap.com/xi/APPL/Global2" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://sap.com/xi/APPL/Global2">
+	<wsdl:types>
+		<xs:schema xmlns="http://sap.com/xi/APPL/Global2" xmlns:xi0="http://sap.com/xi/SAPGlobal20/Global" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://sap.com/xi/APPL/Global2">
+			<xs:complexType name="ProductMDMMAreaSCMAdvPlan">
+			<xs:sequence>
+				<xs:element name="ConsumptionOfStorageCapacity" minOccurs="0" type="tns:Value"/>
+				<xs:element name="GoodsIssueHandlingCost" minOccurs="0" type="tns:Value"/>
+				<xs:element name="GoodsReceiptHandlingCost" minOccurs="0" type="tns:Value"/>
+				<xs:element name="ProductProcurementCostsVal" minOccurs="0" type="tns:Value"/>
+				<xs:element name="LotSizeUnit" minOccurs="0" type="tns:MeasureUnitCode"/>
+				<xs:element name="PlngCalendarPerdcLotSizing" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_SHORT_Text"/>
+				<xs:element name="PPPlanningProcedure" minOccurs="0" type="tns:Char1"/>
+				<xs:element name="ProductPlanningGroup" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_SHORT_Text"/>
+				<xs:element name="ProductPlanningPackage" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_MEDIUM_Text"/>
+				<xs:element name="ProdnPlngHeuristic" minOccurs="0" type="tns:HeuristicIdentifier"/>
+				<xs:element name="GIHandlingCapacity" minOccurs="0" type="tns:Quantity"/>
+				<xs:element name="GRHandlingCapacity" minOccurs="0" type="tns:Quantity"/>
+			</xs:sequence>
+   </xs:complexType>
+			<xs:complexType name="DistributionChannelCode">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="listID" type="xs:string"/>
+						<xs:attribute name="listVersionID" type="xs:string"/>
+						<xs:attribute name="listAgencyID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:complexType name="ProductMDMRplctReqSlsSpecTxtSAPScrptLine">
+				<xs:sequence>
+					<xs:element name="OrdinalNumberValue" type="xs:decimal"/>
+					<xs:element name="SAPScriptLineFormatCode" type="tns:SAPScriptLineFormatCode"/>
+					<xs:element name="SAPScriptLineText" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="SAPScriptLineFormatCode">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="listID" type="xs:string"/>
+						<xs:attribute name="listVersionID" type="xs:string"/>
+						<xs:attribute name="listAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:complexType name="ProductMDMReplicateRequestDescription">
+				<xs:sequence>
+					<xs:element name="Description" type="tns:SHORT_Description"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="xs:string" use="required"/>
+			</xs:complexType>
+
+			<xs:complexType name="SHORT_Description">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="languageCode" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:complexType name="UUID">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="schemeID" type="xs:string"/>
+						<xs:attribute name="schemeAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:complexType name="ProductMDMReplicateRequestGlobalTradeItemNo">
+				<xs:sequence>
+					<xs:element name="ProductStandardID" type="xs:token"/>
+					<xs:element minOccurs="0" name="MeasureUnitCode" type="xs:token"/>
+					<xs:element minOccurs="0" name="ProductStandardMainIndicator" type="xs:boolean"/>
+					<xs:element name="ProductRetailSupplierGTIN" minOccurs="0" maxOccurs="unbounded" type="tns:ProductMDMRpcltReqProdRetailSupplierGTIN"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="xs:string" use="required"/>
+			</xs:complexType>
+			<xs:complexType name="ProductMDMRpcltReqProdRetailSupplierGTIN">
+				<xs:sequence>
+					<xs:element name="SupplierID" type="tns:BusinessPartnerInternalID"/>
+					<xs:element name="SupplierProductID" minOccurs="0" type="tns:NOSC_ProductInternalID"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="ActionCode"/>
+			</xs:complexType>
+			<xs:complexType name="DangerousGoodsIndicatorProfileCode">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="listID" type="xs:string"/>
+						<xs:attribute name="listVersionID" type="xs:string"/>
+						<xs:attribute name="listAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="PackagingProductTypeCode">
+               <xs:annotation>
+               </xs:annotation>
+               <xs:restriction base="xs:token">
+                  <xs:maxLength value="4"/>
+               </xs:restriction>
+            </xs:simpleType>
+			<xs:complexType name="ProductMDMRplctReqDistrChnIndepSlsSpec">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="TransportProductGroupCode" type="tns:TransportMaterialGroupCode"/>
+					<xs:element name="ProductSalesProcessUsabilityProfileCode" minOccurs="0" type="ProductSalesProcessUsabilityProfileCode"/>
+					<xs:element name="ProductSalesProcessUsabilityProfileValidityDate" minOccurs="0" type="Date"/>
+				    <xs:element name="AllowedPackagingVolumeQuantity" minOccurs="0" type="tns:Quantity"/>
+				    <xs:element name="VolumeMaximumLevel" minOccurs="0" type="tns:Value"/>
+                    <xs:element name="ClosedPackagingProductIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ExcessWeightTolerance" minOccurs="0" type="tns:Value"/>
+					<xs:element name="StackingFactor" minOccurs="0" type="tns:Value"/>
+					<xs:element name="PackagingProductTypeCode" minOccurs="0" type="tns:PackagingProductTypeCode"/>
+					<xs:element name="ExcessVolumeTolerance" minOccurs="0" type="tns:Value"/>
+					<xs:element name="AllowedPackagingWeightQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="ProductFreightGroupCode" minOccurs="0" type="tns:ProductFreightGroupCode"/>
+					
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="xs:string" use="required"/>
+			</xs:complexType>
+
+			<xs:complexType name="TransportMaterialGroupCode">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="listID" type="xs:string"/>
+						<xs:attribute name="listVersionID" type="xs:string"/>
+						<xs:attribute name="listAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+
+			<xs:complexType name="MEDIUM_Name">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="languageCode" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="OPTIONAL_MDMIndicator">
+				<xs:restriction base="xs:boolean"/>
+			</xs:simpleType>
+			<xs:simpleType name="NOSC_ProductID">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="60"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="StockDeterminationGroupCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="ProductLogisticsProcessUsabilityProfileCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:ProductLogisticsProcessUsabilityProfileCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="ProductLogisticsProcessUsabilityProfileCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProfitCenterID">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="10"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ActionCode">
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="01"/>
+					<xs:enumeration value="02"/>
+					<xs:enumeration value="03"/>
+					<xs:enumeration value="04"/>
+					<xs:enumeration value="05"/>
+					<xs:enumeration value="06"/>
+					<xs:length value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="NOSC_PlantID">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="OPTIONAL_Indicator">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:restriction base="xs:boolean"/>
+			</xs:simpleType>
+			<xs:simpleType name="MeasureUnitCode">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="3"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			
+			<xs:simpleType name="LANGUAGEINDEPENDENT_SHORT_Text">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:restriction base="xs:string">
+                  <xs:maxLength value="10"/>
+                  <xs:minLength value="1"/>
+                </xs:restriction>
+			</xs:simpleType>
+			 <xs:simpleType name="Value">
+               <xs:annotation>
+               </xs:annotation>
+               <xs:restriction base="xs:decimal"/>
+             </xs:simpleType>
+			  <xs:simpleType name="SmartFormName">
+                <xs:annotation>
+                </xs:annotation>
+                <xs:restriction base="xs:token">
+                   <xs:maxLength value="30"/>
+                </xs:restriction>
+              </xs:simpleType>
+
+			  <xs:simpleType name="BusinessPartnerInternalID">
+               <xs:annotation>
+               </xs:annotation>
+               <xs:restriction base="xs:token">
+                  <xs:maxLength value="10"/>
+                  <xs:minLength value="1"/>
+               </xs:restriction>
+             </xs:simpleType>
+
+			 <xs:complexType name="HandlingUnitTypeCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:HandlingUnitTypeCode.Content">
+						<xs:attribute name="listVersionID" type="xs:token"/>
+						<xs:attribute name="listAgencyID" type="xs:token"/>
+						<xs:attribute name="listAgencySchemeID" type="xs:token"/>
+						<xs:attribute name="listAgencySchemeAgencyID" type="tns:AgencyIdentificationCode"/>
+					</xs:extension>
+				</xs:simpleContent>
+			 </xs:complexType>
+			 <xs:simpleType name="HandlingUnitTypeCode.Content">
+                <xs:restriction base="xs:token">
+                    <xs:maxLength value="4"/>
+                    <xs:minLength value="1"/>
+                </xs:restriction>
+             </xs:simpleType>
+             <xs:simpleType name="ProductHandlingIndicatorCode">
+               <xs:annotation>
+               </xs:annotation>
+               <xs:restriction base="xs:token">
+                <xs:maxLength value="4"/>
+               </xs:restriction>
+          </xs:simpleType>
+		  <xs:simpleType name="AdjustmentProfileCode">
+              <xs:annotation>
+              </xs:annotation>
+              <xs:restriction base="xs:token">
+                  <xs:maxLength value="3"/>
+              </xs:restriction>
+          </xs:simpleType>
+		  <xs:simpleType name="ManufacturerPartProfileCode">
+             <xs:annotation>
+             </xs:annotation>
+             <xs:restriction base="xs:token">
+               <xs:maxLength value="4"/>
+             </xs:restriction>
+          </xs:simpleType>
+		  <xs:simpleType name="ItemCategoryGroupCode">
+            <xs:annotation>
+            </xs:annotation>
+            <xs:restriction base="xs:token">
+                <xs:maxLength value="4"/>
+            </xs:restriction>
+         </xs:simpleType>
+         
+         <xs:simpleType name="WarehouseStorageConditionCode">
+            <xs:annotation>
+            </xs:annotation>
+            <xs:restriction base="xs:token">
+               <xs:maxLength value="2"/>
+            </xs:restriction>
+         </xs:simpleType>
+		 <xs:simpleType name="WarehouseProductGroupCode">
+            <xs:annotation>
+            </xs:annotation>
+         <xs:restriction base="xs:token">
+            <xs:maxLength value="4"/>
+         </xs:restriction>
+        </xs:simpleType>
+		<xs:simpleType name="PackagingMaterialGroupCode">
+          <xs:annotation>
+          </xs:annotation>
+          <xs:restriction base="xs:token">
+             <xs:maxLength value="4"/>
+         </xs:restriction>
+        </xs:simpleType>
+		<xs:simpleType name="QualityInspectionGroupCode">
+            <xs:annotation>
+            </xs:annotation>
+            <xs:restriction base="xs:token">
+              <xs:maxLength value="4"/>
+            </xs:restriction>
+        </xs:simpleType>
+        <xs:simpleType name="ShelfLifeExpirationDatePeriod">
+           <xs:annotation>
+           </xs:annotation>
+           <xs:restriction base="xs:token">
+              <xs:maxLength value="1"/>
+           </xs:restriction>
+        </xs:simpleType>
+		<xs:simpleType name="StorageBinInstructionCode">
+          <xs:annotation>
+          </xs:annotation>
+          <xs:restriction base="xs:token">
+             <xs:maxLength value="2"/>
+          </xs:restriction>
+        </xs:simpleType>
+	<xs:simpleType name="ShelfLifeExpirationDateRoundingRuleCode">
+      <xs:annotation>
+      </xs:annotation>
+      <xs:restriction base="xs:token">
+        <xs:maxLength value="1"/>
+      </xs:restriction>
+   </xs:simpleType>
+			<xs:simpleType name="CatalogProfileCode">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="9"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+		<xs:simpleType name="ANPCode">
+            <xs:annotation>
+            </xs:annotation>
+            <xs:restriction base="xs:token">
+               <xs:maxLength value="9"/>
+               <xs:minLength value="1"/>
+               <xs:pattern value="\d+"/>
+            </xs:restriction>
+         </xs:simpleType>
+
+			<xs:complexType name="ProductMDMReplicateRequestProduct">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="ProductInternalID" type="xs:token"/>
+					<xs:element minOccurs="0" name="UnformattedProductInternalID" type="xs:token"/>
+					<xs:element name="ProductUUID" minOccurs="0" type="tns:UUID"/>
+					<xs:element minOccurs="0" name="ReceiverProductInternalID" type="xs:token"/>
+					<xs:element minOccurs="0" name="UnformattedReceiverProductInternalID" type="xs:token"/>
+					<xs:element minOccurs="0" name="ReceiverProductUUID" type="tns:UUID"/>
+					<xs:element minOccurs="0" name="SourceBusinessSystemID" type="xs:token"/>
+					<xs:element minOccurs="0" name="ProductTypeCode" type="tns:ProductMDMTypeCode"/>
+					<xs:element minOccurs="0" name="IndustrySectorCode" type="tns:ProductIndustrialSectorCode"/>
+					<xs:element name="RetailProductCategoryCode" minOccurs="0" type="tns:RetailProductCategoryCode"/>
+					<xs:element name="DivisionCode" minOccurs="0" type="DivisionCode"/>
+					<xs:element name="LockedIndicator" minOccurs="0" type="OPTIONAL_MDMIndicator"/>
+					<xs:element name="SerialNumberExplicitnessLevelCode" minOccurs="0" type="SerialNumberExplicitnessLevelCode"/>
+					<xs:element name="QualityManagementInProcurementIsActiveIndicator" minOccurs="0" type="OPTIONAL_MDMIndicator"/>
+					<xs:element minOccurs="0" name="DeletedIndicator" type="xs:boolean"/>
+					<xs:element minOccurs="0" name="ProductGroupInternalID" type="xs:token"/>
+					<xs:element minOccurs="0" name="ReceiverProductGroupInternalID" type="xs:token"/>
+					<xs:element minOccurs="0" name="BaseMeasureUnitCode" type="xs:token"/>
+					<xs:element name="ProductDiscountInKindCode" minOccurs="0" type="ProductDiscountInKindCode"/>
+					<xs:element minOccurs="0" name="AuthorisationGroupCode" type="tns:AuthorisationGroupCode"/>
+					<xs:element name="ProductSalesProcessUsabilityProfileCode" minOccurs="0" type="tns:ProductSalesProcessUsabilityProfileCode"/>
+					<xs:element minOccurs="0" name="DangerousGoodsIndicatorProfileCode" type="tns:DangerousGoodsIndicatorProfileCode"/>
+					<xs:element name="BatchManagementRequiredIndicator" minOccurs="0" type="OPTIONAL_MDMIndicator"/>
+					<xs:element name="EnvironmentRelevanceIndicator" minOccurs="0" type="OPTIONAL_MDMIndicator"/>
+					<xs:element name="BasicProductCode" minOccurs="0" type="BasicProductCode"/>
+					<xs:element name="ComputerAidedDesignMaintainedIndicator" minOccurs="0" type="OPTIONAL_MDMIndicator"/>
+					<xs:element name="ConfigurableProductDeterminedIndicator" minOccurs="0" type="OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductSalesProcessUsabilityProfileValidityDate" minOccurs="0" type="Date"/>
+					<xs:element name="ProductionText" minOccurs="0" type="LANGUAGEINDEPENDENT_MEDIUM_Text"/>
+					<xs:element name="ProductSizeText" minOccurs="0" type="LANGUAGEINDEPENDENT_MEDIUM_Text"/>
+					<xs:element name="PreviousName" minOccurs="0" type="LANGUAGEINDEPENDENT_MEDIUM_Name"/>
+					<xs:element name="ProductionMemoPageFormatName" minOccurs="0" type="LANGUAGEINDEPENDENT_SHORT_Name"/>
+					<xs:element name="IndustryStandardDescription" minOccurs="0" type="LANGUAGEINDEPENDENT_SHORT_Description"/>
+					<xs:element name="StorageSpecification" minOccurs="0" type="ProductMDMRplctReqStorageSpec"/>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="Description" type="tns:ProductMDMReplicateRequestDescription"/>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="GlobalTradeItemNumber" type="tns:ProductMDMReplicateRequestGlobalTradeItemNo"/>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="QuantityConversion" type="tns:ProductMDMReplicateRequestQuantityConversion"/>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="QuantityCharacteristic" type="tns:ProductMDMReplicateRequestQuantityCharacteristic"/>
+					<xs:element minOccurs="0" name="TextCollection" type="tns:ProductMDMReplicateRequestTextCollection"/>
+					<xs:element minOccurs="0" name="DistributionChainIndependentSalesSpecification" type="tns:ProductMDMRplctReqDistrChnIndepSlsSpec"/>
+					<xs:element minOccurs="0" name="PlantIndependentProcurementSpecification" type="tns:ProductMDMRplctReqPlntIndepProcmtSpec"/>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="SalesSpecification" type="tns:ProductMDMRplctReqSlsSpec"/>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="SalesSpecificTaxClassification" type="tns:ProductMDMRplctReqSlsSpcfcTxClass"/>
+					<xs:element name="Plant" minOccurs="0" maxOccurs="unbounded" type="tns:ProductMDMRplctReqPlantSpec"/>
+					<xs:element name="ValuationArea" minOccurs="0" maxOccurs="unbounded" type="tns:ProductMDMRplctReqValuationSpec"/>
+					<xs:element name="SubscriptionProduct" minOccurs="0" type="SubscriptionData"/>
+
+					<xs:element name="ProductDocumentPageNumber" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_SHORT_Text"/>
+					<xs:element name="QuarantinePeriod" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="ProductDocumentType" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_SHORT_Text"/>
+					<xs:element name="OvercapacityTolerance" minOccurs="0" type="tns:Value"/>
+					<xs:element name="SmartFormName" minOccurs="0" type="tns:SmartFormName"/>
+					<xs:element name="MaximumCapacity" minOccurs="0" type="tns:Value"/>
+					<xs:element name="GlobalTradeItemNumberVariant" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_SHORT_Text"/>
+					<xs:element name="ProductDocumentChangeNumber" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_SHORT_Text"/>
+					<xs:element name="CompetitorID" minOccurs="0" type="tns:BusinessPartnerInternalID"/>
+					<xs:element name="MaximumPackagingHeight" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="MaximumPackagingWidth" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="MaximumPackagingLength" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="ProductDocumentVersion" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_SHORT_Text"/>
+					<xs:element name="StandardHandlingUnitTypeCode" minOccurs="0" type="tns:HandlingUnitTypeCode"/>
+					<xs:element name="ProductDocumentPageFormat" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_SHORT_Text"/>
+					<xs:element name="ProductDocumentNumber" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_MEDIUM_Text"/>
+					<xs:element name="ProductHighlyViscousIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductHandlingIndicatorCode" minOccurs="0" type="tns:ProductHandlingIndicatorCode"/>
+					<xs:element name="AdjustmentProfileCode" minOccurs="0" type="tns:AdjustmentProfileCode"/>
+					<xs:element name="HandlingUnitTypeCode" minOccurs="0" type="tns:HandlingUnitTypeCode"/>
+					<xs:element name="ManufacturerPartProfileCode" minOccurs="0" type="tns:ManufacturerPartProfileCode"/>
+					<xs:element name="TransportInBulkIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="SerialIdentifierAssignmentProfileCode" minOccurs="0" type="tns:SerialIdentifierAssignmentProfileCode"/>
+					<xs:element name="ItemCategoryGroupCode" minOccurs="0" type="tns:ItemCategoryGroupCode"/>
+					<xs:element name="WarehouseStorageConditionCode" minOccurs="0" type="tns:WarehouseStorageConditionCode"/>
+					<xs:element name="ProductRelevantForHazardousSubstancesIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="WarehouseProductGroupCode" minOccurs="0" type="tns:WarehouseProductGroupCode"/>
+					<xs:element name="VariableTareWeightIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="OwnInventoryManagedProductInternalID" minOccurs="0" type="tns:NOSC_ProductInternalID"/>
+					<xs:element name="ProductEffectivityParameterValuesAssignmentIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="PackingReferenceProductInternalID" minOccurs="0" type="tns:NOSC_ProductInternalID"/>
+					<xs:element name="ApprovedBatchRecordRequiredIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="PilferableIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+				    <xs:element name="PackagingMaterialGroupCode" minOccurs="0" type="tns:PackagingMaterialGroupCode"/>
+                    <xs:element name="QualityInspectionGroupCode" minOccurs="0" type="tns:QualityInspectionGroupCode"/>
+					<xs:element name="CatalogProfileCode" minOccurs="0" type="tns:CatalogProfileCode"/>
+					<xs:element name="ANPCode" minOccurs="0" type="tns:ANPCode"/>
+					<xs:element name="ProductDocumentPageCount" minOccurs="0" type="tns:Value"/>
+					
+                   
+				</xs:sequence>
+				<xs:attribute name="salesSpecificationListCompleteTransmissionIndicator" type="xs:boolean"/>
+				<xs:attribute name="plantListCompleteTransmissionIndicator" type="tns:OPTIONAL_Indicator"/>
+				<xs:attribute name="descriptionListCompleteTransmissionIndicator" type="xs:boolean"/>
+				<xs:attribute name="globalTradeItemNumberListCompleteTransmissionIndicator" type="xs:boolean"/>
+				<xs:attribute name="productCategoryAssignmentListCompleteTransmissionIndicator" type="xs:boolean"/>
+				<xs:attribute name="quantityConversionListCompleteTransmissionIndicator" type="xs:boolean"/>
+				<xs:attribute name="quantityCharacteristicListCompleteTransmissionIndicator" type="xs:boolean"/>
+				<xs:attribute name="plantIndependentProcurementSpecificationListCompleteTransmissionIndicator" type="xs:boolean"/>
+				<xs:attribute name="changeOrdinalNumberValue" type="xs:decimal"/>
+				<xs:attribute name="reconciliationPeriodCounterValue" type="xs:int"/>
+				<xs:attribute name="valuationAreaListCompleteTransmissionIndicator" type="OPTIONAL_MDMIndicator"/>
+			</xs:complexType>
+			<xs:complexType name="ProductMDMRplctReqValuationSpec">
+				<xs:sequence>
+					<xs:element name="ValuationAreaID" type="tns:NOSC_PlantID"/>
+					<xs:element name="DeletedIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="AccountDeterminationProductValuationDataGroupCode" minOccurs="0" type="tns:AccountDeterminationProductValuationDataGroupCode"/>
+					<xs:element name="ProductPriceDeterminationApproachCode" minOccurs="0" type="tns:ProductPriceDeterminationApproachCode"/>
+					<xs:element name="InventoryValuationCategoryCode" minOccurs="0" type="tns:InventoryValuationCategoryCode"/>
+					<xs:element name="ProductUsageTypeCode" minOccurs="0" type="tns:ProductUsageTypeCode"/>
+					<xs:element name="ProductOriginTypeCode" minOccurs="0" type="tns:ProductOriginTypeCode"/>
+					<xs:element name="ProductProducedInhouseIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="SalesOrderStockAccountDeterminationProductValuationDataGroupCode" minOccurs="0" type="tns:AccountDeterminationProductValuationDataGroupCode"/>
+					<xs:element name="ProjectStockAccountDeterminationProductValuationDataGroupCode" minOccurs="0" type="tns:AccountDeterminationProductValuationDataGroupCode"/>
+					<xs:element name="FirstFuturePlannedPriceAmountValue" minOccurs="0" type="tns:AmountValue"/>
+					<xs:element name="SecondFuturePlannedPriceAmountValue" minOccurs="0" type="tns:AmountValue"/>
+					<xs:element name="ThirdFuturePlannedPriceAmountValue" minOccurs="0" type="tns:AmountValue"/>
+					<xs:element name="FirstFuturePlannedPriceValidityDate" minOccurs="0" type="xs:date"/>
+					<xs:element name="SecondFuturePlannedPriceValidityDate" minOccurs="0" type="xs:date"/>
+					<xs:element name="ThirdFuturePlannedPriceValidityDate" minOccurs="0" type="xs:date"/>
+					<xs:element name="ValuationAccount" minOccurs="0" type="tns:ProductMDMRplctReqValuationAccountsSpec"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" use="required" type="ActionCode"/>
+			</xs:complexType>
+			<xs:simpleType name="AccountDeterminationProductValuationDataGroupCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="10"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="ProductOriginTypeCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:ProductOriginTypeCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="ProductOriginTypeCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ProductUsageTypeCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:ProductUsageTypeCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="ProductUsageTypeCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="InventoryValuationCategoryCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:InventoryValuationCategoryCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="InventoryValuationCategoryCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="ProductPriceDeterminationApproachCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:ProductPriceDeterminationApproachCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="ProductPriceDeterminationApproachCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="AmountValue">
+				<xs:restriction base="xs:decimal">
+					<xs:totalDigits value="28"/>
+					<xs:fractionDigits value="6"/>
+					<xs:maxInclusive value="9999999999999999999999.999999"/>
+					<xs:minInclusive value="-9999999999999999999999.999999"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="ProductMDMRplctReqValuationAccountsSpec">
+				<xs:sequence>
+					<xs:element name="CommercialLawLevelOneEvaluatedAmountValue" minOccurs="0" type="tns:AmountValue"/>
+					<xs:element name="CommercialLawLevelTwoEvaluatedAmountValue" minOccurs="0" type="tns:AmountValue"/>
+					<xs:element name="CommercialLawLevelThreeEvaluatedAmountValue" minOccurs="0" type="tns:AmountValue"/>
+					<xs:element name="DevaluationMeasureNumberValue" minOccurs="0" type="tns:NumberValue"/>
+					<xs:element name="LIFOValuationRelevanceIndicator" minOccurs="0" type="OPTIONAL_MDMIndicator"/>
+					<xs:element name="LIFOValuationPoolTypeCode" minOccurs="0" type="LIFOValuationPoolTypeCode"/>
+					<xs:element name="TaxLawLevelOneEvaluatedAmountValue" minOccurs="0" type="tns:AmountValue"/>
+					<xs:element name="TaxLawLevelTwoEvaluatedAmountValue" minOccurs="0" type="tns:AmountValue"/>
+					<xs:element name="TaxLawLevelThreeEvaluatedAmountValue" minOccurs="0" type="tns:AmountValue"/>
+					<xs:element name="ValuationPriceUnitNumberValue" minOccurs="0" type="tns:NumberValue"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="ActionCode"/>
+			</xs:complexType>
+			<xs:simpleType name="NumberValue">
+				<xs:restriction base="xs:int">
+					<xs:maxInclusive value="999999999"/>
+					<xs:minInclusive value="0"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="LIFOValuationPoolTypeCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:LIFOValuationPoolTypeCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="LIFOValuationPoolTypeCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ProductMDMRplctReqPlantSpec">
+				<xs:sequence>
+					<xs:element name="PlantID" type="tns:NOSC_PlantID"/>
+					<xs:element name="DeletedIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="GoodsIssueUnitCode" minOccurs="0" type="tns:MeasureUnitCode"/>
+					<xs:element name="ProfileCode" minOccurs="0" type="tns:ProductLogisticsProcessUsabilityProfileCode"/>
+					<xs:element name="ProfileValidityStartDate" minOccurs="0" type="xs:date"/>
+					<xs:element name="BatchManagementRequiredIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProfitCenterID" minOccurs="0" type="tns:ProfitCenterID"/>
+					<xs:element name="StockDeterminationGroupCode" minOccurs="0" type="tns:StockDeterminationGroupCode"/>
+					<xs:element name="ConfigurableProductID" minOccurs="0" type="tns:NOSC_ProductID"/>
+					<xs:element name="SerialIdentifierAssignmentProfileCode" minOccurs="0" type="tns:SerialIdentifierAssignmentProfileCode"/>
+					<xs:element name="NegativeStockAllowedIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductCFOPCategoryCode" minOccurs="0" type="tns:ProductCFOPCategoryCode"/>
+					<xs:element name="ProductCriticalPartIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductLogisticsHandlingGroupCode" minOccurs="0" type="tns:ProductLogisticsHandlingGroupCode"/>
+					<xs:element name="ProductFreightGroupCode" minOccurs="0" type="tns:ProductFreightGroupCode"/>
+					<xs:element name="ProductDistributionProfileCode" minOccurs="0" type="tns:ProductDistributionProfileCode"/>
+					<xs:element name="OriginalBatchManagementRequiredIndicator" minOccurs="0" type="OPTIONAL_MDMIndicator"/>
+					<xs:element name="OriginalBatchReferenceProductID" minOccurs="0" type="NOSC_ProductID"/>
+					<xs:element name="SupplyPlanning" minOccurs="0" type="tns:ProductMDMRplctReqPlantSupplyPlanningSpec"/>
+					<xs:element name="WorkScheduling" minOccurs="0" type="tns:ProductMDMRplctReqWorkSchedulingSpec"/>
+					<xs:element name="Costing" minOccurs="0" type="tns:ProductMDMRplctReqPlantCostingSpec"/>
+					<xs:element name="Purchasing" minOccurs="0" type="tns:ProductMDMRplctReqPlantProcurementSpec"/>
+					<xs:element name="QualityManagement" minOccurs="0" type="tns:ProductMDMRplctReqPlantQMSpec"/>
+					<xs:element name="MRPArea" minOccurs="0" maxOccurs="unbounded" type="tns:ProductMDMRplctReqPlantMRPAreaSpec"/>
+					<xs:element name="Sales" minOccurs="0" type="tns:ProductMDMRplctReqPlantSalesSpec"/>
+					<xs:element name="Forecasting" minOccurs="0" type="tns:ProductMDMRplctReqPlantForecastSpec"/>
+					<xs:element name="InternationalTrade" minOccurs="0" type="tns:ProductMDMRplctReqPlantIntlTrade"/>
+					<xs:element name="Storage" minOccurs="0" type="tns:ProductMDMRplctReqPlantStorageSpec"/>
+					<xs:element name="StorageLocation" minOccurs="0" maxOccurs="unbounded" type="tns:ProductMDMRplctReqPlantStorageLocationSpec"/>
+					<xs:element name="PlantSCMAdvancedPlanning" minOccurs="0" type="tns:ProductMDMPlantSCMAdvPlan"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" use="required" type="tns:ActionCode"/>
+				<xs:attribute name="storageLocationListCompleteTransmissionIndicator" type="tns:OPTIONAL_MDMIndicator"/>
+				<xs:attribute name="mrpAreaListCompleteTransmissionIndicator" type="tns:OPTIONAL_MDMIndicator"/>
+			</xs:complexType>
+			<xs:complexType name="ProductMDMPlantSCMAdvPlan">
+				<xs:sequence>
+					<xs:element name="ProductPriority" minOccurs="0" type="tns:Small_Int1"/>
+					<xs:element name="PeggingStrategy" minOccurs="0" type="tns:Numc2"/>
+					<xs:element name="LotSizeUnit" minOccurs="0" type="tns:MeasureUnitCode"/>
+					<xs:element name="BOMTypeExplosionUsed" minOccurs="0" type="tns:Char1"/>
+					<xs:element name="PlngCalendarPerdcLotSizing" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_SHORT_Text"/>
+					<xs:element name="RequirementStrategy" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_SHORT_Text"/>
+					<xs:element name="SftyStkVioltnPnltyCostValue" minOccurs="0" type="tns:Value"/>
+					<xs:element name="IsLocDependentShelfLifeUsed" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="LocProdStorageCostValue" minOccurs="0" type="tns:Value"/>
+					<xs:element name="PPPlanningProcedure" minOccurs="0" type="tns:Char1"/>
+					<xs:element name="ProductPlanningGroup" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_SHORT_Text"/>
+					<xs:element name="ResourceNetworkName" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_MEDIUM_Text"/>
+					<xs:element name="ConversionRule" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_MEDIUM_Text"/>
+					<xs:element name="IsAlertsInPeggingAvoided" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductPlanningPackage" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_MEDIUM_Text"/>
+					<xs:element name="MinPassingAmtContinuousPegging" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="InteractiveSourcingProfile" minOccurs="0" type="tns:InteractiveSourcingProfile"/>
+					<xs:element name="ProdnPlngHeuristic" minOccurs="0" type="tns:HeuristicIdentifier"/>
+					<xs:element name="ProductAlertRelevanceCode" minOccurs="0" type="tns:AlertRelevance"/>
+					<xs:element name="IsTotalQtyReceiptElement" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="IsTotalQtyStockElement" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="IsFixedPeggingForProdRetained" minOccurs="0" type="tns:FixedPegging"/>
+					<xs:element name="GIHandlingCapacity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="GRHandlingCapacity" minOccurs="0" type="tns:Quantity"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:simpleType name="Small_Int1">
+				<xs:restriction base="xs:int">
+					<xs:maxInclusive value="3"/>
+					<xs:minInclusive value="0"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="Numc2">
+				<xs:restriction base="xs:int">
+					<xs:maxInclusive value="2"/>
+					<xs:minInclusive value="0"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="Char1">
+				<xs:restriction base="xs:string">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="InteractiveSourcingProfile">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="10"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="HeuristicIdentifier">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="12"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="AlertRelevance">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="FixedPegging">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="ProductFreightGroupCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="8"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="NUMC_3">
+				<xs:restriction base="xs:int">
+					<xs:maxInclusive value="999"/>
+					<xs:minInclusive value="0"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductDistributionProfileCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="SubscriptionData">
+				<xs:sequence>
+					<xs:element name="BillingCycle" minOccurs="0" type="tns:ProductLogisticsHandlingGroupCode"/>
+					<xs:element name="BillingCycleDeterminationRuleId" minOccurs="0" type="tns:ProductLogisticsHandlingGroupCode"/>
+					<xs:element name="ContractAutoRenewalIndicator" minOccurs="0" type="tns:MRPDependentRequirementCode"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="SubscriptionProductSalesData">
+				<xs:sequence>
+					<xs:element name="DefaultContractTerm" minOccurs="0" type="tns:NUMC_3"/>
+					<xs:element name="AltContractTerm1" minOccurs="0" type="tns:NUMC_3"/>
+					<xs:element name="AltContractTerm2" minOccurs="0" type="tns:NUMC_3"/>
+					<xs:element name="ContractTermUnit" minOccurs="0" type="tns:MRPDependentRequirementCode"/>
+					<xs:element name="DefaultExtensionPeriod" minOccurs="0" type="tns:NUMC_3"/>
+					<xs:element name="AltExtensionPeriod1" minOccurs="0" type="tns:NUMC_3"/>
+					<xs:element name="AltExtensionPeriod2" minOccurs="0" type="tns:NUMC_3"/>
+					<xs:element name="ExtensionPeriodUnit" minOccurs="0" type="tns:MRPDependentRequirementCode"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="ProductMDMRplctReqPlantCostingSpec">
+				<xs:sequence>
+					<xs:element name="CoProductIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductBillOfMaterialUsageCategoryCode" minOccurs="0" type="tns:ProductBillOfMaterialUsageCategoryCode"/>
+					<xs:element name="AlternativeBillOfMaterial" minOccurs="0" type="tns:AlternativeBillOfMaterial"/>
+					<xs:element name="VarianceKeyCode" minOccurs="0" type="tns:VarianceKeyCode"/>
+					<xs:element name="CostingProductionVersionCode" minOccurs="0" type="tns:CostingProductionVersionCode"/>
+					<xs:element name="FixedPriceCoProductIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="CostingLotSizeQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="ProductIsNotCostingRelevantIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="TaskListGroupCode" minOccurs="0" type="tns:TaskListGroupCode"/>
+					<xs:element name="TaskListTypeCode" minOccurs="0" type="tns:TaskListTypeCode"/>
+					<xs:element name="CostingSpecialProcurementTypeCode" minOccurs="0" type="tns:CostingSpecialProcurementTypeCode"/>
+					<xs:element name="TaskListGroupCounter" minOccurs="0" type="tns:LANGUAGEINDEPENDENT_SHORT_Text"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:simpleType name="CostingSpecialProcurementTypeCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="TaskListTypeCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="TaskListGroupCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="8"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="CostingProductionVersionCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="VarianceKeyCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="6"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="AlternativeBillOfMaterial">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductBillOfMaterialUsageCategoryCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="ProductMDMRplctReqPlantStorageLocationSpec">
+				<xs:sequence>
+					<xs:element name="StorageLocationID" minOccurs="0" type="tns:StorageLocationInternalID"/>
+					<xs:element name="StorageBinID" minOccurs="0" type="tns:StorageBinID"/>
+					<xs:element name="DeletedIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="LeanWarehouseManagementPickingAreaCode" minOccurs="0" type="tns:LeanWarehouseManagementPickingAreaCode"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="tns:ActionCode"/>
+			</xs:complexType>
+			<xs:simpleType name="StorageBinID">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="10"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="LeanWarehouseManagementPickingAreaCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ProductMDMRplctReqPlantStorageSpec">
+				<xs:sequence>
+					<xs:element name="PhysicalInventoryCycleCountingProfileCode" minOccurs="0" type="tns:PhysicalInventoryCycleCountingProfileCode"/>
+					<xs:element name="WarehouseManagementPutawayAndStockRemovalStrategyCode" minOccurs="0" type="tns:WarehouseManagementPutawayAndStockRemovalStrategyCode"/>
+					<xs:element name="ProvisioningServiceLevelCode" minOccurs="0" type="tns:ProvisioningServiceLevelCode"/>
+					<xs:element name="ProductMaximumStoragePeriodUnitCode" minOccurs="0" type="tns:MeasureUnitCode"/>
+					<xs:element name="CycleCountingCategoryIsFixedIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:simpleType name="ProvisioningServiceLevelCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="WarehouseManagementPutawayAndStockRemovalStrategyCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="PhysicalInventoryCycleCountingProfileCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:PhysicalInventoryCycleCountingProfileCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="PhysicalInventoryCycleCountingProfileCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ProductMDMRplctReqPlantMRPAreaSpec">
+				<xs:sequence>
+					<xs:element name="MRPAreaID" type="tns:MRPAreaID"/>
+					<xs:element name="ProductRequirementsPlanningTypeCode" minOccurs="0" type="tns:ProductRequirementsPlanningTypeCode"/>
+					<xs:element name="ProductRequirementsPlanningResponsibleCode" minOccurs="0" type="tns:ProductRequirementsPlanningResponsibleCode"/>
+					<xs:element name="LotSizeProcedureCode" minOccurs="0" type="tns:LotSizeProcedureCode"/>
+					<xs:element name="FixedLotSizeQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="MaximumLotSizeQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="MinimumLotSizeQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="LotSizeRoundingQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="SafetyStockQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="MaximumStockQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="ReorderThresholdQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="ProcurementSubTypeCode" minOccurs="0" type="tns:ProcurementSubTypeCode"/>
+					<xs:element name="AssemblyProductScrapPercent" minOccurs="0" type="tns:Percent"/>
+					<xs:element name="ProcurementInventoryManagedLocationInternalID" minOccurs="0" type="tns:StorageLocationInternalID"/>
+					<xs:element name="ProductRequirementsPlanningGroupCode" minOccurs="0" type="tns:ProductRequirementsPlanningGroupCode"/>
+					<xs:element name="ProductRequirementsPlanningStorageCostDeterminationProfileCode" minOccurs="0" type="tns:ProductRequirementsPlanningStorageCostDeterminationProfileCode"/>
+					<xs:element name="PlanningCalendarCode" minOccurs="0" type="tns:PlanningCalendarCode"/>
+					<xs:element name="DynamicSafetyStockCalculationProfileCode" minOccurs="0" type="tns:DynamicSafetyStockCalculationProfileCode"/>
+					<xs:element name="SafetyDaysOfSupplyRelevanceCode" minOccurs="0" type="tns:SafetyDaysOfSupplyRelevanceCode"/>
+					<xs:element name="SafetyDaysOfSupplyDurationProfileCode" minOccurs="0" type="tns:SafetyDaysOfSupplyDurationProfileCode"/>
+					<xs:element name="MRPDependentRequirementCode" minOccurs="0" type="tns:MRPDependentRequirementCode"/>
+					<xs:element name="LotSizeOrderAmountValue" minOccurs="0" type="tns:Amount"/>
+					<xs:element name="ServiceLevelPercent" minOccurs="0" type="tns:Percent"/>
+					<xs:element name="DeletedIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="PlannedDeliveryDurationIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="PlanAndOrderDayDeterminationCode" minOccurs="0" type="tns:PlanAndOrderDayDeterminationCode"/>
+					<xs:element name="RoudingProfileCode" minOccurs="0" type="tns:RoudingProfileCode"/>
+					<xs:element name="ProductionInventoryManagedLocationInternalID" minOccurs="0" type="tns:StorageLocationInternalID"/>
+					<xs:element name="MRPAreaSCMAdvancedPlanning" minOccurs="0" type="tns:ProductMDMMAreaSCMAdvPlan"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" use="required" type="tns:ActionCode"/>
+			</xs:complexType>
+			<xs:simpleType name="MRPAreaID">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="10"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="LotSizeProcedureCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductRequirementsPlanningGroupCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductRequirementsPlanningStorageCostDeterminationProfileCode">
+				<xs:restriction base="xs:token">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="PlanningCalendarCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:PlanningCalendarCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencySchemeID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencySchemeAgencyID" type="tns:AgencyIdentificationCode"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="PlanningCalendarCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="10"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="AgencyIdentificationCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="3"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="DynamicSafetyStockCalculationProfileCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:DynamicSafetyStockCalculationProfileCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="DynamicSafetyStockCalculationProfileCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="3"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="SafetyDaysOfSupplyRelevanceCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:SafetyDaysOfSupplyRelevanceCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="SafetyDaysOfSupplyRelevanceCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="SafetyDaysOfSupplyDurationProfileCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:SafetyDaysOfSupplyDurationProfileCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="SafetyDaysOfSupplyDurationProfileCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="3"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="Amount">
+				<xs:simpleContent>
+					<xs:extension base="tns:Amount.Content">
+						<xs:attribute name="currencyCode" use="required" type="tns:CurrencyCode"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="Amount.Content">
+				<xs:restriction base="xs:decimal">
+					<xs:totalDigits value="28"/>
+					<xs:fractionDigits value="6"/>
+					<xs:maxInclusive value="9999999999999999999999.999999"/>
+					<xs:minInclusive value="-9999999999999999999999.999999"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="CurrencyCode">
+				<xs:restriction base="xs:token">
+					<xs:length value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="PlanAndOrderDayDeterminationCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="RoudingProfileCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ProductMDMRplctReqPlantSalesSpec">
+				<xs:sequence>
+					<xs:element name="LoadingGroupCode" minOccurs="0" type="tns:LoadingGroupCode"/>
+					<xs:element name="ReplacementPartTypeCode" minOccurs="0" type="tns:ReplacementPartTypeCode"/>
+					<xs:element name="WorkCentersShippingSetupDuration" minOccurs="0" type="tns:WorkCentersShippingSetupDuration"/>
+					<xs:element name="ProductShippingProcessingDuration" minOccurs="0" type="tns:ProductShippingProcessingDuration"/>
+					<xs:element name="CapacityPlanningQuantity" minOccurs="0" type="tns:Quantity"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:simpleType name="ReplacementPartTypeCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="LoadingGroupCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:LoadingGroupCode.Content">
+						<xs:attribute name="listID" type="xs:token"/>
+						<xs:attribute name="listVersionID" type="xs:token"/>
+						<xs:attribute name="listAgencyID" type="xs:token"/>
+						<xs:attribute name="listAgencySchemeID" type="xs:token"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="LoadingGroupCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="WorkCentersShippingSetupDuration">
+				<xs:restriction base="xs:decimal">
+					<xs:totalDigits value="5"/>
+					<xs:fractionDigits value="2"/>
+					<xs:maxInclusive value="5"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductShippingProcessingDuration">
+				<xs:restriction base="xs:decimal">
+					<xs:totalDigits value="5"/>
+					<xs:fractionDigits value="2"/>
+					<xs:maxInclusive value="5"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ProductMDMRplctReqPlantIntlTrade">
+				<xs:sequence>
+					<xs:element name="ProductOriginCountryCode" minOccurs="0" type="tns:CountryCode"/>
+					<xs:element name="ProductOriginRegionCode" minOccurs="0" type="tns:RegionCode"/>
+					<xs:element name="ConsumptionTaxControlCode" minOccurs="0" type="tns:TaxControlCode"/>
+					<xs:element name="ExportAndImportProductGroupCode" minOccurs="0" type="tns:ExportAndImportProductGroupCode"/>
+					<xs:element name="ProductInternationalTradeClassificationNumber" minOccurs="0" type="tns:ProductInternationalTradeClassificationNumber"/>
+					<xs:element name="ProductCASNumber" minOccurs="0" type="tns:ProductCASNumber"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:simpleType name="ProductCASNumber">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="15"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductInternationalTradeClassificationNumber">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="9"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ExportAndImportProductGroupCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="TaxControlCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="16"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="RegionCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:RegionCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencySchemeID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencySchemeAgencyID" type="tns:AgencyIdentificationCode"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="RegionCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="6"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="CountryCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="3"/>
+					<xs:minLength value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ProductMDMRplctReqPlantForecastSpec">
+				<xs:sequence>
+					<xs:element name="ConsumptionReferenceUsageEndDate" minOccurs="0" type="xs:date"/>
+					<xs:element name="ConsumptionReferenceProductQuantityMultiplier" minOccurs="0" type="tns:ReferenceProductMultiplier"/>
+					<xs:element name="ConsumptionReferenceProductID" minOccurs="0" type="tns:NOSC_ProductID"/>
+					<xs:element name="ConsumptionReferencePlantID" minOccurs="0" type="tns:NOSC_PlantID"/>
+					<xs:element name="FiscalYearVariantCode" minOccurs="0" type="tns:FiscalYearVariantCode_V1"/>
+					<xs:element name="ProductConsumptionPeriodTypeCode" minOccurs="0" type="tns:PeriodTypeCode"/>
+					<xs:element name="ForecastModelResetIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="CorrectionFactorRequiredIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:simpleType name="PeriodTypeCode">
+				<xs:restriction base="xs:token">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="FiscalYearVariantCode_V1">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ReferenceProductMultiplier">
+				<xs:restriction base="xs:decimal">
+					<xs:totalDigits value="4"/>
+					<xs:fractionDigits value="2"/>
+					<xs:maxInclusive value="4"/>
+					<xs:minInclusive value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ProductMDMRplctReqWorkSchedulingSpec">
+				<xs:sequence>
+					<xs:element name="ProductBaseQuantity" minOccurs="0" type="tns:ProductBaseQuantity"/>
+					<xs:element name="OverDeliveryToleranceLimit" minOccurs="0" type="tns:Percent"/>
+					<xs:element name="UnderDeliveryToleranceLimit" minOccurs="0" type="tns:Percent"/>
+					<xs:element name="UnlimitedOverDeliveryIsAllowedIndicator" minOccurs="0" type="tns:Indicator"/>
+					<xs:element name="ProductProcessingDuration" minOccurs="0" type="tns:ProductProcessingDuration"/>
+					<xs:element name="ProductionSupervisorCode" minOccurs="0" type="tns:ProductionSupervisorCode"/>
+					<xs:element name="ProductProductionQuantityUnitCode" minOccurs="0" type="tns:MeasureUnitCode"/>
+					<xs:element name="ProductionOrderBatchEntryDeterminationCode" minOccurs="0" type="tns:ProductionOrderBatchEntryDeterminationCode"/>
+					<xs:element name="OrderChangeManagementProfileCode" minOccurs="0" type="tns:OrderChangeManagementProfileCode"/>
+					<xs:element name="ProductionInventoryManagedLocationInternalID" minOccurs="0" type="tns:StorageLocationInternalID"/>
+					<xs:element name="ProductionSchedulingProfileCode" minOccurs="0" type="tns:ProductionSchedulingProfileCode"/>
+					<xs:element name="ProductWithdrawnFromProductionBinIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="BackflushIndicatorCode" minOccurs="0" type="tns:BackflushIndicatorCode"/>
+					<xs:element name="SetupAndTeardownTimeDuration" minOccurs="0" type="tns:SetupAndTeardownTimeDuration"/>
+					<xs:element name="TransitionMatrixProductsGroupID" minOccurs="0" type="tns:TransitionMatrixProductsGroupID"/>
+					<xs:element name="TransitionDuration" minOccurs="0" type="tns:TransitionDuration"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:simpleType name="TransitionDuration">
+				<xs:restriction base="xs:decimal">
+					<xs:totalDigits value="5"/>
+					<xs:fractionDigits value="2"/>
+					<xs:maxInclusive value="5"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="TransitionMatrixProductsGroupID">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="SetupAndTeardownTimeDuration">
+				<xs:restriction base="xs:decimal">
+					<xs:totalDigits value="5"/>
+					<xs:fractionDigits value="2"/>
+					<xs:maxInclusive value="5"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductionSchedulingProfileCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="6"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="OrderChangeManagementProfileCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="6"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="Indicator">
+				<xs:restriction base="xs:boolean"/>
+			</xs:simpleType>
+			<xs:simpleType name="BackflushIndicatorCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="StorageLocationInternalID">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductionOrderBatchEntryDeterminationCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="ProductBaseQuantity">
+				<xs:simpleContent>
+					<xs:extension base="tns:ProductBaseQuantity.Content">
+						<xs:attribute name="unitCode" type="tns:MeasureUnitCode"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="ProductBaseQuantity.Content">
+				<xs:restriction base="xs:decimal">
+					<xs:totalDigits value="13"/>
+					<xs:fractionDigits value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="SerialIdentifierAssignmentProfileCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:SerialIdentifierAssignmentProfileCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="SerialIdentifierAssignmentProfileCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductCFOPCategoryCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductLogisticsHandlingGroupCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductProcessingDuration">
+				<xs:restriction base="xs:decimal">
+					<xs:totalDigits value="5"/>
+					<xs:fractionDigits value="2"/>
+					<xs:maxInclusive value="5"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProcurementTypeCode">
+				<xs:restriction base="xs:token">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductionSupervisorCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ProductMDMRplctReqPlantProcurementSpec">
+				<xs:sequence>
+					<xs:element name="AutomaticPurchaseOrderAllowedIndicator" minOccurs="0" type="tns:AutomaticPurchaseOrderAllowedIndicator"/>
+					<xs:element name="SourceListRequirementIndicator" minOccurs="0" type="tns:SourceListRequirementIndicator"/>
+					<xs:element name="PurchasingGroupID" minOccurs="0" type="tns:PurchasingGroupID"/>
+					<xs:element name="PurchasingAcrossPurchasingGroupIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="JITDeliverySchedulesRelevantIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:simpleType name="SourceListRequirementIndicator">
+				<xs:restriction base="xs:boolean"/>
+			</xs:simpleType>
+			<xs:simpleType name="AutomaticPurchaseOrderAllowedIndicator">
+				<xs:restriction base="xs:boolean"/>
+			</xs:simpleType>
+			<xs:simpleType name="PurchasingGroupID">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="20"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ProductMDMRplctReqPlantQMSpec">
+				<xs:sequence>
+					<xs:element name="InspectionStockIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="QualityManagementControlKeyCode" minOccurs="0" type="tns:QualityManagementControlKeyCode"/>
+					<xs:element name="ProductQualityAuthorizationGroupCode" minOccurs="0" type="tns:ProductQualityAuthorizationGroupCode"/>
+					<xs:element name="ProductQualityCertificateTypeCode" minOccurs="0" type="tns:ProductQualityCertificateTypeCode"/>
+					<xs:element name="InspectionLotDocumentationRequiredIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="SupplierQualityManagementSystemCode" minOccurs="0" type="tns:SupplierQualityManagementSystemCode"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:simpleType name="ProductQualityAuthorizationGroupCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="6"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="QualityManagementControlKeyCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="8"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductQualityCertificateTypeCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="SupplierQualityManagementSystemCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="ProductMDMRplctReqPlantSupplyPlanningSpec">
+				<xs:sequence>
+					<xs:element name="ProductRequirementsPlanningTypeCode" minOccurs="0" type="tns:ProductRequirementsPlanningTypeCode"/>
+					<xs:element name="ProductRequirementsPlanningResponsibleCode" minOccurs="0" type="tns:ProductRequirementsPlanningResponsibleCode"/>
+					<xs:element name="AvailabilityCheckGroupCode" minOccurs="0" type="tns:AvailabilityCheckGroupCode"/>
+					<xs:element name="MinimumSafetyStockQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="LotSizeProcedureCode" minOccurs="0" type="tns:LotSizeProcedureCode"/>
+					<xs:element name="FixedLotSizeQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="MaximumLotSizeQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="MinimumLotSizeQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="LotSizeRoundingQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="SafetyStockQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="AssemblyProductScrapPercent" minOccurs="0" type="tns:Percent"/>
+					<xs:element name="MRPDependentRequirementCode" minOccurs="0" type="tns:MRPDependentRequirementCode"/>
+					<xs:element name="ProcurementTypeCode" minOccurs="0" type="tns:ProcurementTypeCode"/>
+					<xs:element name="ComponentScrapPercent" minOccurs="0" type="tns:Percent"/>
+					<xs:element name="ProductRequirementsPlanningABCClassificationCode" minOccurs="0" type="tns:MaterialRequirementsPlanningABCClassificationCode"/>
+					<xs:element name="RepetitiveManufacturingAllowedIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="BulkProductComponentIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProcurementSubTypeCode" minOccurs="0" type="tns:ProcurementSubTypeCode"/>
+					<xs:element name="ProductRequirementsConsumptionModeTypeCode" minOccurs="0" type="tns:ProductRequirementsConsumptionModeTypeCode"/>
+					<xs:element name="MaximumStockQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="ReorderThresholdQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="ProductRequirementsPlanningStrategyGroupCode" minOccurs="0" type="tns:ProductRequirementsPlanningStrategyGroupCode"/>
+					<xs:element name="ProcurementInventoryManagedLocationInternalID" minOccurs="0" type="tns:StorageLocationInternalID"/>
+					<xs:element name="ProductRequirementsPlanningGroupCode" minOccurs="0" type="tns:ProductRequirementsPlanningGroupCode"/>
+					<xs:element name="ProductRequirementsPlanningStorageCostDeterminationProfileCode" minOccurs="0" type="tns:ProductRequirementsPlanningStorageCostDeterminationProfileCode"/>
+					<xs:element name="PlanningCalendarCode" minOccurs="0" type="tns:PlanningCalendarCode"/>
+					<xs:element name="DynamicSafetyStockCalculationProfileCode" minOccurs="0" type="tns:DynamicSafetyStockCalculationProfileCode"/>
+					<xs:element name="SafetyDaysOfSupplyRelevanceCode" minOccurs="0" type="tns:SafetyDaysOfSupplyRelevanceCode"/>
+					<xs:element name="LotSizeOrderAmountValue" minOccurs="0" type="tns:Amount"/>
+					<xs:element name="ServiceLevelPercent" minOccurs="0" type="tns:Percent"/>
+					<xs:element name="ProposedProductSupplyAreaCode" minOccurs="0" type="tns:ProposedProductSupplyAreaCode"/>
+					<xs:element name="ForecastRequirementsSplitCategoryCode" minOccurs="0" type="tns:ForecastRequirementsSplitCategoryCode"/>
+					<xs:element name="ConsignmentControlCode" minOccurs="0" type="tns:ConsignmentControlCode"/>
+					<xs:element name="MRPProfileCode" minOccurs="0" type="tns:MRPProfileCode"/>
+					<xs:element name="SchedulingMarginCode" minOccurs="0" type="tns:SchedulingMarginCode"/>
+					<xs:element name="ProductRequirementsConsolidationCode" minOccurs="0" type="tns:ProductRequirementsConsolidationCode"/>
+					<xs:element name="PlanAndOrderDayDeterminationCode" minOccurs="0" type="tns:PlanAndOrderDayDeterminationCode"/>
+					<xs:element name="MRPAvailabilityTypeCode" minOccurs="0" type="tns:MRPAvailabilityTypeCode"/>
+					<xs:element name="RoundingProfileCode" minOccurs="0" type="tns:RoundingProfileCode"/>
+					<xs:element name="DependentRequirementsTypeCode" minOccurs="0" type="tns:DependentRequirementsTypeCode"/>
+					<xs:element name="RepetitiveManufacturingProfileCode" minOccurs="0" type="tns:RepetitiveManufacturingProfileCode"/>
+					<xs:element name="FollowUpProductInternalID" minOccurs="0" type="tns:NOSC_ProductInternalID"/>
+					<xs:element name="EffectiveOutDate" minOccurs="0" type="xs:date"/>
+					 <xs:element name="CrossProjectProductIndicatorCode" minOccurs="0" type="tns:CrossProjectProductIndicatorCode"/>
+					<xs:element name="ProductDiscontinuationTypeCode" minOccurs="0" type="tns:ProductDiscontinuationTypeCode"/>
+					<xs:element name="SafetyDaysOfSupplyDurationProfileCode" minOccurs="0" type="tns:SafetyDaysOfSupplyDurationProfileCode"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:simpleType name="CrossProjectProductIndicatorCode">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:restriction base="xs:token">
+				<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductDiscontinuationTypeCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="RepetitiveManufacturingProfileCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="DependentRequirementsTypeCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="MRPAvailabilityTypeCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductRequirementsConsolidationCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="SchedulingMarginCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="MRPProfileCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ConsignmentControlCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ForecastRequirementsSplitCategoryCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProposedProductSupplyAreaCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="10"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductRequirementsPlanningStrategyGroupCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="AvailabilityCheckGroupCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductRequirementsConsumptionModeTypeCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="ProcurementSubTypeCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:ProcurementSubTypeCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="ProcurementSubTypeCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="MaterialRequirementsPlanningABCClassificationCode">
+				<xs:simpleContent>
+					<xs:extension base="tns:MaterialRequirementsPlanningABCClassificationCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="MaterialRequirementsPlanningABCClassificationCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="Percent">
+				<xs:restriction base="xs:decimal">
+					<xs:totalDigits value="16"/>
+					<xs:fractionDigits value="6"/>
+					<xs:maxInclusive value="9999999999.999999"/>
+					<xs:minInclusive value="-9999999999.999999"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="MRPDependentRequirementCode">
+				<xs:restriction base="xs:token">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductRequirementsPlanningTypeCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ProductRequirementsPlanningResponsibleCode">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="3"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ProductIndustrialSectorCode">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="listID" type="xs:string"/>
+						<xs:attribute name="listVersionID" type="xs:string"/>
+						<xs:attribute name="listAgencyID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:complexType name="RetailProductCategoryCode">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:simpleContent>
+					<xs:extension base="tns:RetailProductCategoryCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+			<xs:simpleType name="RetailProductCategoryCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="ProductMDMRplctReqPlntIndepProcmtSpec">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="ManufacturerID" type="xs:token"/>
+					<xs:element minOccurs="0" name="ProductManufacturerID" type="xs:token"/>
+					<xs:element name="OrderMeasureUnitCode" minOccurs="0" type="tns:MeasureUnitCode"/>
+					<xs:element name="PurchasingAcknowledgmentProfileCode" minOccurs="0" type="PurchasingAcknowledgmentProfileCode"/>
+					<xs:element name="VariablePurchaseOrderUnitOfMeasureActivationStatusCode" minOccurs="0" type="VariablePurchaseOrderUnitOfMeasureActivationStatusCode"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="xs:string" use="required"/>
+			</xs:complexType>
+
+			<xs:complexType name="ProductMDMTypeCode">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="listID" type="xs:string"/>
+						<xs:attribute name="listVersionID" type="xs:string"/>
+						<xs:attribute name="listAgencyID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:complexType name="AuthorisationGroupCode">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="listVersionID" type="xs:string"/>
+						<xs:attribute name="listAgencyID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:complexType name="ProductMDMReplicateRequestQuantityConversion">
+				<xs:sequence>
+					<xs:element name="Quantity" type="tns:Quantity"/>
+					<xs:element name="CorrespondingQuantity" type="tns:Quantity"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="xs:string" use="required"/>
+			</xs:complexType>
+
+			<xs:complexType name="Quantity">
+				<xs:simpleContent>
+					<xs:extension base="xs:decimal">
+						<xs:attribute name="unitCode" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:complexType name="ProductMDMReplicateRequestQuantityCharacteristic">
+				<xs:sequence>
+					<xs:element name="Quantity" type="tns:Quantity"/>
+					<xs:element name="CharacteristicQuantity" type="tns:Quantity"/>
+					<xs:element name="CharacteristicQuantityTypeCode" type="tns:QuantityTypeCode"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="xs:string" use="required"/>
+			</xs:complexType>
+
+			<xs:complexType name="QuantityTypeCode">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="listID" type="xs:string"/>
+						<xs:attribute name="listVersionID" type="xs:string"/>
+						<xs:attribute name="listAgencyID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:complexType name="ProductMDMReplicateRequestTextCollection">
+				<xs:sequence>
+					<xs:element name="TextExistsIndicator" type="xs:boolean"/>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="Text" type="tns:ProductMDMReplicateRequestTextCollectionText"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="xs:string" use="required"/>
+			</xs:complexType>
+
+			<xs:complexType name="ProductMDMReplicateRequestTextCollectionText">
+				<xs:sequence>
+					<xs:element name="ID" type="xs:token"/>
+					<xs:element name="TypeCode" type="tns:TextCollectionTextTypeCode"/>
+					<xs:element name="LanguageCode" type="xs:language"/>
+					<xs:element maxOccurs="unbounded" name="SAPScriptLine" type="tns:ProductMDMReplicateRequestTextCollectionTextSAPScriptLine"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="xs:string" use="required"/>
+			</xs:complexType>
+
+			<xs:complexType name="TextCollectionTextTypeCode">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="listID" type="xs:string"/>
+						<xs:attribute name="listVersionID" type="xs:string"/>
+						<xs:attribute name="listAgencyID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:complexType name="ProductMDMReplicateRequestTextCollectionTextSAPScriptLine">
+				<xs:sequence>
+					<xs:element name="OrdinalNumberValue" type="xs:decimal"/>
+					<xs:element name="SAPScriptLineFormatCode" type="tns:SAPScriptLineFormatCode"/>
+					<xs:element name="SAPScriptLineText" type="xs:string"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="xs:string" use="required"/>
+			</xs:complexType>
+
+			<xs:complexType name="ProductMDMRplctReqSlsSpec">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="MinimumOrderQuantity" type="tns:Quantity"/>
+					<xs:element name="SalesOrganizationID" type="xs:token"/>
+					<xs:element minOccurs="0" name="ReceiverSalesOrganizationID" type="xs:token"/>
+					<xs:element name="DistributionChannelCode" type="tns:DistributionChannelCode"/>
+					<xs:element minOccurs="0" name="CustomerTransactionDocumentItemProcessingTypeDeterminationProductGroupCode" type="xs:token"/>
+					<xs:element minOccurs="0" name="SalesMeasureUnitCode" type="xs:token"/>
+					<xs:element minOccurs="0" name="PriceSpecificationProductGroupCode" type="tns:PriceSpecificationProductGroupCode"/>
+					<xs:element minOccurs="0" name="DeliveryNoteProcessingMinimumDeliveryQuantity" type="tns:Quantity"/>
+					<xs:element minOccurs="0" name="ProductSalesProcessUsabilityProfileCode" type="tns:ProductSalesProcessUsabilityProfileCode"/>
+					<xs:element minOccurs="0" name="DeliveryQuantity" type="tns:Quantity"/>
+					<xs:element minOccurs="0" name="ProductSalesProcessUsabilityProfileValidityDate" type="xs:date"/>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="SalesSpecificationText" type="tns:ProductMDMRplctReqSlsSpecTxt"/>
+					<xs:element minOccurs="0" name="VolumeRebateGroupCode" type="tns:VolumeRebateGroupCode"/>
+					<xs:element name="AccountDeterminationProductGroupCode" minOccurs="0" type="tns:AccountDeterminationProductGroupCode"/>
+					<xs:element name="MinimumMakeToOrderOrderQuantity" minOccurs="0" type="tns:Quantity"/>
+					<xs:element name="ProductUnitGroupCode" minOccurs="0" type="tns:ProductUnitGroupCode"/>
+					<xs:element name="FirstSalesSpecificationProductGroupCode" minOccurs="0" type="tns:SalesSpecificationProductGroupCode"/>
+					<xs:element name="SecondSalesSpecificationProductGroupCode" minOccurs="0" type="tns:SalesSpecificationProductGroupCode"/>
+					<xs:element name="ThirdSalesSpecificationProductGroupCode" minOccurs="0" type="tns:SalesSpecificationProductGroupCode"/>
+					<xs:element name="FourthSalesSpecificationProductGroupCode" minOccurs="0" type="tns:SalesSpecificationProductGroupCode"/>
+					<xs:element name="FifthSalesSpecificationProductGroupCode" minOccurs="0" type="tns:SalesSpecificationProductGroupCode"/>
+					<xs:element name="PricingReferenceProductID" minOccurs="0" type="tns:NOSC_ProductInternalID"/>
+					<xs:element name="ProductHasAttributeID01Indicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductHasAttributeID02Indicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductHasAttributeID03Indicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductHasAttributeID04Indicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductHasAttributeID05Indicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductHasAttributeID06Indicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductHasAttributeID07Indicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductHasAttributeID08Indicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductHasAttributeID09Indicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductHasAttributeID10Indicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductCommissionGroupCode" minOccurs="0" type="tns:ProductCommissionGroupCode"/>
+					<xs:element name="RoundingProfileCode" minOccurs="0" type="tns:RoundingProfileCode"/>
+					<xs:element name="CashDiscountIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="VariableSalesUnitNotAllowedIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="ProductStatisticsGroupCode" minOccurs="0" type="tns:ProductStatisticsGroupCode"/>
+					<xs:element name="DeletedIndicator" minOccurs="0" type="tns:OPTIONAL_MDMIndicator"/>
+					<xs:element name="SubscriptionProductSalesData" minOccurs="0" type="tns:SubscriptionProductSalesData"/>
+
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="xs:string" use="required"/>
+			</xs:complexType>
+
+			<xs:complexType name="ProductSalesProcessUsabilityProfileCode">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="listID" type="xs:string"/>
+						<xs:attribute name="listVersionID" type="xs:string"/>
+						<xs:attribute name="listAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:complexType name="PriceSpecificationProductGroupCode">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="listID" type="xs:string"/>
+						<xs:attribute name="listVersionID" type="xs:string"/>
+						<xs:attribute name="listAgencyID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+
+			<xs:complexType name="ProductMDMRplctReqSlsSpecTxt">
+				<xs:sequence>
+					<xs:element name="TypeCode" type="tns:SalesSpecificationTextTypeCode"/>
+					<xs:element name="LanguageCode" type="xs:language"/>
+					<xs:element maxOccurs="unbounded" name="SalesSpecificationTextSAPScriptLine" type="tns:ProductMDMRplctReqSlsSpecTxtSAPScrptLine"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="xs:string" use="required"/>
+			</xs:complexType>
+
+			<xs:complexType name="SalesSpecificationTextTypeCode">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="listID" type="xs:string"/>
+						<xs:attribute name="listVersionID" type="xs:string"/>
+						<xs:attribute name="listAgencyID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeID" type="xs:string"/>
+						<xs:attribute name="listAgencySchemeAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:complexType name="ProductMDMRplctReqSlsSpcfcTxClass">
+				<xs:sequence>
+					<xs:element name="CountryCode" type="xs:token"/>
+					<xs:element name="TaxTypeCode" type="tns:TaxTypeCode_V1"/>
+					<xs:element name="TaxRateTypeCode" type="tns:TaxRateTypeCode_V1"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="xs:string" use="required"/>
+			</xs:complexType>
+
+			<xs:complexType name="TaxTypeCode_V1">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="listID" type="xs:string"/>
+						<xs:attribute name="listAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:complexType name="TaxRateTypeCode_V1">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="listID" type="xs:string"/>
+						<xs:attribute name="listAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+
+			<xs:complexType name="BusinessDocumentMessageHeader">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="ID" type="tns:BusinessDocumentMessageID"/>
+					<xs:element minOccurs="0" name="UUID" type="tns:UUID"/>
+					<xs:element minOccurs="0" name="ReferenceID" type="tns:BusinessDocumentMessageID"/>
+					<xs:element minOccurs="0" name="ReferenceUUID" type="tns:UUID"/>
+					<xs:element name="CreationDateTime" type="xs:dateTime"/>
+					<xs:element minOccurs="0" name="ReconciliationIndicator" type="xs:boolean"/>
+					<xs:element minOccurs="0" name="SenderBusinessSystemID" type="xs:token"/>
+					<xs:element minOccurs="0" name="RecipientBusinessSystemID" type="xs:token"/>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="BusinessDocumentMessageID">
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name="schemeID" type="xs:string"/>
+						<xs:attribute name="schemeAgencyID" type="xs:string"/>
+						<xs:attribute name="schemeAgencySchemeAgencyID" type="xs:string"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="VolumeRebateGroupCode">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="AccountDeterminationProductGroupCode">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:simpleContent>
+					<xs:extension base="tns:AccountDeterminationProductGroupCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="ProductUnitGroupCode">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="SalesSpecificationProductGroupCode">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:simpleContent>
+					<xs:extension base="xs:token">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="NOSC_ProductInternalID">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="60"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="ProductCommissionGroupCode">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="RoundingProfileCode">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:simpleContent>
+					<xs:extension base="tns:RoundingProfileCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:complexType name="DivisionCode">
+				<xs:simpleContent>
+					<xs:extension base="DivisionCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencySchemeID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencySchemeAgencyID" type="AgencyIdentificationCode"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="DivisionCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="SerialNumberExplicitnessLevelCode">
+				<xs:simpleContent>
+					<xs:extension base="SerialNumberExplicitnessLevelCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="SerialNumberExplicitnessLevelCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ProductDiscountInKindCode">
+				<xs:simpleContent>
+					<xs:extension base="ProductDiscountInKindCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="ProductDiscountInKindCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="BasicProductCode">
+				<xs:simpleContent>
+					<xs:extension base="BasicProductCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="BasicProductCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="48"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="Date">
+				<xs:restriction base="xs:date">
+					<xs:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="LANGUAGEINDEPENDENT_MEDIUM_Text">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="40"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="LANGUAGEINDEPENDENT_MEDIUM_Name">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="40"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="LANGUAGEINDEPENDENT_SHORT_Name">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="10"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="LANGUAGEINDEPENDENT_SHORT_Description">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="40"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ProductMDMRplctReqStorageSpec">
+				<xs:sequence>
+					<xs:element name="ProductStorageRequirementsCode" minOccurs="0" type="MaterialStorageRequirementsCode"/>
+					<xs:element name="ProductStorageTemperatureRangeCode" minOccurs="0" type="MaterialStorageTemperatureRangeCode"/>
+					<xs:element name="HazardousMaterialID" minOccurs="0" type="HazardousMaterialID"/>
+					<xs:element name="ProductLabelTypeCode" minOccurs="0" type="MaterialLabelTypeCode"/>
+					<xs:element name="ProductLabelFormCode" minOccurs="0" type="ProductLabelFormCode"/>
+					<xs:element name="NumberOfGoodsReceiptIssueSlipsToPrintValue" minOccurs="0" type="NumberOfGoodsReceiptIssueSlipsToPrintValue"/>
+					<xs:element name="ExpirationDateCode" minOccurs="0" type="ExpirationDateCode"/>
+					<xs:element name="ShelfLifeExpirationDatePeriod" minOccurs="0" type="tns:ShelfLifeExpirationDatePeriod"/>
+                    <xs:element name="StorageBinInstructionCode" minOccurs="0" type="tns:StorageBinInstructionCode"/>
+                    <xs:element name="ShelfLifeExpirationDateRoundingRuleCode" minOccurs="0" type="tns:ShelfLifeExpirationDateRoundingRuleCode"/>
+                    <xs:element name="TotalShelfLifeStoragePercent" minOccurs="0" type="tns:Value"/>
+                    <xs:element name="TotalShelfLife" minOccurs="0" type="tns:Value"/>
+				</xs:sequence>
+				<xs:attribute name="actionCode" type="ActionCode"/>
+			</xs:complexType>
+
+			<xs:complexType name="MaterialStorageRequirementsCode">
+				<xs:simpleContent>
+					<xs:extension base="MaterialStorageRequirementsCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="MaterialStorageRequirementsCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="MaterialStorageTemperatureRangeCode">
+				<xs:simpleContent>
+					<xs:extension base="MaterialStorageTemperatureRangeCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="MaterialStorageTemperatureRangeCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="HazardousMaterialID">
+				<xs:simpleContent>
+					<xs:extension base="HazardousMaterialID.Content">
+						<xs:attribute name="schemeID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="schemeVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="schemeAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="HazardousMaterialID.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="12"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="MaterialLabelTypeCode">
+				<xs:simpleContent>
+					<xs:extension base="MaterialLabelTypeCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="MaterialLabelTypeCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ProductLabelFormCode">
+				<xs:simpleContent>
+					<xs:extension base="ProductLabelFormCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="ProductLabelFormCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="NumberOfGoodsReceiptIssueSlipsToPrintValue">
+				<xs:simpleContent>
+					<xs:extension base="NumberOfGoodsReceiptIssueSlipsToPrintValue.Content">
+						<xs:attribute name="unitCode" type="MeasureUnitCode"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="NumberOfGoodsReceiptIssueSlipsToPrintValue.Content">
+				<xs:restriction base="xs:decimal">
+					<xs:totalDigits value="13"/>
+					<xs:fractionDigits value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ExpirationDateCode">
+				<xs:simpleContent>
+					<xs:extension base="ExpirationDateCode.Content">
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencySchemeID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencySchemeAgencyID" type="AgencyIdentificationCode"/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="ExpirationDateCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="PurchasingAcknowledgmentProfileCode">
+				<xs:simpleContent>
+					<xs:extension base="PurchasingAcknowledgmentProfileCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="PurchasingAcknowledgmentProfileCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="VariablePurchaseOrderUnitOfMeasureActivationStatusCode">
+				<xs:simpleContent>
+					<xs:extension base="VariablePurchaseOrderUnitOfMeasureActivationStatusCode.Content">
+						<xs:attribute name="listID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listVersionID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="15"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="listAgencyID">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="60"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:simpleType name="VariablePurchaseOrderUnitOfMeasureActivationStatusCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:length value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="ProductStatisticsGroupCode">
+				<xs:annotation>
+				</xs:annotation>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="RoundingProfileCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="4"/>
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="Quantity.Content">
+				<xs:restriction base="xs:decimal">
+					<xs:totalDigits value="31"/>
+					<xs:fractionDigits value="14"/>
+					<xs:maxInclusive value="99999999999999999.99999999999999"/>
+					<xs:minInclusive value="-99999999999999999.99999999999999"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="AccountDeterminationProductGroupCode.Content">
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="ExchangeFaultData">
+				<xs:sequence>
+					<xs:element name="faultText" type="xs:string"/>
+					<xs:element minOccurs="0" name="faultUrl" type="xs:string"/>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="faultDetail" nillable="true" type="tns:ExchangeLogData"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="ExchangeLogData">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="severity" type="xs:string"/>
+					<xs:element name="text" type="xs:string"/>
+					<xs:element minOccurs="0" name="url" type="xs:string"/>
+					<xs:element minOccurs="0" name="id" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="ProductMDMBulkReplicateRequestMessage">
+				<xs:sequence>
+					<xs:element name="MessageHeader" type="tns:BusinessDocumentMessageHeader"/>
+					<xs:element maxOccurs="unbounded" name="ProductMDMReplicateRequestMessage" type="tns:ProductMDMReplicateRequestMessage"/>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="ProductMDMReplicateRequestMessage">
+				<xs:sequence>
+					<xs:element name="MessageHeader" type="tns:BusinessDocumentMessageHeader"/>
+					<xs:element name="Product" type="tns:ProductMDMReplicateRequestProduct"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:schema>
+		<xs:schema xmlns="http://sap.com/xi/SAPGlobal20/Global" xmlns:ns1="http://sap.com/xi/SAPGlobal20/Global" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://sap.com/xi/APPL/Global2" targetNamespace="http://sap.com/xi/SAPGlobal20/Global">
+			<xs:import namespace="http://sap.com/xi/APPL/Global2"/>
+			<xs:element name="ProductMDMBulkReplicateRequestMessage" type="tns:ProductMDMBulkReplicateRequestMessage"/>
+		</xs:schema>
+		<xs:schema xmlns="http://sap.com/xi/SAPGlobal/Global" xmlns:ns1="http://sap.com/xi/APPL/Global2" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://sap.com/xi/SAPGlobal/Global">
+			<xs:import namespace="http://sap.com/xi/APPL/Global2"/>
+			<xs:element name="StandardMessageFault">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="standard" type="ns1:ExchangeFaultData"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="ProductMDMBulkReplicateRequestMessage">
+		<wsdl:part name="ProductMDMBulkReplicateRequestMessage" element="n1:ProductMDMBulkReplicateRequestMessage"/>
+	</wsdl:message>
+	<wsdl:message name="StandardMessageFault">
+		<wsdl:part name="StandardMessageFault" element="tns:StandardMessageFault"/>
+	</wsdl:message>
+	<wsdl:portType name="ProductMDMBulkReplicateRequest_In">
+		<wsdl:operation name="ProductMDMBulkReplicateRequest_In">
+			<wsdl:input message="tns:ProductMDMBulkReplicateRequestMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="ProductMDMBulkReplicateRequest_InSoap11" type="tns:ProductMDMBulkReplicateRequest_In">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="ProductMDMBulkReplicateRequest_In">
+			<soap:operation soapAction="http://sap.com/xi/APPL/Global2/ProductMDMBulkReplicateRequest_In/ProductMDMBulkReplicateRequest_InRequest" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="ProductMDMBulkReplicateRequest_InService">
+		<wsdl:port binding="tns:ProductMDMBulkReplicateRequest_InSoap11" name="ProductMDMBulkReplicateRequest_InSoap11">
+			<soap:address location="/product/v0/soap"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+The notices below are provided with respect to licensed content incorporated herein:
+Copyright HR-XML Consortium. All Rights Reserved. http://www.hrxmlconsortium.org and http://www.hr-xml.org. Terms of license can be found in license.txt.
+Copyright (c) 1997-2013 Open Applications Group, Inc. All Rights Reserved.  http://www.openapplications.org
+-->
+<xsd:schema xmlns="http://www.hr-xml.org/3" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ccts="urn:un:unece:uncefact:documentation:1.1" targetNamespace="http://www.hr-xml.org/3" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xsd:annotation>
+		<xsd:documentation> 
+       Name: AssessmentReport.xsd 
+       Status:  3.3 Release
+       Date this version: 2013-Sep-27 
+       </xsd:documentation>
+	</xsd:annotation>
+	<xsd:element name="AssessmentReport">
+	<xsd:complexType>
+		<xsd:annotation>
+			<xsd:documentation source="http://www.hr-xml.org" xml:lang="en">
+				<ccts:DictionaryEntryName>Assessment Report. Details</ccts:DictionaryEntryName>
+				<ccts:DefinitionText>A document carrying information about an assessment result.  Provides scores and other details to fulfill or respond to an assessment order. AssessmentStatusDetails is part of the data model so that tests, whether completed or pending, can be reported upon. </ccts:DefinitionText>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="OrderID" type = "xsd:string" minOccurs="0"/>
+			<xsd:element name="AssessmentStatus" minOccurs="0" maxOccurs="unbounded">
+			<xsd:complexType>
+		<xsd:sequence>
+			<xsd:element name="Status" type = "xsd:string"/>
+			<xsd:element name="Details" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A textual description that provides additional
+						details
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="StatusDate" type="xsd:date">
+				<xsd:annotation>
+					<xsd:documentation>The date the status last changed
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		</xsd:complexType>
+		</xsd:element>
+			<xsd:element name="AssessmentResult" minOccurs="0" maxOccurs="unbounded">
+			  <xsd:annotation>
+          <xsd:documentation>
+            Root element for AssessmentResults, which is
+            designed to hold data necessary to convey information on assessment
+            results
+          </xsd:documentation>
+        </xsd:annotation>
+      <xsd:complexType>
+        <xsd:sequence>
+          <xsd:element name="ScoreId" type="xsd:string" minOccurs="0"/>
+          <xsd:element name="Passed" type="xsd:boolean" minOccurs="0">
+            <xsd:annotation>
+              <xsd:documentation>
+                A boolean expression that denotes whether the
+                subject passed or failed the assessment.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="Description" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+              <xsd:documentation>"Label" of the score</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="Score" type ="xsd:float" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+              <xsd:documentation>
+                The raw value (numeric) of the score
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="Scale" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+              <xsd:documentation>
+                A textual label to indicate the range of
+                possible values for this score. For example, 0-100 for a
+                percentage scale.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="Band" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+              <xsd:documentation>
+                Provides for categorizing or grouping of
+                results.For example, "beginner", "intermediate" and "expert" would
+                be three different bands
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="Comments" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+              <xsd:documentation>
+                A textual description that provides the opinion
+                of the assessment vendor. It may be based on criteria that have
+                been defined between the client and the vendor
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      </xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

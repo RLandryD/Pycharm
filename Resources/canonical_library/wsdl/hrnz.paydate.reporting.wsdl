@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.sap.com/hrnz.paydate.reporting/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="hrnz.paydate.reporting" targetNamespace="http://www.sap.com/hrnz.paydate.reporting/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.sap.com/hrnz.paydate.reporting/">
+      <xsd:element name="Employement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="input" type="xsd:base64Binary" minOccurs="1" maxOccurs="1"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="EmployementResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="output" type="xsd:base64Binary" minOccurs="1" maxOccurs="1"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="EmployementRequest">
+    <wsdl:part element="tns:Employement" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="EmployementResponse">
+    <wsdl:part element="tns:EmployementResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:portType name="hrnz.paydate.reporting">
+    <wsdl:operation name="Employement">
+      <wsdl:input message="tns:EmployementRequest"/>
+      <wsdl:output message="tns:EmployementResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="hrnz.paydate.reportingSOAP" type="tns:hrnz.paydate.reporting">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Employement">
+      <soap:operation soapAction="http://www.sap.com/hrnz.paydate.reporting/Employement"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="hrnz.paydate.reporting">
+    <wsdl:port binding="tns:hrnz.paydate.reportingSOAP" name="hrnz.paydate.reportingSOAP">
+      <soap:address location="http://www.sap.com/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

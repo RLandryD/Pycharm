@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s0="urn:TMI" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://sap.com/bcm/TMI" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://sap.com/bcm/TMI" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="urn:TMI">
+      <s:element name="CreateTask">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="s0:TaskData" />
+            <s:element minOccurs="0" maxOccurs="1" name="skills" type="s0:ArrayOfSkill" />
+            <s:element minOccurs="0" maxOccurs="1" name="requiredAgents" type="s0:RequiredAgents" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="TaskData">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="item" type="s0:TaskItem" />
+          <s:element minOccurs="0" maxOccurs="1" name="caseId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="cid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="created" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="creator" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="priority" nillable="true" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="warningTime" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="criticalTime" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="fromAddress" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="toAddress" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="toAddressAnswer" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ccAddressAnswer" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="bccAddressAnswer" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="firstModifier" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="firstModified" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="lastModifier" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="lastModified" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="solutionDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="customer" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="index" nillable="true" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="values" type="s0:ArrayOfKV" />
+          <s:element minOccurs="0" maxOccurs="1" name="attachments" type="s0:ArrayOfAttachment" />
+          <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TaskItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="type" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="queue" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="queueName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="responsible" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="status" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="rowVersion" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfKV">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="KV" nillable="true" type="s0:KV" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="KV">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="k" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="v" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfAttachment">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Attachment" nillable="true" type="s0:Attachment" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Attachment">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="filename" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="creator" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="created" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="ext" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="size" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="path" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="data" type="s:base64Binary" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSkill">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Skill" nillable="true" type="s0:Skill" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Skill">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="value" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="RequiredAgents">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="expiryTime" nillable="true" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="agents" type="s0:ArrayOfRequiredAgent" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfRequiredAgent">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="RequiredAgent" nillable="true" type="s0:RequiredAgent" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="RequiredAgent">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CreateTaskResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="response" nillable="true" type="s0:TaskItem" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTaskList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="top" nillable="true" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="modified" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="item" type="s0:TaskItem" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTaskListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="response" nillable="true" type="s0:GetTaskListResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetTaskListResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="serverDate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="items" type="s0:ArrayOfTaskItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTaskItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TaskItem" nillable="true" type="s0:TaskItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetTaskContent">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="filter" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTaskContentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="response" nillable="true" type="s0:TaskData" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateTask">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="s0:TaskData" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateTaskResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="response" nillable="true" type="s0:TaskItem" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="CreateTaskSoapIn">
+    <wsdl:part name="parameters" element="s0:CreateTask" />
+  </wsdl:message>
+  <wsdl:message name="CreateTaskSoapOut">
+    <wsdl:part name="parameters" element="s0:CreateTaskResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTaskListSoapIn">
+    <wsdl:part name="parameters" element="s0:GetTaskList" />
+  </wsdl:message>
+  <wsdl:message name="GetTaskListSoapOut">
+    <wsdl:part name="parameters" element="s0:GetTaskListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTaskContentSoapIn">
+    <wsdl:part name="parameters" element="s0:GetTaskContent" />
+  </wsdl:message>
+  <wsdl:message name="GetTaskContentSoapOut">
+    <wsdl:part name="parameters" element="s0:GetTaskContentResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateTaskSoapIn">
+    <wsdl:part name="parameters" element="s0:UpdateTask" />
+  </wsdl:message>
+  <wsdl:message name="UpdateTaskSoapOut">
+    <wsdl:part name="parameters" element="s0:UpdateTaskResponse" />
+  </wsdl:message>
+  <wsdl:portType name="TMISoap">
+    <wsdl:operation name="CreateTask">
+      <wsdl:input message="tns:CreateTaskSoapIn" />
+      <wsdl:output message="tns:CreateTaskSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTaskList">
+      <wsdl:input message="tns:GetTaskListSoapIn" />
+      <wsdl:output message="tns:GetTaskListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTaskContent">
+      <wsdl:input message="tns:GetTaskContentSoapIn" />
+      <wsdl:output message="tns:GetTaskContentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateTask">
+      <wsdl:input message="tns:UpdateTaskSoapIn" />
+      <wsdl:output message="tns:UpdateTaskSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TMISoap" type="tns:TMISoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CreateTask">
+      <soap:operation soapAction="http://sap.com/bcm/TMI" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaskList">
+      <soap:operation soapAction="http://sap.com/bcm/TMI" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaskContent">
+      <soap:operation soapAction="http://sap.com/bcm/TMI" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateTask">
+      <soap:operation soapAction="http://sap.com/bcm/TMI" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="TMISoap12" type="tns:TMISoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CreateTask">
+      <soap12:operation soapAction="http://sap.com/bcm/TMI" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaskList">
+      <soap12:operation soapAction="http://sap.com/bcm/TMI" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaskContent">
+      <soap12:operation soapAction="http://sap.com/bcm/TMI" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateTask">
+      <soap12:operation soapAction="http://sap.com/bcm/TMI" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TMI">
+    <wsdl:port name="TMISoap" binding="tns:TMISoap">
+      <soap:address location="http://10.44.96.203:1080/TMI/TMI.asmx" />
+    </wsdl:port>
+    <wsdl:port name="TMISoap12" binding="tns:TMISoap12">
+      <soap12:address location="http://10.44.96.203:1080/TMI/TMI.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

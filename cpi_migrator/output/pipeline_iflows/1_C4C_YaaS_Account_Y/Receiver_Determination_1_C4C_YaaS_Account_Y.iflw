@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PIPELINE STEP 2: Receiver Determination iFlow
+  Package  : 1_C4C_YaaS_Account_YaaS_Corporate_Accou_Integration
+  Purpose  : Queries Partner Directory to determine correct receiver.
+             Routes to Interface Separation via ProcessDirect.
+  Internal : ProcessDirect address /pd/ReceiverDetermination_1_C4C_YaaS_Account_Y
+  Partner Directory keys queried at runtime for each message.
+-->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+             id="Receiver_Determination_1_C4C_YaaS_Account_Y"
+             name="Receiver_Determination_1_C4C_YaaS_Account_Y">
+  <process id="ReceiverDet_1_C4C_YaaS_Account_Y_process" ifl:type="IntegrationFlow">
+
+    <startEvent id="Start_PD" name="From Generic Inbound">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/pd/ReceiverDetermination_1_C4C_YaaS_Account_Y</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </startEvent>
+
+    <!-- GROOVY: Query Partner Directory for receiver routing -->
+    <serviceTask id="QueryPD_1" name="Query Partner Directory" ifl:type="Script">
+      <extensionElements>
+        <ifl:property><ifl:key>ScriptLanguage</ifl:key><ifl:value>Groovy</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Script</ifl:key><ifl:value>
+// Query Partner Directory for receiver routing
+import com.sap.gateway.ip.core.customdev.util.Message
+import com.sap.it.api.pd.PartnerDirectoryService
+
+def Message processData(Message message) {
+    def service = ITApiFactory.getApi(PartnerDirectoryService.class)
+    def sender  = message.getHeaders().get("SAP_Sender")
+    def msgType = message.getHeaders().get("SAP_MsgType")
+    def pdKey   = "ReceiverRouting_${sender}_${msgType}"
+
+    def receiver = service.getParameter(pdKey, sender, String.class)
+    message.setHeader("SAP_Receiver", receiver ?: "UNKNOWN")
+
+    // Determine interface name for routing
+    def ifaceKey = "InterfaceName_${sender}_${msgType}"
+    def ifaceName = service.getParameter(ifaceKey, sender, String.class)
+    message.setHeader("SAP_InterfaceName", ifaceName ?: msgType)
+    return message
+}
+        </ifl:value></ifl:property>
+      </extensionElements>
+    </serviceTask>
+
+    <!-- Registered routes for this package: -->
+        <!-- Route: Update Account from C4C to YaaS → YaaS_Corporate_Account_PATCH -->
+
+    <!-- PROCESSDIRECT: Forward to Interface Separation -->
+    <serviceTask id="CallIfaceSep_1" name="→ Interface Separation" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/pd/InterfaceSeparation_1_C4C_YaaS_Account_Y</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+
+    <endEvent id="End_PD"/>
+    <sequenceFlow sourceRef="Start_PD" targetRef="QueryPD_1"/>
+    <sequenceFlow sourceRef="QueryPD_1" targetRef="CallIfaceSep_1"/>
+    <sequenceFlow sourceRef="CallIfaceSep_1" targetRef="End_PD"/>
+  </process>
+</definitions>

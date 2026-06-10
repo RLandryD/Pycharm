@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SCENARIO iFlow: BP from SAP S4HANA to SAP Subscription Billing
+  Display Name : OUT_S4_Outbound_PostExit_BP_from_SAP_S4HANA_t
+  Package      : 1_S4_Outbound_PostExit_Finance
+  Strategy     : BROWNFIELD: Lift-and-shift. Mapping '' ported directly.
+  Complexity   : LOW (score: 5)
+  Effort       : 1 day(s)
+  Sender       : S4_Outbound (SOAP)
+  Receiver     : PostExit (ProcessDirect)
+  Batch        : No
+-->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+             id="BP_from_SAP_S4HANA_t"
+             name="OUT_S4_Outbound_PostExit_BP_from_SAP_S4HANA_t">
+  <process id="BP_from_SAP_S4HANA_t_process" ifl:type="IntegrationFlow">
+
+    <startEvent id="Start_SC" name="From Interface Separation">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/BP_from_SAP_S4HANA_t</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </startEvent>
+
+
+
+    <!-- PROCESSDIRECT: Forward to Outbound Delivery -->
+    <serviceTask id="CallOutbound_1" name="→ Outbound Delivery" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/outbound/1_S4_Outbound_PostEx</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+
+    <endEvent id="End_SC"/>
+    <sequenceFlow sourceRef="Start_SC" targetRef="CallOutbound_1"/>
+    
+    
+    <sequenceFlow sourceRef="CallOutbound_1" targetRef="End_SC"/>
+  </process>
+</definitions>

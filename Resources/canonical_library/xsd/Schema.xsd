@@ -1,0 +1,114 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Schema">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="EntityType" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+              <xs:element name="Key">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="PropertyRef">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:string" name="Name" use="optional"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Property">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:string" name="Name" use="optional"/>
+                      <xs:attribute type="xs:string" name="Nullable" use="optional"/>
+                      <xs:attribute type="xs:string" name="Type" use="optional"/>
+                      <xs:attribute ref="com:IsUnique" xmlns:com="http://schemas.sap.com/commerce"/>
+                      <xs:attribute ref="com:Alias" xmlns:com="http://schemas.sap.com/commerce"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="NavigationProperty">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:string" name="FromRole" use="optional"/>
+                      <xs:attribute type="xs:string" name="Name" use="optional"/>
+                      <xs:attribute type="xs:string" name="Nullable" use="optional"/>
+                      <xs:attribute type="xs:string" name="Relationship" use="optional"/>
+                      <xs:attribute type="xs:string" name="ToRole" use="optional"/>
+                      <xs:attribute ref="com:IsAutoCreate" xmlns:com="http://schemas.sap.com/commerce"/>
+                      <xs:attribute ref="com:IsPartOf" xmlns:com="http://schemas.sap.com/commerce"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+            <xs:attribute type="xs:string" name="Name" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Association" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="End" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:string" name="Multiplicity" use="optional"/>
+                      <xs:attribute type="xs:string" name="Role" use="optional"/>
+                      <xs:attribute type="xs:string" name="Type" use="optional"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="Name" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="EntityContainer">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="EntitySet" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:string" name="EntityType" use="optional"/>
+                      <xs:attribute type="xs:string" name="Name" use="optional"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="AssociationSet" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="End" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:string" name="EntitySet" use="optional"/>
+                            <xs:attribute type="xs:string" name="Role" use="optional"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute type="xs:string" name="Association" use="optional"/>
+                  <xs:attribute type="xs:string" name="Name" use="optional"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="Name"/>
+            <xs:attribute ref="met:IsDefaultEntityContainer" xmlns:met="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="Namespace"/>
+      <xs:attribute ref="com:schema-version" xmlns:com="http://schemas.sap.com/commerce"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

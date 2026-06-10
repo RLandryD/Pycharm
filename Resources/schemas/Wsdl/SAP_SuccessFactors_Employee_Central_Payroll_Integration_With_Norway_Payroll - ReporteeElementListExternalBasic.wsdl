@@ -1,0 +1,1280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" name="ReporteeElementListExternalBasicSF" targetNamespace="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10">
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/2009/10">
+      <xsd:element name="Test">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="TestResponse">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://www.altinn.no/services/common/fault/2009/10" elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/common/fault/2009/10">
+      <xsd:complexType name="AltinnFault">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="AltinnErrorMessage" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AltinnExtendedErrorMessage" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AltinnLocalizedErrorMessage" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ErrorGuid" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ErrorID" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="UserGuid" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="UserId" nillable="true" type="xsd:string">
+           </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="AltinnFault" nillable="true" type="tns:AltinnFault"/>
+    </xsd:schema>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/">
+      <xs:element name="anyType" nillable="true" type="xs:anyType"/>
+      <xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
+      <xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
+      <xs:element name="boolean" nillable="true" type="xs:boolean"/>
+      <xs:element name="byte" nillable="true" type="xs:byte"/>
+      <xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+      <xs:element name="decimal" nillable="true" type="xs:decimal"/>
+      <xs:element name="double" nillable="true" type="xs:double"/>
+      <xs:element name="float" nillable="true" type="xs:float"/>
+      <xs:element name="int" nillable="true" type="xs:int"/>
+      <xs:element name="long" nillable="true" type="xs:long"/>
+      <xs:element name="QName" nillable="true" type="xs:QName"/>
+      <xs:element name="short" nillable="true" type="xs:short"/>
+      <xs:element name="string" nillable="true" type="xs:string"/>
+      <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
+      <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
+      <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
+      <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
+      <xs:element name="char" nillable="true" type="tns:char"/>
+      <xs:simpleType name="char">
+        <xs:restriction base="xs:int"/>
+      </xs:simpleType>
+      <xs:element name="duration" nillable="true" type="tns:duration"/>
+      <xs:simpleType name="duration">
+        <xs:restriction base="xs:duration">
+          <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
+          <xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
+          <xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="guid" nillable="true" type="tns:guid"/>
+      <xs:simpleType name="guid">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:attribute name="FactoryType" type="xs:QName"/>
+      <xs:attribute name="Id" type="xs:ID"/>
+      <xs:attribute name="Ref" type="xs:IDREF"/>
+    </xs:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10">
+      <xsd:import namespace="http://schemas.altinn.no/services/serviceEntity/2009/10"/>
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/Altinn.Common.SBL.Enums.ServiceEngine"/>
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/altinnservice/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/altinnservice/2010/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/Archive/ReporteeArchive/2009/10"/>
+      <xsd:import namespace="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10"/>
+      <xsd:element name="DeleteReporteeElementBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userSSN" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPinCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="authMethod" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="reporteeElementCode" nillable="true" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="DeleteReporteeElementBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetCorrespondenceListForArchiveRefBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userSSN" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPinCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="authMethod" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="reportee" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="archiveReference" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="fromDate" type="xsd:dateTime"/>
+            <xsd:element minOccurs="0" name="toDate" type="xsd:dateTime"/>
+            <xsd:element minOccurs="0" name="languageID" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetCorrespondenceListForArchiveRefBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="GetCorrespondenceListForArchiveRefBasicResult" nillable="true" type="tns:ReporteeElementBEList"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="ReporteeElementBEList">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ReporteeElementBE" nillable="true" type="tns:ReporteeElementBE"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReporteeElementBEList" nillable="true" type="tns:ReporteeElementBEList"/>
+      <xsd:complexType name="ReporteeElementBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="AllowDelete" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AllowNewCopy" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1ArchiveUnitId" nillable="true" type="xsd:long">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1FormCode" nillable="true" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1FormId" nillable="true" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1FormInstanceID" nillable="true" type="xsd:long">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1FormORNo" nillable="true" type="xsd:long">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1ParticipantID" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1ReferenceType" nillable="true" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1WorkflowProcessId" nillable="true" type="xsd:long">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ArchiveId" nillable="true" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ArchiveReference" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element xmlns:q1="http://schemas.altinn.no/services/serviceEntity/2009/10" minOccurs="0" name="CorrespondenceStatus" type="q1:CorrespondenceStatusType">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="DueDate" nillable="true" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="EndUserSystemID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ExternalServiceCode" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="LastChangeType" type="tns:LastChangeType">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="LastChangedBy" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="LastChangedByID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="LastChangedDate" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReporteeElementId" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReporteeElementOwner" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReporteeElementType" type="tns:ReporteeElementType">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReporteeName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="RoleRequirement" type="tns:RoleRequirement">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="RoleRequirementAltinn1Element" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ServiceOwner" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ServiceOwnerCode" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Status" type="tns:ReporteeElementStatus">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="StatusName" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element xmlns:q2="http://schemas.datacontract.org/2004/07/Altinn.Common.SBL.Enums.ServiceEngine" minOccurs="0" name="TaskStatus" type="q2:ProcessActivityType">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Title" nillable="true" type="xsd:string">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReporteeElementBE" nillable="true" type="tns:ReporteeElementBE"/>
+      <xsd:simpleType name="LastChangeType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="Sent"/>
+          <xsd:enumeration value="Saved"/>
+          <xsd:enumeration value="Archived"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="LastChangeType" nillable="true" type="tns:LastChangeType"/>
+      <xsd:simpleType name="ReporteeElementType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="Correspondence"/>
+          <xsd:enumeration value="FormTask"/>
+          <xsd:enumeration value="None"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ReporteeElementType" nillable="true" type="tns:ReporteeElementType"/>
+      <xsd:simpleType name="RoleRequirement">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="Read"/>
+          <xsd:enumeration value="ReadButNotPerformNextStep"/>
+          <xsd:enumeration value="ReadAndPerformNextStep"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="RoleRequirement" nillable="true" type="tns:RoleRequirement"/>
+      <xsd:simpleType name="ReporteeElementStatus">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="NotOpenedNoConfirmationReq"/>
+          <xsd:enumeration value="NotOpenedConfirmationReq"/>
+          <xsd:enumeration value="OpenedNoConfirmedReq"/>
+          <xsd:enumeration value="OpenedNotConfirmed"/>
+          <xsd:enumeration value="Confirmed"/>
+          <xsd:enumeration value="FillIn"/>
+          <xsd:enumeration value="SignIn"/>
+          <xsd:enumeration value="Archive"/>
+          <xsd:enumeration value="SendIn"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ReporteeElementStatus" nillable="true" type="tns:ReporteeElementStatus"/>
+      <xsd:element name="GetCorrespondenceListForReporteeBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userSSN" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPinCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="authMethod" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="reportee" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="fromDate" type="xsd:dateTime"/>
+            <xsd:element minOccurs="0" name="toDate" type="xsd:dateTime"/>
+            <xsd:element minOccurs="0" name="languageID" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetCorrespondenceListForReporteeBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="GetCorrespondenceListForReporteeBasicResult" nillable="true" type="tns:ReporteeElementBEList"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetFormSetElementsBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userSSN" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPinCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="authMethod" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="reporteeElementID" type="xsd:int"/>
+            <xsd:element minOccurs="0" name="languageID" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetFormSetElementsBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element xmlns:q3="http://schemas.altinn.no/services/altinnservice/2009/10" minOccurs="0" name="GetFormSetElementsBasicResult" nillable="true" type="q3:FormSetElementBEList"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="FormSetElementBE">
+         <xsd:sequence>
+          <xsd:element xmlns:q4="http://schemas.altinn.no/services/serviceEntity/2009/10" minOccurs="0" name="IconFileName" type="q4:AttachmentType">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ItemID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ItemName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ItemType" type="tns:ItemType">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ItemURL" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element xmlns:q5="http://schemas.altinn.no/services/serviceEntity/2009/10" minOccurs="0" name="ValidationStatusType" type="q5:FormValidationStatusType">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="FormSetElementBE" nillable="true" type="tns:FormSetElementBE"/>
+      <xsd:simpleType name="ItemType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="MainForm">
+          </xsd:enumeration>
+          <xsd:enumeration value="SubForm">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="BinaryAttachment">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">3</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ItemType" nillable="true" type="tns:ItemType"/>
+      <xsd:element name="GetFormSetElementsBasicV2">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="systemUserName" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="systemPassword" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="userSSN" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="userPassword" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="userPinCode" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="authMethod" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="reporteeElementID" type="xsd:int"/>
+            <xsd:element minOccurs="1" name="languageID" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetFormSetElementsBasicV2Response">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element xmlns:q6="http://schemas.altinn.no/services/altinnservice/2010/10" minOccurs="0" name="GetFormSetElementsBasicV2Result" nillable="true" type="q6:FormSetElementExternalBEV2List"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetReporteeElementListBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userSSN" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPinCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="authMethod" nillable="true" type="xsd:string"/>
+            <xsd:element xmlns:q7="http://schemas.altinn.no/services/Archive/ReporteeArchive/2009/10" minOccurs="0" name="searchBE" nillable="true" type="q7:ExternalSearchBE"/>
+            <xsd:element minOccurs="0" name="languageID" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetReporteeElementListBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="GetReporteeElementListBasicResult" nillable="true" type="tns:ReporteeElementBEList"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetReporteeElementListBasicV2">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="systemUserName" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="systemPassword" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="userSSN" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="userPassword" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="userPinCode" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="authMethod" type="xsd:string"/>
+            <xsd:element xmlns:q8="http://schemas.altinn.no/services/Archive/ReporteeArchive/2009/10" minOccurs="1" name="searchBE" type="q8:ExternalSearchBEV2"/>
+            <xsd:element minOccurs="1" name="languageID" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetReporteeElementListBasicV2Response">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element xmlns:q9="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10" minOccurs="0" name="GetReporteeElementListBasicV2Result" nillable="true" type="q9:ReporteeElementBEV2Lis"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/serviceEntity/2009/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/serviceEntity/2009/10">
+      <xsd:simpleType name="CorrespondenceStatusType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="Created"/>
+          <xsd:enumeration value="Read"/>
+          <xsd:enumeration value="Replied"/>
+          <xsd:enumeration value="ChangedByGovAgency"/>
+          <xsd:enumeration value="ChangedByUser"/>
+          <xsd:enumeration value="Confirmed"/>
+          <xsd:enumeration value="DeletedByUser"/>
+          <xsd:enumeration value="DeletedByAltinn"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="CorrespondenceStatusType" nillable="true" type="tns:CorrespondenceStatusType"/>
+      <xsd:simpleType name="AttachmentType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="application_None"/>
+          <xsd:enumeration value="application_pdf"/>
+          <xsd:enumeration value="application_msword"/>
+          <xsd:enumeration value="application_vnd_ms_excel"/>
+          <xsd:enumeration value="application_vnd_oasis_opendocument_text"/>
+          <xsd:enumeration value="application_vnd_oasis_opendocument_presentation"/>
+          <xsd:enumeration value="application_vnd_oasis_opendocument_spreadsheet"/>
+          <xsd:enumeration value="application_rtf"/>
+          <xsd:enumeration value="application_vnd_ms_powerpoint"/>
+          <xsd:enumeration value="application_postscript"/>
+          <xsd:enumeration value="application_zip"/>
+          <xsd:enumeration value="text_plain"/>
+          <xsd:enumeration value="text_html"/>
+          <xsd:enumeration value="text_xml"/>
+          <xsd:enumeration value="text_rtf"/>
+          <xsd:enumeration value="text_richtext"/>
+          <xsd:enumeration value="binary_octet_stream"/>
+          <xsd:enumeration value="not_Applicable"/>
+          <xsd:enumeration value="MTOM"/>
+          <xsd:enumeration value="BASE64"/>
+          <xsd:enumeration value="image_jpeg"/>
+          <xsd:enumeration value="image_gif"/>
+          <xsd:enumeration value="image_bmp"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="AttachmentType" nillable="true" type="tns:AttachmentType"/>
+      <xsd:simpleType name="FormValidationStatusType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NotSet"/>
+          <xsd:enumeration value="Valid"/>
+          <xsd:enumeration value="NonValid"/>
+          <xsd:enumeration value="NotValidated"/>
+          <xsd:enumeration value="NotApplicable"/>
+          <xsd:enumeration value="ValidWithWarning"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="FormValidationStatusType" nillable="true" type="tns:FormValidationStatusType"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Altinn.Common.SBL.Enums.ServiceEngine" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Altinn.Common.SBL.Enums.ServiceEngine">
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      <xsd:simpleType name="ProcessActivityType">
+         <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="FormFilling"/>
+          <xsd:enumeration value="Signing"/>
+          <xsd:enumeration value="SendIn"/>
+          <xsd:enumeration value="Archive">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">7</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ProcessActivityType" nillable="true" type="tns:ProcessActivityType"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/altinnservice/2009/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/altinnservice/2009/10">
+      <xsd:import namespace="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10"/>
+      <xsd:complexType name="FormSetElementBEList">
+        <xsd:sequence>
+          <xsd:element xmlns:q10="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10" minOccurs="0" maxOccurs="unbounded" name="FormSetElementBE" nillable="true" type="q10:FormSetElementBE"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="FormSetElementBEList" nillable="true" type="tns:FormSetElementBEList"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/altinnservice/2010/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/altinnservice/2010/10">
+      <xsd:import namespace="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10"/>
+      <xsd:complexType name="FormSetElementExternalBEV2List">
+        <xsd:sequence>
+          <xsd:element xmlns:q11="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10" minOccurs="0" maxOccurs="unbounded" name="FormSetElementBEV2" nillable="true" type="q11:FormSetElementBEV2"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="FormSetElementExternalBEV2List" nillable="true" type="tns:FormSetElementExternalBEV2List"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10" elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10">
+      <xsd:import namespace="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/serviceEntity/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/serviceEntity/2010/10"/>
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      <xsd:import namespace="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/ServiceEngine/Workflow/2010/10"/>
+      <xsd:complexType name="FormSetElementBEV2">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="CreatedByUserID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CreatedDateTime" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element xmlns:q12="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10" minOccurs="0" name="DestinationType" type="q12:UserTypeRestriction">
+          </xsd:element>
+          <xsd:element xmlns:q13="http://schemas.altinn.no/services/serviceEntity/2009/10" minOccurs="0" name="IconFileName" type="q13:AttachmentType">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="IsAddedAfterFormFillin" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="IsAssociatedToFormSet" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="IsSigningMandatory" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ItemID" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ItemName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ItemType" type="tns:ItemType">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ItemURL" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element xmlns:q14="http://schemas.altinn.no/services/serviceEntity/2010/10" minOccurs="0" name="ValidationStatusType" type="q14:FormValidationStatusTypeExternalV2">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="FormSetElementBEV2" nillable="true" type="tns:FormSetElementBEV2"/>
+      <xsd:simpleType name="ItemType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="MainForm">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="SubForm">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="BinaryAttachment">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">3</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ItemType" nillable="true" type="tns:ItemType"/>
+      <xsd:complexType name="ReporteeElementBEV2Lis">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ReporteeElementBEV2" nillable="true" type="tns:ReporteeElementBEV2"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReporteeElementBEV2Lis" nillable="true" type="tns:ReporteeElementBEV2Lis"/>
+      <xsd:complexType name="ReporteeElementBEV2">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="AllowDelete" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AllowNewCopy" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1ArchiveUnitId" nillable="true" type="xsd:long">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1FormCode" nillable="true" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1FormId" nillable="true" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1FormInstanceID" nillable="true" type="xsd:long">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1FormORNo" nillable="true" type="xsd:long">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1ParticipantID" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1ReferenceType" nillable="true" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Altinn1WorkflowProcessId" nillable="true" type="xsd:long">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ArchiveId" nillable="true" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ArchiveReference" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CaseID" type="xsd:int">
+          </xsd:element>
+          <xsd:element xmlns:q15="http://schemas.altinn.no/services/serviceEntity/2010/10" minOccurs="0" name="CorrespondenceStatus" type="q15:CorrespondenceStatusTypeV2">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="DueDate" nillable="true" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="EndUserSystemID" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ExternalServiceCode" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="IsCaseArchived" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="IsMatched" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="LastChangeType" type="tns:LastChangeTypeV2">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="LastChangedBy" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="LastChangedByID" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="LastChangedDate" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Notice" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ParentCaseName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReporteeElementId" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReporteeElementOwner" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReporteeElementType" type="tns:ReporteeElementTypeV2">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReporteeName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="RoleRequirement" type="tns:RoleRequirementV2">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="RoleRequirementAltinn1Element" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="SEReporteeElementID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ServiceEditionVersion" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ServiceOwner" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ServiceOwnerCode" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ServiceOwnerDescription" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element xmlns:q16="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10" minOccurs="0" name="Status" type="q16:ReporteeElementStatus">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="StatusName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element xmlns:q17="http://schemas.altinn.no/services/ServiceEngine/Workflow/2010/10" minOccurs="0" name="TaskStatus" type="q17:ProcessActivityTypeV2">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="Title" nillable="true" type="xsd:string">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReporteeElementBEV2" nillable="true" type="tns:ReporteeElementBEV2"/>
+      <xsd:simpleType name="LastChangeTypeV2">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="Sent"/>
+          <xsd:enumeration value="Saved"/>
+          <xsd:enumeration value="Archived"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="LastChangeTypeV2" nillable="true" type="tns:LastChangeTypeV2"/>
+      <xsd:simpleType name="ReporteeElementTypeV2">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="Correspondence"/>
+          <xsd:enumeration value="FormTask"/>
+          <xsd:enumeration value="None">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">5</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="Collaboration">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">3</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="LookUp">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">4</EnumerationValue>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ReporteeElementTypeV2" nillable="true" type="tns:ReporteeElementTypeV2"/>
+      <xsd:simpleType name="RoleRequirementV2">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="Read"/>
+          <xsd:enumeration value="ReadButNotPerformNextStep"/>
+          <xsd:enumeration value="ReadAndPerformNextStep"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="RoleRequirementV2" nillable="true" type="tns:RoleRequirementV2"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10">
+      <xsd:simpleType name="UserTypeRestriction">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="PortalOnly"/>
+          <xsd:enumeration value="EndUserSystemOnly"/>
+          <xsd:enumeration value="ShowToAll"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="UserTypeRestriction" nillable="true" type="tns:UserTypeRestriction"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/serviceEntity/2010/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/serviceEntity/2010/10">
+      <xsd:simpleType name="FormValidationStatusTypeExternalV2">
+         <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NotSet"/>
+          <xsd:enumeration value="Valid"/>
+          <xsd:enumeration value="NonValid"/>
+          <xsd:enumeration value="NotValidated"/>
+          <xsd:enumeration value="NotApplicable"/>
+          <xsd:enumeration value="ValidWithWarning"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="FormValidationStatusTypeExternalV2" nillable="true" type="tns:FormValidationStatusTypeExternalV2"/>
+      <xsd:simpleType name="CorrespondenceStatusTypeV2">
+         <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="Created"/>
+          <xsd:enumeration value="Read"/>
+          <xsd:enumeration value="Replied"/>
+          <xsd:enumeration value="ChangedByGovAgency"/>
+          <xsd:enumeration value="ChangedByUser"/>
+          <xsd:enumeration value="Confirmed"/>
+          <xsd:enumeration value="DeletedByUser"/>
+          <xsd:enumeration value="DeletedByAltinn"/>
+          <xsd:enumeration value="Archived"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="CorrespondenceStatusTypeV2" nillable="true" type="tns:CorrespondenceStatusTypeV2"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/ServiceEngine/Workflow/2010/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/ServiceEngine/Workflow/2010/10">
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      <xsd:simpleType name="ProcessActivityTypeV2">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="FormFilling"/>
+          <xsd:enumeration value="Signing"/>
+          <xsd:enumeration value="SendIn"/>
+          <xsd:enumeration value="ParallelSigning">
+          </xsd:enumeration>
+          <xsd:enumeration value="Archive">
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ProcessActivityTypeV2" nillable="true" type="tns:ProcessActivityTypeV2"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/Archive/ReporteeArchive/2009/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/Archive/ReporteeArchive/2009/10">
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+      <xsd:complexType name="ExternalSearchBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="ArchiveReference" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element name="FromDate" nillable="true" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="RecievedMessages" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element name="Reportee" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SearchName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SearchString" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SentAndArchived" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element xmlns:q18="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="ServiceCodeList" nillable="true" type="q18:ArrayOfstring">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ServiceOwnerCode" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ToBeProcessed" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ToBeProcessedByOthers" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element name="ToDate" nillable="true" type="xsd:dateTime">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ExternalSearchBE" nillable="true" type="tns:ExternalSearchBE"/>
+      <xsd:complexType name="ExternalSearchBEV2">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="ArchiveReference" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CaseID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CollectionPages" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="EDialogue" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element name="FromDate" nillable="true" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element name="Reportee" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SearchName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SearchString" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SentAndArchived" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element xmlns:q19="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="ServiceCodeList" nillable="true" type="q19:ArrayOfstring">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ServiceOwnerCode" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ToBeProcessed" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ToBeProcessedByOthers" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element name="ToDate" nillable="true" type="xsd:dateTime">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ExternalSearchBEV2" nillable="true" type="tns:ExternalSearchBEV2"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/Arrays" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+      <xsd:complexType name="ArrayOfstring">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ArrayOfstring" nillable="true" type="tns:ArrayOfstring"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IReporteeElementListExternalBasic_Test_InputMessage">
+    <wsdl:part xmlns:q20="http://www.altinn.no/services/2009/10" name="parameters" element="q20:Test"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_Test_OutputMessage">
+    <wsdl:part xmlns:q21="http://www.altinn.no/services/2009/10" name="parameters" element="q21:TestResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_Test_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q22="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q22:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_DeleteReporteeElementBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteReporteeElementBasic"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_DeleteReporteeElementBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteReporteeElementBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_DeleteReporteeElementBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q23="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q23:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetCorrespondenceListForArchiveRefBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCorrespondenceListForArchiveRefBasic"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetCorrespondenceListForArchiveRefBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCorrespondenceListForArchiveRefBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetCorrespondenceListForArchiveRefBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q24="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q24:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetCorrespondenceListForReporteeBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCorrespondenceListForReporteeBasic"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetCorrespondenceListForReporteeBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCorrespondenceListForReporteeBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetCorrespondenceListForReporteeBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q25="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q25:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetFormSetElementsBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetFormSetElementsBasic"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetFormSetElementsBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetFormSetElementsBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetFormSetElementsBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q26="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q26:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetFormSetElementsBasicV2_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetFormSetElementsBasicV2"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetFormSetElementsBasicV2_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetFormSetElementsBasicV2Response"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetFormSetElementsBasicV2_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q27="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q27:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetReporteeElementListBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetReporteeElementListBasic"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetReporteeElementListBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetReporteeElementListBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetReporteeElementListBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q28="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q28:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetReporteeElementListBasicV2_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetReporteeElementListBasicV2"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetReporteeElementListBasicV2_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetReporteeElementListBasicV2Response"/>
+  </wsdl:message>
+  <wsdl:message name="IReporteeElementListExternalBasic_GetReporteeElementListBasicV2_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q29="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q29:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:portType name="IReporteeElementListExternalBasic">
+    <wsdl:documentation>&lt;summary&gt;&#13;
+            Service contract for the ReporteeElementList service exposed to end user systems on basic binding.&#13;
+            Used to handle elements, both active and archived.&#13;
+            &lt;/summary&gt;</wsdl:documentation>
+    <wsdl:operation name="Test">
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test" message="tns:IReporteeElementListExternalBasic_Test_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestResponse" message="tns:IReporteeElementListExternalBasic_Test_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestAltinnFaultFault" name="AltinnFaultFault" message="tns:IReporteeElementListExternalBasic_Test_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteReporteeElementBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            Deletes a Reportee Element.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="systemUserName"&gt;&#13;
+            System user name is the system identifier for the end user system as registered in Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;&#13;
+            System password is the password for the registered end user system - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userSSN"&gt;&#13;
+            User SSN is the end user's social security number - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPassword"&gt;&#13;
+            User password is the end user's own password for authentication as set in the profile - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPinCode"&gt;&#13;
+            User Pin Code is the requested authentication challenge token requested by Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="authMethod"&gt;&#13;
+            It is the selected authentication method for the authentication challenge (AltinnPin, TaxPin, SMSPin) - mandatory&#13;
+            parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="reporteeElementCode"&gt;&#13;
+            A unique identifier for a Reportee Element prefixed with the element origination type - mandatory parameter:&#13;
+            Altinn 1, active: A1E&#13;
+            Altinn 1, archived: A1A&#13;
+            Altinn 2, active: A2E&#13;
+            Altinn 2, archived: A2A&#13;
+            &lt;/param&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/DeleteReporteeElementBasic" message="tns:IReporteeElementListExternalBasic_DeleteReporteeElementBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/DeleteReporteeElementBasicResponse" message="tns:IReporteeElementListExternalBasic_DeleteReporteeElementBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/DeleteReporteeElementBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IReporteeElementListExternalBasic_DeleteReporteeElementBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetCorrespondenceListForArchiveRefBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            Retrieves a list of correspondences using the operation GetReporteeElementList.&#13;
+            Creates an SearchBE object to search for all correspondences with a given archive reference.&#13;
+            Each correspondence may refer to an archive reference.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="systemUserName"&gt;&#13;
+            System user name is the system identifier for the end user system as registered in Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;&#13;
+            System password is the password for the registered end user system - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userSSN"&gt;&#13;
+            User SSN is the end user's social security number - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPassword"&gt;&#13;
+            User password is the end user's own password for authentication as set in the profile - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPinCode"&gt;&#13;
+            User Pin Code is the requested authentication challenge token requested by Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="authMethod"&gt;&#13;
+            It is the selected authentication method for the authentication challenge (AltinnPin, TaxPin, SMSPin) - mandatory&#13;
+            parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="reportee"&gt;&#13;
+            Reportee SSN (11 digits)/Org Number (9 digits) to retrieve correspondences for. - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="archiveReference"&gt;&#13;
+            Archive reference to retrieve correspondences for. - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="fromDate"&gt;&#13;
+            Is specified, all results must have LastChangedDate greater than the FromDate - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="toDate"&gt;&#13;
+            If specified, all results must have LastChangedDate less than the specified value. - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="languageID"&gt;&#13;
+            Localization Language (English 1033, Bokmål 1044, Nynorsk 2068) to get titles in - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;returns&gt;&#13;
+            The list of results from the database&#13;
+            &lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetCorrespondenceListForArchiveRefBasic" message="tns:IReporteeElementListExternalBasic_GetCorrespondenceListForArchiveRefBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetCorrespondenceListForArchiveRefBasicResponse" message="tns:IReporteeElementListExternalBasic_GetCorrespondenceListForArchiveRefBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetCorrespondenceListForArchiveRefBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IReporteeElementListExternalBasic_GetCorrespondenceListForArchiveRefBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetCorrespondenceListForReporteeBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            Retrieves a list of correspondences using the method internal GetReporteeElements.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;remarks&gt;&#13;
+            Creates a SearchBE object to search for all correspondences for a given reportee.&#13;
+            &lt;/remarks&gt;&#13;
+            &lt;param name="systemUserName"&gt;&#13;
+            System user name is the system identifier for the end user system as registered in Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;&#13;
+            System password is the password for the registered end user system - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userSSN"&gt;&#13;
+            User SSN is the end user's social security number - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPassword"&gt;&#13;
+            User password is the end user's own password for authentication as set in the profile - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPinCode"&gt;&#13;
+            User Pin Code is the requested authentication challenge token requested by Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="authMethod"&gt;&#13;
+            It is the selected authentication method for the authentication challenge (AltinnPin, TaxPin, SMSPin) - mandatory&#13;
+            parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="reportee"&gt;&#13;
+            Identifies a person (SSN, 11 digits) or organization (Org Number, 9 digits) - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="fromDate"&gt;&#13;
+            If specified, all results must have LastChangedDate greater than the FromDate - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="toDate"&gt;&#13;
+            If specified, all results must have LastChangedDate less that the specified value. - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="languageID"&gt;&#13;
+            Localization Language (English 1033, Bokmål 1044, Nynorsk 2068) to get titles in - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;returns&gt;&#13;
+            The list of results from the database&#13;
+            &lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetCorrespondenceListForReporteeBasic" message="tns:IReporteeElementListExternalBasic_GetCorrespondenceListForReporteeBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetCorrespondenceListForReporteeBasicResponse" message="tns:IReporteeElementListExternalBasic_GetCorrespondenceListForReporteeBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetCorrespondenceListForReporteeBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IReporteeElementListExternalBasic_GetCorrespondenceListForReporteeBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetFormSetElementsBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            Retrieves the elements belonging to a ReporteeElement(main form, sub forms and binary attachments)&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="systemUserName"&gt;&#13;
+            System user name is the system identifier for the end user system as registered in Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;&#13;
+            System password is the password for the registered end user system - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userSSN"&gt;&#13;
+            User SSN is the end user's social security number - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPassword"&gt;&#13;
+            User password is the end user's own password for authentication as set in the profile - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPinCode"&gt;&#13;
+            User Pin Code is the requested authentication challenge token requested by Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="authMethod"&gt;&#13;
+            It is the selected authentication method for the authentication challenge (AltinnPin, TaxPin, SMSPin) - mandatory&#13;
+            parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="reporteeElementID"&gt;&#13;
+            Identifier for a Reportee Element - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="languageID"&gt;&#13;
+            Localization Language (English 1033, Bokmål 1044, Nynorsk 2068) to get titles in - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;returns&gt;&#13;
+            A list of FormSetElementBE objects&#13;
+            &lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetFormSetElementsBasic" message="tns:IReporteeElementListExternalBasic_GetFormSetElementsBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetFormSetElementsBasicResponse" message="tns:IReporteeElementListExternalBasic_GetFormSetElementsBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetFormSetElementsBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IReporteeElementListExternalBasic_GetFormSetElementsBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetFormSetElementsBasicV2">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            Retrieves the elements belonging to a ReporteeElement(main form, sub forms and binary attachments)&#13;
+            &lt;/summary&gt;&#13;
+            &lt;remarks&gt;&#13;
+            This operation is versioned as V2 as it contain some additional information. Preferred over GetFormSetElementsBasic.&#13;
+            &lt;/remarks&gt;&#13;
+            &lt;param name="systemUserName"&gt;&#13;
+            System user name is the system identifier for the end user system as registered in Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;&#13;
+            System password is the password for the registered end user system - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userSSN"&gt;&#13;
+            User SSN is the end user's social security number - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPassword"&gt;&#13;
+            User password is the end user's own password for authentication as set in the profile - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPinCode"&gt;&#13;
+            User Pin Code is the requested authentication challenge token requested by Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="authMethod"&gt;&#13;
+            It is the selected authentication method for the authentication challenge (AltinnPin, TaxPin, SMSPin) - mandatory&#13;
+            parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="reporteeElementID"&gt;&#13;
+            Identifier for a Reportee Element - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="languageID"&gt;&#13;
+            Localization Language (English 1033, Bokmål 1044, Nynorsk 2068) to get titles in - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;returns&gt;&#13;
+            A list of FormSetElementBE objects&#13;
+            &lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetFormSetElementsBasicV2" message="tns:IReporteeElementListExternalBasic_GetFormSetElementsBasicV2_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetFormSetElementsBasicV2Response" message="tns:IReporteeElementListExternalBasic_GetFormSetElementsBasicV2_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetFormSetElementsBasicV2AltinnFaultFault" name="AltinnFaultFault" message="tns:IReporteeElementListExternalBasic_GetFormSetElementsBasicV2_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetReporteeElementListBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            Returns a list of active and archived elements in Altinn.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="systemUserName"&gt;&#13;
+            System user name is the system identifier for the end user system as registered in Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;&#13;
+            System password is the password for the registered end user system - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userSSN"&gt;&#13;
+            User SSN is the end user's social security number - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPassword"&gt;&#13;
+            User password is the end user's own password for authentication as set in the profile - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPinCode"&gt;&#13;
+            User Pin Code is the requested authentication challenge token requested by Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="authMethod"&gt;&#13;
+            It is the selected authentication method for the authentication challenge (AltinnPin, TaxPin, SMSPin) - mandatory&#13;
+            parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="searchBE"&gt;&#13;
+            The business entity SearchBE provides parameters for filtering&#13;
+            the results that is to be returned from the method - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="languageID"&gt;&#13;
+            Localization Language (English 1033, Bokmål 1044, Nynorsk 2068) to get titles in - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;returns&gt;&#13;
+            The list of results from the databases. The object returned will contain the field LimitReached to indicate that the&#13;
+            maximum number of rows were returned.The user should narrow the search if this field is true.&#13;
+            &lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetReporteeElementListBasic" message="tns:IReporteeElementListExternalBasic_GetReporteeElementListBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetReporteeElementListBasicResponse" message="tns:IReporteeElementListExternalBasic_GetReporteeElementListBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetReporteeElementListBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IReporteeElementListExternalBasic_GetReporteeElementListBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetReporteeElementListBasicV2">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            Returns a list of active and archived elements in Altinn.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;remarks&gt;&#13;
+            This operation is versioned as V2 as it contain some additional information. Preferred over GetReporteeElementListBasic.&#13;
+            &lt;/remarks&gt;&#13;
+            &lt;param name="systemUserName"&gt;&#13;
+            System user name is the system identifier for the end user system as registered in Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;&#13;
+            System password is the password for the registered end user system - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userSSN"&gt;&#13;
+            User SSN is the end user's social security number - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPassword"&gt;&#13;
+            User password is the end user's own password for authentication as set in the profile - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPinCode"&gt;&#13;
+            User Pin Code is the requested authentication challenge token requested by Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="authMethod"&gt;&#13;
+            It is the selected authentication method for the authentication challenge (AltinnPin, TaxPin, SMSPin) - mandatory&#13;
+            parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="searchBE"&gt;&#13;
+            The business entity SearchBE provides parameters for filtering&#13;
+            the results that is to be returned from the method. - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="languageID"&gt;&#13;
+            Localization Language (English 1033, Bokmål 1044, Nynorsk 2068) to get titles in - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;returns&gt;&#13;
+            The list of results from the databases. The object returned will contain the field LimitReached to indicate that the&#13;
+            maximum number of rows were returned.The user should narrow the search if this field is true.&#13;
+            &lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetReporteeElementListBasicV2" message="tns:IReporteeElementListExternalBasic_GetReporteeElementListBasicV2_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetReporteeElementListBasicV2Response" message="tns:IReporteeElementListExternalBasic_GetReporteeElementListBasicV2_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetReporteeElementListBasicV2AltinnFaultFault" name="AltinnFaultFault" message="tns:IReporteeElementListExternalBasic_GetReporteeElementListBasicV2_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IReporteeElementListExternalBasic" type="tns:IReporteeElementListExternalBasic">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Test">
+      <soap:operation soapAction="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteReporteeElementBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/DeleteReporteeElementBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetCorrespondenceListForArchiveRefBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetCorrespondenceListForArchiveRefBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetCorrespondenceListForReporteeBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetCorrespondenceListForReporteeBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetFormSetElementsBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetFormSetElementsBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetFormSetElementsBasicV2">
+      <soap:operation soapAction="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetFormSetElementsBasicV2" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetReporteeElementListBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetReporteeElementListBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetReporteeElementListBasicV2">
+      <soap:operation soapAction="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10/IReporteeElementListExternalBasic/GetReporteeElementListBasicV2" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ReporteeElementListExternalBasicSF">
+    <wsdl:port name="BasicHttpBinding_IReporteeElementListExternalBasic" binding="tns:BasicHttpBinding_IReporteeElementListExternalBasic">
+      <soap:address location="http://tt02.altinn.basefarm.net/ServiceEngineExternal/ReporteeElementListExternalBasic.svc"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

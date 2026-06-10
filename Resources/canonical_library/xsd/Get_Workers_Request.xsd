@@ -1,0 +1,1102 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:nyw="urn:com.netyourwork/aod" xmlns:wd="urn:com.workday/bsvc" xmlns:wd-wsdl="urn:com.workday/bsvc/Human_Resources" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="urn:com.workday/bsvc">
+<xsd:element name="Get_Workers_Request" type="wd:Get_Workers_RequestType"/>
+<xsd:complexType name="Transaction_LogObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:Transaction_LogReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Worker_Request_ReferencesType">
+<xsd:annotation>
+<xsd:documentation>Utilize the Request References element to retrieve a specific instance(s) of Worker and its associated data.</xsd:documentation>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" name="Worker_Reference" type="wd:WorkerObjectType">
+<xsd:annotation>
+<xsd:documentation>A reference to the ID of the worker. The ID consists of a type attribute, which should be set to "Employee_ID" or "Contingent_Worker_ID", and a value attribute, such as "04345".   If Skip Non Existing Instances value is set to true. When a reference id value that does not meet the entry date criteria is passed, the non existent reference id will be ignored.</xsd:documentation>
+<xsd:appinfo>
+<wd:Common_Reference_ID_Type>Employee_ID</wd:Common_Reference_ID_Type>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+<xsd:attribute name="Skip_Non_Existing_Instances" type="xsd:boolean"/>
+<xsd:attribute name="Ignore_Invalid_References" type="xsd:boolean"/>
+</xsd:complexType>
+<xsd:simpleType name="CountryReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="ISO_3166-1_Alpha-2_Code"/>
+<wd:enumeration value="ISO_3166-1_Alpha-3_Code"/>
+<wd:enumeration value="ISO_3166-1_Numeric-3_Code"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="National_ID_TypeObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:National_ID_TypeObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="WorkerObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:WorkerObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:simpleType name="Universal_IdentifierReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Universal_Identifier_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="Transaction_Log_TypeObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:Transaction_Log_TypeReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Field_And_Parameter_Criteria_DataType">
+<xsd:annotation>
+<xsd:documentation>Field Result Request Criteria</xsd:documentation>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" name="Provider_Reference" type="wd:External_Field_and_Parameter_Initialization_ProviderObjectType">
+<xsd:annotation>
+<xsd:documentation>Field And Parameter Initialization Provider Reference</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:simpleType name="Transaction_LogReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Absence_Case_ID"/>
+<wd:enumeration value="Alternate_Supplier_Contract_ID"/>
+<wd:enumeration value="Assign_Pay_Group_Event_ID"/>
+<wd:enumeration value="Assignable_Payroll_ID"/>
+<wd:enumeration value="Background_Check_ID"/>
+<wd:enumeration value="Background_Process_Instance_ID"/>
+<wd:enumeration value="Backorder_Event_ID"/>
+<wd:enumeration value="Budget_Amendment_ID"/>
+<wd:enumeration value="Change_Order_Reference_ID"/>
+<wd:enumeration value="Compensation_Review_Event_ID"/>
+<wd:enumeration value="Customer_Request_ID"/>
+<wd:enumeration value="Customer_Request_Reference_ID"/>
+<wd:enumeration value="Eligibility_Override_Event_ID"/>
+<wd:enumeration value="Employee_Review_ID"/>
+<wd:enumeration value="Employee_Severance_Worksheet_Event_ID"/>
+<wd:enumeration value="Goods_Delivery_Group_ID"/>
+<wd:enumeration value="Goods_Delivery_Run_ID"/>
+<wd:enumeration value="Historical_Student_Charge_ID"/>
+<wd:enumeration value="Invite_Committee_Candidate_Event_ID"/>
+<wd:enumeration value="IRS_1099_MISC_Adjustment_ID"/>
+<wd:enumeration value="Mass_Change_Requisition_Requester_ID"/>
+<wd:enumeration value="Medicare_Information_Event_ID"/>
+<wd:enumeration value="Position_Budget_Group_ID"/>
+<wd:enumeration value="Procurement_Mass_Close_ID"/>
+<wd:enumeration value="Procurement_Mass_ReOpen_ID"/>
+<wd:enumeration value="Procurement_Roll_Forward_ID"/>
+<wd:enumeration value="Receipt_Number"/>
+<wd:enumeration value="Request_Leave_of_Absence_ID"/>
+<wd:enumeration value="Requisition_Sourcing_Event_ID"/>
+<wd:enumeration value="Spend_Authorization_ID"/>
+<wd:enumeration value="Spend_Authorization_Mass_Close_ID"/>
+<wd:enumeration value="Student_Charge_Adjustment_ID"/>
+<wd:enumeration value="Student_Charge_Document_ID"/>
+<wd:enumeration value="Student_Charge_ID"/>
+<wd:enumeration value="Student_Dismissal_Event_ID"/>
+<wd:enumeration value="Student_Employment_Eligibility_Event_ID"/>
+<wd:enumeration value="Student_Hold_Assignment_Override_Event_ID"/>
+<wd:enumeration value="Student_Institutional_Withdrawal_Event_ID"/>
+<wd:enumeration value="Student_Leave_of_Absence_Event_ID"/>
+<wd:enumeration value="Supplier_Contract_Amendment_ID"/>
+<wd:enumeration value="Supplier_Contract_History_ID"/>
+<wd:enumeration value="Supplier_Contract_ID"/>
+<wd:enumeration value="Supplier_Invoice_Contract_ID"/>
+<wd:enumeration value="Workday_Project_ID"/>
+<wd:enumeration value="Worker_Time_Card_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="External_Field_and_Parameter_Initialization_ProviderObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:External_Field_and_Parameter_Initialization_ProviderObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:simpleType name="Integration_Document_FieldReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Integration_Document_Field_Name"/>
+<wd:enumeration value="Workday_Integration_Document_Field_Name"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="Position_ElementObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:Position_ElementReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Effective_And_Updated_DateTime_DataType">
+<xsd:annotation>
+<xsd:documentation>Element contains effective and updated date/time data.</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<xsd:documentation>Updated Through must be less than or equal to Current Moment!</xsd:documentation>
+<wd:Validation_Message>Updated Through must be less than or equal to Current Moment!</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<xsd:documentation>Effective From must be less than or equal to Effective Through!</xsd:documentation>
+<wd:Validation_Message>Effective From must be less than or equal to Effective Through!</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<xsd:documentation>If one of Effective From or Effective Through contains a value, both are Required!</xsd:documentation>
+<wd:Validation_Message>If one of Effective From or Effective Through contains a value, both are Required!</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<xsd:documentation>If one of Updated From or Updated Through contains a value, both are Required!</xsd:documentation>
+<wd:Validation_Message>If one of Updated From or Updated Through contains a value, both are Required!</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<xsd:documentation>Updated From must be less than or equal to Updated Through!</xsd:documentation>
+<wd:Validation_Message>Updated From must be less than or equal to Updated Through!</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element maxOccurs="1" minOccurs="0" name="Updated_From" type="xsd:dateTime">
+<xsd:annotation>
+<xsd:documentation>Defines the earliest moment (e.g. datetime) data was entered into the Workday system.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Updated_Through" type="xsd:dateTime">
+<xsd:annotation>
+<xsd:documentation>Defines the latest moment (e.g. datetime) data was entered into the Workday system.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Effective_From" type="xsd:dateTime">
+<xsd:annotation>
+<xsd:documentation>Defines the earliest Effective Date (e.g. As Of Date) data is marked within the Workday system.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Effective_Through" type="xsd:dateTime">
+<xsd:annotation>
+<xsd:documentation>Defines the latest Effective Date (e.g. As Of Date) data is marked within the Workday system.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="OrganizationObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:OrganizationObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Benefit_PlanObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:Benefit_PlanReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Worker_Request_CriteriaType">
+<xsd:annotation>
+<xsd:documentation>The Request Criteria element lets you apply additional criteria to identify the specific instance(s) of a Worker.</xsd:documentation>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="Transaction_Log_Criteria_Data" type="wd:Transaction_Log_CriteriaType">
+<xsd:annotation>
+<xsd:documentation>Transaction Log Criteria Data</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="Organization_Reference" type="wd:OrganizationObjectType">
+<xsd:annotation>
+<xsd:documentation>Unique Identifier for a Supervisory Organization</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="Country_Reference" type="wd:CountryObjectType">
+<xsd:annotation>
+<xsd:documentation>Unique Identifier for a Country</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Subordinate_Organizations" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>When this boolean value is set to true, indicates to include all subordinate organizations to the Organization Reference in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="Position_Reference" type="wd:Position_ElementObjectType">
+<xsd:annotation>
+<xsd:documentation>Unique identifier for  the position of the worker.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element minOccurs="0" name="Event_Reference" type="wd:Transaction_LogObjectType">
+<xsd:annotation>
+<xsd:documentation>The identifier of an existing Event.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="Benefit_Plan_Reference" type="wd:Benefit_PlanObjectType">
+<xsd:annotation>
+<xsd:documentation>The unique identifier to a benefits plan, along with a string describing the benefits plan. Identifies the benefit plan or plans that can be used for Benefit Enrollment and Benefit Eligibility. Enrollment is checked when the benefit plan year falls within the effective date. Otherwise, if the benefit plan year falls outside of the effective data, then eligibility is checked.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element minOccurs="0" name="Field_And_Parameter_Criteria_Data" type="wd:Field_And_Parameter_Criteria_DataType"/>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="National_ID_Criteria_Data" type="wd:Worker_by_National_ID_Request_CriteriaType"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Inactive_Workers" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes from the response terminated employees or contingent workers whose contracts have ended. (See also: Exclude_Employees, Exclude_Contingent_Workers)</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Employees" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes employees from inclusion in the response. (See also: Exclude_Inactive_Workers, Exclude_Contingent_Workers)</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Contingent_Workers" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes contingent workers from inclusion in the response. (See also: Exclude_Inactive_Workers, Exclude_Employees)</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="Eligibility_Criteria_Data" type="wd:Eligibility_Criteria_DataType"/>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="Universal_ID_Reference" type="wd:Universal_IdentifierObjectType">
+<xsd:annotation>
+<xsd:documentation>All worker roles will be returned for the person associated with each universal identifier.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="Response_FilterType">
+<xsd:annotation>
+<xsd:documentation>Parameters that let you filter the data returned in the response. You can filter returned data by dates and page attributes.</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<xsd:documentation>Page number cannot be zero.</xsd:documentation>
+<wd:Validation_Message>Page Number cannot be zero.</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element maxOccurs="1" minOccurs="0" name="As_Of_Effective_Date" type="xsd:date">
+<xsd:annotation>
+<xsd:documentation>Indicates the date when application data, such as benefits and compensation, are deemed effective in the Workday system. (Also referred to as the "Effective Moment".) If not specified, this date defaults to TODAY.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="As_Of_Entry_DateTime" type="xsd:dateTime">
+<xsd:annotation>
+<xsd:documentation>Indicates the date and time that data was entered into the system. (This field is also referred to as the "Entry Moment".) If not specified, defaults to the CURRENT DATE/TIME.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Page">
+<xsd:annotation>
+<xsd:documentation>Indicates the page of data to return in the response, and defaults to the first page (Page = 1). For responses that contain more than one page of data, use this parameter to retrieve the additional pages of data. For example, set Page = 2 to retrieve the second page of data.
+
+Note: If you set the page parameter, you must also specify the "As_Of_Entry_Date" to ensure that the result set remains the same between your requests.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleType>
+<xsd:restriction base="xsd:decimal">
+<xsd:totalDigits value="12"/>
+<xsd:minInclusive value="0"/>
+<xsd:fractionDigits value="0"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Count">
+<xsd:annotation>
+<xsd:documentation>Sets the number of objects to return within each response page (Min = 1, Max = 999, Default = 100 if not set). Any values you set must be between 1-999.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleType>
+<xsd:restriction base="xsd:decimal">
+<xsd:totalDigits value="3"/>
+<xsd:minInclusive value="0"/>
+<xsd:fractionDigits value="0"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="Transaction_Type_ReferencesType">
+<xsd:annotation>
+<xsd:documentation>Wrapper element containing Transaction Types.</xsd:documentation>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="Transaction_Type_Reference" type="wd:Transaction_Log_TypeObjectType">
+<xsd:annotation>
+<xsd:documentation>If specified, this search criterium will return those Transaction Log Entries with Transaction Types that match the search criterium.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="SubscriberObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:SubscriberObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Worker_Response_GroupType">
+<xsd:annotation>
+<xsd:documentation>Use the response group to limit the response to the data you are interested in. If the request does not set any values for the response group, then the response by default returns the following elements: Reference, Personal Data, Employment Data, Compensation Data, Organization Data, and Role Data.</xsd:documentation>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Reference" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Reference element for the worker is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Personal_Information" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Personal Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Additional_Jobs" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>This flag indicates that data for Additional Jobs and International Assignments should be included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Employment_Information" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Employment Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Compensation" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Compensation Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Organizations" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Organization Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Organization_Support_Role_Data" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the supporting role information from the Organization Data element response.  This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Location_Hierarchies" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the location hierarchies from the Organization Data element response.  This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Cost_Centers" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the cost centers from the Organization Data element response.  This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Cost_Center_Hierarchies" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the cost center hierarchies from the Organization Data element response.  This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Companies" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the company organizations from the Organization Data element response.  This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Company_Hierarchies" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the company hierarchies from the Organization Data element response.  This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Matrix_Organizations" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the matrix organizations from the Organization Data element response.  This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Pay_Groups" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the pay groups from the Organization Data element response.  This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Regions" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the regions from the Organization Data element response.  This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Region_Hierarchies" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the region hierarchies from the Organization Data element response.  This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Supervisory_Organizations" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the supervisory organizations from the Organization Data element response.  This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Teams" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the teams from the Organization Data element response.  This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Custom_Organizations" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the custom organizations from the Organization Data element response.  This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Roles" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Role Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Management_Chain_Data" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Management Chain Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Multiple_Managers_in_Management_Chain_Data" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Set to true to return multiple managers in the management chain data section. Default selection is to return a single manager.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Benefit_Enrollments" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Benefit Enrollment Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Benefit_Eligibility" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Includes Benefit Eligibility Data</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Related_Persons" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Related Person Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Qualifications" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Qualification Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Employee_Review" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Employee Review Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Goals" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates that Goal Details will be included in the web service response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Development_Items" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates that Development Item Details will be included in the web service response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Skills" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates that Skill Details will be included in the web service response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Photo" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Photo Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Worker_Documents" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Worker Document Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Transaction_Log_Data" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Transaction Log Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Subevents_for_Corrected_Transaction" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Include sub-events of corrected events in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Subevents_for_Rescinded_Transaction" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Include sub-events of rescinded event in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Succession_Profile" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Succession Profile element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Talent_Assessment" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Talent Assessment element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Employee_Contract_Data" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Employee Contract element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Contracts_for_Terminated_Workers" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Include Contracts for Terminated Workers</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Collective_Agreement_Data" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Include Collective Agreement data. This also requires Include Employment Information to be true.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Probation_Period_Data" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Include Probation Period data. This also requires the Inlcude Employment Information to be true</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Extended_Employee_Contract_Details" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Extended Employee Contracts Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Feedback_Received" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates that Feedback Received will be included in the web service response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_User_Account" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates that User Account Data will be included in the web service response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Career" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates that Career Data will be included in the web service response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Account_Provisioning" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates that Account Provisioning Data will be included in the web service response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Background_Check_Data" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Background Check Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Contingent_Worker_Tax_Authority_Form_Information" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Indicates if the Contingent Worker Tax Authority Form Information Data element is included in the response.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Funds" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the Funds from the Organization Data element response. This can only be selected when the Include Organization Data boolean is also selected</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Fund_Hierarchies" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the fund hierarchies from the Organization Data element response. This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Grants" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the Grants from the Organization Data element response. This can only be selected when the Include Organization Data boolean is also selected</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Grant_Hierarchies" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the grant hierarchies from the Organization Data element response. This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Business_Units" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the Business Units from the Organization Data element response. This can only be selected when the Include Organization Data boolean is also selected</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Business_Unit_Hierarchies" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the business unit hierarchies from the Organization Data element response. This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Programs" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the Programs from the Organization Data element response. This can only be selected when the Include Organization Data boolean is also selected</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Program_Hierarchies" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the program hierarchies from the Organization Data element response. This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Gifts" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the Gifts from the Organization Data element response. This can only be selected when the Include Organization Data boolean is also selected</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Exclude_Gift_Hierarchies" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Excludes the gift hierarchies from the Organization Data element response. This can only be selected when the Include Organization Data boolean is also selected.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="WorkerObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:WorkerReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Eligibility_Criteria_DataType">
+<xsd:annotation>
+<xsd:documentation>Eligibility Criteria Data.  Eligibility Criteria element is used in conjunction with Workday delivered integrations.</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<xsd:documentation>Eligibility Criteria Data Field Reference must be a valid Integration Document Field from a provider specified in the Field_And_Parameter_Criteria_Data element.</xsd:documentation>
+<wd:Validation_Message>Eligibility Criteria Data Field Reference must be a valid Integration Document Field from a provider specified in the Field_And_Parameter_Criteria_Data element.</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element name="Field_Reference" type="wd:Integration_Document_FieldObjectType">
+<xsd:annotation>
+<xsd:documentation>Integration Document Field Reference.  Eligibility Criteria element is used in conjunction with Workday delivered integrations.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="As_Of_Effective_Date" type="xsd:date">
+<xsd:annotation>
+<xsd:documentation>Indicates the date when application data, such as benefits and compensation, are deemed effective in the Workday system. (Also referred to as the "Effective Moment".) If not specified, this date defaults to TODAY.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="As_Of_Entry_DateTime" type="xsd:dateTime">
+<xsd:annotation>
+<xsd:documentation>Indicates the date and time that data was entered into the system. (This field is also referred to as the "Entry Moment".) If not specified, defaults to the CURRENT DATE/TIME.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:simpleType name="WorkerReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Contingent_Worker_ID"/>
+<wd:enumeration value="Employee_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="External_Field_and_Parameter_Initialization_ProviderReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Integration_System_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="Transaction_Log_CriteriaType">
+<xsd:annotation>
+<xsd:documentation>Searches the transaction log for business processes and event lites to find specific events that occurred during a period of time.</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<xsd:documentation>Subscriber Reference must have an enabled Transaction Log Service configuration.</xsd:documentation>
+<wd:Validation_Message>Subscriber Reference must have an enabled Transaction Log Service configuration.</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element minOccurs="0" name="Transaction_Date_Range_Data" type="wd:Effective_And_Updated_DateTime_DataType">
+<xsd:annotation>
+<xsd:documentation>Encapsulating element containing Effective and Updated DateTime data.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:choice>
+<xsd:element minOccurs="0" name="Transaction_Type_References" type="wd:Transaction_Type_ReferencesType">
+<xsd:annotation>
+<xsd:documentation>If specified, this search criteria will return those Transaction Log Entries which match the Transaction Types specified here.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element minOccurs="0" name="Subscriber_Reference" type="wd:SubscriberObjectType">
+<xsd:annotation>
+<xsd:documentation>If specified, this search criterium will return those Transaction Log Entries that match the Transaction Types defined in the subscription of the subscriber.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:choice>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:simpleType name="National_ID_TypeReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="National_ID_Type_Code"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="Benefit_PlanReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Additional_Benefits_Plan_ID"/>
+<wd:enumeration value="Defined_Contribution_Plan_ID"/>
+<wd:enumeration value="Health_Care_Coverage_Plan_ID"/>
+<wd:enumeration value="Health_Savings_Account_Plan_ID"/>
+<wd:enumeration value="Insurance_Coverage_Plan_ID"/>
+<wd:enumeration value="Spending_Account_Plan_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="External_Field_and_Parameter_Initialization_ProviderObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:External_Field_and_Parameter_Initialization_ProviderReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:simpleType name="OrganizationReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Company_Reference_ID"/>
+<wd:enumeration value="Cost_Center_Reference_ID"/>
+<wd:enumeration value="Custom_Organization_Reference_ID"/>
+<wd:enumeration value="Organization_Reference_ID"/>
+<wd:enumeration value="Region_Reference_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="Universal_IdentifierObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:Universal_IdentifierReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="National_ID_TypeObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:National_ID_TypeReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Integration_Document_FieldObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Integration_Document_FieldObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="CountryObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:CountryReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:simpleType name="Transaction_Log_TypeReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Business_Process_Type"/>
+<wd:enumeration value="Event_Lite_Type_ID"/>
+<wd:enumeration value="Reorganization_Activity_Type"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="CountryObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:CountryObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Get_Workers_RequestType">
+<xsd:annotation>
+<xsd:documentation>Request element used to find and get workers and their associated data.</xsd:documentation>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element minOccurs="0" name="Request_References" type="wd:Worker_Request_ReferencesType"/>
+<xsd:element minOccurs="0" name="Request_Criteria" type="wd:Worker_Request_CriteriaType"/>
+<xsd:element minOccurs="0" name="Response_Filter" type="wd:Response_FilterType"/>
+<xsd:element minOccurs="0" name="Response_Group" type="wd:Worker_Response_GroupType"/>
+</xsd:sequence>
+<xsd:attribute ref="wd:version"/>
+</xsd:complexType>
+<xsd:simpleType name="SubscriberReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Integration_Service_Name"/>
+<wd:enumeration value="Integration_System_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:attribute name="version" type="xsd:string" wd:fixed="v32.0"/>
+<xsd:complexType name="Universal_IdentifierObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Universal_IdentifierObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Transaction_LogObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Transaction_LogObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Integration_Document_FieldObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:Integration_Document_FieldReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+<xsd:attribute name="parent_id" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of a parent object</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+<xsd:attribute name="parent_type">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type of a parent object</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Integration_Document_Name"/>
+<wd:enumeration value="Workday_Integration_Document_Name"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Benefit_PlanObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Benefit_PlanObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Transaction_Log_TypeObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Transaction_Log_TypeObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Position_ElementObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Position_ElementObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="SubscriberObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:SubscriberReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:simpleType name="Position_ElementReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Position_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="OrganizationObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:OrganizationReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Worker_by_National_ID_Request_CriteriaType">
+<xsd:annotation>
+<xsd:documentation>National Id request criteria.</xsd:documentation>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element maxOccurs="1" name="Identifier_ID" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>The specific national ID value for the worker.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:choice>
+<xsd:element name="National_ID_Type_Reference" type="wd:National_ID_TypeObjectType">
+<xsd:annotation>
+<xsd:documentation>The type of national id for the worker. Either the type or the country need to be included.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element name="Country_Reference" type="wd:CountryObjectType">
+<xsd:annotation>
+<xsd:documentation>The Country Reference for the National ID.
+You must enter either the National ID Type or the Country for the National ID.
+Using the National ID Type is more explicit -if a country is entered, then it is possible that there are multiple workers who have the same ID value but with different national id types within that country.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:choice>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,440 @@
+
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:tns="http://AltInn.no/webservices/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://AltInn.no/webservices/">
+   <wsdl:types>
+      <s:schema elementFormDefault="qualified" targetNamespace="http://AltInn.no/webservices/">
+         <s:element name="SubmitBatch">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="batch" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="SubmitBatchResponse">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="SubmitBatchResult" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:simpleType name="AttachmentType">
+            <s:restriction base="s:string">
+               <s:enumeration value="None" />
+               <s:enumeration value="Dime" />
+               <s:enumeration value="Base64" />
+            </s:restriction>
+         </s:simpleType>
+         <s:element name="SubmitBatchPw">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="batch" type="s:string" />
+                  <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="SubmitBatchPwResponse">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="SubmitBatchPwResult" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="BatchStatus">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="1" maxOccurs="1" name="enterpriseSystemId" type="s:int" />
+                  <s:element minOccurs="0" maxOccurs="1" name="batchId" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="BatchStatusResponse">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="BatchStatusResult" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="BatchStatusPw">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="1" maxOccurs="1" name="enterpriseSystemId" type="s:int" />
+                  <s:element minOccurs="0" maxOccurs="1" name="batchId" type="s:string" />
+                  <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="BatchStatusPwResponse">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="BatchStatusPwResult" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="BatchReceipt">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="1" maxOccurs="1" name="enterpriseSystemId" type="s:int" />
+                  <s:element minOccurs="0" maxOccurs="1" name="batchId" type="s:string" />
+                  <s:element minOccurs="1" maxOccurs="1" name="version" type="s:int" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="BatchReceiptResponse">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="BatchReceiptResult" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="BatchReceiptPw">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="1" maxOccurs="1" name="enterpriseSystemId" type="s:int" />
+                  <s:element minOccurs="0" maxOccurs="1" name="batchId" type="s:string" />
+                  <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                  <s:element minOccurs="1" maxOccurs="1" name="version" type="s:int" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="BatchReceiptPwResponse">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="BatchReceiptPwResult" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="GetSchemaDefinition">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="1" maxOccurs="1" name="orNumber" type="s:long" />
+                  <s:element minOccurs="1" maxOccurs="1" name="orVersion" type="s:long" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="GetSchemaDefinitionResponse">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="GetSchemaDefinitionResult" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="ActiveForms">
+            <s:complexType />
+         </s:element>
+         <s:element name="ActiveFormsResponse">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="ActiveFormsResult" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="AltInnStatus">
+            <s:complexType />
+         </s:element>
+         <s:element name="AltInnStatusResponse">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="AltInnStatusResult" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="RequestInfoText">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="1" maxOccurs="1" name="informationType" type="tns:EnterpriseInformationType" />
+                  <s:element minOccurs="1" maxOccurs="1" name="orNumber" type="s:long" />
+                  <s:element minOccurs="1" maxOccurs="1" name="orVersion" type="s:long" />
+                  <s:element minOccurs="1" maxOccurs="1" name="languageCode" type="s:int" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:simpleType name="EnterpriseInformationType">
+            <s:restriction base="s:string">
+               <s:enumeration value="SIGNING_TEXT" />
+            </s:restriction>
+         </s:simpleType>
+         <s:element name="RequestInfoTextResponse">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="RequestInfoTextResult" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="RequestPrefillData">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="prefillRequestXml" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="RequestPrefillDataResponse">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="RequestPrefillDataResult" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:element name="RequestAuthenticationChallenge">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="1" maxOccurs="1" name="EnterpriseId" type="s:int" />
+                  <s:element minOccurs="0" maxOccurs="1" name="FNumber" type="s:string" />
+                  <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+                  <s:element minOccurs="1" maxOccurs="1" name="AuthenticationMethod" type="tns:EnterpriseSigningAuthenticationMethod" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+         <s:simpleType name="EnterpriseSigningAuthenticationMethod">
+            <s:restriction base="s:string">
+               <s:enumeration value="AUTHENTICATION_METHOD_SMS" />
+               <s:enumeration value="AUTHENTICATION_METHOD_CURRENT_PIN" />
+            </s:restriction>
+         </s:simpleType>
+         <s:element name="RequestAuthenticationChallengeResponse">
+            <s:complexType>
+               <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="RequestAuthenticationChallengeResult" type="s:string" />
+               </s:sequence>
+            </s:complexType>
+         </s:element>
+      </s:schema>
+   </wsdl:types>
+   <wsdl:message name="SubmitBatchSoapIn">
+      <wsdl:part name="parameters" element="tns:SubmitBatch" />
+   </wsdl:message>
+   <wsdl:message name="SubmitBatchSoapOut">
+      <wsdl:part name="parameters" element="tns:SubmitBatchResponse" />
+   </wsdl:message>
+   <wsdl:message name="SubmitBatchPwSoapIn">
+      <wsdl:part name="parameters" element="tns:SubmitBatchPw" />
+   </wsdl:message>
+   <wsdl:message name="SubmitBatchPwSoapOut">
+      <wsdl:part name="parameters" element="tns:SubmitBatchPwResponse" />
+   </wsdl:message>
+   <wsdl:message name="BatchStatusSoapIn">
+      <wsdl:part name="parameters" element="tns:BatchStatus" />
+   </wsdl:message>
+   <wsdl:message name="BatchStatusSoapOut">
+      <wsdl:part name="parameters" element="tns:BatchStatusResponse" />
+   </wsdl:message>
+   <wsdl:message name="BatchStatusPwSoapIn">
+      <wsdl:part name="parameters" element="tns:BatchStatusPw" />
+   </wsdl:message>
+   <wsdl:message name="BatchStatusPwSoapOut">
+      <wsdl:part name="parameters" element="tns:BatchStatusPwResponse" />
+   </wsdl:message>
+   <wsdl:message name="BatchReceiptSoapIn">
+      <wsdl:part name="parameters" element="tns:BatchReceipt" />
+   </wsdl:message>
+   <wsdl:message name="BatchReceiptSoapOut">
+      <wsdl:part name="parameters" element="tns:BatchReceiptResponse" />
+   </wsdl:message>
+   <wsdl:message name="BatchReceiptPwSoapIn">
+      <wsdl:part name="parameters" element="tns:BatchReceiptPw" />
+   </wsdl:message>
+   <wsdl:message name="BatchReceiptPwSoapOut">
+      <wsdl:part name="parameters" element="tns:BatchReceiptPwResponse" />
+   </wsdl:message>
+   <wsdl:message name="GetSchemaDefinitionSoapIn">
+      <wsdl:part name="parameters" element="tns:GetSchemaDefinition" />
+   </wsdl:message>
+   <wsdl:message name="GetSchemaDefinitionSoapOut">
+      <wsdl:part name="parameters" element="tns:GetSchemaDefinitionResponse" />
+   </wsdl:message>
+   <wsdl:message name="ActiveFormsSoapIn">
+      <wsdl:part name="parameters" element="tns:ActiveForms" />
+   </wsdl:message>
+   <wsdl:message name="ActiveFormsSoapOut">
+      <wsdl:part name="parameters" element="tns:ActiveFormsResponse" />
+   </wsdl:message>
+   <wsdl:message name="AltInnStatusSoapIn">
+      <wsdl:part name="parameters" element="tns:AltInnStatus" />
+   </wsdl:message>
+   <wsdl:message name="AltInnStatusSoapOut">
+      <wsdl:part name="parameters" element="tns:AltInnStatusResponse" />
+   </wsdl:message>
+   <wsdl:message name="RequestInfoTextSoapIn">
+      <wsdl:part name="parameters" element="tns:RequestInfoText" />
+   </wsdl:message>
+   <wsdl:message name="RequestInfoTextSoapOut">
+      <wsdl:part name="parameters" element="tns:RequestInfoTextResponse" />
+   </wsdl:message>
+   <wsdl:message name="RequestPrefillDataSoapIn">
+      <wsdl:part name="parameters" element="tns:RequestPrefillData" />
+   </wsdl:message>
+   <wsdl:message name="RequestPrefillDataSoapOut">
+      <wsdl:part name="parameters" element="tns:RequestPrefillDataResponse" />
+   </wsdl:message>
+   <wsdl:message name="RequestAuthenticationChallengeSoapIn">
+      <wsdl:part name="parameters" element="tns:RequestAuthenticationChallenge" />
+   </wsdl:message>
+   <wsdl:message name="RequestAuthenticationChallengeSoapOut">
+      <wsdl:part name="parameters" element="tns:RequestAuthenticationChallengeResponse" />
+   </wsdl:message>
+   <wsdl:portType name="DataExchangeSoap">
+      <wsdl:operation name="SubmitBatch">
+         <wsdl:input message="tns:SubmitBatchSoapIn" />
+         <wsdl:output message="tns:SubmitBatchSoapOut" />
+      </wsdl:operation>
+      <wsdl:operation name="SubmitBatchPw">
+         <wsdl:input message="tns:SubmitBatchPwSoapIn" />
+         <wsdl:output message="tns:SubmitBatchPwSoapOut" />
+      </wsdl:operation>
+      <wsdl:operation name="BatchStatus">
+         <wsdl:input message="tns:BatchStatusSoapIn" />
+         <wsdl:output message="tns:BatchStatusSoapOut" />
+      </wsdl:operation>
+      <wsdl:operation name="BatchStatusPw">
+         <wsdl:input message="tns:BatchStatusPwSoapIn" />
+         <wsdl:output message="tns:BatchStatusPwSoapOut" />
+      </wsdl:operation>
+      <wsdl:operation name="BatchReceipt">
+         <wsdl:input message="tns:BatchReceiptSoapIn" />
+         <wsdl:output message="tns:BatchReceiptSoapOut" />
+      </wsdl:operation>
+      <wsdl:operation name="BatchReceiptPw">
+         <wsdl:input message="tns:BatchReceiptPwSoapIn" />
+         <wsdl:output message="tns:BatchReceiptPwSoapOut" />
+      </wsdl:operation>
+      <wsdl:operation name="GetSchemaDefinition">
+         <wsdl:input message="tns:GetSchemaDefinitionSoapIn" />
+         <wsdl:output message="tns:GetSchemaDefinitionSoapOut" />
+      </wsdl:operation>
+      <wsdl:operation name="ActiveForms">
+         <wsdl:input message="tns:ActiveFormsSoapIn" />
+         <wsdl:output message="tns:ActiveFormsSoapOut" />
+      </wsdl:operation>
+      <wsdl:operation name="AltInnStatus">
+         <wsdl:input message="tns:AltInnStatusSoapIn" />
+         <wsdl:output message="tns:AltInnStatusSoapOut" />
+      </wsdl:operation>
+      <wsdl:operation name="RequestInfoText">
+         <wsdl:input message="tns:RequestInfoTextSoapIn" />
+         <wsdl:output message="tns:RequestInfoTextSoapOut" />
+      </wsdl:operation>
+      <wsdl:operation name="RequestPrefillData">
+         <wsdl:input message="tns:RequestPrefillDataSoapIn" />
+         <wsdl:output message="tns:RequestPrefillDataSoapOut" />
+      </wsdl:operation>
+      <wsdl:operation name="RequestAuthenticationChallenge">
+         <wsdl:input message="tns:RequestAuthenticationChallengeSoapIn" />
+         <wsdl:output message="tns:RequestAuthenticationChallengeSoapOut" />
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="DataExchangeSoap" type="tns:DataExchangeSoap">
+      <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+      <wsdl:operation name="SubmitBatch">
+         <soap:operation soapAction="http://AltInn.no/webservices/SubmitBatch" style="document" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="SubmitBatchPw">
+         <soap:operation soapAction="http://AltInn.no/webservices/SubmitBatchPw" style="document" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="BatchStatus">
+         <soap:operation soapAction="http://AltInn.no/webservices/BatchStatus" style="document" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="BatchStatusPw">
+         <soap:operation soapAction="http://AltInn.no/webservices/BatchStatusPw" style="document" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="BatchReceipt">
+         <soap:operation soapAction="http://AltInn.no/webservices/BatchReceipt" style="document" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="BatchReceiptPw">
+         <soap:operation soapAction="http://AltInn.no/webservices/BatchReceiptPw" style="document" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="GetSchemaDefinition">
+         <soap:operation soapAction="http://AltInn.no/webservices/GetSchemaDefinition" style="document" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="ActiveForms">
+         <soap:operation soapAction="http://AltInn.no/webservices/ActiveForms" style="document" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="AltInnStatus">
+         <soap:operation soapAction="http://AltInn.no/webservices/AltInnStatus" style="document" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="RequestInfoText">
+         <soap:operation soapAction="http://AltInn.no/webservices/RequestInfoText" style="document" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="RequestPrefillData">
+         <soap:operation soapAction="http://AltInn.no/webservices/RequestPrefillData" style="document" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="RequestAuthenticationChallenge">
+         <soap:operation soapAction="http://AltInn.no/webservices/RequestAuthenticationChallenge" style="document" />
+         <wsdl:input>
+            <soap:body use="literal" />
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" />
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="DataExchange">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/" />
+      <wsdl:port name="DataExchangeSoap" binding="tns:DataExchangeSoap">
+         <soap:address location="http://localhost/AltInn.WebServices.Integration/DataExchange.asmx" />
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.sap.com/eDocument/Peru/InvoiceTransmission/v1.0"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#" name="eDocInvoiceTransmissionPeru"
+	xmlns:in="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+	targetNamespace="http://www.sap.com/eDocument/Peru/InvoiceTransmission/v1.0">
+
+
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+			xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+			<xsd:element name="Invoice" type="InvoiceTypeAny">
+				<xsd:annotation>
+					<xsd:documentation>This simplified WSDL contains no message structures, this improves memory consumption in HCI</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+
+			<xsd:complexType name="InvoiceTypeAny">
+				<xsd:sequence>
+					<xsd:any namespace='http://www.w3.org/1999/xhtml' minOccurs='1'
+						maxOccurs='unbounded' processContents='lax' />
+				</xsd:sequence>
+			</xsd:complexType>
+
+		</xsd:schema>
+
+
+		<xsd:schema targetNamespace="http://www.sap.com/eDocument/Peru/InvoiceTransmission/v1.0" >
+			<xsd:element name="SendInvoiceResponse" type="tns:SendInvoiceResponseType">
+			</xsd:element>
+			<xsd:complexType name="SendInvoiceResponseType">
+				<xsd:sequence>
+					<xsd:any namespace='http://www.w3.org/1999/xhtml' minOccurs='1'
+						maxOccurs='unbounded' processContents='lax' />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+
+	</wsdl:types>
+
+
+
+	<wsdl:message name="SendInvoiceResponse">
+		<wsdl:part name="SendInvoiceResponseParameters" element="tns:SendInvoiceResponse">
+			<wsdl:documentation>
+				UBL Application Response Type + Sent Signed
+				Invoice
+			</wsdl:documentation>
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="Invoice">
+		<wsdl:part name="InvoicePart" element="in:Invoice"></wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="eDocInvoiceTransmissionPeru">
+		<wsdl:operation name="SendInvoice">
+			<wsdl:input message="tns:Invoice" name="eDocInvoiceTransmissionPeruInput" />
+			<wsdl:output message="tns:SendInvoiceResponse" name="eDocInvoiceTransmissionPeruOutput" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="eDocInvoiceTransmissionPeruSOAP" type="tns:eDocInvoiceTransmissionPeru">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="SendInvoice">
+			<soap:operation
+				soapAction="http://www.sap.com/eDocument/Peru/InvoiceTransmission/v1.0/NewOperation" />
+			<wsdl:input name="eDocInvoiceTransmissionPeruInput">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="eDocInvoiceTransmissionPeruOutput">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="eDocInvoiceTransmissionPeru">
+		<wsdl:port binding="tns:eDocInvoiceTransmissionPeruSOAP"
+			name="eDocInvoiceTransmissionPeruSOAP">
+			<soap:address location="http://endpointaddress" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
+

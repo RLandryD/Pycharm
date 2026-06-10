@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.sap.com/eDocument/Peru/VoidedDocumentsTransmission/v1.0"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#" name="eDocInvoiceTransmissionPeru"
+	xmlns:vd="urn:sunat:names:specification:ubl:peru:schema:xsd:VoidedDocuments-1"
+	targetNamespace="http://www.sap.com/eDocument/Peru/VoidedDocumentsTransmission/v1.0">
+	<wsdl:types>
+		<!-- VoidedDocumentsTransmission -->
+				<xsd:schema
+			targetNamespace="urn:sunat:names:specification:ubl:peru:schema:xsd:VoidedDocuments-1"
+			xmlns="urn:sunat:names:specification:ubl:peru:schema:xsd:VoidedDocuments-1"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+			<xsd:element name="VoidedDocuments" type="VoidedDocumentsType">
+				<xsd:annotation>
+					<xsd:documentation>This simplified WSDL contains no message
+						structures, this improves memory consumption in HCI
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+
+			<xsd:complexType name="VoidedDocumentsType">
+				<xsd:sequence>
+					<xsd:any namespace='http://www.w3.org/1999/xhtml'
+						minOccurs='1' maxOccurs='unbounded' processContents='lax' />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+
+		<xsd:schema
+			xmlns:tns="http://www.sap.com/eDocument/Peru/VoidedDocumentsTransmission/v1.0"
+			targetNamespace="http://www.sap.com/eDocument/Peru/VoidedDocumentsTransmission/v1.0">
+			<xsd:element name="SendVoidedDocumentsResponse" type="tns:SendVoidedDocumentsResponseType">
+			</xsd:element>
+			<xsd:complexType name="SendVoidedDocumentsResponseType">
+				<xsd:sequence>
+					<xsd:any namespace='http://www.w3.org/1999/xhtml'
+						minOccurs='1' maxOccurs='unbounded' processContents='lax' />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+		
+		
+	</wsdl:types>
+
+
+	<wsdl:message name="VoidedDocuments">
+		<wsdl:part name="VoidedDocumentsParameters" element="vd:VoidedDocuments" />
+	</wsdl:message>
+	<wsdl:message name="SendVoidedDocumentsResponse">
+		<wsdl:part name="SendVoidedDocumentsResponseParameters"  element="tns:SendVoidedDocumentsResponse" />
+	</wsdl:message>
+	<wsdl:portType name="eDocPeruVoidedDocumentsTransmission">
+		<wsdl:operation name="SendVoidedDocuments">
+			<wsdl:input message="tns:VoidedDocuments" />
+			<wsdl:output message="tns:SendVoidedDocumentsResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="eDocPeruVoidedDocumentsTransmissionSOAP"
+		type="tns:eDocPeruVoidedDocumentsTransmission">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="SendVoidedDocuments">
+			<soap:operation
+				soapAction="http://www.sap.com/eDocument/Peru/VoidedDocumentsTransmission/v1.0/NewOperation" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="eDocPeruVoidedDocumentsTransmission">
+		<wsdl:port binding="tns:eDocPeruVoidedDocumentsTransmissionSOAP"
+			name="eDocPeruVoidedDocumentsTransmissionSOAP">
+			<soap:address location="http://endpointaddress" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
+

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0">
+	<xsd:element name="root">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element type="aggregatedSalesTransactions" name="aggregatedSalesTransactions" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="aggregatedSalesTransactions">
+		<xsd:sequence>
+		    <xsd:element type="xsd:token" name="aggregationID" maxOccurs="1" minOccurs="1"/>
+			<xsd:element type="xsd:token" name="storeID" maxOccurs="1" minOccurs="1"/>
+			<xsd:element type="xsd:token" name="date" maxOccurs="1" minOccurs="1"/>
+			<xsd:element type="xsd:token" name="externalSystemID" maxOccurs="1" minOccurs="1"/>
+			<xsd:element type="aggregatedSalesByProduct" name="aggregatedSalesByProduct" maxOccurs="unbounded" minOccurs="0"/>
+			<xsd:element type="aggregatedPaymentList" name="aggregatedPaymentList" maxOccurs="unbounded" minOccurs="0"/>
+			<xsd:element type="aggregatedSalesPerReceipt" name="salesPerReceipt" maxOccurs="unbounded" minOccurs="0"/>
+			<xsd:element type="customerOrderPaymentList" name="customerOrderPaymentList" maxOccurs="unbounded" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="aggregatedSalesByProduct">
+		<xsd:sequence>
+		    <xsd:element type="xsd:token" name="sequenceNumber" maxOccurs="1" minOccurs="1" />
+			<xsd:element type="xsd:token" name="productID" maxOccurs="1" minOccurs="1"/>
+		    <xsd:element type="xsd:token" name="itemType" maxOccurs="1" minOccurs="1"/>
+			<xsd:element type="xsd:token" name="currency" maxOccurs="1" minOccurs="1"/>
+			<xsd:element type="xsd:token" name="totalSalesAmount" maxOccurs="1" minOccurs="1"/>
+			<xsd:element type="xsd:token" name="totalQuantity" maxOccurs="1" minOccurs="1"/>
+			<xsd:element type="xsd:token" name="unitCode" maxOccurs="1" minOccurs="1"/>
+			<xsd:element type="xsd:token" name="promotion" maxOccurs="1" minOccurs="0"/>
+			<xsd:element type="priceSpecifications" name="priceSpecifications" maxOccurs="unbounded" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+    <xsd:complexType name="aggregatedPaymentList">
+		<xsd:sequence>
+		    <xsd:element type="xsd:token" name="paymentMethod" maxOccurs="1" minOccurs="1" />
+		    <xsd:element type="amount" name="amount" maxOccurs="1" minOccurs="1" />
+			<xsd:element type="xsd:token" name="paytCardByDigitalPaymentSrvc" maxOccurs="1" minOccurs="0"/>
+			<xsd:element type="xsd:token" name="authorizationDateTime" maxOccurs="1" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="aggregatedSalesPerReceipt">
+		<xsd:sequence>
+			<xsd:element type="xsd:token" name="externalTransactionID" />
+			<xsd:element type="xsd:token" name="workstation" />
+			<xsd:element type="xsd:token" name="customerId" minOccurs="0" />
+			<xsd:element type="xsd:token" name="endTime" minOccurs="0" />
+			<xsd:element type="xsd:token" name="operatorId" minOccurs="0" />
+			<xsd:element type="xsd:token" name="channelId" minOccurs="0" />
+			<xsd:element type="xsd:token" name="transactionNumber" minOccurs="0" />
+			<xsd:element type="salesPerReceiptDiscount" name="discounts" minOccurs="0" maxOccurs="unbounded" />
+			<xsd:element type="salesPerReceiptItem" name="item" maxOccurs="unbounded" />
+			<xsd:element type="paymentList" name="paymentList" minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="customerOrderPaymentList">
+		<xsd:sequence>
+			<xsd:element type="xsd:token" name="externalTransactionID" />
+			<xsd:element type="xsd:token" name="workstation" />
+			<xsd:element type="xsd:token" name="customerId" minOccurs="0" />
+			<xsd:element type="xsd:token" name="operatorId" minOccurs="0" />
+			<xsd:element type="xsd:token" name="channelId" minOccurs="0" />
+			<xsd:element type="xsd:token" name="transactionNumber" minOccurs="0" />
+			<xsd:element type="salesPerReceiptDiscount" name="discounts" minOccurs="0" maxOccurs="unbounded" />
+			<xsd:element type="salesPerReceiptItem" name="item" maxOccurs="unbounded" />
+			<xsd:element type="paymentList" name="paymentList" minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="salesPerReceiptDiscount">
+		<xsd:sequence>
+			<xsd:element type="xsd:token" name="discountType" />
+			<xsd:element type="xsd:token" name="discountAmount" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="salesPerReceiptItem">
+		<xsd:sequence>
+			<xsd:element type="xsd:token" name="itemID" minOccurs="0" />
+			<xsd:element type="xsd:token" name="itemType" minOccurs="0" />
+			<xsd:element type="xsd:token" name="totalAmount" />
+			<xsd:element type="xsd:token" name="currency" />
+			<xsd:element type="xsd:token" name="uom" minOccurs="0" />
+			<xsd:element type="xsd:token" name="quantity" minOccurs="0" />
+			<xsd:element type="xsd:token" name="promotion" maxOccurs="1" minOccurs="0"/>
+			<xsd:element type="priceSpecifications" name="priceSpecification" minOccurs="0" maxOccurs="unbounded" />
+			<xsd:element type="xsd:token" name="salesMovementItemTypeCode" minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="paymentList">
+		<xsd:sequence>
+			<xsd:element type="xsd:token" name="paymentMethod" />
+			<xsd:element type="amount" name="amount" />
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="amount">
+		<xsd:sequence>
+		    <xsd:element type="xsd:token" name="amount" maxOccurs="1" minOccurs="1"/>
+            <xsd:element type="xsd:token" name="currencyCode" maxOccurs="1" minOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="priceSpecifications">
+		<xsd:sequence>
+            <xsd:element type="xsd:token" name="priceSpecificationElementTypeCode" maxOccurs="1" minOccurs="1"/>
+            <xsd:element type="xsd:token" name="priceSpecificationRateValue" maxOccurs="1" minOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+</xsd:schema>

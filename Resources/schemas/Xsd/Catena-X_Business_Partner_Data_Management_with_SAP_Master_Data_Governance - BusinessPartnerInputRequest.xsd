@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2015 rel. 4 (http://www.altova.com) von Sina Otte (SAP SE) bearbeitet -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="BusinessPartnerInputRequest" type="BusinessPartnerInputRequestType"/>
+	<!-- Definitions of complex types -->
+	<xs:complexType name="BusinessPartnerInputRequestType">
+		<xs:sequence>
+			<xs:element name="businessPartnerIEntity" type="businessPartnerIEntity" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="businessPartnerIEntity">
+		<xs:sequence>
+			<xs:element name="externalId" type="xs:string"/>
+			<xs:element name="nameParts" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="identifiers" type="BusinessPartnerIdentifierDto" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="states" type="BusinessPartnerStateDto" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="roles" type="RoleEnum" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="legalEntity" type="LegalEntityRepresentationInputDto" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="site" type="SiteRepresentationInputDto" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="address" type="AddressRepresentationInputDto" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="isOwnCompanyData" type="xs:boolean" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BusinessPartnerIdentifierDto">
+		<xs:sequence>
+			<xs:element name="type" type="xs:string"/>
+			<xs:element name="value" type="xs:string" minOccurs="0"/>
+			<xs:element name="issuingBody" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BusinessPartnerStateDto">
+		<xs:sequence>
+			<xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+			<xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+			<xs:element name="type" type="StateEnum"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LegalEntityRepresentationInputDto">
+		<xs:sequence>
+			<xs:element name="legalEntityBpn" type="xs:string" minOccurs="0"/>
+			<xs:element name="legalName" type="xs:string" minOccurs="0"/>
+			<xs:element name="shortName" type="xs:string" minOccurs="0"/>
+			<xs:element name="legalForm" type="xs:string" minOccurs="0"/>
+			<xs:element name="classifications" type="BusinessPartnerClassificationDto" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BusinessPartnerClassificationDto">
+		<xs:sequence>
+			<xs:element name="type" type="ClassificationTypeEnum" minOccurs="0"/>
+			<xs:element name="code" type="xs:string" minOccurs="0"/>
+			<xs:element name="value" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SiteRepresentationInputDto">
+		<xs:sequence>
+			<xs:element name="siteBpn" type="xs:string" minOccurs="0"/>
+			<xs:element name="name" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AddressRepresentationInputDto">
+		<xs:sequence>
+			<xs:element name="addressBpn" type="xs:string" minOccurs="0"/>
+			<xs:element name="name" type="xs:string" minOccurs="0"/>
+			<xs:element name="addressType" type="AddressTypeEnum" minOccurs="0"/>
+			<xs:element name="physicalPostalAddress" type="PhysicalPostalAddressDto" minOccurs="0"/>
+			<xs:element name="alternativePostalAddress" type="AlternativePostalAddressDto" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PhysicalPostalAddressDto">
+		<xs:sequence>
+			<xs:element name="geographicCoordinates" type="GeoCoordinateDto" minOccurs="0"/>
+			<xs:element name="country" type="CountryCodeEnum" minOccurs="0"/>
+			<xs:element name="administrativeAreaLevel1" type="xs:string" minOccurs="0"/>
+			<xs:element name="administrativeAreaLevel2" type="xs:string" minOccurs="0"/>
+			<xs:element name="administrativeAreaLevel3" type="xs:string" minOccurs="0"/>
+			<xs:element name="postalCode" type="xs:string" minOccurs="0"/>
+			<xs:element name="city" type="xs:string" minOccurs="0"/>
+			<xs:element name="district" type="xs:string" minOccurs="0"/>
+			<xs:element name="street" type="StreetDtoType" minOccurs="0"/>
+			<xs:element name="companyPostalCode" type="xs:string" minOccurs="0"/>
+			<xs:element name="industrialZone" type="xs:string" minOccurs="0"/>
+			<xs:element name="building" type="xs:string" minOccurs="0"/>
+			<xs:element name="floor" type="xs:string" minOccurs="0"/>
+			<xs:element name="door" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AlternativePostalAddressDto">
+		<xs:sequence>
+			<xs:element name="geographicCoordinates" type="GeoCoordinateDto" minOccurs="0"/>
+			<xs:element name="country" type="CountryCodeEnum" minOccurs="0"/>
+			<xs:element name="administrativeAreaLevel1" type="xs:string" minOccurs="0"/>
+			<xs:element name="postalCode" type="xs:string" minOccurs="0"/>
+			<xs:element name="city" type="xs:string" minOccurs="0"/>
+			<xs:element name="deliveryServiceType" type="DeliveryServiceTypeEnum" minOccurs="0"/>
+			<xs:element name="deliveryServiceQualifier" type="xs:string" minOccurs="0"/>
+			<xs:element name="deliveryServiceNumber" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GeoCoordinateDto">
+		<xs:sequence>
+			<xs:element name="longitude" type="xs:float" minOccurs="0"/>
+			<xs:element name="latitude" type="xs:float" minOccurs="0"/>
+			<xs:element name="altitude" type="xs:float" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="StreetDtoType">
+		<xs:sequence>
+			<xs:element name="namePrefix" type="NamePrefixType" minOccurs="0"/>
+			<xs:element name="additionalNamePrefix" type="AdditionalNamePrefixType" minOccurs="0"/>
+			<xs:element name="name" type="NameType" minOccurs="0"/>
+			<xs:element name="nameSuffix" type="NameSuffixType" minOccurs="0"/>
+			<xs:element name="additionalNameSuffix" type="AdditionalNameSuffixType" minOccurs="0"/>
+			<xs:element name="houseNumber" type="HouseNumberType" minOccurs="0"/>
+			<xs:element name="houseNumberSupplement" type="HouseNumberSupplementType" minOccurs="0"/>
+			<xs:element name="milestone" type="MilestoneType" minOccurs="0"/>
+			<xs:element name="direction" type="DirectionType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Definitions of simple types -->
+	<xs:simpleType name="CountryCodeEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="UNDEFINED"/>
+			<xs:enumeration value="AC"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StateEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ACTIVE"/>
+			<xs:enumeration value="INACTIVE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ClassificationTypeEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NACE"/>
+			<xs:enumeration value="NAF"/>
+			<xs:enumeration value="NAICS"/>
+			<xs:enumeration value="SIC"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AddressTypeEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="LegalAndSiteMainAddress"/>
+			<xs:enumeration value="LegalAddress"/>
+			<xs:enumeration value="SiteMainAddress"/>
+			<xs:enumeration value="AdditionalAddress"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DeliveryServiceTypeEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PO_BOX"/>
+			<xs:enumeration value="PRIVATE_BAG"/>
+			<xs:enumeration value="BOITE_POSTALE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StreetDto">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="RoleEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SUPPLIER"/>
+			<xs:enumeration value="CUSTOMER"/>
+			<xs:enumeration value="ONE_TIME_SUPPLIER"/>
+			<xs:enumeration value="ONE_TIME_CUSTOMER"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NamePrefixType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AdditionalNamePrefixType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NameType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NameSuffixType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AdditionalNameSuffixType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="HouseNumberType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="HouseNumberSupplementType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MilestoneType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DirectionType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

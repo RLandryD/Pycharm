@@ -1,0 +1,223 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="MessageHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="ID"/>
+        <xs:element type="xs:string" name="UUID"/>
+        <xs:element type="xs:string" name="ReferenceID"/>
+        <xs:element type="xs:dateTime" name="CreationDateTime"/>
+        <xs:element type="xs:string" name="SenderBusinessSystemID"/>
+        <xs:element type="xs:string" name="RecipientBusinessSystemID"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="BusinessDocumentObjectListCompleteTransmissionIndicator"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="BusinessPartnerRelationshipSUITEReplicateRequestMessage">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MessageHeader">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="ID"/>
+              <xs:element type="xs:string" name="UUID"/>
+              <xs:element type="xs:dateTime" name="CreationDateTime"/>
+              <xs:element type="xs:string" name="SenderBusinessSystemID"/>
+              <xs:element type="xs:string" name="RecipientBusinessSystemID"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="BusinessPartnerRelationship">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="BusinessPartnerUUID"/>
+              <xs:element type="xs:int" name="BusinessPartnerInternalID"/>
+              <xs:element type="xs:string" name="RelationshipBusinessPartnerUUID"/>
+              <xs:element type="xs:int" name="RelationshipBusinessPartnerInternalID"/>
+              <xs:element type="xs:string" name="RoleCode"/>
+              <xs:element name="ValidityPeriod">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:date" name="StartDate"/>
+                    <xs:element type="xs:date" name="EndDate"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element type="xs:string" name="DefaultIndicator"/>
+              <xs:element name="ContactPerson">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:byte" name="BusinessPartnerFunctionTypeCode"/>
+                    <xs:element type="xs:string" name="BusinessPartnerFunctionalAreaCode"/>
+                    <xs:element type="xs:string" name="PowerOfAttorneyTypeCode" nillable="true"/>
+                    <xs:element type="xs:string" name="VIPReasonCode" nillable="true"/>
+                    <xs:element type="xs:string" name="ContactPersonNote" nillable="true"/>
+                    <xs:element name="WorkplaceAddressInformation">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="AddressUUID"/>
+                          <xs:element type="xs:string" name="DefaultIndicator"/>
+                          <xs:element name="Address">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="CommunicationPreference">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element type="xs:string" name="PreferredCommunicationMediumTypeCode" nillable="true"/>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="Email">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element type="xs:string" name="URI"/>
+                                      <xs:element type="xs:string" name="UsageDeniedIndicator"/>
+                                      <xs:element name="ValidityPeriod">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element type="xs:date" name="StartDate"/>
+                                            <xs:element type="xs:date" name="EndDate"/>
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                      <xs:element type="xs:string" name="TransportNeutralEncapsulationFormatEnabledIndicator"/>
+                                      <xs:element name="EmailUsage" maxOccurs="unbounded" minOccurs="0">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element name="Usage">
+                                              <xs:complexType>
+                                                <xs:sequence>
+                                                  <xs:element type="xs:string" name="Code"/>
+                                                  <xs:element name="ValidityPeriod">
+                                                    <xs:complexType>
+                                                      <xs:sequence>
+                                                        <xs:element type="xs:date" name="StartDate"/>
+                                                        <xs:element type="xs:date" name="EndDate"/>
+                                                      </xs:sequence>
+                                                    </xs:complexType>
+                                                  </xs:element>
+                                                </xs:sequence>
+                                              </xs:complexType>
+                                            </xs:element>
+                                            <xs:element type="xs:string" name="DefaultIndicator"/>
+                                          </xs:sequence>
+                                          <xs:attribute type="xs:byte" name="actionCode" use="optional"/>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute type="xs:byte" name="actionCode" use="optional"/>
+                                    <xs:attribute type="xs:string" name="eMailUsageListCompleteTransmissionIndicator" use="optional"/>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="Telephone" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="Number">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element type="xs:string" name="SubscriberID"/>
+                                            <xs:element type="xs:string" name="ExtensionID" nillable="true"/>
+                                            <xs:element type="xs:string" name="CountryCode"/>
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                      <xs:element type="xs:long" name="FormattedNumberDescription"/>
+                                      <xs:element type="xs:string" name="UsageDeniedIndicator"/>
+                                      <xs:element name="ValidityPeriod">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element type="xs:date" name="StartDate"/>
+                                            <xs:element type="xs:date" name="EndDate"/>
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                      <xs:element type="xs:string" name="MobilePhoneNumberIndicator"/>
+                                      <xs:element type="xs:string" name="SMSEnabledIndicator"/>
+                                      <xs:element name="TelephoneUsage" maxOccurs="unbounded" minOccurs="0">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element name="Usage">
+                                              <xs:complexType>
+                                                <xs:sequence>
+                                                  <xs:element type="xs:string" name="Code"/>
+                                                  <xs:element name="ValidityPeriod">
+                                                    <xs:complexType>
+                                                      <xs:sequence>
+                                                        <xs:element type="xs:date" name="StartDate"/>
+                                                        <xs:element type="xs:date" name="EndDate"/>
+                                                      </xs:sequence>
+                                                    </xs:complexType>
+                                                  </xs:element>
+                                                </xs:sequence>
+                                              </xs:complexType>
+                                            </xs:element>
+                                            <xs:element type="xs:string" name="DefaultIndicator"/>
+                                          </xs:sequence>
+                                          <xs:attribute type="xs:byte" name="actionCode" use="optional"/>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute type="xs:byte" name="actionCode"/>
+                                    <xs:attribute type="xs:string" name="telephoneUsageListCompleteTransmissionIndicator"/>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="Workplace">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element type="xs:string" name="FunctionalTitleName" nillable="true"/>
+                                      <xs:element type="xs:string" name="DepartmentName" nillable="true"/>
+                                      <xs:element type="xs:string" name="BuildingID" nillable="true"/>
+                                      <xs:element type="xs:string" name="FloorID" nillable="true"/>
+                                      <xs:element type="xs:string" name="RoomID" nillable="true"/>
+                                      <xs:element type="xs:string" name="InhouseMailID" nillable="true"/>
+                                      <xs:element type="xs:string" name="CorrespondenceShortName" nillable="true"/>
+                                    </xs:sequence>
+                                    <xs:attribute type="xs:byte" name="actionCode" use="optional"/>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute type="xs:string" name="addressRepresentationPersonNameListCompleteTransmissionIndicator" use="optional"/>
+                              <xs:attribute type="xs:string" name="emailListCompleteTransmissionIndicator" use="optional"/>
+                              <xs:attribute type="xs:string" name="facsimileListCompleteTransmissionIndicator" use="optional"/>
+                              <xs:attribute type="xs:string" name="telephoneListCompleteTransmissionIndicator" use="optional"/>
+                              <xs:attribute type="xs:string" name="webListCompleteTransmissionIndicator" use="optional"/>
+                              <xs:attribute type="xs:string" name="workplaceListCompleteTransmissionIndicator" use="optional"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:attribute type="xs:byte" name="actionCode" use="optional"/>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="CustomerContactPerson">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:short" name="InternalID"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="SupplierContactPerson">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:byte" name="InternalID"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute type="xs:byte" name="actionCode" use="optional"/>
+                  <xs:attribute type="xs:string" name="workplaceAddressListCompleteTransmissionIndicator" use="optional"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ShareHolder">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="EquityParticipationPercent" nillable="true"/>
+                    <xs:element type="xs:string" name="CompanyControlIndicator"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

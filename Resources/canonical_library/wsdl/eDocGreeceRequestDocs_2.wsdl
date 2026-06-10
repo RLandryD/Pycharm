@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.sap.com/eDocument/Greece/RequestDocs/v2.0.1" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="eDocGreeceRequestInvoice" targetNamespace="http://www.sap.com/eDocument/Greece/RequestDocs/v2.0.1" xmlns:xsd1="http://www.aade.gr/myDATA/invoice/v1.0" xmlns:xsd2="http://www.sap.com/Greece/requestDocs/v1.0">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.sap.com/eDocument/Greece/RequestDocs/v2.0.1">
+      <xsd:element name="RequestDocs">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="in" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="RequestDocsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="out" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetDocsRequest" type="tns:DocRequest"></xsd:element>
+
+      <xsd:complexType name="DocRequest">
+      	<xsd:sequence>
+      		<xsd:element name="Mark" type="xsd:string" maxOccurs="1"
+      			minOccurs="1">
+      		</xsd:element>
+      		<xsd:element name="vatId" type="xsd:string" maxOccurs="1"
+      			minOccurs="0">
+      		</xsd:element>
+      		<xsd:element name="maxMark" type="xsd:string"
+      			maxOccurs="1" minOccurs="0">
+      		</xsd:element>
+      		<xsd:element name="dateFrom" type="xsd:date"
+      			maxOccurs="1" minOccurs="0">
+      		</xsd:element>
+      		<xsd:element name="dateTo" type="xsd:date" maxOccurs="1"
+      			minOccurs="0">
+      		</xsd:element>
+      		<xsd:element name="invoiceType" type="xsd:string"
+      			maxOccurs="1" minOccurs="0">
+      		</xsd:element>
+      		<xsd:element name="receiverVatId" type="xsd:string"
+      			maxOccurs="1" minOccurs="0">
+      		</xsd:element>
+      		<xsd:element name="nextPartitionKey" type="xsd:string"
+      			maxOccurs="1" minOccurs="0">
+      		</xsd:element>
+      		<xsd:element name="nextRowKey" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+      	</xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    	<xsd:import
+    		namespace="http://www.sap.com/Greece/requestDocs/v1.0"
+    		schemaLocation="requestedInvoicesDoc-v2.0.1.xsd">
+    	</xsd:import></xsd:schema></wsdl:types>
+    	
+  <wsdl:message name="RequestDocsRequest">
+    <wsdl:part element="tns:GetDocsRequest" name="docsRequestParameter"/>
+  </wsdl:message>
+  <wsdl:message name="RequestDocsResponse">
+    <wsdl:part element="xsd2:RequestedDoc" name="docsResponseParameter"/>
+  </wsdl:message>
+
+  <wsdl:portType name="eDocGreeceRequestDocs">
+    <wsdl:operation name="RequestDocs">
+      <wsdl:input message="tns:RequestDocsRequest"/>
+      <wsdl:output message="tns:RequestDocsResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="NewBinding" type="tns:eDocGreeceRequestDocs">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="RequestDocs">
+      <soap:operation soapAction="http://www.sap.com/eDocument/Greece/RequestDocs/v2.0.1/NewOperation"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <wsdl:service name="eDocGreeceRequestDocs">
+    <wsdl:port binding="tns:NewBinding" name="eDocGreeceRequestDocs">
+      <soap:address location="http://www.sap.com/"/>
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>

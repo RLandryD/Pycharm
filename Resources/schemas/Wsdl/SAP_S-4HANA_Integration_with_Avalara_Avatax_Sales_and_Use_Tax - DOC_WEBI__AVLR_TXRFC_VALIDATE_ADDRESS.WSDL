@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="urn:sap-com:document:sap:rfc:functions" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="urn:sap-com:document:sap:rfc:functions" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+ <wsdl:documentation>
+  <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+ </wsdl:documentation>
+ <wsp:UsingPolicy wsdl:required="true"/>
+ <wsp:Policy wsu:Id="IF_IF__-AVLR_-TXRFC_VALIDATE_ADDRESS">
+  <sapsession:Session xmlns:sapsession="http://www.sap.com/webas/630/soap/features/session/">
+   <sapsession:enableSession>false</sapsession:enableSession>
+  </sapsession:Session>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP__-AVLR_-TXRFC_VALIDATE_ADDRESS">
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsdl:types>
+  <xsd:schema attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:rfc:functions">
+   <xsd:simpleType name="RfcException.Message.Number">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char1">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char10">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="10"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char14">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="14"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char15">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="15"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char25">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="25"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char3">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char4">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="4"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char40">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="40"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char50">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="50"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char60">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="60"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="_-AVLR_-TXRFCE00001">
+    <xsd:sequence>
+     <xsd:element name="STREET1" type="tns:char50"/>
+     <xsd:element name="STREET2" type="tns:char50"/>
+     <xsd:element name="STREET3" type="tns:char50"/>
+     <xsd:element name="STREET4" type="tns:char50"/>
+     <xsd:element name="STREET5" type="tns:char50"/>
+     <xsd:element name="POSTALCITY" type="tns:char40"/>
+     <xsd:element name="COUNTY" type="tns:char40"/>
+     <xsd:element name="STATE" type="tns:char3"/>
+     <xsd:element name="POSTALCODE" type="tns:char10"/>
+     <xsd:element name="POSTALCODEEXTENSION" type="tns:char4"/>
+     <xsd:element name="INCORPORATED" type="tns:char1"/>
+     <xsd:element name="COUNTRY" type="tns:char3"/>
+     <xsd:element name="PLACENAME" type="tns:char40"/>
+     <xsd:element name="HOUSENUMBER" type="tns:char10"/>
+     <xsd:element name="APARTMENTNUMBER" type="tns:char10"/>
+     <xsd:element name="POBOX" type="tns:char10"/>
+     <xsd:element name="LEADINGDIRECTION" type="tns:char3"/>
+     <xsd:element name="STREETNAME" type="tns:char25"/>
+     <xsd:element name="STREETSUFFIX" type="tns:char15"/>
+     <xsd:element name="TRAILINGDIRECTION" type="tns:char3"/>
+     <xsd:element name="LATITUDE" type="tns:char15"/>
+     <xsd:element name="LONGITUDE" type="tns:char15"/>
+     <xsd:element name="JURISDICTIONCODE" type="tns:char14"/>
+     <xsd:element name="ADDRESSCONFIDENCE" type="tns:char3"/>
+     <xsd:element name="JURISDICTIONMATCHCODE" type="tns:char1"/>
+     <xsd:element name="STATUSCODE" type="tns:char4"/>
+     <xsd:element name="STATUSDESCRIPTION" type="tns:char50"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RfcException.Message">
+    <xsd:sequence>
+     <xsd:element name="ID" type="xsd:string"/>
+     <xsd:element name="Number" type="tns:RfcException.Message.Number"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="_-AVLR_-TXRFC_VALIDATE_ADDRESS.RfcException">
+    <xsd:sequence>
+     <xsd:element name="Name" type="tns:_-AVLR_-TXRFC_VALIDATE_ADDRESS.RfcExceptions"/>
+     <xsd:element name="Text" type="xsd:string" minOccurs="0"/>
+     <xsd:element name="Message" type="tns:RfcException.Message" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TABLE_OF__-AVLR_-TXRFCE00001">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:_-AVLR_-TXRFCE00001" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:simpleType name="_-AVLR_-TXRFC_VALIDATE_ADDRESS.RfcExceptions">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="SYSTEM_ERROR"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:element name="_-AVLR_-TXRFC_VALIDATE_ADDRESS.Exception" type="tns:_-AVLR_-TXRFC_VALIDATE_ADDRESS.RfcException"/>
+   <xsd:element name="_-AVLR_-TXRFC_VALIDATE_ADDRESS">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="CITY" type="tns:char40" minOccurs="0"/>
+      <xsd:element name="COUNTRY" type="tns:char3" minOccurs="0"/>
+      <xsd:element name="POBOX" type="tns:char10" minOccurs="0"/>
+      <xsd:element name="POSTALCODE" type="tns:char10" minOccurs="0"/>
+      <xsd:element name="STATE" type="tns:char3" minOccurs="0"/>
+      <xsd:element name="STREET1" type="tns:char60" minOccurs="0"/>
+      <xsd:element name="STREET2" type="tns:char40" minOccurs="0"/>
+      <xsd:element name="STREET3" type="tns:char40" minOccurs="0"/>
+      <xsd:element name="STREET4" type="tns:char40" minOccurs="0"/>
+      <xsd:element name="STREET5" type="tns:char40" minOccurs="0"/>
+      <xsd:element name="VALIDATE_ADDRESS_OUT" type="tns:TABLE_OF__-AVLR_-TXRFCE00001"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="_-AVLR_-TXRFC_VALIDATE_ADDRESSResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="VALIDATE_ADDRESS_OUT" type="tns:TABLE_OF__-AVLR_-TXRFCE00001"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="_-AVLR_-TXRFC_VALIDATE_ADDRESS">
+  <wsdl:part name="parameters" element="tns:_-AVLR_-TXRFC_VALIDATE_ADDRESS"/>
+ </wsdl:message>
+ <wsdl:message name="_-AVLR_-TXRFC_VALIDATE_ADDRESSResponse">
+  <wsdl:part name="parameter" element="tns:_-AVLR_-TXRFC_VALIDATE_ADDRESSResponse"/>
+ </wsdl:message>
+ <wsdl:message name="_-AVLR_-TXRFC_VALIDATE_ADDRESS.Exception">
+  <wsdl:part name="_-AVLR_-TXRFC_VALIDATE_ADDRESS.Exception" element="tns:_-AVLR_-TXRFC_VALIDATE_ADDRESS.Exception"/>
+ </wsdl:message>
+ <wsdl:portType name="_-AVLR_-TXRFC_VALIDATE_ADDRESS">
+  <wsp:Policy>
+   <wsp:PolicyReference URI="#IF_IF__-AVLR_-TXRFC_VALIDATE_ADDRESS"/>
+  </wsp:Policy>
+  <wsdl:operation name="_-AVLR_-TXRFC_VALIDATE_ADDRESS">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP__-AVLR_-TXRFC_VALIDATE_ADDRESS"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:_-AVLR_-TXRFC_VALIDATE_ADDRESS"/>
+   <wsdl:output message="tns:_-AVLR_-TXRFC_VALIDATE_ADDRESSResponse"/>
+   <wsdl:fault name="_-AVLR_-TXRFC_VALIDATE_ADDRESS.Exception" message="tns:_-AVLR_-TXRFC_VALIDATE_ADDRESS.Exception"/>
+  </wsdl:operation>
+ </wsdl:portType>
+</wsdl:definitions>

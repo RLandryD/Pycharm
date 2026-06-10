@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  name="ExternalSesReqForApprovalImport"
+				  targetNamespace=""
+				  xmlns="">
+    <wsdl:types>
+        <xsd:schema elementFormDefault="qualified" attributeFormDefault="unqualified" 
+					xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+					targetNamespace="">
+
+            <xsd:element name="cXML">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element ref="Header"/>
+						<xsd:element ref="Request"/>
+					</xsd:sequence>
+					<xsd:attribute name="payloadID" type="xsd:string"/>
+					<xsd:attribute name="timestamp" type="xsd:dateTime"/>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="Header">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="From" type="FromCredential"/>
+						<xsd:element name="To" type="ToCredential"/>
+						<xsd:element name="Sender" type="Sender"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="FromCredential">
+				<xsd:sequence>
+					<xsd:element name="Credential" type="Credential"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ToCredential">
+				<xsd:sequence>
+					<xsd:element name="Credential" type="Credential"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="Credential">
+				<xsd:sequence>
+					<xsd:element name="Identity" type="xsd:string"/>
+				</xsd:sequence>
+				<xsd:attribute name="domain" type="xsd:string"/>
+			</xsd:complexType>
+			<xsd:complexType name="Sender">
+				<xsd:sequence>
+					<xsd:element name="Credential" type="Credential"/>
+					<xsd:element name="UserAgent" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="Request">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="ServiceEntryRequest" type="ServiceEntryRequest"/>
+					</xsd:sequence>
+					<xsd:attribute name="deploymentMode" type="xsd:string"/>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="ServiceEntryRequest">
+				<xsd:sequence>
+					<xsd:element name="ServiceEntryRequestHeader" type="ServiceEntryRequestHeader"/>
+					<xsd:element name="ServiceEntryOrder" type="ServiceEntryOrder"/>
+					<xsd:element name="ServiceEntrySummary" type="ServiceEntrySummary"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ServiceEntryRequestHeader">
+				<xsd:sequence>
+					<xsd:element name="PartnerContact" type="PartnerContact"/>
+					<xsd:element name="Period" type="Period"/>
+					<xsd:element name="Comments" type="xsd:string"/>
+					<xsd:element name="HeaderExtrinsics" type="xsd:string"/>
+				</xsd:sequence>
+				<xsd:attribute name="serviceEntryDate" type="xsd:dateTime"/>
+				<xsd:attribute name="serviceEntryID" type="xsd:string"/>
+				<xsd:attribute name="operation" type="xsd:string"/>
+			</xsd:complexType>
+			<xsd:complexType name="PartnerContact">
+				<xsd:sequence>
+					<xsd:element name="Contact" type="Contact"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="Contact">
+				<xsd:sequence>
+					<xsd:element name="Name" type="xsd:string"/>
+					<xsd:element name="Email" type="xsd:string"/>
+					<xsd:element name="Phone" type="Phone"/>
+					<xsd:element name="PostalAddress" type="PostalAddress"/>
+				</xsd:sequence>
+				<xsd:attribute name="role" type="xsd:string"/>
+				<xsd:attribute name="addressID" type="xsd:string"/>
+			</xsd:complexType>
+			<xsd:complexType name="Phone">
+				<xsd:sequence>
+					<xsd:element name="TelephoneNumber" type="TelephoneNumber"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="TelephoneNumber">
+				<xsd:sequence>
+					<xsd:element name="Country" type="Country"/>
+					<xsd:element name="AreaOrCityCode" type="xsd:integer"/>
+					<xsd:element name="Number" type="xsd:integer"/>
+					<xsd:element name="Extension" type="xsd:integer"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="PostalAddress">
+				<xsd:sequence>
+					<xsd:element name="Street" type="xsd:string"/>
+					<xsd:element name="Street" type="xsd:string"/>
+					<xsd:element name="Street" type="xsd:string"/>
+					<xsd:element name="Street" type="xsd:string"/>
+					<xsd:element name="City" type="xsd:string"/>
+					<xsd:element name="State" type="xsd:string"/>
+					<xsd:element name="PostalCode" type="xsd:integer"/>
+					<xsd:element name="Country" type="Country"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="Country">
+				<xsd:simpleContent>
+					<xsd:extension base="xsd:string">
+						<xsd:attribute name="isoCountryCode" type="xsd:string"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:complexType name="Period">
+				<xsd:attribute name="startDate" type="xsd:dateTime"/>
+				<xsd:attribute name="endDate" type="xsd:dateTime"/>
+			</xsd:complexType>
+			<xsd:complexType name="Money">
+				<xsd:simpleContent>
+					<xsd:extension base="xsd:double">
+						<xsd:attribute name="currency" type="xsd:string"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:complexType name="ServiceEntrySummary">
+				<xsd:sequence>
+					<xsd:element name="SubtotalAmount" type="SubtotalAmount"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="SubtotalAmount">
+				<xsd:sequence>
+					<xsd:element name="Money" type="Money"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ServiceEntryOrder">
+				<xsd:sequence>
+					<xsd:element name="ServiceEntryOrderInfo" type="ServiceEntryOrderInfo"/>
+					<xsd:element name="ServiceEntryItem" type="ServiceEntryItem"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ServiceEntryOrderInfo">
+				<xsd:sequence>
+					<xsd:element name="OrderReference" type="OrderReference"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="OrderReference">
+				<xsd:attribute name="orderID" type="xsd:string"/>
+			</xsd:complexType>
+			<xsd:complexType name="ServiceEntryItem">
+				<xsd:sequence>
+					<xsd:element name="ItemReference" type="ItemReference"/>
+					<xsd:element name="UnitOfMeasure" type="xsd:string"/>
+					<xsd:element name="UnitPrice" type="UnitPrice"/>
+					<xsd:element name="Period" type="Period"/>
+					<xsd:element name="SubtotalAmount" type="SubtotalAmount"/>
+					<xsd:element name="SplitAccounting" type="SplitAccounting"/>
+					<xsd:element name="Comments" type="xsd:string"/>
+					<xsd:element name="LineExtrinsics" type="xsd:string"/>
+				</xsd:sequence>
+				<xsd:attribute name="serviceLineNumber" type="xsd:string"/>
+				<xsd:attribute name="quantity" type="xsd:integer"/>
+				<xsd:attribute name="type" type="xsd:string"/>
+			</xsd:complexType>
+			<xsd:complexType name="ItemReference">
+				<xsd:sequence>
+					<xsd:element name="ItemID" type="ItemID"/>
+					<xsd:element name="Description" type="xsd:string"/>
+				</xsd:sequence>
+				<xsd:attribute name="lineNumber" type="xsd:string"/>
+			</xsd:complexType>
+			<xsd:complexType name="ItemID">
+				<xsd:sequence>
+					<xsd:element name="SupplierPartID" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="UnitPrice">
+				<xsd:sequence>
+					<xsd:element name="Money" type="Money"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="SplitAccounting">
+				<xsd:sequence>
+					<xsd:element name="SplitAccount" type="SplitAccount"/>
+					<xsd:element name="Charge" type="Charge"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="SplitAccount">
+				<xsd:attribute name="name" type="xsd:string"/>
+				<xsd:attribute name="Percentage" type="xsd:string"/>
+				<xsd:attribute name="CostCenterOriginalCode" type="xsd:string"/>
+				<xsd:attribute name="CompanyCode" type="xsd:string"/>
+				<xsd:attribute name="ControllingArea" type="xsd:string"/>
+				<xsd:attribute name="GLAccount" type="xsd:string"/>
+				<xsd:attribute name="WBSElement" type="xsd:string"/>
+				<xsd:attribute name="InternalOrder" type="xsd:string"/>
+				<xsd:attribute name="AccountCategory" type="xsd:string"/>
+			</xsd:complexType>
+			<xsd:complexType name="Charge">
+				<xsd:sequence>
+					<xsd:element name="Money" type="Money"/>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="ServiceEntrySheetStsNotifMsg">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="MessageHeader" type="MessageHeader"/>
+						<xsd:element name="ServiceEntrySheetStatusEntity" type="ServiceEntrySheetStatusEntity"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="MessageHeader">
+				<xsd:sequence>
+					<xsd:element name="ID" type="xsd:string"/>
+					<xsd:element name="UUID" type="xsd:string"/>
+					<xsd:element name="CreationDateTime" type="xsd:string"/>
+					<xsd:element name="SenderBusinessSystemID" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ServiceEntrySheetStatusEntity">
+				<xsd:sequence>
+					<xsd:element name="ServiceEntrySheet" type="xsd:string"/>
+					<xsd:element name="PurgDocExternalReference" type="xsd:string"/>
+					<xsd:element name="PurchaseOrder" type="xsd:string"/>
+					<xsd:element name="ApprovalStatus" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="HeadersMessage">
+        <wsdl:part element="Header" name="header"/>
+    </wsdl:message>
+    <wsdl:message name="ExternalSesReqForApprovalImportRequestMessage">
+        <wsdl:part element="cXML" name="body"/>
+    </wsdl:message>
+    <wsdl:message name="ExternalSesReqForApprovalImportReplyMessage">
+        <wsdl:part element="ServiceEntrySheetStsNotifMsg" name="body"/>
+    </wsdl:message>
+    <wsdl:portType name="ExternalSesReqForApprovalImportPortType">
+        <wsdl:operation name="ExternalSesReqForApprovalImportOperation">
+            <wsdl:input message="ExternalSesReqForApprovalImportRequestMessage"/>
+            <wsdl:output message="ExternalSesReqForApprovalImportReplyMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ExternalSesReqForApprovalImportBinding" type="ExternalSesReqForApprovalImportPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="ExternalSesReqForApprovalImportOperation">
+            <soap:operation soapAction="/Process Definition"/>
+            <wsdl:input>
+                <soap:header message="HeadersMessage" part="header" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:header message="HeadersMessage" part="header" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ExternalSesReqForApprovalImport">
+        <wsdl:documentation>Ariba SES Web Service</wsdl:documentation>
+        <wsdl:port binding="ExternalSesReqForApprovalImportBinding" name="SES">
+            <soap:address location="https://www.fieldglass.net/soap/connector/sesintegration"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

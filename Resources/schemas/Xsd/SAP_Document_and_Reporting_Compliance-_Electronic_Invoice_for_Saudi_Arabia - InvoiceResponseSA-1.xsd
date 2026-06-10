@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+	xmlns="http://www.sap.com/eDocument/SA/InvoiceResponse/v2.0"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.sap.com/eDocument/SA/InvoiceResponse/v2.0"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xsd:element name="InvoiceResponse" type="InvoiceResponseType" />
+
+	<xsd:complexType name="InvoiceResponseType">
+		<xsd:sequence>
+			<xsd:element name="Status" type="xsd:string"
+				minOccurs="0">
+			</xsd:element>
+			<xsd:element name="Message" type="MessageType"
+				minOccurs="0">
+			</xsd:element>
+
+            <xsd:element name="ExternalResponseContent"
+				type="xsd:base64Binary" minOccurs="0" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="ExternalResponse"
+				type="ExternalResponseType" minOccurs="0" maxOccurs="1">
+			</xsd:element>
+
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="MessageType">
+		<xsd:sequence>
+			<xsd:element name="Code" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+			<xsd:element name="Description" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ExternalResponseType">
+		<xsd:sequence>
+
+			<xsd:element name="Status" type="xsd:string"
+				minOccurs="0">
+			</xsd:element>
+			<xsd:element name="ClearedInvoice" type="xsd:base64Binary"
+				minOccurs="0">
+			</xsd:element>
+			<xsd:element name="SignedXML" type="xsd:base64Binary"
+				maxOccurs="1" minOccurs="0">
+			</xsd:element>
+			<xsd:element name="InvoiceHash" type="xsd:base64Binary"
+				minOccurs="0">
+			</xsd:element>
+			<xsd:element name="Warnings" type="ErrorType" minOccurs="0"
+				maxOccurs="unbounded">
+			</xsd:element>
+			<xsd:element name="Errors" type="ErrorType" minOccurs="0"
+				maxOccurs="unbounded">
+			</xsd:element>
+			<xsd:element name="Message" type="ErrorType"
+				minOccurs="0" maxOccurs="unbounded">
+			</xsd:element>
+
+			<xsd:element name="QRParameters" type="QRParametersType" maxOccurs="1" minOccurs="0"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ErrorType">
+		<xsd:sequence>
+			<xsd:element name="Category" type="xsd:string" maxOccurs="1"
+				minOccurs="0">
+			</xsd:element>
+			<xsd:element name="Code" type="xsd:string" maxOccurs="1"
+				minOccurs="0">
+			</xsd:element>
+			<xsd:element name="Message" type="xsd:string" maxOccurs="1"
+				minOccurs="0">
+			</xsd:element>
+			<xsd:element name="Type" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	<xsd:complexType name="QRParametersType">
+		<xsd:sequence>
+			<xsd:element name="Signature" type="xsd:base64Binary"
+				maxOccurs="1" minOccurs="0">
+			</xsd:element>
+			<xsd:element name="ECDSAPublicKey" type="xsd:base64Binary"
+				maxOccurs="1" minOccurs="0">
+			</xsd:element>
+			<xsd:element name="TimeStamp" type="xsd:string"
+				maxOccurs="1" minOccurs="0">
+			</xsd:element>
+			<xsd:element name="QRCode" type="xsd:base64Binary" maxOccurs="1" minOccurs="0"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

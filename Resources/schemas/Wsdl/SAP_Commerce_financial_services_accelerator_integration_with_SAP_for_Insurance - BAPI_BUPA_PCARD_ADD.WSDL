@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="urn:sap-com:document:sap:rfc:functions" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="urn:sap-com:document:sap:rfc:functions" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+ <wsdl:documentation>
+  <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+ </wsdl:documentation>
+ <wsp:UsingPolicy wsdl:required="true"/>
+ <wsp:Policy wsu:Id="IF_IF_Z_bapi_BUPA_PCARD_ADD">
+  <sapsession:Session xmlns:sapsession="http://www.sap.com/webas/630/soap/features/session/">
+   <sapsession:enableSession>false</sapsession:enableSession>
+  </sapsession:Session>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_BAPI_BUPA_PCARD_ADD">
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsdl:types>
+  <xsd:schema attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:rfc:functions">
+   <xsd:simpleType name="char1">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char10">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="10"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char20">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="20"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char220">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="220"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char25">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="25"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char30">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="30"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char32">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="32"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char4">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="4"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char40">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="40"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char50">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="50"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char6">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="6"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric3">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric6">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="6"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="BAPIBUS1006_PCARD_DATA">
+    <xsd:sequence>
+     <xsd:element name="CARD_TYPE" type="tns:char4"/>
+     <xsd:element name="CARD_NUMBER" type="tns:char25"/>
+     <xsd:element name="CARD_DEFAULT" type="tns:char1"/>
+     <xsd:element name="CREDITCARDNAME" type="tns:char40"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="BAPIRET2">
+    <xsd:sequence>
+     <xsd:element name="TYPE" type="tns:char1"/>
+     <xsd:element name="ID" type="tns:char20"/>
+     <xsd:element name="NUMBER" type="tns:numeric3"/>
+     <xsd:element name="MESSAGE" type="tns:char220"/>
+     <xsd:element name="LOG_NO" type="tns:char20"/>
+     <xsd:element name="LOG_MSG_NO" type="tns:numeric6"/>
+     <xsd:element name="MESSAGE_V1" type="tns:char50"/>
+     <xsd:element name="MESSAGE_V2" type="tns:char50"/>
+     <xsd:element name="MESSAGE_V3" type="tns:char50"/>
+     <xsd:element name="MESSAGE_V4" type="tns:char50"/>
+     <xsd:element name="PARAMETER" type="tns:char32"/>
+     <xsd:element name="ROW" type="xsd:int"/>
+     <xsd:element name="FIELD" type="tns:char30"/>
+     <xsd:element name="SYSTEM" type="tns:char10"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TABLE_OF_BAPIRET2">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:BAPIRET2" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="BAPI_BUPA_PCARD_ADD">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="BUSINESSPARTNER" type="tns:char10"/>
+      <xsd:element name="CARD_ID" type="tns:char6" minOccurs="0"/>
+      <xsd:element name="DATA" type="tns:BAPIBUS1006_PCARD_DATA"/>
+      <xsd:element name="RETURN" type="tns:TABLE_OF_BAPIRET2" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="BAPI_BUPA_PCARD_ADDResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="CARD_ID_OUT" type="tns:char6"/>
+      <xsd:element name="RETURN" type="tns:TABLE_OF_BAPIRET2" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="BAPI_BUPA_PCARD_ADD">
+  <wsdl:part name="parameters" element="tns:BAPI_BUPA_PCARD_ADD"/>
+ </wsdl:message>
+ <wsdl:message name="BAPI_BUPA_PCARD_ADDResponse">
+  <wsdl:part name="parameter" element="tns:BAPI_BUPA_PCARD_ADDResponse"/>
+ </wsdl:message>
+ <wsdl:portType name="Z_bapi_BUPA_PCARD_ADD">
+  <wsdl:documentation>
+   <sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+    <sapdoc:docitem docURL="http://ldai1emo.wdf.sap.corp:50000/sap/bc/esdt/docu/sd_text?sap-client=815&amp;sd_name=Z_BAPI_BUPA_PCARD_ADD"/>
+   </sapdoc:sapdoc>
+  </wsdl:documentation>
+  <wsp:Policy>
+   <wsp:PolicyReference URI="#IF_IF_Z_bapi_BUPA_PCARD_ADD"/>
+  </wsp:Policy>
+  <wsdl:operation name="BAPI_BUPA_PCARD_ADD">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_BAPI_BUPA_PCARD_ADD"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:BAPI_BUPA_PCARD_ADD"/>
+   <wsdl:output message="tns:BAPI_BUPA_PCARD_ADDResponse"/>
+  </wsdl:operation>
+ </wsdl:portType>
+</wsdl:definitions>

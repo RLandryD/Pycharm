@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+-
+<wsdl:definitions
+	targetNamespace="http://www.sap.com/eDocument/Colombia/V1.0" xmlns:tns="http://www.sap.com/eDocument/Colombia/V1.0" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:cd="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaDocumentos" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+
+	-
+	<wsdl:types xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+
+		-
+		<schema
+			targetNamespace="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaDocumentos"
+			xmlns:tns="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaDocumentos"
+			elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema">
+
+			<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:EnvioConsultaDocumento"
+				name="ConsultaResultadoValidacionDocumentosPeticion">
+			</element>
+
+			<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:DocumentosRecibidos"
+				name="ConsultaResultadoValidacionDocumentosRespuesta">
+			</element>
+
+			<!-- REQUEST -->
+
+
+
+			-
+			<complexType xmlns="http://www.w3.org/2001/XMLSchema"
+				name="EnvioConsultaDocumento">
+
+
+				-
+				<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<documentation xmlns="http://www.w3.org/2001/XMLSchema">Consulta de Documentos por medio
+						de web service</documentation>
+
+				</annotation>
+
+
+				-
+				<sequence xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:TipoDocumenotoType"
+						name="TipoDocumento" minOccurs="1" maxOccurs="1" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:NumeroDocumentoType"
+						name="NumeroDocumento" minOccurs="1" maxOccurs="1" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:NitType"
+						name="NitEmisor" minOccurs="1" maxOccurs="1" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="dateTime"
+						name="FechaGeneracion" minOccurs="1" maxOccurs="1" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:IdentificadorSoftwareType"
+						name="IdentificadorSoftware" minOccurs="1" maxOccurs="1" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:CufeType"
+						name="CUFE" minOccurs="0" maxOccurs="1" />
+
+				</sequence>
+
+			</complexType>
+
+			<!-- RESPONSE -->
+
+
+
+			-
+			<complexType xmlns="http://www.w3.org/2001/XMLSchema"
+				name="DocumentosRecibidos">
+
+
+				-
+				<sequence xmlns="http://www.w3.org/2001/XMLSchema">
+
+
+					-
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="int"
+						name="CodigoTransaccion" minOccurs="1" maxOccurs="1">
+
+
+						-
+						<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+
+							<documentation xml:lang="es"
+								xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace"> El código de
+								respuesta, puede incluir mensajes de error de validación
+								estructural. </documentation>
+
+						</annotation>
+
+					</element>
+
+
+					-
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="dateTime"
+						name="FechaTransaccion" minOccurs="1" maxOccurs="1">
+
+
+						-
+						<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+
+							<documentation xml:lang="es"
+								xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace"> Fecha y hora
+								en que se recibe la consulta del documento. </documentation>
+
+						</annotation>
+
+					</element>
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="string"
+						name="DescripcionTransaccion" minOccurs="1" maxOccurs="1" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:DocumentoRecibido"
+						name="DocumentoRecibido" minOccurs="0" maxOccurs="unbounded" />
+
+				</sequence>
+
+			</complexType>
+
+
+			-
+			<complexType xmlns="http://www.w3.org/2001/XMLSchema"
+				name="DocumentoRecibido">
+
+
+				-
+				<sequence xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:DatosBasicosDocumento"
+						name="DatosBasicosDocumento" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:ValidacionFuncional"
+						name="VerificacionFuncional" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:ValidacionTecnica"
+						name="ValidacionTecnica" />
+
+				</sequence>
+
+			</complexType>
+
+
+			-
+			<complexType xmlns="http://www.w3.org/2001/XMLSchema"
+				name="DatosBasicosDocumento">
+
+
+				-
+				<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<documentation xml:lang="es"
+						xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace"> Contiene la
+						informacion basica del documento recibido </documentation>
+
+				</annotation>
+
+
+				-
+				<sequence xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:NitType"
+						name="Emisor" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="dateTime"
+						name="FechaHoraRecepcion" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="string"
+						name="FechaHoraEmision" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="string"
+						name="EstadoDocumento" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="string"
+						name="DescripcionEstado" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="string"
+						name="NumeroDocumento" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="string"
+						name="CUFE" />
+
+				</sequence>
+
+			</complexType>
+
+
+			-
+			<complexType xmlns="http://www.w3.org/2001/XMLSchema"
+				name="ValidacionFuncional">
+
+
+				-
+				<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<documentation xml:lang="es"
+						xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace"> Contiene la
+						informacion la validaciones funcionales realizadas </documentation>
+
+				</annotation>
+
+
+				-
+				<sequence xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:VerificacionDocumento"
+						name="VerificacionDocumento" minOccurs="0" maxOccurs="unbounded" />
+
+				</sequence>
+
+			</complexType>
+
+
+			-
+			<complexType xmlns="http://www.w3.org/2001/XMLSchema"
+				name="VerificacionDocumento">
+
+
+				-
+				<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<documentation xml:lang="es"
+						xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace"> Contiene la
+						informacion de las verificaciones realizadas </documentation>
+
+				</annotation>
+
+
+				-
+				<sequence xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="long"
+						name="CodigoVeriFunc" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="string"
+						name="DescripcionVeriFunc" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="int"
+						name="ResultadoVeriFunc" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="string"
+						name="VerificacionRealizada" />
+
+				</sequence>
+
+			</complexType>
+
+
+			-
+			<complexType xmlns="http://www.w3.org/2001/XMLSchema"
+				name="ValidacionTecnica">
+
+
+				-
+				<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<documentation xml:lang="es"
+						xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace"> Contiene la
+						informacion de las verificaciones realizadas </documentation>
+
+				</annotation>
+
+
+				-
+				<sequence xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:DetalleTecnicoDocumento"
+						name="DetalleTecnicoDocumento" minOccurs="0" maxOccurs="unbounded" />
+
+				</sequence>
+
+			</complexType>
+
+
+			-
+			<complexType xmlns="http://www.w3.org/2001/XMLSchema"
+				name="DetalleTecnicoDocumento">
+
+
+				-
+				<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<documentation xml:lang="es"
+						xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace"> Contiene la
+						informacion de las verificaciones realizadas </documentation>
+
+				</annotation>
+
+
+				-
+				<sequence xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="string"
+						name="Evento" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="dateTime"
+						name="FechaVeriTec" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="string"
+						name="ReglaVeriTec" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="tns:PropiedadesTecnicas"
+						name="PropiedadesTecnicas" minOccurs="0" maxOccurs="unbounded" />
+
+				</sequence>
+
+			</complexType>
+
+
+			-
+			<complexType xmlns="http://www.w3.org/2001/XMLSchema"
+				name="PropiedadesTecnicas">
+
+
+				-
+				<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<documentation xml:lang="es"
+						xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace"> Contiene la
+						informacion de las propiedades tecnicas </documentation>
+
+				</annotation>
+
+
+				-
+				<sequence xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="string"
+						name="PropiedadVeriTec" />
+
+					<element xmlns="http://www.w3.org/2001/XMLSchema" type="string"
+						name="DescripcionVeriTec" />
+
+				</sequence>
+
+			</complexType>
+
+			<!-- Declaraciones de tipos -->
+
+
+
+			-
+			<simpleType xmlns="http://www.w3.org/2001/XMLSchema" name="CufeType">
+
+
+				-
+				<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<documentation xmlns="http://www.w3.org/2001/XMLSchema">Codigo Unico de Factura
+						Electronica, es obligatorio cuando el tipo de documento es igual a
+						'1:Factura'</documentation>
+
+				</annotation>
+
+
+				-
+				<restriction xmlns="http://www.w3.org/2001/XMLSchema"
+					base="string">
+
+					<minLength xmlns="http://www.w3.org/2001/XMLSchema"
+						value="1" />
+
+					<maxLength xmlns="http://www.w3.org/2001/XMLSchema"
+						value="40" />
+
+				</restriction>
+
+			</simpleType>
+
+
+			-
+			<simpleType xmlns="http://www.w3.org/2001/XMLSchema" name="NitType">
+
+
+				-
+				<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<documentation xmlns="http://www.w3.org/2001/XMLSchema">NIT</documentation>
+
+				</annotation>
+
+
+				-
+				<restriction xmlns="http://www.w3.org/2001/XMLSchema"
+					base="string">
+
+					<minLength xmlns="http://www.w3.org/2001/XMLSchema"
+						value="1" />
+
+					<maxLength xmlns="http://www.w3.org/2001/XMLSchema"
+						value="35" />
+
+				</restriction>
+
+			</simpleType>
+
+
+			-
+			<simpleType xmlns="http://www.w3.org/2001/XMLSchema" name="IdentificadorSoftwareType">
+
+
+				-
+				<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<documentation xmlns="http://www.w3.org/2001/XMLSchema">Identificador Unico del Software
+					</documentation>
+
+				</annotation>
+
+
+				-
+				<restriction xmlns="http://www.w3.org/2001/XMLSchema"
+					base="string">
+
+					<minLength xmlns="http://www.w3.org/2001/XMLSchema"
+						value="1" />
+
+					<maxLength xmlns="http://www.w3.org/2001/XMLSchema"
+						value="40" />
+
+				</restriction>
+
+			</simpleType>
+
+
+			-
+			<simpleType xmlns="http://www.w3.org/2001/XMLSchema" name="TipoDocumenotoType">
+
+
+				-
+				<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<documentation xmlns="http://www.w3.org/2001/XMLSchema">Tipo de Documentos: 1 = Factura
+						2 = Nota Débito 3 = Nota Crédito </documentation>
+
+				</annotation>
+
+
+				-
+				<restriction xmlns="http://www.w3.org/2001/XMLSchema"
+					base="int">
+
+					<enumeration xmlns="http://www.w3.org/2001/XMLSchema"
+						value="1" />
+
+					<enumeration xmlns="http://www.w3.org/2001/XMLSchema"
+						value="2" />
+
+					<enumeration xmlns="http://www.w3.org/2001/XMLSchema"
+						value="3" />
+
+				</restriction>
+
+			</simpleType>
+
+
+			-
+			<simpleType xmlns="http://www.w3.org/2001/XMLSchema" name="NumeroDocumentoType">
+
+
+				-
+				<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+
+					<documentation xmlns="http://www.w3.org/2001/XMLSchema">Numero de Documento electronico
+					</documentation>
+
+				</annotation>
+
+
+				-
+				<restriction xmlns="http://www.w3.org/2001/XMLSchema"
+					base="string">
+
+					<minLength xmlns="http://www.w3.org/2001/XMLSchema"
+						value="1" />
+
+					<maxLength xmlns="http://www.w3.org/2001/XMLSchema"
+						value="35" />
+
+				</restriction>
+
+			</simpleType>
+
+		</schema>
+
+	</wsdl:types>
+
+
+	-
+	<wsdl:message xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+		name="ConsultaResultadoValidacionDocumentosRespuesta">
+
+		<wsdl:part xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+			name="ConsultaResultadoValidacionDocumentosRespuesta" element="cd:ConsultaResultadoValidacionDocumentosRespuesta">
+		</wsdl:part>
+
+	</wsdl:message>
+
+
+	-
+	<wsdl:message xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+		name="ConsultaResultadoValidacionDocumentosPeticion">
+
+		<wsdl:part xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+			name="ConsultaResultadoValidacionDocumentosPeticion" element="cd:ConsultaResultadoValidacionDocumentosPeticion">
+		</wsdl:part>
+
+	</wsdl:message>
+
+
+	-
+	<wsdl:portType xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+		name="consultaDocumentoPortName">
+
+
+		-
+		<wsdl:operation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+			name="ConsultaResultadoValidacionDocumentos">
+
+			<wsdl:input xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+				name="ConsultaResultadoValidacionDocumentosPeticion" message="tns:ConsultaResultadoValidacionDocumentosPeticion">
+			</wsdl:input>
+
+			<wsdl:output xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+				name="ConsultaResultadoValidacionDocumentosRespuesta" message="tns:ConsultaResultadoValidacionDocumentosRespuesta">
+			</wsdl:output>
+
+		</wsdl:operation>
+
+	</wsdl:portType>
+
+
+	-
+	<wsdl:binding xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+		type="tns:consultaDocumentoPortName" name="consultaDocumentoPortNameSoap11">
+
+		<soap:binding xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+			transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+
+
+		-
+		<wsdl:operation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+			name="ConsultaResultadoValidacionDocumentos">
+
+			<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+				soapAction="" />
+
+
+			-
+			<wsdl:input xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+				name="ConsultaResultadoValidacionDocumentosPeticion">
+
+				<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+					use="literal" />
+
+			</wsdl:input>
+
+
+			-
+			<wsdl:output xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+				name="ConsultaResultadoValidacionDocumentosRespuesta">
+
+				<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+					use="literal" />
+
+			</wsdl:output>
+
+		</wsdl:operation>
+
+	</wsdl:binding>
+
+
+	-
+	<wsdl:service xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+		name="consultaDocumentoPortNameService">
+
+
+		-
+		<wsdl:port xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+			name="consultaDocumentoPortNameSoap11" binding="tns:consultaDocumentoPortNameSoap11">
+
+			<soap:address xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+				location="http://facturaelectronica.dian.gov.co:80/habilitacion/B2BIntegrationEngine/FacturaElectronica" />
+
+		</wsdl:port>
+
+	</wsdl:service>
+
+</wsdl:definitions>

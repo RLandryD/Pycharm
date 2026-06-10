@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Public" targetNamespace="http://www.government-gateway.cz/wcf/submission"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+    xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex"
+    xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy"
+    xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:i0="http://tempuri.org/"
+    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+    xmlns:tns="http://www.government-gateway.cz/wcf/submission"
+    xmlns:wsa10="http://www.w3.org/2005/08/addressing"
+    xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+    xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+    <wsp:UsingPolicy required="true" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+    <wsp:Policy wsu:Id="BN__binding"
+        xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <sp:TransportBinding xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702">
+                    <wsp:Policy>
+                        <sp:TransportToken>
+                            <wsp:Policy>
+                                <sp:HttpsToken>
+                                    <wsp:Policy>
+                                        <wsp:ExactlyOne>
+                                            <sp:HttpBasicAuthentication/>
+                                            <sp:RequireClientCertificate/>
+                                        </wsp:ExactlyOne>
+                                    </wsp:Policy>
+                                </sp:HttpsToken>
+                            </wsp:Policy>
+                        </sp:TransportToken>
+                        <sp:AlgorithmSuite>
+                            <wsp:Policy>
+                                <wsp:ExactlyOne>
+                                    <sp:Basic256/>
+                                    <sp:Basic192/>
+                                    <sp:Basic128/>
+                                    <sp:TripleDes/>
+                                    <sp:Basic256Rsa15/>
+                                    <sp:Basic192Rsa15/>
+                                    <sp:Basic128Rsa15/>
+                                    <sp:TripleDesRsa15/>
+                                    <sp:Basic256Sha256/>
+                                    <sp:Basic192Sha256/>
+                                    <sp:Basic128Sha256/>
+                                    <sp:TripleDesSha256/>
+                                    <sp:Basic256Sha256Rsa15/>
+                                    <sp:Basic192Sha256Rsa15/>
+                                    <sp:Basic128Sha256Rsa15/>
+                                    <sp:TripleDesSha256Rsa15/>
+                                </wsp:ExactlyOne>
+                            </wsp:Policy>
+                        </sp:AlgorithmSuite>
+                        <sp:Layout>
+                            <wsp:Policy>
+                                <sp:Strict/>
+                            </wsp:Policy>
+                        </sp:Layout>
+                    </wsp:Policy>
+                </sp:TransportBinding>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+    <wsdl:types>
+        <xs:schema elementFormDefault="qualified"
+            targetNamespace="http://www.government-gateway.cz/wcf/submission"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/">
+            <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+            <xs:element name="Submit">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="tclass" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="bodies" nillable="true"
+                            type="q1:ArrayOfBodyPart"
+                            xmlns:q1="http://www.government-gateway.cz/wcf/submission"/>
+                        <xs:element minOccurs="0" name="optionals" nillable="true"
+                            type="q2:ArrayOfOptionalParameter"
+                            xmlns:q2="http://www.government-gateway.cz/wcf/submission"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="ArrayOfBodyPart">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="BodyPart" nillable="true"
+                        type="q3:BodyPart"
+                        xmlns:q3="http://www.government-gateway.cz/wcf/submission"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ArrayOfBodyPart" nillable="true" type="q4:ArrayOfBodyPart"
+                xmlns:q4="http://www.government-gateway.cz/wcf/submission"/>
+            <xs:complexType name="BodyPart">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Body" nillable="true">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element minOccurs="0" name="any" nillable="true" type="xs:string"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="Id" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="BodyPart" nillable="true" type="q5:BodyPart"
+                xmlns:q5="http://www.government-gateway.cz/wcf/submission"/>
+            <xs:complexType name="ArrayOfOptionalParameter">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="OptionalParameter"
+                        nillable="true" type="q6:OptionalParameter"
+                        xmlns:q6="http://www.government-gateway.cz/wcf/submission"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ArrayOfOptionalParameter" nillable="true"
+                type="q7:ArrayOfOptionalParameter"
+                xmlns:q7="http://www.government-gateway.cz/wcf/submission"/>
+            <xs:complexType name="OptionalParameter">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="ParameterName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="ParameterType" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="ParameterValue" nillable="true" type="xs:string"
+                    />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="OptionalParameter" nillable="true" type="q8:OptionalParameter"
+                xmlns:q8="http://www.government-gateway.cz/wcf/submission"/>
+            <xs:element name="SubmitResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="SubmitResult" nillable="true"
+                            type="q9:PollResponseData"
+                            xmlns:q9="http://www.government-gateway.cz/wcf/submission"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="PollResponseData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="BodyBase64XML" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="Class" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="CorrelationID" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="Function" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="GatewayTimestamp" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" name="GovTalkErrors" nillable="true"
+                        type="q10:GovTalkErrors"
+                        xmlns:q10="http://www.government-gateway.cz/wcf/submission"/>
+                    <xs:element minOccurs="0" name="PollInterval" type="ser:duration"/>
+                    <xs:element minOccurs="0" name="Qualifier" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="PollResponseData" nillable="true" type="q11:PollResponseData"
+                xmlns:q11="http://www.government-gateway.cz/wcf/submission"/>
+            <xs:complexType name="GovTalkErrors">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Errors" nillable="true" type="q12:ArrayOfError"
+                        xmlns:q12="http://www.government-gateway.cz/wcf/submission"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GovTalkErrors" nillable="true" type="q13:GovTalkErrors"
+                xmlns:q13="http://www.government-gateway.cz/wcf/submission"/>
+            <xs:complexType name="ArrayOfError">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="Error" nillable="true"
+                        type="q14:Error" xmlns:q14="http://www.government-gateway.cz/wcf/submission"
+                    />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ArrayOfError" nillable="true" type="q15:ArrayOfError"
+                xmlns:q15="http://www.government-gateway.cz/wcf/submission"/>
+            <xs:complexType name="Error">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="GatewayTimeStamp" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" name="Id" type="xs:int"/>
+                    <xs:element minOccurs="0" name="Location" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="Number" type="xs:int"/>
+                    <xs:element minOccurs="0" name="RaisedBy" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="Text" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="Error" nillable="true" type="q16:Error"
+                xmlns:q16="http://www.government-gateway.cz/wcf/submission"/>
+            <xs:complexType name="GGErrorException">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="GatewayTimeStamp" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" name="Location" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="Number" type="xs:int"/>
+                    <xs:element minOccurs="0" name="RaisedBy" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="Text" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GGErrorException" nillable="true" type="q17:GGErrorException"
+                xmlns:q17="http://www.government-gateway.cz/wcf/submission"/>
+            <xs:element name="Poll">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="correlationid" nillable="true"
+                            type="xs:string"/>
+                        <xs:element minOccurs="0" name="optionals" nillable="true"
+                            type="q18:ArrayOfOptionalParameter"
+                            xmlns:q18="http://www.government-gateway.cz/wcf/submission"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="PollResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="PollResult" nillable="true"
+                            type="q19:PollResponseData"
+                            xmlns:q19="http://www.government-gateway.cz/wcf/submission"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Dispose">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="correlationid" nillable="true"
+                            type="xs:string"/>
+                        <xs:element minOccurs="0" name="optionals" nillable="true"
+                            type="q20:ArrayOfOptionalParameter"
+                            xmlns:q20="http://www.government-gateway.cz/wcf/submission"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DisposeResponse">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DataRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="tclass" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="optionals" nillable="true"
+                            type="q21:ArrayOfOptionalParameter"
+                            xmlns:q21="http://www.government-gateway.cz/wcf/submission"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DataRequestResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="DataRequestResult" nillable="true"
+                            type="q22:DataResponseBody"
+                            xmlns:q22="http://www.government-gateway.cz/wcf/submission"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="DataResponseBody">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="EndTimeStamp" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" name="Rows" nillable="true"
+                        type="q23:ArrayOfStatusRecord"
+                        xmlns:q23="http://www.government-gateway.cz/wcf/submission"/>
+                    <xs:element minOccurs="0" name="SenderID" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="StartTimeStamp" type="xs:dateTime"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="DataResponseBody" nillable="true" type="q24:DataResponseBody"
+                xmlns:q24="http://www.government-gateway.cz/wcf/submission"/>
+            <xs:complexType name="ArrayOfStatusRecord">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="StatusRecord"
+                        nillable="true" type="q25:StatusRecord"
+                        xmlns:q25="http://www.government-gateway.cz/wcf/submission"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ArrayOfStatusRecord" nillable="true" type="q26:ArrayOfStatusRecord"
+                xmlns:q26="http://www.government-gateway.cz/wcf/submission"/>
+            <xs:complexType name="StatusRecord">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="CorrelationID" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="Status" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="TimeStamp" type="xs:dateTime"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="StatusRecord" nillable="true" type="q27:StatusRecord"
+                xmlns:q27="http://www.government-gateway.cz/wcf/submission"/>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified"
+            targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/">
+            <xs:element name="anyType" nillable="true" type="xs:anyType"/>
+            <xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
+            <xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
+            <xs:element name="boolean" nillable="true" type="xs:boolean"/>
+            <xs:element name="byte" nillable="true" type="xs:byte"/>
+            <xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element name="decimal" nillable="true" type="xs:decimal"/>
+            <xs:element name="double" nillable="true" type="xs:double"/>
+            <xs:element name="float" nillable="true" type="xs:float"/>
+            <xs:element name="int" nillable="true" type="xs:int"/>
+            <xs:element name="long" nillable="true" type="xs:long"/>
+            <xs:element name="QName" nillable="true" type="xs:QName"/>
+            <xs:element name="short" nillable="true" type="xs:short"/>
+            <xs:element name="string" nillable="true" type="xs:string"/>
+            <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
+            <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
+            <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
+            <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
+            <xs:element name="char" nillable="true" type="tns:char"/>
+            <xs:simpleType name="char">
+                <xs:restriction base="xs:int"/>
+            </xs:simpleType>
+            <xs:element name="duration" nillable="true" type="tns:duration"/>
+            <xs:simpleType name="duration">
+                <xs:restriction base="xs:duration">
+                    <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
+                    <xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
+                    <xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="guid" nillable="true" type="tns:guid"/>
+            <xs:simpleType name="guid">
+                <xs:restriction base="xs:string">
+                    <xs:pattern
+                        value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"
+                    />
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:attribute name="FactoryType" type="xs:QName"/>
+            <xs:attribute name="Id" type="xs:ID"/>
+            <xs:attribute name="Ref" type="xs:IDREF"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="IBusinessTransactions_Submit_InputMessage">
+        <wsdl:part name="parameters" element="tns:Submit"/>
+    </wsdl:message>
+    <wsdl:message name="IBusinessTransactions_Submit_OutputMessage">
+        <wsdl:part name="parameters" element="tns:SubmitResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IBusinessTransactions_Submit_GGErrorExceptionFault_FaultMessage">
+        <wsdl:part name="detail" element="tns:GGErrorException"/>
+    </wsdl:message>
+    <wsdl:message name="IBusinessTransactions_Poll_InputMessage">
+        <wsdl:part name="parameters" element="tns:Poll"/>
+    </wsdl:message>
+    <wsdl:message name="IBusinessTransactions_Poll_OutputMessage">
+        <wsdl:part name="parameters" element="tns:PollResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IBusinessTransactions_Poll_GGErrorExceptionFault_FaultMessage">
+        <wsdl:part name="detail" element="tns:GGErrorException"/>
+    </wsdl:message>
+    <wsdl:message name="IBusinessTransactions_Dispose_InputMessage">
+        <wsdl:part name="parameters" element="tns:Dispose"/>
+    </wsdl:message>
+    <wsdl:message name="IBusinessTransactions_Dispose_OutputMessage">
+        <wsdl:part name="parameters" element="tns:DisposeResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IBusinessTransactions_Dispose_GGErrorExceptionFault_FaultMessage">
+        <wsdl:part name="detail" element="tns:GGErrorException"/>
+    </wsdl:message>
+    <wsdl:message name="IBusinessTransactions_DataRequest_InputMessage">
+        <wsdl:part name="parameters" element="tns:DataRequest"/>
+    </wsdl:message>
+    <wsdl:message name="IBusinessTransactions_DataRequest_OutputMessage">
+        <wsdl:part name="parameters" element="tns:DataRequestResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IBusinessTransactions_DataRequest_GGErrorExceptionFault_FaultMessage">
+        <wsdl:part name="detail" element="tns:GGErrorException"/>
+    </wsdl:message>
+    <wsdl:portType name="IBusinessTransactions">
+        <wsdl:operation name="Submit">
+            <wsdl:input
+                wsaw:Action="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/Submit"
+                message="tns:IBusinessTransactions_Submit_InputMessage"/>
+            <wsdl:output
+                wsaw:Action="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/SubmitResponse"
+                message="tns:IBusinessTransactions_Submit_OutputMessage"/>
+            <wsdl:fault
+                wsaw:Action="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/SubmitGGErrorExceptionFault"
+                name="GGErrorExceptionFault"
+                message="tns:IBusinessTransactions_Submit_GGErrorExceptionFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="Poll">
+            <wsdl:input
+                wsaw:Action="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/Poll"
+                message="tns:IBusinessTransactions_Poll_InputMessage"/>
+            <wsdl:output
+                wsaw:Action="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/PollResponse"
+                message="tns:IBusinessTransactions_Poll_OutputMessage"/>
+            <wsdl:fault
+                wsaw:Action="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/PollGGErrorExceptionFault"
+                name="GGErrorExceptionFault"
+                message="tns:IBusinessTransactions_Poll_GGErrorExceptionFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="Dispose">
+            <wsdl:input
+                wsaw:Action="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/Dispose"
+                message="tns:IBusinessTransactions_Dispose_InputMessage"/>
+            <wsdl:output
+                wsaw:Action="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/DisposeResponse"
+                message="tns:IBusinessTransactions_Dispose_OutputMessage"/>
+            <wsdl:fault
+                wsaw:Action="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/DisposeGGErrorExceptionFault"
+                name="GGErrorExceptionFault"
+                message="tns:IBusinessTransactions_Dispose_GGErrorExceptionFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="DataRequest">
+            <wsdl:input
+                wsaw:Action="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/DataRequest"
+                message="tns:IBusinessTransactions_DataRequest_InputMessage"/>
+            <wsdl:output
+                wsaw:Action="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/DataRequestResponse"
+                message="tns:IBusinessTransactions_DataRequest_OutputMessage"/>
+            <wsdl:fault
+                wsaw:Action="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/DataRequestGGErrorExceptionFault"
+                name="GGErrorExceptionFault"
+                message="tns:IBusinessTransactions_DataRequest_GGErrorExceptionFault_FaultMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="Binding" type="tns:IBusinessTransactions">
+        <wsp:PolicyReference URI="#BN__binding"/>
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="Submit">
+            <soap:operation
+                soapAction="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/Submit"
+                style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GGErrorExceptionFault">
+                <soap:fault use="literal" name="GGErrorExceptionFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="Poll">
+            <soap:operation
+                soapAction="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/Poll"
+                style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GGErrorExceptionFault">
+                <soap:fault use="literal" name="GGErrorExceptionFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="Dispose">
+            <soap:operation
+                soapAction="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/Dispose"
+                style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GGErrorExceptionFault">
+                <soap:fault use="literal" name="GGErrorExceptionFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="DataRequest">
+            <soap:operation
+                soapAction="http://www.government-gateway.cz/wcf/submission/IBusinessTransactions/DataRequest"
+                style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GGErrorExceptionFault">
+                <soap:fault use="literal" name="GGErrorExceptionFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="Service">
+        <wsdl:port name="Binding" binding="tns:Binding">
+            <soap:address location="https://host:port/path"/>
+            <wsa10:EndpointReference>
+                <wsa10:Address>https://host:port/path</wsa10:Address>
+            </wsa10:EndpointReference>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

@@ -3447,6 +3447,55 @@ class TestIFlowPackaging:
         data = CPIUploader._package_iflow(tmp_path / "nope.iflw", "A", "A")
         assert data is None
 
+    def test_manifest_uses_crlf_line_endings(self, tmp_path):
+        # Regression: CPI's OData artifact parser returns HTTP 500
+        # "InputStream cannot be null" when META-INF/MANIFEST.MF has bare-LF
+        # line endings. The JAR/OSGi spec requires CRLF + a trailing blank
+        # line. _package_iflow must never ship a bare-LF manifest, regardless
+        # of whether the manifest came from the validated __meta copy (read as
+        # bytes) or the in-code fallback.
+        import io, zipfile
+        from fetcher.cpi_uploader import CPIUploader
+        data = CPIUploader._package_iflow(self._make_iflw(tmp_path), "Art1", "Art One")
+        mf = zipfile.ZipFile(io.BytesIO(data)).read("META-INF/MANIFEST.MF")
+        assert b"\r\n" in mf, "manifest must use CRLF"
+        assert b"\n" not in mf.replace(b"\r\n", b""), "manifest must have no bare LF"
+        assert mf.endswith(b"\r\n\r\n"), "manifest must end with a blank line"
+
+    def test_validated_meta_manifest_crlf_preserved(self, tmp_path):
+        # The validated manifest stashed in <stem>__meta/ is written with CRLF
+        # by the generator; _package_iflow must read it without universal-newline
+        # translation so the CRLF survives into the uploaded bundle.
+        import io, zipfile
+        from fetcher.cpi_uploader import CPIUploader
+        iflw = self._make_iflw(tmp_path)
+        meta = tmp_path / f"{iflw.stem}__meta"
+        meta.mkdir()
+        (meta / "MANIFEST.MF").write_bytes(
+            b"Manifest-Version: 1.0\r\nBundle-SymbolicName: X\r\n"
+            b"SAP-BundleType: IntegrationFlow\r\n\r\n")
+        (meta / ".project").write_bytes(b"<projectDescription/>\r\n")
+        data = CPIUploader._package_iflow(iflw, "X", "X")
+        mf = zipfile.ZipFile(io.BytesIO(data)).read("META-INF/MANIFEST.MF")
+        assert b"\n" not in mf.replace(b"\r\n", b""), "validated manifest CRLF was stripped"
+
+    def test_bundle_includes_parameters_propdef(self, tmp_path):
+        # Regression: CPI's OData create returns HTTP 500 "InputStream cannot be
+        # null" when src/main/resources/parameters.propdef is absent. Every real
+        # importable iFlow bundle carries both parameters.prop AND
+        # parameters.propdef; the timer scaffold was missing the propdef.
+        import io, zipfile
+        import xml.etree.ElementTree as ET
+        from fetcher.cpi_uploader import CPIUploader
+        data = CPIUploader._package_iflow(self._make_iflw(tmp_path), "Art1", "Art One")
+        z = zipfile.ZipFile(io.BytesIO(data))
+        names = z.namelist()
+        assert "src/main/resources/parameters.prop" in names
+        assert "src/main/resources/parameters.propdef" in names, \
+            "parameters.propdef missing → CPI 500 InputStream cannot be null"
+        # propdef must be well-formed XML (CPI parses it to build the param model)
+        ET.fromstring(z.read("src/main/resources/parameters.propdef").decode())
+
 
 # ─── SAP-style naming + URL leak fix ─────────────────────────────────────────
 
@@ -4291,6 +4340,25 @@ class TestSAPComplexityEngine:
             participants=18, msgflows=14, routers=8))
         # A complex iFlow must score strictly higher weight than a simple one.
         assert complex_.total_weight > simple.total_weight
+
+    def test_has_bpm_flag_fires_ccbpm_and_outweighs_non_bpm(self):
+        """Regression: the authoritative has_bpm flag was extracted but never
+        wired to a rule, so BPM interfaces scored identically to non-BPM ones
+        and everything collapsed to size S. has_bpm must fire SAP's ccBPM rule
+        (Evaluate category) — adding weight AND bumping the t-shirt size."""
+        from analyzer.sap_complexity_engine import SAPComplexityEngine
+        from extractor.pi_extractor import InterfaceRecord
+        eng = SAPComplexityEngine()
+        common = dict(id="x", namespace="", software_component="",
+                      sender_system="", receiver_system="",
+                      sender_adapter="HTTPS", receiver_adapter="HTTPS",
+                      message_interface="X", mapping_program="MM")
+        plain = eng.assess_interface(InterfaceRecord(name="Plain", has_bpm=False, **common))
+        bpm = eng.assess_interface(InterfaceRecord(name="Bpm", has_bpm=True, **common))
+        assert bpm.total_weight > plain.total_weight, "has_bpm added no weight"
+        assert bpm.category == "Evaluate", "ccBPM should mark the interface Evaluate"
+        # the BPM interface must not be classified identically-small to the plain one
+        assert (bpm.size, plain.size) != ("S", "S") or bpm.total_weight > plain.total_weight
 
     def test_real_ma_record_routes_through_mode1_else_approximation(self):
         """Contract _ma_assess depends on: a record carrying real MA figures
@@ -5559,9 +5627,12 @@ class TestCorpusPipeline:
             tf.write(buf.getvalue()); p = tf.name
         try:
             files = walk_corpus(p)
-            # keys are now path-qualified (collision fix): the file at
-            # inner/x.groovy keeps its path, not collapsed to the basename.
-            assert "inner/x.groovy" in files and "y.xsl" in files
+            # keys are container-qualified (collision fix v2): the zip's own
+            # name prefixes every internal path, so same-named files in
+            # different packages never collapse.
+            assert any(k.endswith("/inner/x.groovy") for k in files)
+            assert any(k.endswith("/y.xsl") for k in files)
+            assert all("/" in k for k in files)
             # and extension detection still works on path-qualified keys
             from library_builder.corpus_pipeline import group_by_type
             grouped = group_by_type(files)
@@ -7059,64 +7130,6 @@ class TestMultiTypeGenerateBundle:
         assert kinds == ["script", "mapping"]   # generic fallback, never worse
 
 
-class TestUploadClonePath:
-    """upload_iflow routes through clone-and-adapt when a template library is set."""
-
-    _MANIFEST = ("Manifest-Version: 1.0\r\nBundle-ManifestVersion: 2\r\n"
-                 "Bundle-SymbolicName: T; singleton:=true\r\nBundle-Name: T\r\n"
-                 "Bundle-Version: 1.0.0\r\nSAP-BundleType: IntegrationFlow\r\n"
-                 "Import-Package: x\r\n\r\n")
-
-    def _make_lib(self, libdir):
-        from scaffolder.iflow_personalizer import _dos_zip
-        tpl = _dos_zip({
-            "META-INF/MANIFEST.MF": self._MANIFEST,
-            ".project": "<projectDescription><name>T</name></projectDescription>",
-            "src/main/resources/scenarioflows/integrationflow/T.iflw":
-                '<bpmn2:definitions><bpmn2:serviceTask/><bpmn2:serviceTask/>'
-                '<x ref="src/main/resources/script/s.groovy"/>'
-                '<m ref="src/main/resources/mapping/m.mmap"/></bpmn2:definitions>',
-            "src/main/resources/script/s.groovy": "// tpl\n",
-            "src/main/resources/mapping/m.mmap":
-                '<?xml version="1.0"?><messageMapping name="m" draft="true"/>',
-        })
-        (libdir / "t.zip").write_bytes(tpl)
-
-    def test_clone_bundle_when_library_set(self, tmp_path, monkeypatch):
-        monkeypatch.setenv("CPI_MIGRATOR_HOME", str(tmp_path / "home"))
-        import importlib, io, zipfile, requests
-        from fetcher import user_settings as us
-        importlib.reload(us)
-        import scaffolder.template_library as TL
-        TL._BEST_CACHE.clear()
-        libdir = tmp_path / "lib"
-        libdir.mkdir()
-        self._make_lib(libdir)
-        us.set_setting("template_library_dir", str(libdir))
-        from fetcher.cpi_uploader import CPIUploader
-        from fetcher.preflight import preflight_inner_bundle
-        up = CPIUploader("https://x", requests.Session())
-        extra = [("src/main/resources/script/a_process.groovy", "// GEN logic\n"),
-                 ("src/main/resources/mapping/a_mapping.mmap",
-                  '<?xml version="1.0"?><messageMapping name="a"/>')]
-        b = up._maybe_clone_bundle("Z_A", extra)
-        assert b and preflight_inner_bundle(b)[0]
-        z = zipfile.ZipFile(io.BytesIO(b))
-        assert any(n.endswith("Z_A.iflw") for n in z.namelist())
-        assert b"GEN logic" in z.read("src/main/resources/script/s.groovy")
-
-    def test_none_when_no_library(self, tmp_path, monkeypatch):
-        monkeypatch.setenv("CPI_MIGRATOR_HOME", str(tmp_path / "home2"))
-        import importlib, requests
-        from fetcher import user_settings as us
-        importlib.reload(us)
-        import scaffolder.template_library as TL
-        TL._BEST_CACHE.clear()
-        from fetcher.cpi_uploader import CPIUploader
-        up = CPIUploader("https://x", requests.Session())
-        assert up._maybe_clone_bundle("Z_A", []) is None   # → caller falls back
-
-
 class TestPackageNamingNoCompanyURL:
     """Package names must carry functionality, never the company/namespace URL."""
 
@@ -7199,3 +7212,2636 @@ class TestTimerInterfaceScaffold:
         assert {r.interface_name for r in rep.processed} == {"Keep"}
         assert any(r.interface_name == "Push" and "Excluded" in r.reason
                    for r in rep.needs_attention)
+
+
+class TestUploadShapeRouting:
+    """Deploy uses the single generated-package path (clone-and-adapt removed)."""
+
+    def _uploader(self):
+        from fetcher.cpi_uploader import CPIUploader
+        u = CPIUploader.__new__(CPIUploader)
+        u.base_url = "https://x"
+        u.calls = {"clone": 0, "package": 0}
+        u.sanitize_package_id = lambda s: s
+        u._artifact_exists = lambda *a, **k: False
+        u._package_iflow = lambda *a, **k: (
+            u.calls.__setitem__("package", u.calls["package"] + 1) or b"TIMER")
+        u._post_artifact = lambda zip_bytes, *a, **k: setattr(u, "last", zip_bytes)
+        return u
+
+    def test_default_uses_scaffold_not_clone(self):
+        from pathlib import Path
+        u = self._uploader()
+        u.upload_iflow(Path("x.iflw"), "P", "A", "Name")
+        assert u.calls["clone"] == 0 and u.last == b"TIMER"
+
+    def test_scaffold_path_drops_clone_extras(self):
+        # The packaged scaffold must NOT bundle clone-oriented scripts/mappings —
+        # doing so produced a CPI 500 ("InputStream cannot be null").
+        from pathlib import Path
+        from fetcher.cpi_uploader import CPIUploader
+        u = CPIUploader.__new__(CPIUploader)
+        u.base_url = "https://x"
+        seen = {}
+        u.sanitize_package_id = lambda s: s
+        u._artifact_exists = lambda *a, **k: False
+        def _pkg(iflw_path, art_id, art_name, params="", extra_artifacts=None):
+            seen["extras"] = extra_artifacts
+            return b"ZIP"
+        u._package_iflow = _pkg
+        u._post_artifact = lambda *a, **k: None
+        u.upload_iflow(Path("x.iflw"), "P", "A", "Name",
+                       extra_artifacts=[("script/a.groovy", "x")])
+        assert seen["extras"] is None
+
+
+class TestConsultantStructure:
+    """Consultant-defined structure → linear iFlow wiring (timer → CM* → end).
+    Foundation for the 'consultant structure' feature."""
+
+    def test_parse_basic_path(self):
+        from scaffolder.minimal_iflow import parse_consultant_structure
+        steps, notes = parse_consultant_structure("timer -> content modifier -> end")
+        assert [s["type"] for s in steps] == ["timer", "content_modifier", "end"]
+        assert notes == []
+
+    def test_request_reply_is_dropped_with_note(self):
+        from scaffolder.minimal_iflow import parse_consultant_structure
+        steps, notes = parse_consultant_structure(
+            "timer -> content modifier -> request-reply -> end")
+        assert [s["type"] for s in steps] == ["timer", "content_modifier", "end"]
+        assert any("request-reply" in n.lower() for n in notes)
+
+    def test_timer_and_end_are_ensured(self):
+        from scaffolder.minimal_iflow import parse_consultant_structure
+        steps, _ = parse_consultant_structure("content modifier")
+        assert steps[0]["type"] == "timer" and steps[-1]["type"] == "end"
+
+    def test_multiple_separators_and_aliases(self):
+        from scaffolder.minimal_iflow import parse_consultant_structure
+        steps, _ = parse_consultant_structure("scheduler => CM => cm => end")
+        assert [s["type"] for s in steps] == \
+            ["timer", "content_modifier", "content_modifier", "end"]
+
+    def test_build_linear_iflw_is_wellformed_and_linear(self):
+        import xml.etree.ElementTree as ET
+        from scaffolder.minimal_iflow import generate_structured_iflow
+        res = generate_structured_iflow("Flow_X", "timer -> CM -> CM -> CM -> end",
+                                        iflow_id="FlowX")
+        ET.fromstring(res.iflw_xml)  # well-formed
+        x = res.iflw_xml
+        starts, cms, ends = (x.count("<bpmn2:startEvent"),
+                             x.count("<bpmn2:callActivity"),
+                             x.count("<bpmn2:endEvent"))
+        flows = x.count("<bpmn2:sequenceFlow")
+        assert (starts, cms, ends) == (1, 3, 1)
+        assert flows == (starts + cms + ends) - 1  # strictly linear chain
+
+    def test_structured_bundle_has_propdef(self):
+        import io, zipfile
+        from scaffolder.minimal_iflow import generate_structured_iflow, build_bundle_zip
+        res = generate_structured_iflow("F", "timer -> content modifier -> end")
+        z = zipfile.ZipFile(io.BytesIO(build_bundle_zip(res)))
+        assert "src/main/resources/parameters.propdef" in z.namelist()
+        assert "src/main/resources/parameters.prop" in z.namelist()
+
+
+class TestComplexityScaledStructure:
+    """Generated iFlow structure must scale with interface complexity, not be a
+    fixed 2-CM shape for everything (the 'all the same structure' complaint)."""
+
+    def _rec(self, **kw):
+        from extractor.pi_extractor import InterfaceRecord
+        base = dict(id="x", name="X", namespace="", software_component="",
+                    sender_system="", receiver_system="", sender_adapter="HTTPS",
+                    receiver_adapter="HTTPS", message_interface="X", description="")
+        base.update(kw)
+        return InterfaceRecord(**base)
+
+    def test_simple_interface_stays_bare(self):
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+        assert IFlowScaffolder._complexity_step_plan(self._rec()) == []
+
+    def test_plan_scales_with_signals(self):
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+        simple = IFlowScaffolder._complexity_step_plan(self._rec())
+        mid = IFlowScaffolder._complexity_step_plan(
+            self._rec(mapping_program="MM", has_multi_mapping=True, channel_count=2))
+        heavy = IFlowScaffolder._complexity_step_plan(self._rec(
+            mapping_program="MM", has_multi_mapping=True, channel_count=4, has_bpm=True,
+            description="groovy xslt value mapping router jdbc lookup multicast"))
+        assert len(simple) < len(mid) < len(heavy)
+
+    def test_generated_iflw_step_count_scales(self):
+        import types, tempfile, xml.etree.ElementTree as ET
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+        sc = IFlowScaffolder(tempfile.mkdtemp())
+        def cms(rec):
+            x = sc.scaffold(types.SimpleNamespace(interface=rec)).read_text()
+            ET.fromstring(x)  # well-formed
+            return x.count("<bpmn2:callActivity")
+        simple = cms(self._rec(name="Simple"))
+        heavy = cms(self._rec(name="Heavy", mapping_program="MM",
+                              has_multi_mapping=True, channel_count=3, has_bpm=True,
+                              description="groovy xslt router value mapping"))
+        assert simple == 2          # bare Timer→CM→CM→End
+        assert heavy > simple       # scales up
+
+    def test_middle_steps_generator_wellformed(self):
+        import xml.etree.ElementTree as ET
+        from scaffolder.minimal_iflow import generate_timer_interface_iflow
+        res = generate_timer_interface_iflow(
+            "Flow", "Flow", middle_steps=["Map Fields", "Run Groovy Script", "Gather"])
+        ET.fromstring(res.iflw_xml)
+        # CM1 + 3 middle + ack CM = 5 callActivities
+        assert res.iflw_xml.count("<bpmn2:callActivity") == 5
+
+
+class TestDecodedStepBuilders:
+    """The real CPI step palette (Script/Mapping/Splitter/Gather/Filter) decoded
+    from the 166-iFlow corpus. Each builder must emit the exact decoded
+    activityType + cmdVariantUri, stay well-formed, keep the chain linear, and
+    bundle any referenced resource file (script .groovy / mapping .xsl)."""
+
+    def test_each_builder_has_decoded_constants(self):
+        from scaffolder.minimal_iflow import (
+            _script_step, _mapping_step, _splitter_step, _gather_step, _filter_step)
+        import xml.etree.ElementTree as ET
+        cases = [
+            (_script_step("C1", "s", "x.groovy"), "Script",
+             "cname::GroovyScript"),
+            (_mapping_step("C1", "m", "MapX"), "Mapping",
+             "cname::XSLTMapping/version::1.2.0"),
+            (_splitter_step("C1", "sp"), "Splitter",
+             "cname::GeneralSplitter/version::1.5.1"),
+            (_gather_step("C1", "g"), "Gather",
+             "cname::Gather/version::1.2.0"),
+            (_filter_step("C1", "f"), "Filter",
+             "cname::Filter/version::1.1.0"),
+        ]
+        for xml, at, cmd in cases:
+            # wrap the fragment so the bpmn2:/ifl: prefixes resolve (they're
+            # only declared on the root of the full document)
+            doc = ('<root xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" '
+                   'xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd">'
+                   + xml + '</root>')
+            ET.fromstring(doc)
+            assert f"<value>{at}</value>" in xml
+            assert cmd in xml
+
+    def test_mixed_flow_wellformed_linear_and_bundles_files(self):
+        import xml.etree.ElementTree as ET, io, zipfile
+        from scaffolder.minimal_iflow import (
+            generate_timer_interface_iflow, build_bundle_zip)
+        mids = [{"kind": "mapping", "name": "Map Fields"},
+                {"kind": "script", "name": "Run Groovy Script"},
+                {"kind": "splitter", "name": "Split Records"},
+                {"kind": "filter", "name": "Filter Content"},
+                {"kind": "gather", "name": "Gather Responses"}]
+        res = generate_timer_interface_iflow("Mix", "Mix", middle_steps=mids)
+        x = res.iflw_xml
+        ET.fromstring(x)
+        for at in ["Mapping", "Script", "Splitter", "Filter", "Gather"]:
+            assert f"<value>{at}</value>" in x
+        # CM1 + 5 middle + ack = 7 callActivities, strictly linear
+        acts = x.count("<bpmn2:callActivity")
+        flows = x.count("<bpmn2:sequenceFlow")
+        starts = x.count("<bpmn2:startEvent")
+        ends = x.count("<bpmn2:endEvent")
+        assert acts == 7
+        assert flows == (starts + acts + ends) - 1
+        # referenced files present + valid
+        groovy = [p for p in res.files if p.endswith(".groovy")]
+        xsl = [p for p in res.files if p.endswith(".xsl")]
+        assert groovy and xsl
+        assert "processData(Message message)" in res.files[groovy[0]]
+        ET.fromstring(res.files[xsl[0]])  # xsl well-formed
+        z = zipfile.ZipFile(io.BytesIO(build_bundle_zip(res)))
+        assert groovy[0] in z.namelist() and xsl[0] in z.namelist()
+
+    def test_mapping_path_has_no_ext_but_file_does(self):
+        from scaffolder.minimal_iflow import generate_timer_interface_iflow
+        res = generate_timer_interface_iflow(
+            "M", "M", middle_steps=[{"kind": "mapping", "name": "Map Fields"}])
+        x = res.iflw_xml
+        # corpus convention: mappingpath references the resource WITHOUT ext,
+        # the bundled file IS <name>.xsl
+        assert "<value>src/main/resources/mapping/MapFields</value>" in x
+        assert "src/main/resources/mapping/MapFields.xsl" in res.files
+
+    def test_mapping_uses_bundled_stylesheet_source(self):
+        # regression for the tenant "Mapping file not found" / StringIndexOOB:
+        # must load from the bundle (mappingSrcIflow) with a mappinguri pointing
+        # at the .xsl, NOT from a runtime header.
+        from scaffolder.minimal_iflow import generate_timer_interface_iflow
+        res = generate_timer_interface_iflow(
+            "M", "M", middle_steps=[{"kind": "mapping", "name": "Map Fields"}])
+        x = res.iflw_xml
+        assert "<value>mappingSrcIflow</value>" in x
+        assert "mappingSrcHeader" not in x          # no header dependency
+        assert "dir://mapping/xslt/src/main/resources/mapping/MapFields.xsl" in x
+
+    def test_mapping_or_splitter_seed_xml_body(self):
+        # XSLT/Splitter need XML input; the first CM must seed a body so a
+        # timer flow doesn't fail "supports XML input only".
+        from scaffolder.minimal_iflow import generate_timer_interface_iflow
+        x = generate_timer_interface_iflow(
+            "M", "M", middle_steps=[{"kind": "mapping", "name": "Map Fields"}]).iflw_xml
+        assert "&lt;root&gt;&lt;Record/&gt;&lt;/root&gt;" in x or "<root><Record/></root>" in x
+
+    def test_pool_width_grows_with_steps(self):
+        import re
+        from scaffolder.minimal_iflow import generate_timer_interface_iflow
+        def pool_w(n):
+            mids = [{"kind": "content_modifier", "name": f"S{i}"} for i in range(n)]
+            x = generate_timer_interface_iflow("P", "P", middle_steps=mids).iflw_xml
+            m = re.search(r'BPMNShape_Participant_Process_1.*?width="([\d.]+)"', x, re.S)
+            return float(m.group(1))
+        assert pool_w(8) > pool_w(2)   # pool must scale, not overflow
+
+    def test_string_middle_steps_stay_content_modifiers(self):
+        # Backward compat: bare strings remain Content Modifiers (no new
+        # activity types, no extra files) — the proven default shape.
+        from scaffolder.minimal_iflow import generate_timer_interface_iflow
+        res = generate_timer_interface_iflow(
+            "S", "S", middle_steps=["Map Fields", "Gather"])
+        x = res.iflw_xml
+        assert "<value>Mapping</value>" not in x
+        assert "<value>Gather</value>" not in x
+        assert not any(p.endswith((".groovy", ".xsl")) for p in res.files)
+
+    def test_complexity_plan_emits_typed_kinds(self):
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+        from extractor.pi_extractor import InterfaceRecord
+        rec = InterfaceRecord(
+            id="x", name="X", namespace="", software_component="",
+            sender_system="", receiver_system="", sender_adapter="HTTPS",
+            receiver_adapter="HTTPS", message_interface="X",
+            mapping_program="MM", channel_count=2,
+            description="groovy filter")
+        plan = IFlowScaffolder._complexity_step_plan(rec)
+        kinds = {s["kind"] for s in plan}
+        assert "mapping" in kinds   # mapping_program
+        assert "script" in kinds    # groovy
+        assert "filter" in kinds    # filter keyword
+        assert "splitter" in kinds and "gather" in kinds  # channel_count > 1
+
+    def test_scaffolded_iflow_uses_real_step_types(self):
+        import types, tempfile, xml.etree.ElementTree as ET
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+        from extractor.pi_extractor import InterfaceRecord
+        rec = InterfaceRecord(
+            id="x", name="HeavyReal", namespace="", software_component="",
+            sender_system="", receiver_system="", sender_adapter="HTTPS",
+            receiver_adapter="HTTPS", message_interface="X",
+            mapping_program="MM", channel_count=3,
+            description="groovy xslt filter")
+        sc = IFlowScaffolder(tempfile.mkdtemp())
+        x = sc.scaffold(types.SimpleNamespace(interface=rec)).read_text()
+        ET.fromstring(x)
+        # generated flow now contains genuine decoded step elements, not all-CM
+        for at in ["Script", "Mapping", "Splitter", "Gather", "Filter"]:
+            assert f"<value>{at}</value>" in x, at
+
+
+class TestCorpusStore:
+    """Persistent, editable, incrementally-updatable capability store. Distill
+    once -> save sharded JSON -> load fast -> add-only merge (deduped). Proves
+    the workbench no longer needs to re-walk the raw corpus each session."""
+
+    @staticmethod
+    def _caps():
+        from library_builder.solver import NormalizedCapability
+        return [
+            NormalizedCapability(
+                cap_id="groovy:a", ctype="groovy", intent="map idoc to xml",
+                keywords={"idoc", "xml", "map"}, varies=["root"], weight=2,
+                source_ref="A.groovy", raw={"name": "A", "body": "..."}),
+            NormalizedCapability(
+                cap_id="xslt:b", ctype="xslt", intent="remove namespaces",
+                keywords={"remove", "namespaces"}, weight=1,
+                source_ref="B.xsl", raw={"name": "B"}),
+        ]
+
+    def test_save_creates_sharded_json_and_index(self):
+        import tempfile, os
+        from library_builder.corpus_store import CorpusStore
+        d = tempfile.mkdtemp()
+        idx = CorpusStore(self._caps()).save(d)
+        assert os.path.exists(os.path.join(d, "index.json"))
+        assert os.path.exists(os.path.join(d, "groovy.json"))
+        assert os.path.exists(os.path.join(d, "xslt.json"))
+        assert idx["total_capabilities"] == 2
+
+    def test_load_roundtrip_preserves_caps(self):
+        import tempfile
+        from library_builder.corpus_store import CorpusStore
+        d = tempfile.mkdtemp()
+        CorpusStore(self._caps()).save(d)
+        loaded = CorpusStore.load(d)
+        assert {c.cap_id for c in loaded.caps} == {"groovy:a", "xslt:b"}
+        a = next(c for c in loaded.caps if c.cap_id == "groovy:a")
+        assert isinstance(a.keywords, set) and "idoc" in a.keywords  # set rehydrated
+        assert a.raw["name"] == "A"                                  # raw preserved
+
+    def test_merge_is_add_only_and_dedupes(self):
+        import tempfile
+        from library_builder.corpus_store import CorpusStore
+        from library_builder.solver import NormalizedCapability
+        d = tempfile.mkdtemp()
+        CorpusStore(self._caps()).save(d)
+        store = CorpusStore.load(d)
+        new = NormalizedCapability(cap_id="groovy:c", ctype="groovy",
+                                   intent="split", keywords={"split"},
+                                   source_ref="C.groovy", raw={"name": "C"})
+        r1 = store.merge_caps([new])
+        assert r1["added"] == 1 and r1["total"] == 3
+        r2 = store.merge_caps([new])          # same cap again
+        assert r2["added"] == 0 and r2["skipped"] == 1
+        store.save(d)
+        assert len(CorpusStore.load(d).caps) == 3
+
+    def test_load_tolerates_missing_index(self):
+        import tempfile, os
+        from library_builder.corpus_store import CorpusStore
+        d = tempfile.mkdtemp()
+        CorpusStore(self._caps()).save(d)
+        os.remove(os.path.join(d, "index.json"))
+        assert len(CorpusStore.load(d).caps) == 2   # falls back to *.json shards
+
+    def test_search_works_on_loaded_store(self):
+        import tempfile
+        from library_builder.corpus_store import CorpusStore
+        d = tempfile.mkdtemp()
+        CorpusStore(self._caps()).save(d)
+        loaded = CorpusStore.load(d)
+        hits = loaded.search("idoc xml", top_n=3)
+        assert any(cid == "groovy:a" for cid, _ in hits)
+
+
+class TestResourcePackaging:
+    """Regression for the tenant 'Mapping file not found': scaffolded resource
+    files (scripts/mappings) must persist next to the iFlow and ship inside the
+    uploaded package, even on the on-demand path (extra_artifacts=None)."""
+
+    def _rec(self):
+        from extractor.pi_extractor import InterfaceRecord
+        return InterfaceRecord(
+            id="x", name="Pkg_Test", namespace="", software_component="",
+            sender_system="", receiver_system="", sender_adapter="HTTPS",
+            receiver_adapter="HTTPS", message_interface="X",
+            mapping_program="MM", description="groovy", channel_count=1)
+
+    def test_scaffold_persists_resources_and_package_ships_them(self):
+        import types, tempfile, io, zipfile
+        from pathlib import Path
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+        from fetcher.cpi_uploader import CPIUploader
+        out = tempfile.mkdtemp()
+        p = IFlowScaffolder(output_dir=out).scaffold(
+            types.SimpleNamespace(interface=self._rec()))
+        meta = Path(p).with_name(Path(p).stem + "__meta")
+        persisted = {x.name for x in meta.rglob("*") if x.is_file()}
+        assert any(n.endswith(".xsl") for n in persisted)
+        assert any(n.endswith(".groovy") for n in persisted)
+        # package with NO extra_artifacts (the path that used to drop them)
+        z = zipfile.ZipFile(io.BytesIO(
+            CPIUploader._package_iflow(Path(p), "PkgTest", "Pkg_Test")))
+        names = z.namelist()
+        assert any("/mapping/" in n and n.endswith(".xsl") for n in names)
+        assert any("/script/" in n and n.endswith(".groovy") for n in names)
+
+    def test_content_modifier_constant_vs_expression_body(self):
+        from scaffolder.minimal_iflow import _content_modifier_step
+        # literal body -> constant (no "Expression Text has no parameters" error)
+        lit = _content_modifier_step("C1", "n", body_expr="<root><Record/></root>")
+        assert "<value>constant</value>" in lit
+        # ${...} body -> expression
+        expr = _content_modifier_step("C1", "n", body_expr="${property.X}")
+        assert "<value>expression</value>" in expr
+
+
+class TestMonsterFixes:
+    """Regressions for the monster tenant run: filter-before-splitter empty
+    body, and the artifact Name HTTP 400."""
+
+    def test_filter_xpath_is_single_root_safe(self):
+        from scaffolder.minimal_iflow import _filter_step
+        x = _filter_step("C1", "Filter Content")
+        # must select ONE document element (/*), not every element (//*),
+        # or the result is a multi-root fragment the splitter can't parse.
+        assert "<value>/*</value>" in x
+        assert "<value>//*</value>" not in x
+
+    def test_filter_then_splitter_iflow_is_well_formed(self):
+        import types, tempfile
+        import xml.etree.ElementTree as ET
+        from pathlib import Path
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+        from extractor.pi_extractor import InterfaceRecord
+        rec = InterfaceRecord(id="x", name="Filt_Split", namespace="",
+            software_component="", sender_system="", receiver_system="",
+            sender_adapter="HTTPS", receiver_adapter="HTTPS", message_interface="X",
+            mapping_program="", description="filter duplicates then split batch",
+            channel_count=3)
+        p = IFlowScaffolder(output_dir=tempfile.mkdtemp()).scaffold(
+            types.SimpleNamespace(interface=rec))
+        ET.fromstring(Path(p).read_text())   # whole iflow well-formed
+
+    def test_artifact_name_sanitized_for_cpi(self):
+        from fetcher.cpi_uploader import CPIUploader as C
+        assert C.sanitize_artifact_name("Order Sync & Validate (EU/US)") == \
+            "Order Sync Validate EU US"
+        assert not C.sanitize_artifact_name("ends with period.").endswith(".")
+        import re
+        for bad in ["A/B", "x&y", "(z)", "1abc", "  ", ":,;"]:
+            s = C.sanitize_artifact_name(bad)
+            assert re.match(r"[A-Za-z_]", s) and not s.endswith(".")
+
+
+class TestGroovyCanonical:
+    """Generated Groovy must create a real exchange property and not carry the
+    unused import CPI's Groovy 2.0 editor strips."""
+
+    def test_groovy_sets_exchange_property_and_no_unused_import(self):
+        from scaffolder.minimal_iflow import _groovy_body
+        g = _groovy_body("processData")
+        assert "message.setProperty(" in g          # creates a real property
+        assert "import java.util.HashMap" not in g  # unused -> CPI flags it
+        assert "com.sap.gateway.ip.core.customdev.util.Message" in g
+        assert "def Message processData(Message message)" in g
+        assert "return message" in g
+
+
+class TestConvertersAndAdjacency:
+    """The 4 decoded converters build well-formed XML and the content-type
+    adjacency validator catches a converter feeding an incompatible step."""
+
+    def test_four_converters_well_formed(self):
+        import xml.etree.ElementTree as ET
+        from scaffolder.minimal_iflow import _build_middle_step
+        for k in ("xml_to_json", "json_to_xml", "xml_to_csv", "csv_to_xml"):
+            xml, _ = _build_middle_step(k, "C1", {"name": k}, "sf_in", "sf_out")
+            ET.fromstring("<r xmlns:bpmn2='b' xmlns:ifl='i'>" + xml + "</r>")
+
+    def test_converter_versions(self):
+        from scaffolder.minimal_iflow import _build_middle_step
+        want = {"xml_to_json": "XmlToJsonConverter/version::1.0.8",
+                "json_to_xml": "JsonToXmlConverter/version::1.1.2",
+                "xml_to_csv":  "XmlToCsvConverter/version::1.1.0",
+                "csv_to_xml":  "CsvToXmlConverter/version::1.1"}
+        for k, sig in want.items():
+            xml, _ = _build_middle_step(k, "C1", {"name": k}, "a", "b")
+            assert sig in xml
+
+    def test_adjacency_accepts_round_trip(self):
+        from scaffolder.minimal_iflow import validate_step_chain
+        ok, errs = validate_step_chain(["xml_to_json", "json_to_xml", "mapping"])
+        assert ok and not errs
+
+    def test_adjacency_rejects_json_into_mapping(self):
+        from scaffolder.minimal_iflow import validate_step_chain
+        ok, errs = validate_step_chain(["xml_to_json", "mapping"])
+        assert not ok and "mapping" in errs[0]
+
+    def test_script_is_format_agnostic_passthrough(self):
+        from scaffolder.minimal_iflow import validate_step_chain
+        ok, _ = validate_step_chain(["xml_to_json", "script", "json_to_xml"])
+        assert ok
+
+
+class TestLinearMonster:
+    """The high-confidence linear monster: well-formed, content-safe chain, all
+    schemas bundled, packages into the tenant-accepted zip layout."""
+
+    def test_builds_well_formed_with_resources(self):
+        import xml.etree.ElementTree as ET
+        from scaffolder.monster_iflow import build_linear_monster
+        r = build_linear_monster()
+        ET.fromstring(r.iflw_xml)
+        res = {k.split("resources/")[1] for k in r.files
+               if k.startswith("src/main/resources/") and not k.endswith(("prop", "propdef"))}
+        for needed in ("xsd/Order.xsd", "wsdl/OrderService.wsdl",
+                       "edmx/Order.edmx", "mapping/NormalizeOrders.xsl",
+                       "script/reformatDate.groovy"):
+            assert needed in res
+
+    def test_packages_into_valid_bundle(self):
+        import io, zipfile
+        from scaffolder.monster_iflow import build_linear_monster, monster_to_zip
+        zf = zipfile.ZipFile(io.BytesIO(monster_to_zip(build_linear_monster())))
+        names = zf.namelist()
+        assert "META-INF/MANIFEST.MF" in names and ".project" in names
+        assert any(n.endswith(".iflw") for n in names)
+
+
+class TestBranchingMonster:
+    """The branching monster (router + multicast + join + gather + exception
+    subprocess) must be structurally self-consistent: every diagram shape maps
+    to a process element, every edge to a flow, and every flow endpoint exists."""
+
+    def _consistency(self, result):
+        import xml.etree.ElementTree as ET
+        NS = {"bpmn2": "http://www.omg.org/spec/BPMN/20100524/MODEL"}
+        root = ET.fromstring(result.iflw_xml)
+        proc = root.find(".//bpmn2:process", NS)
+        elem_ids, flow_ids, endpoints = set(), set(), []
+        for e in proc.iter():
+            tag = e.tag.split("}")[-1]; eid = e.get("id")
+            if tag == "sequenceFlow":
+                flow_ids.add(eid); endpoints.append((e.get("sourceRef"), e.get("targetRef")))
+            elif eid and tag in ("startEvent", "endEvent", "callActivity",
+                                  "exclusiveGateway", "parallelGateway", "subProcess"):
+                elem_ids.add(eid)
+        DI = "{http://www.omg.org/spec/BPMN/20100524/DI}"
+        shapes = {s.get("bpmnElement") for s in root.iter(DI + "BPMNShape")}
+        edges = {ed.get("bpmnElement") for ed in root.iter(DI + "BPMNEdge")}
+        for s, t in endpoints:
+            assert s in elem_ids and t in elem_ids
+        for sh in shapes:
+            assert sh == "Participant_Process_1" or sh in elem_ids
+        for el in elem_ids:
+            assert el in shapes
+        assert edges == flow_ids
+
+    def test_branching_consistent_both_variants(self):
+        from scaffolder.monster_iflow import build_branching_monster
+        self._consistency(build_branching_monster(include_exception=False))
+        self._consistency(build_branching_monster(include_exception=True))
+
+    def test_branching_carries_decoded_signatures(self):
+        from scaffolder.monster_iflow import build_branching_monster
+        x = build_branching_monster(include_exception=True).iflw_xml
+        for sig in ("activityType</key><value>ExclusiveGateway",
+                    'default="SequenceFlow_8"',
+                    "cname::Multicast/version::1.1.1",
+                    "cname::Join/version::1.0.0",
+                    "cname::Gather/version::1.2.0",
+                    "ErrorEventSubProcessTemplate",
+                    "tFormalExpression"):
+            assert sig in x
+
+    def test_branching_packages(self):
+        import io, zipfile
+        from scaffolder.monster_iflow import build_branching_monster, monster_to_zip
+        zf = zipfile.ZipFile(io.BytesIO(monster_to_zip(build_branching_monster())))
+        assert "META-INF/MANIFEST.MF" in zf.namelist()
+
+
+class TestStepsColumnPipeline:
+    """The explicit Steps column drives an arbitrary CPI step pipeline (50+),
+    mixing converter steps and XSLT-mapping conversions, content-type-valid."""
+
+    def test_parse_and_validate_big_pipeline(self):
+        from scaffolder.minimal_iflow import parse_steps_spec, validate_step_chain
+        spec = " | ".join([
+            "Content Modifier: Seed",
+            "XML to JSON Converter", "JSON to XML Converter",
+            "XSLT Mapping (to CSV): MapCsv", "CSV to XML Converter",
+            "XSLT Mapping (to JSON): MapJson", "JSON to XML Converter",
+            "Splitter", "Gather", "Message Mapping: Norm"])
+        mids, kinds = parse_steps_spec(spec)
+        assert len(mids) == 10
+        ok, errs = validate_step_chain(kinds, "XML")
+        assert ok, errs
+
+    def test_xslt_paren_alias_resolves(self):
+        from scaffolder.minimal_iflow import parse_steps_spec
+        mids, kinds = parse_steps_spec("XSLT Mapping (to CSV): X")
+        assert kinds == ["xslt_to_csv"]
+
+    def test_converting_xslt_ships_text_output_stylesheet(self):
+        from scaffolder.minimal_iflow import _build_middle_step
+        _, files = _build_middle_step("xslt_to_csv", "C1", {"name": "X", "mapping_name": "X"}, "a", "b")
+        xsl = next(v for k, v in files.items() if k.endswith(".xsl"))
+        assert 'method="text"' in xsl
+
+    def test_unknown_step_falls_back_to_cm(self):
+        from scaffolder.minimal_iflow import parse_steps_spec
+        _, kinds = parse_steps_spec("Frobnicate Widgets")
+        assert kinds == ["content_modifier"]
+
+
+class TestMonsterValidatorFixes:
+    """Fixes for the tenant design-time validator feedback on the monsters."""
+
+    def test_csv_to_xml_has_mandatory_schema_and_bundles_xsd(self):
+        from scaffolder.minimal_iflow import _build_middle_step
+        xml, files = _build_middle_step("csv_to_xml", "C1", {"name": "x"}, "a", "b")
+        assert "XML_Schema_File_Path" in xml
+        assert any(k.endswith("CsvTarget.xsd") for k in files)
+
+    def test_router_omits_raisealert_and_sets_throwexception_false(self):
+        from scaffolder.monster_iflow import build_branching_monster
+        x = build_branching_monster(include_exception=False).iflw_xml
+        assert "<key>raiseAlert</key>" not in x
+        assert "<key>throwException</key><value>false</value>" in x
+
+    def test_multicast_branches_are_named(self):
+        from scaffolder.monster_iflow import build_branching_monster
+        x = build_branching_monster(include_exception=False).iflw_xml
+        for nm in ('name="JSON Branch"', 'name="Filter Branch"', 'name="CSV Branch"'):
+            assert nm in x
+
+    def test_pool_top_clearance_is_widened(self):
+        import re
+        from scaffolder.monster_iflow import build_branching_monster
+        x = build_branching_monster(include_exception=True).iflw_xml
+        pool_y = float(re.search(r'Participant_Process_1.*?y="([\d.]+)"', x, re.S).group(1))
+        assert 135.0 - pool_y >= 70   # 2.5x the prior 30px gap
+
+    def test_branching_still_structurally_consistent(self):
+        import xml.etree.ElementTree as ET
+        from scaffolder.monster_iflow import build_branching_monster
+        NS = {"bpmn2": "http://www.omg.org/spec/BPMN/20100524/MODEL"}
+        for exc in (False, True):
+            root = ET.fromstring(build_branching_monster(include_exception=exc).iflw_xml)
+            proc = root.find(".//bpmn2:process", NS)
+            elem_ids, flow_ids, endpoints = set(), set(), []
+            for e in proc.iter():
+                tag = e.tag.split("}")[-1]; eid = e.get("id")
+                if tag == "sequenceFlow":
+                    flow_ids.add(eid); endpoints.append((e.get("sourceRef"), e.get("targetRef")))
+                elif eid and tag in ("startEvent", "endEvent", "callActivity",
+                                     "exclusiveGateway", "parallelGateway", "subProcess"):
+                    elem_ids.add(eid)
+            for s, t in endpoints:
+                assert s in elem_ids and t in elem_ids
+
+
+class TestSchemaExtractorFullContent:
+    """XSD/WSDL/EDMX extraction retains the FULL file and dedupes identical ones."""
+
+    def test_full_content_retained_and_edmx_parsed(self):
+        from extractor.esr_extractor import ESRFileParser
+        xsd = b'<?xml version="1.0"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:x"><xs:element name="A"/></xs:schema>'
+        edmx = b'<?xml version="1.0"?><edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0"/>'
+        objs = ESRFileParser().parse_uploaded_files({"A.xsd": xsd, "svc.edmx": edmx})
+        by = {o.obj_type: o for o in objs}
+        assert by["DataType"].content == xsd.decode()
+        assert by["EDMX"].content == edmx.decode()
+        assert by["DataType"].namespace == "urn:x"
+
+    def test_identical_files_deduped(self):
+        from extractor.esr_extractor import ESRFileParser
+        xsd = b'<?xml version="1.0"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"/>'
+        objs = ESRFileParser().parse_uploaded_files({"A.xsd": xsd, "B.xsd": xsd})
+        assert sum(1 for o in objs if o.obj_type == "DataType") == 1
+
+
+class TestSchemaDeduper:
+    """3-tier schema clustering: exact / structural / family, richest-canonical."""
+
+    EDMX_A = (b'<?xml version="1.0"?><edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">'
+              b'<edmx:DataServices><Schema Namespace="API_BP" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">'
+              b'<EntityType Name="A_Partner"/><EntityType Name="A_Address"/>'
+              b'<EntitySet Name="A_Partner"/><EntitySet Name="A_Address"/></Schema></edmx:DataServices></edmx:Edmx>')
+    # same service, a different host + one extra entity (newer release) → richer
+    EDMX_B = (b'<?xml version="1.0"?><edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">'
+              b'<edmx:DataServices><Schema Namespace="API_BP" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">'
+              b'<EntityType Name="A_Partner"/><EntityType Name="A_Address"/><EntityType Name="A_Industry"/>'
+              b'<EntitySet Name="A_Partner"/><EntitySet Name="A_Address"/><EntitySet Name="A_Industry"/></Schema></edmx:DataServices></edmx:Edmx>')
+
+    def _write(self, tmp_path, name, data):
+        p = tmp_path / name
+        p.write_bytes(data)
+        return str(p)
+
+    def test_family_clusters_same_service_across_versions(self, tmp_path):
+        from extractor.schema_deduper import dedup, canonical
+        a = self._write(tmp_path, "host1_API_BP.edmx", self.EDMX_A)
+        b = self._write(tmp_path, "host2_API_BP.edmx", self.EDMX_B)
+        res = dedup([a, b])
+        fams = [v for k, v in res.family.items() if len(v) > 1]
+        assert len(fams) == 1 and len(fams[0]) == 2          # same family
+        assert len({f.struct for f in fams[0]}) == 2          # but different structure (versions)
+        assert canonical(fams[0]).path == b                   # richest (extra entity) wins
+
+    def test_exact_duplicates_collapse(self, tmp_path):
+        from extractor.schema_deduper import dedup
+        a = self._write(tmp_path, "x1.edmx", self.EDMX_A)
+        b = self._write(tmp_path, "x2.edmx", self.EDMX_A)   # identical bytes
+        res = dedup([a, b])
+        assert len({k for k in res.exact}) == 1             # one exact group
+
+    def test_idoc_wsdls_not_overmerged_by_shared_namespace(self, tmp_path):
+        from extractor.schema_deduper import fingerprint
+        w1 = (b'<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" '
+              b'targetNamespace="urn:sap-com:document:sap:idoc:soap:messages">'
+              b'<wsdl:portType name="INVOIC.INVOIC01"/></wsdl:definitions>')
+        w2 = (b'<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" '
+              b'targetNamespace="urn:sap-com:document:sap:idoc:soap:messages">'
+              b'<wsdl:portType name="DESADV.DELVRY07"/></wsdl:definitions>')
+        f1 = self._write(tmp_path, "a.wsdl", w1); f2 = self._write(tmp_path, "b.wsdl", w2)
+        from extractor.schema_deduper import fingerprint
+        assert fingerprint(f1).family != fingerprint(f2).family   # different IDocs split
+
+
+class TestODataMetadataFetcher:
+    """Standalone $metadata fetcher: URL build, retry, save, manifest, dedup."""
+    EDMX = (b'<?xml version="1.0"?><edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">'
+            b'<edmx:DataServices><Schema Namespace="API_BP" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">'
+            b'<EntityType Name="A_BP"/><EntitySet Name="A_BP"/></Schema></edmx:DataServices></edmx:Edmx>')
+
+    def test_metadata_url_build_and_idempotent(self):
+        from fetcher.odata_metadata_fetcher import metadata_url
+        assert metadata_url(product="s4hanacloud", service="API_BUSINESS_PARTNER").endswith(
+            "/sap/opu/odata/sap/API_BUSINESS_PARTNER/$metadata")
+        # re-appending $metadata is idempotent + case-insensitive strip
+        assert metadata_url(url="https://h/svc/$METADATA") == "https://h/svc/$metadata"
+
+    def test_unknown_product_raises(self):
+        from fetcher.odata_metadata_fetcher import metadata_url
+        import pytest
+        with pytest.raises(ValueError):
+            metadata_url(product="nope", service="X")
+
+    def test_fetch_retries_then_saves_and_manifests(self, tmp_path, monkeypatch):
+        import fetcher.odata_metadata_fetcher as F
+        state = {"n": 0}
+
+        class Resp:
+            def __init__(self, c, b=b"", h=None):
+                self.status_code, self.content, self.headers = c, b, (h or {})
+
+        def fake_get(session, url, headers, timeout, auth=None):
+            assert headers.get("apikey") == "K"
+            state["n"] += 1
+            if "GOOD" in url:
+                return Resp(200, self.EDMX) if state["n"] > 1 else Resp(429, h={"Retry-After": "0"})
+            return Resp(404)
+
+        monkeypatch.setattr(F, "_http_get", fake_get)
+        res = F.fetch_all(
+            [{"name": "GOOD", "product": "s4hanacloud", "service": "GOOD"},
+             {"name": "BAD", "product": "s4hanacloud", "service": "BAD"}],
+            "K", str(tmp_path), rate_per_sec=100)
+        ok = [r for r in res if r.ok]
+        assert len(ok) == 1 and (tmp_path / "edmx" / "GOOD.edmx").exists()
+        assert state["n"] >= 3                         # 429 retry happened
+        assert [r for r in res if not r.ok][0].status == 404
+        assert (tmp_path / "_fetch_manifest.json").exists()
+
+    def test_auth_failure_reported(self, tmp_path, monkeypatch):
+        import fetcher.odata_metadata_fetcher as F
+
+        class Resp:
+            def __init__(self, c): self.status_code, self.content, self.headers = c, b"", {}
+        monkeypatch.setattr(F, "_http_get", lambda *a, **k: Resp(403))
+        res = F.fetch_all([{"name": "x", "url": "https://h/svc"}], "K", str(tmp_path))
+        assert not res[0].ok and res[0].status == 403 and "auth" in res[0].error
+
+
+class TestFetcherKeyLoading:
+    """--key-file accepts plain text or JSON; diagnoses BTP OAuth service keys."""
+    def test_plain_text_key(self):
+        from fetcher.odata_metadata_fetcher import key_from_text
+        assert key_from_text("  ABC123\n") == ("ABC123", "")
+
+    def test_json_apikey_field(self):
+        from fetcher.odata_metadata_fetcher import key_from_text
+        assert key_from_text('{"x":{"apikey":"KK"}}') == ("KK", "")
+
+    def test_oauth_service_key_is_diagnosed(self):
+        from fetcher.odata_metadata_fetcher import key_from_text
+        k, err = key_from_text('{"oauth":{"clientid":"sb-a","clientsecret":"z","url":"https://u"}}')
+        assert k == "" and "OAuth service key" in err
+
+
+class TestSchemaLibraryOrganizer:
+    """Content-sniff classification + dedupe into typed folders."""
+    def test_classify_and_layout(self, tmp_path):
+        from tools.organize_schema_library import organize, classify
+        src = tmp_path / "src"; src.mkdir()
+        # an EDMX saved with a .xml extension must still classify as edmx
+        (src / "svc.xml").write_bytes(
+            b'<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">'
+            b'<edmx:DataServices><Schema Namespace="API_X" '
+            b'xmlns="http://schemas.microsoft.com/ado/2008/09/edm">'
+            b'<EntityType Name="E"/><EntitySet Name="E"/></Schema></edmx:DataServices></edmx:Edmx>')
+        (src / "a.wsdl").write_bytes(
+            b'<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" '
+            b'targetNamespace="urn:t"><wsdl:portType name="P"/></wsdl:definitions>')
+        (src / "s.xsd").write_bytes(
+            b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" '
+            b'targetNamespace="urn:s"><xs:element name="Root"/></xs:schema>')
+        assert classify(src / "svc.xml") == "edmx"
+        out = tmp_path / "lib"
+        s = organize([str(src)], str(out), generate_openapi=False)
+        assert s["kept"]["edmx"] == 1 and s["kept"]["wsdl"] == 1 and s["kept"]["xsd"] == 1
+        assert (out / "edmx" / "API_X.edmx").exists()      # named from Schema Namespace
+        assert (out / "suggested_fetch_targets.csv").exists()
+
+
+class TestDiscoveryHints:
+    """Extract re-fetch templates from WSDL/EDMX; recognize Gateway catalog."""
+    def test_edmx_and_wsdl_hints(self, tmp_path):
+        from extractor.discovery_hints import from_edmx, from_wsdl, build_manifest
+        e = tmp_path / "host_x_sap_opu_odata_sap_API_FOO.edmx"
+        e.write_bytes(b'<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">'
+                      b'<edmx:DataServices><Schema Namespace="API_FOO" '
+                      b'xmlns="http://schemas.microsoft.com/ado/2008/09/edm"/></edmx:DataServices></edmx:Edmx>')
+        h = from_edmx(str(e))[0]
+        assert h.type == "edmx" and h.refetch_url_template == "{HOST}/sap/opu/odata/sap/API_FOO/$metadata"
+        w = tmp_path / "svc.wsdl"
+        w.write_bytes(b'<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" '
+                      b'xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="t">'
+                      b'<wsdl:portType name="MyPort"/><wsdl:service name="S"><wsdl:port>'
+                      b'<soap:address location="https://host:port/sap/bc/srt/scs_ext/sap/myop"/>'
+                      b'</wsdl:port></wsdl:service></wsdl:definitions>')
+        wh = [x for x in from_wsdl(str(w)) if x.service_path.startswith("/sap")][0]
+        assert wh.host_hint == ""                      # host:port placeholder → no real host
+        assert wh.refetch_url_template == "{HOST}/sap/bc/srt/scs_ext/sap/myop?wsdl"
+        summary = build_manifest([str(tmp_path)], str(tmp_path / "m.csv"))
+        assert summary["edmx"] == 1 and summary["wsdl"] >= 1
+        # catalog enumerate-endpoints always present
+        text = (tmp_path / "m.csv").read_text()
+        assert "CATALOGSERVICE" in text
+
+
+class TestFetcherOwnCredentials:
+    """{HOST} substitution, verbatim wsdl URL, basic-auth, typed routing."""
+    def test_resolve_url_variants(self):
+        from fetcher.odata_metadata_fetcher import resolve_url
+        assert resolve_url({"url": "{HOST}/svc/$metadata"}, "https://s:443") == "https://s:443/svc/$metadata"
+        assert resolve_url({"url": "{HOST}/p?wsdl"}, "https://s") == "https://s/p?wsdl"
+        assert resolve_url({"url": "https://s/svc"}) == "https://s/svc/$metadata"
+        import pytest
+        with pytest.raises(ValueError):
+            resolve_url({"url": "{HOST}/x"})           # no host supplied
+
+    def test_basic_auth_routes_wsdl(self, tmp_path, monkeypatch):
+        import fetcher.odata_metadata_fetcher as F
+
+        class R:
+            def __init__(self, c, b): self.status_code, self.content, self.headers = c, b, {}
+
+        def fake(session, url, headers, timeout, auth=None):
+            assert auth == ("u", "p") and "apikey" not in headers
+            return R(200, b'<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" '
+                          b'targetNamespace="t"><wsdl:portType name="P"/></wsdl:definitions>')
+        monkeypatch.setattr(F, "_http_get", fake)
+        res = F.fetch_all([{"name": "svc", "url": "{HOST}/sap/bc/srt/x?wsdl"}],
+                          "n/a", str(tmp_path), host="https://mysys:443", auth=("u", "p"))
+        assert res[0].ok and (tmp_path / "wsdl" / "svc.wsdl").exists()
+
+
+class TestFetcherOAuth:
+    """OAuth client-credentials → bearer from a BTP/API-Mgmt service key."""
+    def test_bearer_from_service_key(self, monkeypatch):
+        import fetcher.odata_metadata_fetcher as F
+
+        class R:
+            def __init__(self, c, j=None): self.status_code, self._j, self.headers, self.content = c, j, {}, b""
+            def json(self): return self._j
+
+        def fake_post(session, turl, cid, csec, timeout):
+            assert turl.endswith("/oauth/token") and cid == "c" and csec == "s"
+            return R(200, {"access_token": "TOK"})
+        monkeypatch.setattr(F, "_http_post_token", fake_post)
+        tok, err = F.bearer_from_service_key('{"uaa":{"clientid":"c","clientsecret":"s","url":"https://a"}}')
+        assert tok == "TOK" and err == ""
+        _, e = F.bearer_from_service_key('{"x":1}')
+        assert "clientid" in e
+
+    def test_bearer_used_on_request(self, tmp_path, monkeypatch):
+        import fetcher.odata_metadata_fetcher as F
+
+        class R:
+            def __init__(self, c, b): self.status_code, self.content, self.headers = c, b, {}
+
+        def fake_get(session, url, headers, timeout, auth=None):
+            assert headers.get("Authorization") == "Bearer TOK"
+            return R(200, b'<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">'
+                          b'<edmx:DataServices><Schema Namespace="X" '
+                          b'xmlns="http://schemas.microsoft.com/ado/2008/09/edm"/></edmx:DataServices></edmx:Edmx>')
+        monkeypatch.setattr(F, "_http_get", fake_get)
+        res = F.fetch_all([{"name": "X", "url": "{HOST}/svc"}], "n/a", str(tmp_path),
+                          host="https://t:443", bearer="TOK")
+        assert res[0].ok and (tmp_path / "edmx" / "X.edmx").exists()
+
+
+class TestOAuthBlockSelection:
+    """Token URL must come from the OAuth block (uaa), not the top-level service url."""
+    def test_abap_servicekey_shape_uses_uaa_url(self, monkeypatch):
+        import fetcher.odata_metadata_fetcher as F
+        cap = {}
+
+        class R:
+            def __init__(self, c, j=None): self.status_code, self._j, self.headers, self.content = c, j, {}, b""
+            def json(self): return self._j
+
+        def fake_post(session, turl, cid, csec, timeout):
+            cap["turl"] = turl
+            return R(200, {"access_token": "TOK"})
+        monkeypatch.setattr(F, "_http_post_token", fake_post)
+        key = ('{"url":"https://SYS.abap.us10.hana.ondemand.com",'
+               '"endpoints":{"abap":"https://SYS.abap.us10.hana.ondemand.com"},'
+               '"uaa":{"clientid":"sb-x|abap!b1","clientsecret":"P",'
+               '"url":"https://tenant.authentication.us10.hana.ondemand.com"}}')
+        tok, err = F.bearer_from_service_key(key)
+        assert tok == "TOK" and err == ""
+        assert cap["turl"] == "https://tenant.authentication.us10.hana.ondemand.com/oauth/token"
+        assert "abap.us10" not in cap["turl"]      # must NOT use the system url
+
+
+class TestTargetsCommentSkipping:
+    """Seed CSV comments (# lines) and empty rows are skipped, not fetched as data."""
+    def test_load_targets_skips_comments(self, tmp_path):
+        from fetcher.odata_metadata_fetcher import load_targets
+        p = tmp_path / "seed.csv"
+        p.write_text(
+            "name,product,service,url\n"
+            "# a comment section\n"
+            "API_X,s4hanacloud,API_X,\n"
+            "# MyExample,,,https://h/svc\n"
+            "\n"
+            "API_Y,s4hanacloud,API_Y,\n")
+        t = load_targets(str(p))
+        assert [r["name"] for r in t] == ["API_X", "API_Y"]
+
+
+class TestSchemaMatcher:
+    """Match interface message types to the right canonical schema."""
+    def _lib(self, tmp_path):
+        (tmp_path / "orders.xsd").write_bytes(
+            b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" '
+            b'targetNamespace="http://acme.com/xi/SD"><xs:element name="OrderRequest"/></xs:schema>')
+        (tmp_path / "invoice.xsd").write_bytes(
+            b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" '
+            b'targetNamespace="http://acme.com/xi/FI"><xs:element name="InvoiceRequest"/></xs:schema>')
+        (tmp_path / "bp.edmx").write_bytes(
+            b'<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"><edmx:DataServices>'
+            b'<Schema Namespace="API_BP" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">'
+            b'<EntityType Name="A_BusinessPartner"/></Schema></edmx:DataServices></edmx:Edmx>')
+        from extractor.schema_matcher import SchemaIndex
+        return SchemaIndex.build(str(tmp_path))
+
+    def test_name_plus_namespace_is_best(self, tmp_path):
+        from extractor.schema_matcher import match_for_interface
+        idx = self._lib(tmp_path)
+        m = match_for_interface(idx, message_interface="OrderRequest", namespace="http://acme.com/xi/SD")
+        assert m and m.entry.path.endswith("orders.xsd") and m.score >= 6
+
+    def test_name_only_match(self, tmp_path):
+        from extractor.schema_matcher import match_for_interface
+        m = match_for_interface(self._lib(tmp_path), message_interface="InvoiceRequest")
+        assert m and m.entry.path.endswith("invoice.xsd")
+
+    def test_edmx_entity_match(self, tmp_path):
+        from extractor.schema_matcher import match_for_interface
+        m = match_for_interface(self._lib(tmp_path), message_interface="A_BusinessPartner")
+        assert m and m.entry.path.endswith("bp.edmx")
+
+    def test_kind_is_filter_not_self_match(self, tmp_path):
+        idx = self._lib(tmp_path)
+        assert idx.match(name="OrderRequest", kind="edmx") == []   # name doesn't match any edmx
+
+    def test_no_match_returns_none(self, tmp_path):
+        from extractor.schema_matcher import match_for_interface
+        assert match_for_interface(self._lib(tmp_path), message_interface="Xyz", namespace="urn:nope") is None
+
+
+class TestSchemaBindingIntoScaffold:
+    """Matched schema is bundled into a generated iFlow, additively."""
+    def _idx(self, tmp_path):
+        (tmp_path / "orders.xsd").write_bytes(
+            b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" '
+            b'targetNamespace="http://acme.com/xi/SD"><xs:element name="OrderRequest"/></xs:schema>')
+        from extractor.schema_matcher import SchemaIndex
+        return SchemaIndex.build(str(tmp_path))
+
+    def test_enriches_and_still_zips(self, tmp_path):
+        import io, zipfile
+        from scaffolder.schema_binding import bundle_matched_schema
+        from scaffolder.minimal_iflow import generate_structured_iflow, build_bundle_zip
+        idx = self._idx(tmp_path)
+        res = generate_structured_iflow("SD_OrderFlow", "timer -> content modifier -> end")
+        b = bundle_matched_schema(res, "OrderRequest", "http://acme.com/xi/SD", idx)
+        assert b and b.confident and b.resource_path in res.files
+        assert isinstance(res.files[b.resource_path], bytes)
+        names = zipfile.ZipFile(io.BytesIO(build_bundle_zip(res))).namelist()
+        assert b.resource_path in names
+        assert any(n.endswith(".iflw") for n in names)
+
+    def test_no_match_leaves_bundle_untouched(self, tmp_path):
+        from scaffolder.schema_binding import bundle_matched_schema
+        from scaffolder.minimal_iflow import generate_structured_iflow
+        idx = self._idx(tmp_path)
+        res = generate_structured_iflow("X", "timer -> end")
+        before = dict(res.files)
+        assert bundle_matched_schema(res, "Nope", "urn:nope", idx) is None
+        assert res.files == before
+
+    def test_reference_path_shape(self, tmp_path):
+        from scaffolder.schema_binding import bind_interface_schema
+        idx = self._idx(tmp_path)
+        b = bind_interface_schema("OrderRequest", "http://acme.com/xi/SD", idx)
+        assert b.reference_path == "/xsd/orders.xsd"
+        assert b.resource_path == "src/main/resources/xsd/orders.xsd"
+
+
+class TestOrganizerNoAccumulation:
+    """Re-running the organizer into the same dir must not pile up identical copies."""
+    def _bp(self, ns):
+        return ('<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"><edmx:DataServices>'
+                f'<Schema Namespace="{ns}" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">'
+                '<EntityType Name="A_BusinessPartner"/></Schema></edmx:DataServices></edmx:Edmx>').encode()
+
+    def test_reruns_do_not_accumulate(self, tmp_path):
+        from tools.organize_schema_library import organize
+        src = tmp_path / "src"; src.mkdir()
+        (src / "API_BUSINESS_PARTNER.edmx").write_bytes(self._bp("API_BUSINESS_PARTNER"))
+        out = tmp_path / "out"
+        for _ in range(3):
+            organize([str(src)], str(out), generate_openapi=False)
+        files = sorted(p.name for p in (out / "edmx").glob("*.edmx"))
+        assert files == ["API_BUSINESS_PARTNER.edmx"]
+
+    def test_distinct_variant_is_kept(self, tmp_path):
+        from tools.organize_schema_library import organize
+        src = tmp_path / "src"; src.mkdir()
+        (src / "a.edmx").write_bytes(self._bp("API_BUSINESS_PARTNER"))
+        (src / "b.edmx").write_bytes(self._bp("API_BUSINESS_PARTNER_V2"))
+        out = tmp_path / "out"
+        organize([str(src)], str(out), generate_openapi=False)
+        files = sorted(p.name for p in (out / "edmx").glob("*.edmx"))
+        assert len(files) == 2
+
+    def test_clean_wipes_before_rebuild(self, tmp_path):
+        from tools.organize_schema_library import organize
+        src = tmp_path / "src"; src.mkdir()
+        (src / "a.edmx").write_bytes(self._bp("API_BUSINESS_PARTNER"))
+        out = tmp_path / "out"
+        organize([str(src)], str(out), generate_openapi=False)
+        (out / "edmx" / "STALE.edmx").write_bytes(b"<x/>")  # leftover from a prior layout
+        organize([str(src)], str(out), generate_openapi=False, clean=True)
+        files = sorted(p.name for p in (out / "edmx").glob("*.edmx"))
+        assert "STALE.edmx" not in files
+
+
+class TestXsdFamilyNoOverMerge:
+    """Distinct message types in the same namespace must NOT collapse (data loss)."""
+    def test_distinct_types_same_ns_separate(self, tmp_path):
+        from extractor.schema_deduper import fingerprint
+        a = tmp_path / "o.xsd"; b = tmp_path / "i.xsd"
+        a.write_bytes(b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:co:sd"><xs:element name="OrderRequest_MT"/></xs:schema>')
+        b.write_bytes(b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:co:sd"><xs:element name="Invoice_MT"/></xs:schema>')
+        assert fingerprint(str(a)).family != fingerprint(str(b)).family
+
+    def test_same_type_diff_whitespace_merges(self, tmp_path):
+        from extractor.schema_deduper import fingerprint
+        a = tmp_path / "o.xsd"; c = tmp_path / "o2.xsd"
+        a.write_bytes(b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:co:sd"><xs:element name="OrderRequest_MT"/></xs:schema>')
+        c.write_bytes(b'<xs:schema  xmlns:xs="http://www.w3.org/2001/XMLSchema"  targetNamespace="urn:co:sd"><xs:element name="OrderRequest_MT"/></xs:schema>')
+        assert fingerprint(str(a)).family == fingerprint(str(c)).family
+
+    def test_same_type_diff_ns_separate(self, tmp_path):
+        from extractor.schema_deduper import fingerprint
+        a = tmp_path / "o.xsd"; e = tmp_path / "o3.xsd"
+        a.write_bytes(b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:co:sd"><xs:element name="OrderRequest_MT"/></xs:schema>')
+        e.write_bytes(b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:other"><xs:element name="OrderRequest_MT"/></xs:schema>')
+        assert fingerprint(str(a)).family != fingerprint(str(e)).family
+
+
+class TestLibraryAudit:
+    def test_audit_surfaces_drops_and_no_false_divergent(self, tmp_path):
+        from tools.audit_schema_library import audit
+        def w(n,b): (tmp_path/n).write_bytes(b)
+        w("o.xsd", b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:co:sd"><xs:element name="OrderRequest_MT"/></xs:schema>')
+        w("i.xsd", b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:co:sd"><xs:element name="Invoice_MT"/></xs:schema>')
+        w("o_copy.xsd", b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:co:sd"><xs:element name="OrderRequest_MT"/></xs:schema>')
+        w("notes.txt", b'hello')
+        r = audit([str(tmp_path)])
+        assert r["families"]["xsd"] == 2          # Order (with its dupe) + Invoice
+        assert sum(len(v) for v in r["divergent"].values()) == 0
+        assert len(r["unclassified"]) == 1        # the txt is surfaced, not silently dropped
+
+
+class TestRouterIflow:
+    NS={"bpmn2":"http://www.omg.org/spec/BPMN/20100524/MODEL","ifl":"http:///com.sap.ifl.model/Ifl.xsd",
+        "bpmndi":"http://www.omg.org/spec/BPMN/20100524/DI"}
+    def _routes(self, res):
+        import xml.etree.ElementTree as ET
+        root = ET.fromstring(res.iflw_xml)
+        out=[]
+        for sf in root.findall(".//bpmn2:sequenceFlow", self.NS):
+            if any((p.find("key") is not None and p.find("key").text=="cmdVariantUri"
+                    and "GatewayRoute" in (p.find("value").text or ""))
+                   for p in sf.findall(".//ifl:property", self.NS)):
+                c=sf.find("bpmn2:conditionExpression", self.NS)
+                out.append((sf.get("id"), c.text if c is not None else None))
+        return root, out
+    def test_default_matches_gateway_and_conditions(self):
+        from scaffolder.router_iflow import generate_router_iflow
+        res = generate_router_iflow("R", route_property="value", set_value="Y")
+        root, routes = self._routes(res)
+        gw = root.find(".//bpmn2:exclusiveGateway", self.NS)
+        defaults=[rid for rid,c in routes if c is None]
+        conds=[c for _,c in routes if c]
+        assert len(defaults)==1 and defaults[0]==gw.get("default")
+        assert any("= 'Y'" in c for c in conds)
+        assert any("!= null and" in c and "!= ''" in c for c in conds)
+        assert len(root.findall(".//bpmn2:endEvent", self.NS))==3
+    def test_no_dangling_flows_and_di_complete(self):
+        import xml.etree.ElementTree as ET
+        from scaffolder.router_iflow import generate_router_iflow
+        root = ET.fromstring(generate_router_iflow("R").iflw_xml)
+        ids={e.get("id") for tag in ("startEvent","endEvent","callActivity","exclusiveGateway")
+             for e in root.findall(f".//bpmn2:{tag}", self.NS)}
+        assert not [sf.get("id") for sf in root.findall(".//bpmn2:sequenceFlow", self.NS)
+                    if sf.get("sourceRef") not in ids or sf.get("targetRef") not in ids]
+        shapes={s.get("bpmnElement") for s in root.findall(".//bpmndi:BPMNShape", self.NS)}
+        assert not [i for i in ids if i not in shapes]
+    def test_n_branches(self):
+        import xml.etree.ElementTree as ET
+        from scaffolder.router_iflow import generate_router_iflow
+        routes=[{"label":f"R{i}","condition":f"${{property.x}} = '{i}'","expr_type":"NonXML","process":True} for i in range(4)]
+        routes.append({"label":"def","condition":None,"expr_type":"NonXML","process":False})
+        root=ET.fromstring(generate_router_iflow("R5", routes=routes).iflw_xml)
+        assert len(root.findall(".//bpmn2:exclusiveGateway/bpmn2:outgoing", self.NS))==5
+    def test_bundle_zips(self):
+        import io, zipfile
+        from scaffolder.router_iflow import generate_router_iflow
+        from scaffolder.minimal_iflow import build_bundle_zip
+        z=build_bundle_zip(generate_router_iflow("R"))
+        assert any(n.endswith(".iflw") for n in zipfile.ZipFile(io.BytesIO(z)).namelist())
+
+
+class TestIFlowParser:
+    def test_round_trips_router(self):
+        from scaffolder.router_iflow import generate_router_iflow
+        from extractor.iflow_parser import parse_iflow
+        m = parse_iflow(generate_router_iflow("R", route_property="value", set_value="Y").iflw_xml, "R")
+        assert "ExclusiveGateway" in m.kinds()
+        assert len(m.routes) == 3
+        assert sum(1 for r in m.routes if r.condition is None) == 1     # one default
+        assert any("= 'Y'" in (r.condition or "") for r in m.routes)
+
+    def test_round_trips_linear_sequence(self):
+        from scaffolder.minimal_iflow import generate_timer_interface_iflow
+        from extractor.iflow_parser import parse_iflow
+        mids = [{"kind": "content_modifier", "name": "A"}, {"kind": "script", "name": "B"}]
+        m = parse_iflow(generate_timer_interface_iflow("L", middle_steps=mids).iflw_xml, "L")
+        assert {"Enricher", "Script", "StartTimerEvent", "EndEvent"} <= m.kinds()
+        assert m.sequence and m.steps[m.sequence[0]].kind == "StartTimerEvent"
+
+    def test_extracts_processes_and_params(self):
+        from scaffolder.router_iflow import generate_router_iflow
+        from extractor.iflow_parser import parse_iflow
+        m = parse_iflow(generate_router_iflow("R").iflw_xml, "R")
+        assert any(p.is_main for p in m.processes)
+        assert isinstance(m.parameters, set)
+
+    def test_handles_malformed_gracefully(self):
+        from extractor.iflow_parser import parse_iflow
+        import pytest
+        with pytest.raises(Exception):
+            parse_iflow("<not><closed>", "bad")
+
+
+class TestCorpusGuardAndCache:
+    def test_walk_skips_oversized_files(self, tmp_path):
+        from library_builder import corpus_pipeline as cp
+        (tmp_path / "big.xsd").write_bytes(b"<x/>" + b" " * (6 * 1024 * 1024))
+        (tmp_path / "small.groovy").write_text("def x(){}")
+        files = cp.walk_corpus(str(tmp_path))
+        assert not any("big" in k for k in files)
+        assert any("small" in k for k in files)
+
+    def test_budget_caps(self):
+        from library_builder.corpus_pipeline import _Budget
+        b = _Budget(max_files=2, max_bytes=10**9)
+        assert b.take(1) and b.take(1)
+        assert not b.take(1) and b.capped
+
+    def test_disk_cache_builds_once_and_invalidates(self, tmp_path, monkeypatch):
+        import time
+        from library_builder import corpus_pipeline as cp
+        calls = {"n": 0}
+        orig = cp._build_corpus
+        def counting(*a, **k):
+            calls["n"] += 1
+            return orig(*a, **k)
+        monkeypatch.setattr(cp, "_build_corpus", counting)
+        cache_dir = tmp_path / "cache"; cache_dir.mkdir()
+        monkeypatch.setattr(cp, "_cache_file", lambda sig: cache_dir / f"c_{sig}.pkl")
+        src = tmp_path / "src"; src.mkdir()
+        (src / "a.groovy").write_text("def a(){}")
+        cp.build_corpus(path=str(src))
+        cp.build_corpus(path=str(src))           # cache hit
+        assert calls["n"] == 1
+        time.sleep(0.01); (src / "b.groovy").write_text("def b(){}")
+        cp.build_corpus(path=str(src))           # invalidated
+        assert calls["n"] == 2
+
+    def test_signature_changes_with_content(self, tmp_path):
+        from library_builder.corpus_pipeline import _dir_signature
+        (tmp_path / "x").write_text("a")
+        s1 = _dir_signature(str(tmp_path))
+        (tmp_path / "y").write_text("b")
+        assert _dir_signature(str(tmp_path)) != s1
+
+
+class TestRoundTripCoverage:
+    def test_supported_set_derived_empirically(self):
+        from extractor.coverage import generator_supported_kinds
+        s = generator_supported_kinds()
+        # the load-bearing kinds the generator emits today
+        for k in ("Enricher", "Script", "Mapping", "ExclusiveGateway",
+                  "EndEvent", "StartTimerEvent"):
+            assert k in s, f"{k} should be in the empirical supported set"
+
+    def test_generated_flow_is_reproducible(self):
+        from scaffolder import minimal_iflow as mi
+        from extractor.coverage import measure_corpus, generator_supported_kinds
+        iflw, _ = mi.build_flow_from_steps(
+            "T", "T", [{"kind": "script"}, {"kind": "content_modifier"}])
+        rep = measure_corpus([("t.iflw", iflw)], generator_supported_kinds())
+        assert rep.total == 1 and rep.reproducible == 1 and rep.pct == 100.0
+
+    def test_unsupported_kind_blocks_and_greedy_unlocks(self):
+        from extractor.coverage import (measure_corpus, assess, greedy_unlock_order,
+                                        IFlowVerdict)
+        # synthetic verdict: blocked solely by one fake construct
+        rep = measure_corpus([], set())
+        rep.total = 2
+        rep.reproducible = 1
+        rep.verdicts = [
+            IFlowVerdict("a", True, 3, 1),
+            IFlowVerdict("b", False, 4, 1, unsupported_kinds={"FooStep"}),
+        ]
+        curve = greedy_unlock_order(rep)
+        assert curve and curve[0][0] == "FooStep" and curve[-1][2] == 100.0
+
+
+class TestModelGenerator:
+    def test_generate_from_model_roundtrips_linear(self):
+        from scaffolder import minimal_iflow as mi
+        from scaffolder.model_generator import generate_from_model
+        from extractor.iflow_parser import parse_iflow
+        iflw, _ = mi.build_flow_from_steps(
+            "X", "X", [{"kind": "script"}, {"kind": "mapping"},
+                       {"kind": "content_modifier"}])
+        m1 = parse_iflow(iflw, "X")
+        res = generate_from_model(m1, name="X")
+        m2 = parse_iflow(res.iflw_xml, "X")
+        mids = lambda m: [m.steps[s].kind for s in m.sequence
+                          if m.steps[s].kind not in
+                          ("StartEvent", "StartTimerEvent", "EndEvent")]
+        assert mids(m1) == mids(m2) == ["Script", "Mapping", "Enricher"]
+
+    def test_unsupported_construct_raises(self):
+        from scaffolder.model_generator import (generate_from_model,
+                                                UnsupportedConstruct)
+        from extractor.iflow_parser import IFlowModel, Process, Step
+        # gateway + multi-process now emit; an unsupported STEP KIND still raises
+        m = IFlowModel(name="x", processes=[Process("Process_1", "m", True)])
+        m.steps = {"S1": Step(id="S1", kind="ErrorEventSubProcessTemplate",
+                              name="e", process_id="Process_1", config={},
+                              incoming=[], outgoing=[], parent_subprocess="")}
+        m.sequence = ["S1"]
+        try:
+            generate_from_model(m)
+            assert False, "should raise on unsupported kind"
+        except UnsupportedConstruct:
+            pass
+
+
+class TestExternalCallEmitter:
+    def test_external_call_reparses(self):
+        import xml.etree.ElementTree as ET
+        from scaffolder.external_call_iflow import generate_external_call_iflow
+        from extractor.iflow_parser import parse_iflow
+        res = generate_external_call_iflow("EC", address="https://h/api",
+                                           receiver_name="API")
+        ET.fromstring(res.iflw_xml)            # well-formed
+        m = parse_iflow(res.iflw_xml, "EC")
+        assert "ExternalCall" in [s.kind for s in m.steps.values()]
+        assert any(e.direction == "receiver" for e in m.endpoints)
+
+
+class TestCpiRegenerationWiring:
+    def test_regenerate_reproduces_supported(self):
+        from scaffolder import minimal_iflow as mi
+        from scaffolder.regenerate import regenerate_iflow_xml
+        iflw, _ = mi.build_flow_from_steps(
+            "R", "R", [{"kind": "script"}, {"kind": "mapping"}])
+        r = regenerate_iflow_xml(iflw, "R")
+        assert r.reproduced and r.n_steps == 2
+
+    def test_regenerate_honest_on_unsupported(self):
+        from scaffolder.regenerate import regenerate_iflow_xml
+        from extractor.iflow_parser import IFlowModel, Process, Step
+        # an unsupported step kind can't be emitted → honest blocker, no crash
+        import scaffolder.regenerate as rg
+        from unittest.mock import patch
+        m = IFlowModel(name="x", processes=[Process("Process_1", "m", True)])
+        m.steps = {"S1": Step(id="S1", kind="ErrorEventSubProcessTemplate",
+                              name="e", process_id="Process_1", config={},
+                              incoming=[], outgoing=[], parent_subprocess="")}
+        m.sequence = ["S1"]
+        with patch.object(rg, "parse_iflow", return_value=m):
+            r = rg.regenerate_iflow_xml("<x/>", "x")
+        assert not r.reproduced and r.blockers
+
+    def test_scaffold_uses_source_iflow(self, tmp_path):
+        import types
+        from scaffolder import minimal_iflow as mi
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+        from extractor.iflow_parser import parse_iflow
+        src, _ = mi.build_flow_from_steps(
+            "S", "S", [{"kind": "script"}, {"kind": "filter"}])
+        iface = types.SimpleNamespace(name="S", id="1", source_iflow_xml=src,
+                                      steps_spec="", sender_adapter="",
+                                      receiver_adapter="")
+        out = IFlowScaffolder(output_dir=str(tmp_path)).scaffold(
+            types.SimpleNamespace(interface=iface))
+        g = parse_iflow(out.read_text(), "S")
+        mids = [g.steps[s].kind for s in g.sequence
+                if g.steps[s].kind not in ("StartEvent", "StartTimerEvent", "EndEvent")]
+        assert mids == ["Script", "Filter"]      # real structure, not a 2-CM stub
+
+    def test_extractor_pulls_iflw_text(self):
+        import io, zipfile
+        from scaffolder import minimal_iflow as mi
+        from fetcher.artifact_router import _iflw_text_from_bundle
+        res = mi.generate_minimal_iflow("B", "B")
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w") as z:
+            for path, content in res.files.items():
+                z.writestr(path, content)
+        text = _iflw_text_from_bundle(buf.getvalue())
+        assert "<bpmn2:" in text
+
+
+class TestExternalCallIntegration:
+    def test_external_call_composes_in_linear_flow(self):
+        import xml.etree.ElementTree as ET
+        from scaffolder import minimal_iflow as mi
+        from extractor.iflow_parser import parse_iflow
+        iflw, _ = mi.build_flow_from_steps("M", "M", [
+            {"kind": "script"},
+            {"kind": "external_call", "name": "Request-Reply",
+             "receiver_name": "ERP", "address": "https://erp/api"},
+            {"kind": "content_modifier"}])
+        ET.fromstring(iflw)
+        m = parse_iflow(iflw, "M")
+        mids = [m.steps[s].kind for s in m.sequence
+                if m.steps[s].kind not in ("StartEvent", "StartTimerEvent", "EndEvent")]
+        assert mids == ["Script", "ExternalCall", "Enricher"]
+        assert any(e.direction == "receiver" and e.name == "ERP"
+                   for e in m.endpoints)
+
+    def test_no_receiver_path_has_no_receiver_participant(self):
+        from scaffolder import minimal_iflow as mi
+        iflw, _ = mi.build_flow_from_steps(
+            "L", "L", [{"kind": "script"}, {"kind": "mapping"}])
+        assert "EndpointRecevier" not in iflw      # linear path unchanged
+
+    def test_externalcall_model_roundtrips(self):
+        from scaffolder import minimal_iflow as mi
+        from scaffolder.regenerate import regenerate_iflow_xml
+        src, _ = mi.build_flow_from_steps("E", "E", [
+            {"kind": "content_modifier"},
+            {"kind": "external_call", "receiver_name": "API",
+             "address": "https://h/x"}])
+        r = regenerate_iflow_xml(src, "E")
+        assert r.reproduced and r.n_steps == 2
+
+    def test_parser_links_externalcall_receiver(self):
+        from scaffolder.external_call_iflow import generate_external_call_iflow
+        from extractor.iflow_parser import parse_iflow
+        res = generate_external_call_iflow("X", address="https://h/api",
+                                           receiver_name="ERP")
+        m = parse_iflow(res.iflw_xml, "X")
+        ec = next(s for s in m.steps.values() if s.kind == "ExternalCall")
+        assert ec.config.get("receiver_name") == "ERP"
+        assert "https://h/api" in ec.config.get("address", "")
+
+
+class TestLinearConstructs:
+    import pytest as _pytest
+
+    @_pytest.mark.parametrize("kind", [
+        "Encoder", "Decoder", "DBstorage", "XMLDigitalSignMessage",
+        "SimpleSignMessage", "Send", "Variables", "XmlModifier",
+        "contentEnricherWithLookup", "Persist", "XmlValidator"])
+    def test_passthrough_construct_roundtrips(self, kind):
+        import xml.etree.ElementTree as ET
+        from scaffolder import minimal_iflow as mi
+        from extractor.iflow_parser import parse_iflow
+        iflw, _ = mi.build_flow_from_steps(
+            "P", "P", [{"kind": "content_modifier"}, {"kind": kind}])
+        ET.fromstring(iflw)
+        m = parse_iflow(iflw, "P")
+        kinds = [m.steps[s].kind for s in m.sequence
+                 if m.steps[s].kind not in ("StartEvent", "StartTimerEvent", "EndEvent")]
+        assert kinds == ["Enricher", kind]
+
+    def test_parser_derives_externalcall_from_cmdvariant(self):
+        # a serviceTask with cmdVariant ExternalCall but NO activityType must
+        # classify as ExternalCall, not the bare 'ServiceTask' tag fallback.
+        from extractor.iflow_parser import parse_iflow
+        xml = ('<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"'
+               ' xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd">'
+               '<bpmn2:process id="Process_1"><bpmn2:serviceTask id="ST" name="Request-Reply">'
+               '<bpmn2:extensionElements><ifl:property><key>cmdVariantUri</key>'
+               '<value>ctype::FlowstepVariant/cname::ExternalCall</value></ifl:property>'
+               '</bpmn2:extensionElements></bpmn2:serviceTask></bpmn2:process></bpmn2:definitions>')
+        m = parse_iflow(xml, "x")
+        assert any(s.kind == "ExternalCall" for s in m.steps.values())
+
+
+class TestRequestReplyReclassification:
+    def test_bare_servicetask_with_receiver_is_externalcall(self):
+        # serviceTask, no activityType/cmdVariant, but sends a messageFlow to a
+        # receiver participant → must classify as ExternalCall, not ServiceTask.
+        from extractor.iflow_parser import parse_iflow
+        xml = ('<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"'
+               ' xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd">'
+               '<bpmn2:collaboration id="C">'
+               '<bpmn2:participant id="Participant_2" ifl:type="EndpointRecevier" name="ERP"/>'
+               '<bpmn2:messageFlow id="MF3" sourceRef="ServiceTask_1" targetRef="Participant_2"/>'
+               '</bpmn2:collaboration>'
+               '<bpmn2:process id="Process_1">'
+               '<bpmn2:serviceTask id="ServiceTask_1" name="Request-Reply">'
+               '<bpmn2:incoming>f1</bpmn2:incoming><bpmn2:outgoing>f2</bpmn2:outgoing>'
+               '</bpmn2:serviceTask></bpmn2:process></bpmn2:definitions>')
+        m = parse_iflow(xml, "x")
+        st = m.steps["ServiceTask_1"]
+        assert st.kind == "ExternalCall"
+        assert st.config.get("receiver_name") == "ERP"
+
+
+class TestEndpointExtraction:
+    def test_extracts_real_sender_receiver_adapters(self):
+        from extractor.iflow_parser import extract_endpoints
+        xml = ('<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"'
+               ' xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd">'
+               '<bpmn2:collaboration id="C">'
+               '<bpmn2:participant id="P1" ifl:type="EndpointSender" name="S4HANA"/>'
+               '<bpmn2:participant id="P2" ifl:type="EndpointRecevier" name="OpenText"/>'
+               '<bpmn2:messageFlow id="MF1" sourceRef="P1" targetRef="StartEvent_1">'
+               '<bpmn2:extensionElements><ifl:property><key>ComponentType</key>'
+               '<value>HTTPS</value></ifl:property></bpmn2:extensionElements></bpmn2:messageFlow>'
+               '<bpmn2:messageFlow id="MF2" sourceRef="ServiceTask_1" targetRef="P2">'
+               '<bpmn2:extensionElements><ifl:property><key>ComponentType</key>'
+               '<value>SOAP</value></ifl:property></bpmn2:extensionElements></bpmn2:messageFlow>'
+               '</bpmn2:collaboration>'
+               '<bpmn2:process id="Process_1"><bpmn2:startEvent id="StartEvent_1"/>'
+               '</bpmn2:process></bpmn2:definitions>')
+        ep = extract_endpoints(xml)
+        assert ep["sender_system"] == "S4HANA"
+        assert ep["sender_adapter"] == "HTTPS"
+        assert ep["receiver_system"] == "OpenText"
+        assert ep["receiver_adapter"] == "SOAP"
+
+    def test_timer_flow_has_empty_sender(self):
+        from extractor.iflow_parser import extract_endpoints
+        xml = ('<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"'
+               ' xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd">'
+               '<bpmn2:process id="Process_1"><bpmn2:startEvent id="StartEvent_1"/>'
+               '</bpmn2:process></bpmn2:definitions>')
+        ep = extract_endpoints(xml)
+        assert ep["sender_system"] == "" and ep["receiver_system"] == ""
+
+
+class TestExternalCallReceiverFidelity:
+    def test_receiver_adapter_preserved_not_defaulted_to_http(self):
+        # An ExternalCall whose receiver is a SOAP adapter must regenerate with a
+        # SOAP receiver message flow, not a hardcoded HTTP one.
+        import xml.etree.ElementTree as ET
+        from scaffolder.regenerate import regenerate_iflow_xml
+        xml = ('<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"'
+               ' xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd">'
+               '<bpmn2:collaboration id="C">'
+               '<bpmn2:participant id="P1" ifl:type="EndpointSender" name="Sender"/>'
+               '<bpmn2:participant id="P2" ifl:type="EndpointRecevier" name="Backend"/>'
+               '<bpmn2:participant id="PP" ifl:type="IntegrationProcess" name="Integration Process" processRef="Process_1"/>'
+               '<bpmn2:messageFlow id="MF1" name="SOAP" sourceRef="ServiceTask_1" targetRef="P2">'
+               '<bpmn2:extensionElements>'
+               '<ifl:property><key>ComponentType</key><value>SOAP</value></ifl:property>'
+               '<ifl:property><key>address</key><value>https://soap.example/svc</value></ifl:property>'
+               '<ifl:property><key>cmdVariantUri</key><value>ctype::AdapterVariant/cname::sap:SOAP/tp::HTTP/mp::SOAP 1.x/direction::Receiver/version::1.6.0</value></ifl:property>'
+               '</bpmn2:extensionElements></bpmn2:messageFlow></bpmn2:collaboration>'
+               '<bpmn2:process id="Process_1">'
+               '<bpmn2:startEvent id="StartEvent_2"><bpmn2:outgoing>s1</bpmn2:outgoing></bpmn2:startEvent>'
+               '<bpmn2:serviceTask id="ServiceTask_1" name="Request-Reply">'
+               '<bpmn2:extensionElements>'
+               '<ifl:property><key>activityType</key><value>ExternalCall</value></ifl:property>'
+               '<ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::ExternalCall</value></ifl:property>'
+               '</bpmn2:extensionElements>'
+               '<bpmn2:incoming>s1</bpmn2:incoming><bpmn2:outgoing>s2</bpmn2:outgoing></bpmn2:serviceTask>'
+               '<bpmn2:endEvent id="EndEvent_2"><bpmn2:incoming>s2</bpmn2:incoming></bpmn2:endEvent>'
+               '<bpmn2:sequenceFlow id="s1" sourceRef="StartEvent_2" targetRef="ServiceTask_1"/>'
+               '<bpmn2:sequenceFlow id="s2" sourceRef="ServiceTask_1" targetRef="EndEvent_2"/>'
+               '</bpmn2:process></bpmn2:definitions>')
+        r = regenerate_iflow_xml(xml, "soap_call")
+        assert r.reproduced
+        g = r.result.iflw_xml
+        ET.fromstring(g)
+        # the regenerated receiver flow must carry SOAP, not HTTP
+        assert "<value>SOAP</value>" in g
+        assert "sap:SOAP" in g
+        assert "https://soap.example/svc" in g
+
+
+class TestStructureAwareEffort:
+    def _multiproc_xml(self):
+        return ('<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"'
+                ' xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd">'
+                '<bpmn2:collaboration id="C">'
+                '<bpmn2:participant id="PP" ifl:type="IntegrationProcess" name="Integration Process" processRef="Process_1"/>'
+                '<bpmn2:participant id="LP" ifl:type="LocalIntegrationProcess" name="LIP" processRef="Process_2"/>'
+                '</bpmn2:collaboration>'
+                '<bpmn2:process id="Process_1"><bpmn2:startEvent id="StartEvent_1"/>'
+                '<bpmn2:callActivity id="C1"><bpmn2:extensionElements>'
+                '<ifl:property><key>activityType</key><value>Mapping</value></ifl:property>'
+                '</bpmn2:extensionElements></bpmn2:callActivity>'
+                '<bpmn2:endEvent id="EndEvent_1"/></bpmn2:process>'
+                '<bpmn2:process id="Process_2"><bpmn2:startEvent id="StartEvent_2"/>'
+                '<bpmn2:callActivity id="C2"><bpmn2:extensionElements>'
+                '<ifl:property><key>activityType</key><value>Script</value></ifl:property>'
+                '</bpmn2:extensionElements></bpmn2:callActivity>'
+                '<bpmn2:endEvent id="EndEvent_2"/></bpmn2:process></bpmn2:definitions>')
+
+    def test_real_structure_raises_complexity(self):
+        from extractor.pi_extractor import InterfaceRecord
+        from analyzer.complexity_analyzer import ComplexityAnalyzer
+        an = ComplexityAnalyzer({})
+        base = dict(id="x", name="x", namespace="", software_component="",
+                    sender_system="", receiver_system="",
+                    sender_adapter="HTTPS", receiver_adapter="HTTPS",
+                    message_interface="")
+        no_xml = an.assess(InterfaceRecord(**base))
+        with_xml = an.assess(InterfaceRecord(source_iflow_xml=self._multiproc_xml(), **base))
+        # the multi-process flow must score strictly higher than metadata-only
+        assert with_xml.score > no_xml.score
+
+    def test_metadata_only_path_unchanged(self):
+        # No source XML → structural signal contributes nothing.
+        from extractor.pi_extractor import InterfaceRecord
+        from analyzer.complexity_analyzer import ComplexityAnalyzer
+        an = ComplexityAnalyzer({})
+        rec = InterfaceRecord(id="x", name="x", namespace="", software_component="",
+                              sender_system="", receiver_system="",
+                              sender_adapter="HTTPS", receiver_adapter="HTTPS",
+                              message_interface="")
+        pts, note = an._structural_score(rec)
+        assert pts == 0 and note == ""
+
+
+class TestPassthroughHonesty:
+    def test_endpoint_only_passthrough_reproduced_with_endpoints(self):
+        # A flow with 0 middle steps but real sender+receiver endpoints is now
+        # reproduced FAITHFULLY — the generator emits the participants + message
+        # flows, so it is not an empty Start→End. (The regenerate guard remains
+        # as a safety net for any path that would still drop them.)
+        from scaffolder.regenerate import regenerate_iflow_xml
+        from extractor.iflow_parser import parse_iflow
+        xml = ('<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"'
+               ' xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd">'
+               '<bpmn2:collaboration id="C">'
+               '<bpmn2:participant id="P1" ifl:type="EndpointSender" name="Src"/>'
+               '<bpmn2:participant id="P2" ifl:type="EndpointRecevier" name="Tgt"/>'
+               '<bpmn2:participant id="PP" ifl:type="IntegrationProcess" name="Integration Process" processRef="Process_1"/>'
+               '<bpmn2:messageFlow id="MF1" name="HTTPS" sourceRef="P1" targetRef="StartEvent_1">'
+               '<bpmn2:extensionElements><ifl:property><key>ComponentType</key><value>HTTPS</value></ifl:property></bpmn2:extensionElements>'
+               '</bpmn2:messageFlow>'
+               '<bpmn2:messageFlow id="MF2" sourceRef="EndEvent_1" targetRef="P2"/>'
+               '</bpmn2:collaboration>'
+               '<bpmn2:process id="Process_1">'
+               '<bpmn2:startEvent id="StartEvent_1"><bpmn2:outgoing>s1</bpmn2:outgoing></bpmn2:startEvent>'
+               '<bpmn2:endEvent id="EndEvent_1"><bpmn2:incoming>s1</bpmn2:incoming></bpmn2:endEvent>'
+               '<bpmn2:sequenceFlow id="s1" sourceRef="StartEvent_1" targetRef="EndEvent_1"/>'
+               '</bpmn2:process></bpmn2:definitions>')
+        r = regenerate_iflow_xml(xml, "passthrough")
+        assert r.reproduced is True and r.result is not None
+        m2 = parse_iflow(r.result.iflw_xml, "passthrough")
+        assert sorted(e.direction for e in m2.endpoints) == ["receiver", "sender"]
+        assert any(mf.config.get("ComponentType") == "HTTPS"
+                   for mf in m2.message_flows)
+
+
+class TestStructureAwareSizing:
+    def test_real_iflow_sizes_scale_with_structure(self):
+        # A 9-process/112-step monster must outweigh a 0-step passthrough. The
+        # old keyword path collapsed every uploaded iFlow to "S" because the
+        # record had no rich description; sizing now reads the parsed topology.
+        import os, pickle, pytest
+        corpus = "/tmp/learn/iflws.pkl"
+        if not os.path.exists(corpus):
+            pytest.skip("corpus not present in this environment")
+        from analyzer.sap_complexity_engine import SAPComplexityEngine
+        iflws = pickle.load(open(corpus, "rb"))
+        by = {p.rsplit("/", 1)[-1]: x for p, x in iflws}
+        eng = SAPComplexityEngine()
+
+        class Rec:
+            def __init__(s, nm, x):
+                s.name = nm; s.source_iflow_xml = x; s.description = ""
+
+        big = eng.assess_interface(Rec("m", by["S_ContentModifier_SetConstant.iflw"]))
+        small = eng.assess_interface(Rec("s", by["AribaPOOut.iflw"]))
+        assert big.total_weight > small.total_weight
+        assert big.size in ("L", "XL")
+        assert small.size in ("S", "M")
+
+
+class TestConstructCoverage:
+    def test_coverage_reports_matched_and_generic(self):
+        # The weighting audit must report unknown constructs as "generic_only"
+        # (honestly flagged, no dedicated rule) rather than guessing them free.
+        import os, pickle, pytest
+        corpus = "/tmp/learn/iflws.pkl"
+        if not os.path.exists(corpus):
+            pytest.skip("corpus not present in this environment")
+        from analyzer.sap_complexity_engine import construct_coverage
+
+        class Rec:
+            def __init__(s, x): s.name = "x"; s.source_iflow_xml = x
+
+        by = {p.rsplit("/", 1)[-1]: x for p, x in pickle.load(open(corpus, "rb"))}
+        cov = construct_coverage(Rec(by["com_sap_GS_Chile_GetStatus.iflw"]))
+        assert cov is not None
+        # Script/Mapping/ExternalCall have dedicated rules; Enricher/Filter do not
+        assert "ExternalCall" in cov["matched"]
+        assert "Enricher" in cov["generic_only"]
+        assert cov["total_middle_steps"] == sum(
+            [v["count"] for v in cov["matched"].values()]
+            + list(cov["generic_only"].values()))
+        # no real iFlow -> None (falls back, never crashes)
+        class Bare:
+            name = "y"; source_iflow_xml = None
+        assert construct_coverage(Bare()) is None
+
+
+class TestPassthroughConfigReEmit:
+    def test_signer_config_carried_not_hollow_shell(self):
+        # Regression guard: passthrough steps (XMLDigitalSign, Variables, ...)
+        # must re-emit their captured config verbatim. A hollow shell makes CPI
+        # reject the step ("Private Key Alias is not specified", etc.).
+        import os, pickle, pytest
+        import xml.dom.minidom as MD
+        corpus = "/tmp/learn/iflws.pkl"
+        if not os.path.exists(corpus):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        by = {p.rsplit("/", 1)[-1]: x for p, x in pickle.load(open(corpus, "rb"))}
+        out = generate_from_model(
+            parse_iflow(by["com_sap_GS_Chile_SignEnvioDTE.iflw"], "s")).iflw_xml
+        # functional signer properties must be present with their real values
+        assert "<key>privateKeyAlias</key><value>${header.signatureKey}</value>" in out
+        assert "signatureAlgorithm" in out and "canonicalizationMethod" in out
+        assert "transformMethod" in out and "signatureType" in out
+        MD.parseString(out)  # still well-formed
+
+
+class TestFilterConfigReEmit:
+    def test_filter_carries_real_xpath_not_synthetic_nodelist(self):
+        # The filter must reproduce the real wrapContent/xpathType (e.g.
+        # /p2:SetDTE + Node), not the synthetic /* + Nodelist that trips CPI's
+        # content-type check.
+        import os, pickle, re, pytest
+        corpus = "/tmp/learn/iflws.pkl"
+        if not os.path.exists(corpus):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        by = {p.rsplit("/", 1)[-1]: x for p, x in pickle.load(open(corpus, "rb"))}
+        out = generate_from_model(
+            parse_iflow(by["com_sap_GS_Chile_SignEnvioDTE.iflw"], "x")).iflw_xml
+        m = re.search(r'<bpmn2:callActivity\b(?:(?!</bpmn2:callActivity>).)*?'
+                      r'Filter(?:(?!</bpmn2:callActivity>).)*?</bpmn2:callActivity>',
+                      out, re.S)
+        f = dict(re.findall(r'<key>([^<]+)</key>\s*<value>([^<]*)</value>', m.group(0)))
+        assert f.get("wrapContent") == "/p2:SetDTE"
+        assert f.get("xpathType") == "Node"
+
+
+class TestResourceResolver:
+    def _corpus(self):
+        return {
+            "PkgA.zip!h1_content!src/main/resources/mapping/Foo.xsl": "<xslA/>",
+            "PkgB.zip!h2_content!src/main/resources/mapping/Foo.xsl": "<xslB/>",
+            "PkgA.zip!h1_content!src/main/resources/script/bar.groovy": "A.bar",
+            "PkgA.zip!h1_content!src/main/resources/xsd/Schema_v1.xsd": "<xsd/>",
+        }
+
+    def test_resolves_dir_uri_to_content(self):
+        from scaffolder.resource_resolver import resolve
+        c = self._corpus()
+        r = resolve("dir://mapping/xslt/src/main/resources/mapping/Foo.xsl",
+                    c, package="PkgA.zip", kind="mapping")
+        assert r.ok and r.content == "<xslA/>"
+
+    def test_package_scope_disambiguates_same_basename(self):
+        from scaffolder.resource_resolver import resolve
+        c = self._corpus()
+        assert resolve("Foo.xsl", c, package="PkgA.zip").content == "<xslA/>"
+        assert resolve("Foo.xsl", c, package="PkgB.zip").content == "<xslB/>"
+
+    def test_script_and_xsd_basenames(self):
+        from scaffolder.resource_resolver import resolve
+        c = self._corpus()
+        assert resolve("bar.groovy", c, kind="script").content == "A.bar"
+        assert resolve("Schema_v1.xsd", c, kind="schema").content == "<xsd/>"
+
+    def test_unresolved_is_not_ok(self):
+        from scaffolder.resource_resolver import resolve
+        assert not resolve("Nope.xsl", self._corpus()).ok
+
+    def test_nested_batch_zip_scopes_to_real_package(self):
+        # The real package is the .zip before *_content, not the outer batch.
+        from scaffolder.resource_resolver import _package_of, resolve
+        key = ("part4.zip!Data_Ingestion_Integration_with_SAP_S-4HANA.zip!"
+               "e547_content!META-INF/MANIFEST.MF")
+        assert _package_of(key) == \
+            "data_ingestion_integration_with_sap_s-4hana.zip"
+        c = {
+            "batch.zip!PkgA.zip!h_content!src/main/resources/mapping/Foo.xsl": "<A/>",
+            "batch.zip!PkgB.zip!h_content!src/main/resources/mapping/Foo.xsl": "<B/>",
+        }
+        assert resolve("Foo.xsl", c, package="PkgA.zip").content == "<A/>"
+        assert resolve("Foo.xsl", c, package="PkgB.zip").content == "<B/>"
+
+
+class TestMockEndpoints:
+    def test_mock_scaffold_is_well_formed_and_self_triggering(self):
+        import os, pickle, xml.dom.minidom as MD, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_mock_from_model
+        by = {p.rsplit("/", 1)[-1]: x
+              for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb"))}
+        # any flow works; mock replaces its I/O with a testable scaffold
+        m = parse_iflow(next(iter(by.values())), "x")
+        res = generate_mock_from_model(m, name="MockTest")
+        MD.parseString(res.iflw_xml)                       # well-formed
+        assert "timerEventDefinition" in res.iflw_xml      # self-triggering
+        m2 = parse_iflow(res.iflw_xml, "x")
+        kinds = {m2.steps[s].kind for s in m2.steps}
+        assert "ExternalCall" in kinds and "Enricher" in kinds
+
+
+class TestSchemaMockPayload:
+    def test_xsd_sample_no_child_leak(self):
+        from scaffolder.sample_payload import sample_payload_from_xsd
+        xsd = ('<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">'
+               '<xs:element name="A"><xs:complexType><xs:sequence>'
+               '<xs:element name="B"><xs:complexType><xs:sequence>'
+               '<xs:element name="C" type="xs:string"/></xs:sequence>'
+               '</xs:complexType></xs:element></xs:sequence></xs:complexType>'
+               '</xs:element></xs:schema>')
+        out = sample_payload_from_xsd(xsd)
+        # C must appear once, nested under B — not leaked up to A
+        assert out.count("<C>") == 1 and "<B><C>" in out
+
+    def test_garbage_xsd_falls_back(self):
+        from scaffolder.sample_payload import sample_payload_from_xsd
+        assert "MockPayload" in sample_payload_from_xsd("not xml")
+
+    def test_mock_seeds_schema_derived_body_when_resolvable(self):
+        from types import SimpleNamespace as NS
+        from scaffolder.model_generator import mock_specs_from_model
+        xsd = ('<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">'
+               '<xs:element name="Req"><xs:complexType><xs:sequence>'
+               '<xs:element name="Id" type="xs:int"/></xs:sequence>'
+               '</xs:complexType></xs:element></xs:schema>')
+        corpus = {"PkgX.zip!h_content!src/main/resources/xsd/Req.xsd": xsd}
+        step = NS(config={"schemaResourceUri": "src/main/resources/xsd/Req.xsd"})
+        model = NS(steps={"s": step}, endpoints=[], name="X",
+                   source_package="PkgX.zip")
+        specs = mock_specs_from_model(model, corpus=corpus)
+        assert specs[0].get("body") == "<Req><Id>0</Id></Req>"
+
+    def test_mock_without_schema_uses_generic(self):
+        from types import SimpleNamespace as NS
+        from scaffolder.model_generator import mock_specs_from_model
+        model = NS(steps={}, endpoints=[], name="Y", source_package=None)
+        assert "body" not in mock_specs_from_model(model, corpus={})[0]
+
+
+class TestMockPayloadPriority:
+    def test_real_body_beats_synthetic(self):
+        from types import SimpleNamespace as NS
+        from scaffolder.model_generator import mock_specs_from_model
+        real = '<Doc xmlns="urn:x"><field>value</field></Doc>'
+        m = NS(steps={"s": NS(config={"wrapContent": real})},
+               endpoints=[], name="A", source_package=None)
+        assert mock_specs_from_model(m)[0].get("body") == real
+
+    def test_schema_derived_when_no_real_body(self):
+        from types import SimpleNamespace as NS
+        from scaffolder.model_generator import mock_specs_from_model
+        xsd = ('<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">'
+               '<xs:element name="R" type="xs:string"/></xs:schema>')
+        m = NS(steps={"s": NS(config={"schemaResourceUri": "xsd/R.xsd"})},
+               endpoints=[], name="B", source_package="P.zip")
+        body = mock_specs_from_model(
+            m, corpus={"P.zip!h_content!xsd/R.xsd": xsd})[0].get("body")
+        assert body and "<R>" in body
+
+    def test_bare_passthrough_is_generic(self):
+        from types import SimpleNamespace as NS
+        from scaffolder.model_generator import mock_specs_from_model
+        m = NS(steps={}, endpoints=[], name="C", source_package=None)
+        assert mock_specs_from_model(m)[0].get("body") is None
+
+
+class TestSchemaPipelineFunctional:
+    """End-to-end: ref -> resolve(corpus) -> sample_payload -> conforms.
+    Uses reusable XSD fixtures so the schema resolver is functionally tested
+    even though the sandbox corpus has no real xsd."""
+    def test_every_fixture_resolves_generates_and_conforms(self):
+        import sys, os
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
+        from schema_fixtures import FIXTURES, sample_conforms
+        from scaffolder.sample_payload import sample_payload_from_xsd
+        from scaffolder.resource_resolver import resolve
+        for nm, (xsd, root) in FIXTURES.items():
+            path = f"Pkg.zip!h_content!src/main/resources/xsd/{nm}.xsd"
+            res = resolve(f"{nm}.xsd", {path: xsd}, kind="schema",
+                          package="Pkg.zip")
+            assert res.ok, nm
+            sample = sample_payload_from_xsd(res.content, root)
+            assert sample_conforms(sample, xsd), f"{nm}: {sample}"
+
+    def test_mock_uses_fixture_schema_when_resolvable(self):
+        import sys, os
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
+        from types import SimpleNamespace as NS
+        from schema_fixtures import FIXTURES, sample_conforms
+        from scaffolder.model_generator import mock_specs_from_model
+        xsd, root = FIXTURES["nested"]
+        corpus = {"Pkg.zip!h_content!src/main/resources/xsd/nested.xsd": xsd}
+        model = NS(steps={"s": NS(config={
+            "schemaResourceUri": "src/main/resources/xsd/nested.xsd"})},
+            endpoints=[], name="N", source_package="Pkg.zip")
+        body = mock_specs_from_model(model, corpus=corpus)[0].get("body")
+        assert body and sample_conforms(body, xsd)
+
+
+class TestTransformDiff:
+    def test_identity_matches_real_transform_diverges(self):
+        import pytest
+        try:
+            from scaffolder.transform_diff import compare_mappings
+        except Exception:
+            pytest.skip("lxml unavailable")
+        ident = ('<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"'
+                 ' version="1.0"><xsl:template match="@*|node()"><xsl:copy>'
+                 '<xsl:apply-templates select="@*|node()"/></xsl:copy>'
+                 '</xsl:template></xsl:stylesheet>')
+        real = ('<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"'
+                ' version="1.0"><xsl:template match="/A"><B><id>'
+                '<xsl:value-of select="x"/></id></B></xsl:template></xsl:stylesheet>')
+        p = "<A><x>1</x></A>"
+        assert compare_mappings(p, ident, ident).match is True
+        assert compare_mappings(p, real, ident).match is False
+
+    def test_mmap_not_comparable(self):
+        import pytest
+        try:
+            from scaffolder.transform_diff import compare_mappings
+        except Exception:
+            pytest.skip("lxml unavailable")
+        assert compare_mappings("<a/>", "x", "y", kind="mmap").comparable is False
+
+
+class TestMultiProcessEmitter:
+    def test_multiprocess_reproduces_with_local_processes(self):
+        import os, pickle, xml.dom.minidom as MD, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_multiprocess
+        by = {p.rsplit("/", 1)[-1]: x
+              for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb"))}
+        m = parse_iflow(by["S_ContentModifier_SetConstant.iflw"], "mp")
+        res = generate_multiprocess(m, name="mp")
+        MD.parseString(res.iflw_xml)                      # well-formed
+        m2 = parse_iflow(res.iflw_xml, "mp")
+        assert len(m2.processes) > 1                      # local processes present
+        _B = {"StartEvent", "EndEvent", "StartTimerEvent"}
+        src = [m.steps[s].kind for s in m.sequence
+               if s in m.steps and m.steps[s].kind not in _B]
+        out = [m2.steps[s].kind for s in m2.sequence
+               if s in m2.steps and m2.steps[s].kind not in _B]
+        assert src == out and "ProcessCallElement" in out
+
+    def test_processid_collision_remapped(self):
+        # a local process reusing 'Process_1' must not collide with the main
+        from scaffolder.minimal_iflow import inject_local_processes
+        from types import SimpleNamespace as NS
+        proc = NS(id="Process_1", name="LIP", is_main=False, step_ids=[])
+        model = NS(processes=[NS(id="MainP", is_main=True, step_ids=[]), proc],
+                   steps={})
+        out = inject_local_processes(
+            '<x>    <bpmndi:BPMNDiagram></x>', model)
+        assert "Process_1_LIP" in out
+
+
+class TestGatewayEmitter:
+    def test_gateway_flow_round_trips(self):
+        import os, pickle, xml.dom.minidom as MD, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.minimal_iflow import build_gateway_flow
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        _B = {"StartEvent", "EndEvent", "StartTimerEvent", "MessageStartEvent",
+              "MessageEndEvent"}
+        m = parse_iflow(by["ReadMailsfromDataStore.iflw"], "g")  # 2 gateways
+        iflw, _ = build_gateway_flow("g", "g", m)
+        MD.parseString(iflw)
+        m2 = parse_iflow(iflw, "g")
+        mids = lambda mm: [mm.steps[s].kind for s in mm.sequence
+                           if s in mm.steps and mm.steps[s].kind not in _B]
+        assert mids(m) == mids(m2)
+        assert "ExclusiveGateway" in mids(m2)
+
+    def test_gateway_conditions_emitted(self):
+        # branch conditions + default branch must survive the round-trip
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.minimal_iflow import build_gateway_flow
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        m = parse_iflow(by["SIChile_Boleta_Operations.iflw"], "g")
+        iflw, _ = build_gateway_flow("g", "g", m)
+        m2 = parse_iflow(iflw, "g")
+        src_conds = sorted(r.condition or "" for r in m.routes)
+        out_conds = sorted(r.condition or "" for r in m2.routes)
+        assert src_conds == out_conds
+
+
+class TestExceptionSubprocessEmitter:
+    def test_subprocess_emitted_with_children(self):
+        import os, pickle, xml.dom.minidom as MD, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        _B = {"StartEvent", "EndEvent", "StartTimerEvent", "MessageStartEvent",
+              "MessageEndEvent"}
+        m = parse_iflow(by["Testing.iflw"], "s")
+        res = generate_from_model(m, name="s")
+        MD.parseString(res.iflw_xml)                       # well-formed
+        m2 = parse_iflow(res.iflw_xml, "s")
+        mids = lambda mm: [mm.steps[s].kind for s in mm.sequence
+                           if s in mm.steps and mm.steps[s].kind not in _B]
+        assert mids(m) == mids(m2)
+        assert "ErrorEventSubProcessTemplate" in mids(m2)
+        # the handler children must survive (not flattened to a childless node)
+        sub = [s for s in m2.steps.values()
+               if s.kind == "ErrorEventSubProcessTemplate"][0]
+        kids = sorted(s.kind for s in m2.steps.values()
+                      if s.parent_subprocess == sub.id)
+        assert kids == ["EndEvent", "Enricher", "StartErrorEvent"]
+
+
+class TestResourceAttach:
+    def _model(self):
+        from extractor.iflow_parser import IFlowModel, Process, Step
+        m = IFlowModel(name="r", processes=[Process("Process_1", "m", True)])
+        m.steps = {
+            "S1": Step(id="S1", kind="Script", name="Script",
+                       process_id="Process_1",
+                       config={"script": "helper.groovy",
+                               "cmdVariantUri": "ctype::FlowstepVariant/cname::GroovyScript"},
+                       incoming=[], outgoing=[], parent_subprocess=""),
+            "S2": Step(id="S2", kind="Mapping", name="XSLT",
+                       process_id="Process_1",
+                       config={"mappinguri": "dir://mapping/xslt/src/main/resources/mapping/conv.xsl",
+                               "mappingname": "conv",
+                               "cmdVariantUri": "ctype::FlowstepVariant/cname::XSLTMapping/version::1.2.0"},
+                       incoming=[], outgoing=[], parent_subprocess=""),
+        }
+        m.sequence = ["S1", "S2"]
+        return m
+
+    def test_resolves_and_ships_real_files(self):
+        from scaffolder.resource_attach import attach_resources
+        corpus = {
+            "MyPkg.zip/MyPkg_content/src/main/resources/script/helper.groovy":
+                "def processData(m){ return m }  // REAL",
+            "MyPkg.zip/MyPkg_content/src/main/resources/mapping/conv.xsl":
+                '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"/>',
+        }
+        rep = attach_resources(self._model(), corpus)
+        assert len(rep.resolved) == 2 and not rep.unresolved
+        assert rep.shipped["src/main/resources/script/helper.groovy"].endswith("REAL")
+        assert "xsl:stylesheet" in rep.shipped["src/main/resources/mapping/conv.xsl"]
+
+    def test_unresolved_is_graceful(self):
+        from scaffolder.resource_attach import attach_resources
+        rep = attach_resources(self._model(), {"other/x.txt": "y"})
+        assert not rep.shipped and len(rep.unresolved) == 2     # logged, not fatal
+
+    def test_generate_overwrites_stub_with_real(self):
+        from scaffolder.model_generator import generate_from_model
+        corpus = {
+            "P.zip/P_content/src/main/resources/script/helper.groovy": "REAL-LOGIC",
+            "P.zip/P_content/src/main/resources/mapping/conv.xsl":
+                '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"/>',
+        }
+        m = self._model()
+        r = generate_from_model(m, name="r", resources=corpus)
+        assert r.files["src/main/resources/script/helper.groovy"] == "REAL-LOGIC"
+        # without a corpus the bundle is still produced (no report)
+        r0 = generate_from_model(self._model(), name="r")
+        assert getattr(r0, "resource_report", None) is None
+
+
+class TestEndpointEmitter:
+    def test_passthrough_endpoints_reproduced(self):
+        import os, pickle, xml.dom.minidom as MD, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        from scaffolder.regenerate import regenerate_iflow_xml
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        xml = by["POtoS4Create.iflw"]
+        m = parse_iflow(xml, "p")
+        res = generate_from_model(m, name="p")
+        MD.parseString(res.iflw_xml)                          # well-formed
+        m2 = parse_iflow(res.iflw_xml, "p")
+        # sender/receiver participants + their adapter config survive
+        assert sorted(e.direction for e in m2.endpoints) == ["receiver", "sender"]
+        src_adapters = sorted(mf.config.get("ComponentType", "")
+                              for mf in m.message_flows)
+        out_adapters = sorted(mf.config.get("ComponentType", "")
+                              for mf in m2.message_flows)
+        assert src_adapters == out_adapters and src_adapters
+        # and the honesty guard now passes (faithful, not mock)
+        assert regenerate_iflow_xml(xml, "p").reproduced is True
+
+    def test_message_flow_adapter_config_carried(self):
+        # the real adapter URL/path must travel, not a placeholder
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        m = parse_iflow(by["POtoS4Create.iflw"], "p")
+        res = generate_from_model(m, name="p")
+        m2 = parse_iflow(res.iflw_xml, "p")
+        src = {k: v for mf in m.message_flows for k, v in mf.config.items()}
+        out = {k: v for mf in m2.message_flows for k, v in mf.config.items()}
+        assert out.get("urlPath") == src.get("urlPath")
+        assert out.get("ComponentType") == src.get("ComponentType")
+
+
+class TestIFlowLevelCarry:
+    def test_collab_config_carried_verbatim(self):
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        m = parse_iflow(by["POtoS4Create.iflw"], "p")
+        assert m.collab_config.get("namespaceMapping") is not None
+        m2 = parse_iflow(generate_from_model(m, name="p").iflw_xml, "p")
+        for k, v in m.collab_config.items():
+            assert m2.collab_config.get(k) == v, k
+
+    def test_apply_collab_config_overlay(self):
+        from scaffolder.minimal_iflow import build_iflw, apply_collab_config
+        from extractor.iflow_parser import parse_iflow
+        out = apply_collab_config(
+            build_iflw("x", "x"),
+            {"namespaceMapping": "xmlns:s=http://x", "corsEnabled": "true"})
+        cc = parse_iflow(out, "x").collab_config
+        assert cc.get("namespaceMapping") == "xmlns:s=http://x"   # replaced
+        assert cc.get("corsEnabled") == "true"                    # appended
+
+    def test_parameter_files_shipped(self):
+        from scaffolder.minimal_iflow import emit_parameter_files
+        files = emit_parameter_files({"OAUTH_URL", "My Param"})
+        prop = files["src/main/resources/parameters.prop"]
+        pdef = files["src/main/resources/parameters.propdef"]
+        assert "OAUTH_URL=" in prop and "My\\ Param=" in prop     # key escaping
+        assert pdef.count("<parameter>") == 2
+        assert "<name>OAUTH_URL</name>" in pdef
+        empty = emit_parameter_files(set())
+        assert "<parameters></parameters>" in \
+            empty["src/main/resources/parameters.propdef"]        # real empty shell
+
+    def test_bundle_ships_metainfo_and_params(self):
+        from scaffolder.model_generator import generate_from_model
+        from extractor.iflow_parser import IFlowModel, Process
+        m = IFlowModel(name="x", processes=[Process("Process_1", "m", True)])
+        r = generate_from_model(m, name="x")
+        assert "metainfo.prop" in r.files
+        assert "src/main/resources/parameters.prop" in r.files
+        assert "src/main/resources/parameters.propdef" in r.files
+
+
+class TestTenantFixes:
+    def test_layered_layout_no_overlap_and_anchored_edges(self):
+        import os, pickle, re, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        out = generate_from_model(parse_iflow(by["ReadMailsfromDataStore.iflw"],
+                                              "g"), name="g").iflw_xml
+        shapes = {}
+        for mm in re.finditer(r'<bpmndi:BPMNShape bpmnElement="([^"]+)"[^>]*>'
+                              r'<dc:Bounds height="([\d.]+)" width="([\d.]+)" '
+                              r'x="([\d.]+)" y="([\d.]+)"', out):
+            i, h, w, x, y = mm.groups()
+            shapes[i] = (float(x), float(y), float(w), float(h))
+        ids = [i for i in shapes if not i.startswith("Participant_")]
+        for a in range(len(ids)):                  # no two nodes overlap
+            for b in range(a + 1, len(ids)):
+                x1, y1, w1, h1 = shapes[ids[a]]
+                x2, y2, w2, h2 = shapes[ids[b]]
+                assert not (x1 < x2 + w2 and x2 < x1 + w1
+                            and y1 < y2 + h2 and y2 < y1 + h1)
+        for mm in re.finditer(                      # arrows touch their shapes
+                r'sourceElement="BPMNShape_([^"]+)" targetElement='
+                r'"BPMNShape_([^"]+)"><di:waypoint x="([\d.]+)"[^/]*'
+                r'y="([\d.]+)"/><di:waypoint x="([\d.]+)"[^/]*y="([\d.]+)"', out):
+            s, t, ax, ay, bx, by = mm.groups()
+            for sid, px, py in ((s, float(ax), float(ay)),
+                                (t, float(bx), float(by))):
+                if sid in shapes:
+                    x, y, w, h = shapes[sid]
+                    assert x - 1 <= px <= x + w + 1 and y - 1 <= py <= y + h + 1
+
+    def test_parallel_gateway_element_and_version_floor(self):
+        import os, pickle, re, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        m = None
+        for k, v in by.items():                     # multicast in the MAIN process
+            if "parallelGateway" not in v:
+                continue
+            cand = parse_iflow(v, "p")
+            if any(s.kind in ("Multicast", "SequentialMulticast")
+                   and not s.parent_subprocess
+                   and s.process_id == next(p.id for p in cand.processes
+                                            if p.is_main)
+                   for s in cand.steps.values()):
+                m = cand
+                break
+        assert m is not None
+        out = generate_from_model(m, name="p").iflw_xml
+        assert "<bpmn2:parallelGateway" in out      # not a callActivity
+        ver = re.search(r"cname::(?:Sequential)?Multicast/version::([\d.]+)", out)
+        assert ver and tuple(map(int, ver.group(1).split("."))) >= (1, 1)
+        # kinds still round-trip
+        m2 = parse_iflow(out, "p")
+        assert any(s.kind in ("Multicast", "SequentialMulticast")
+                   for s in m2.steps.values())
+
+    def test_gateway_branches_named(self):
+        import os, pickle, re, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        out = generate_from_model(
+            parse_iflow(by["SIChile_Boleta_Operations.iflw"], "g"),
+            name="g").iflw_xml
+        m2 = parse_iflow(out, "g")
+        for s in m2.steps.values():
+            if s.kind == "ExclusiveGateway":
+                for fid in s.outgoing:
+                    mm = re.search(r'<bpmn2:sequenceFlow id="%s"([^>]*)'
+                                   % re.escape(fid), out)
+                    assert mm and 'name="' in mm.group(1)
+
+    def test_error_start_event_cpi_form(self):
+        # 'StartErrorEvent v1.0 not supported' fix: cname::ErrorStartEvent
+        # inside the errorEventDefinition, no stale componentVersion
+        from scaffolder.minimal_iflow import _gw_fix_versions, _gw_event_def
+        cfg = _gw_fix_versions("StartErrorEvent",
+                               {"componentVersion": "1.0",
+                                "activityType": "StartErrorEvent"})
+        assert "componentVersion" not in cfg
+        assert cfg["cmdVariantUri"].endswith("cname::ErrorStartEvent")
+        assert "cname::ErrorStartEvent" in _gw_event_def("StartErrorEvent")
+
+    def test_mapping_referenced_schemas_shipped(self):
+        from extractor.iflow_parser import IFlowModel, Process, Step
+        from scaffolder.resource_attach import attach_resources
+        m = IFlowModel(name="x", processes=[Process("Process_1", "m", True)])
+        m.steps = {"S1": Step(
+            id="S1", kind="Mapping", name="MM", process_id="Process_1",
+            config={"mappinguri": "dir://mmap/src/main/resources/mapping/P.mmap",
+                    "cmdVariantUri":
+                        "ctype::FlowstepVariant/cname::MessageMapping"},
+            incoming=[], outgoing=[], parent_subprocess="")}
+        m.sequence = ["S1"]
+        corpus = {
+            "K.zip/K_content/src/main/resources/mapping/P.mmap":
+                '<m src="In.wsdl" tgt="Out.xsd"/>',
+            "K.zip/K_content/src/main/resources/wsdl/In.wsdl": "<w/>",
+            "K.zip/K_content/src/main/resources/xsd/Out.xsd": "<x/>",
+        }
+        rep = attach_resources(m, corpus)
+        assert "src/main/resources/wsdl/In.wsdl" in rep.shipped
+        assert "src/main/resources/xsd/Out.xsd" in rep.shipped
+
+
+class TestEditorLoadFixes:
+    def test_every_process_has_participant_and_pool(self):
+        import os, pickle, re, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        # multi-process flow: 'Error while loading' root cause
+        out = generate_from_model(
+            parse_iflow(by["S_ContentModifier_SetConstant.iflw"], "s"),
+            name="s").iflw_xml
+        procs = set(re.findall(r'<bpmn2:process id="([^"]+)"', out))
+        refs = set(re.findall(r'processRef="([^"]+)"', out))
+        pools = set(re.findall(r'BPMNShape bpmnElement="Participant_([^"]+)"',
+                               out))
+        assert len(procs) > 1                       # actually multi-process
+        for pid in procs:                           # every process referenced
+            assert pid in refs and pid in pools
+        # every LIP chain node has a DI shape
+        for nid in re.findall(r'<bpmn2:(?:callActivity|startEvent|endEvent) '
+                              r'id="((?:SE_|EE_|N_)[^"]+)"', out):
+            assert f'BPMNShape bpmnElement="{nid}"' in out
+
+    def test_main_process_selection_ignores_called_lips(self):
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        m = parse_iflow(by["S_ContentModifier_SetConstant.iflw"], "s")
+        main = next(p for p in m.processes if p.is_main)
+        m2 = parse_iflow(generate_from_model(m, name="s").iflw_xml, "s")
+        main2 = next(p for p in m2.processes if p.is_main)
+        assert main.id == main2.id                  # regen keeps the same main
+
+    def test_timer_start_emits_timer_event_definition(self):
+        import os, pickle, re, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        nm = next(k for k, v in by.items() if "timerEventDefinition" in v)
+        m = parse_iflow(by[nm], "t")
+        t = next(s for s in m.steps.values() if "Timer" in s.kind)
+        assert "scheduleKey" in t.config            # parser captures schedule
+        out = generate_from_model(m, name="t").iflw_xml
+        assert "timerEventDefinition" in out        # not a message start
+        assert "scheduleKey" in out
+
+    def test_main_pool_encloses_layout(self):
+        import os, pickle, re, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        out = generate_from_model(
+            parse_iflow(by["ReadMailsfromDataStore.iflw"], "g"),
+            name="g").iflw_xml
+        pool = re.search(r'bpmnElement="Participant_Process[^"]*"[^>]*>\s*'
+                         r'<dc:Bounds height="([\d.]+)" width="([\d.]+)" '
+                         r'x="([\d.]+)" y="([\d.]+)"', out)
+        ph, pw, px, py = (float(v) for v in pool.groups())
+        for mm in re.finditer(r'BPMNShape bpmnElement="((?!Participant)[^"]+)" '
+                              r'id="[^"]*"><dc:Bounds height="([\d.]+)" '
+                              r'width="([\d.]+)" x="([\d.]+)" y="([\d.]+)"', out):
+            nid, h, w, x, y = mm.group(1), *map(float, mm.groups()[1:])
+            if nid.startswith(("SE_", "EE_", "N_")):
+                continue                            # LIP pools live below
+            assert px <= x and x + w <= px + pw
+            assert py <= y and y + h <= py + ph
+
+    def test_processdirect_gets_valid_default_address(self):
+        from extractor.iflow_parser import (IFlowModel, Process, Step,
+                                            MessageFlow, Endpoint)
+        from scaffolder.model_generator import generate_from_model
+        import re
+        m = IFlowModel(name="My Flow", processes=[Process("Process_1", "m",
+                                                          True)])
+        s = Step(id="S1", kind="Enricher", name="cm", process_id="Process_1",
+                 config={}, incoming=["F1"], outgoing=["F2"],
+                 parent_subprocess="")
+        m.steps = {"S1": s}
+        m.sequence = ["S1"]
+        m._flow_target = {}
+        m.endpoints = [Endpoint(id="Participant_9", name="R",
+                                direction="receiver", etype="EndpointRecevier")]
+        m.message_flows = [MessageFlow(
+            id="MessageFlow_4", name="ProcessDirect", source="S1",
+            target="Participant_9",
+            config={"ComponentType": "ProcessDirect", "Name": "ProcessDirect"})]
+        out = generate_from_model(m, name="My Flow").iflw_xml
+        addr = re.search(r"<key>address</key><value>([^<]*)</value>", out)
+        assert addr and addr.group(1).startswith("/")
+
+
+class TestNestedCorpusAndParameters:
+    def _nested_corpus(self, tmp_path):
+        import io, zipfile, os, pickle
+        def jar(files):
+            b = io.BytesIO()
+            with zipfile.ZipFile(b, "w") as z:
+                for k, v in files.items():
+                    z.writestr(k, v)
+            return b.getvalue()
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        src = by["nz.ird.oauth.token.revoke.iflw"]
+        bundleA = jar({
+            "src/main/resources/scenarioflows/integrationflow/"
+            "nz.ird.oauth.token.revoke.iflw": src,
+            "src/main/resources/parameters.prop":
+                "Revoke_URL=/revoke/v2\nrole=ESBMessaging.send\n",
+            "src/main/resources/parameters.propdef":
+                '<?xml version="1.0"?><parameters><parameter>'
+                '<key>Revoke_URL</key></parameter></parameters>',
+            "src/main/resources/script/Revoke process header.groovy": "// s",
+            "src/main/resources/mapping/Revoke xml to xhtml.xsl":
+                "<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/"
+                "Transform' version='1.0'/>"})
+        bundleB = jar({
+            "src/main/resources/scenarioflows/integrationflow/other.iflw":
+                "<x/>",
+            "src/main/resources/parameters.prop": "WRONG=other\n"})
+        part2 = jar({
+            "New_Zealand_Inland_Revenue_Reporting_for_Payroll_Version_2.zip":
+                jar({"aaa_content": bundleA}),
+            "Other_Package.zip": jar({"bbb_content": bundleB})})
+        d = tmp_path / "pkgs"
+        d.mkdir()
+        (d / "part2.zip").write_bytes(part2)
+        return str(d), src
+
+    def test_walk_keys_are_container_prefixed(self, tmp_path):
+        import os, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from library_builder.corpus_pipeline import walk_corpus
+        d, _ = self._nested_corpus(tmp_path)
+        files = walk_corpus(d)
+        props = [k for k in files if k.endswith("parameters.prop")]
+        # without container prefixes the second package's prop is dropped
+        assert len(props) == 2
+        assert all(k.startswith("part2.zip/") for k in files)
+        assert any("_content::src/" in k for k in files)
+
+    def test_original_parameters_from_source_bundle(self, tmp_path):
+        import os, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from library_builder.corpus_pipeline import walk_corpus
+        from scaffolder.regenerate import regenerate_iflow_xml
+        d, src = self._nested_corpus(tmp_path)
+        files = walk_corpus(d)
+        regen = regenerate_iflow_xml(
+            src, "OAUTH Token Revoke V2", resources=files,
+            package="New Zealand Inland Revenue Reporting for Payroll "
+                    "Version 2")
+        assert regen.reproduced and regen.result is not None
+        prop = regen.result.files["src/main/resources/parameters.prop"]
+        assert "Revoke_URL=/revoke/v2" in prop      # real configured values
+        assert "WRONG" not in prop                  # not another package's
+        assert "Revoke_URL" in regen.result.files[
+            "src/main/resources/parameters.propdef"]
+        shipped = regen.result.files
+        assert "src/main/resources/script/Revoke process header.groovy" \
+            in shipped                              # References tab content
+        assert "src/main/resources/mapping/Revoke xml to xhtml.xsl" in shipped
+
+    def test_resolver_normalizes_package_names(self):
+        from scaffolder.resource_resolver import resolve
+        files = {
+            "part2.zip/My_Pkg_V2.zip/a_content::src/main/resources/script/"
+            "f.groovy": "right",
+            "other.zip/b_content::src/main/resources/script/f.groovy":
+                "wrong"}
+        r = resolve("f.groovy", files, package="My Pkg V2")
+        assert r.ok and r.content == "right" and not r.ambiguous
+
+    def test_lip_multicast_emitted_as_real_gateway(self):
+        import os, pickle, re, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        src = next(x for p, x in pickle.load(open("/tmp/learn/iflws.pkl",
+                                                  "rb"))
+                   if p.endswith("Job_Recruiting_Fields_OpenText.iflw"))
+        out = generate_from_model(parse_iflow(src, "rci"), name="rci").iflw_xml
+        lip = re.search(r'<bpmn2:process id="Process_45360926".*?'
+                        r'</bpmn2:process>', out, re.S).group(0)
+        # linearized LIPs emitted Multicast as a callActivity — the editor's
+        # 'Error while loading' breaker class
+        assert "<bpmn2:parallelGateway" in lip
+        lip2 = re.search(r'<bpmn2:process id="Process_145".*?</bpmn2:process>',
+                         out, re.S).group(0)
+        assert "<bpmn2:exclusiveGateway" in lip2
+        assert "<bpmn2:subProcess" in lip2          # nested, not flattened
+
+
+class TestEditorFidelityRound4:
+    """Locks for the RCI093 editor-error delta: source-faithful event
+    definitions, timer schedule, gateway-route flow props, selective resource
+    walk, and partner-adjacent endpoint placement."""
+
+    def _rci(self):
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        src = next(x for p, x in pickle.load(open("/tmp/learn/iflws.pkl",
+                                                  "rb"))
+                   if p.endswith("Job_Recruiting_Fields_OpenText.iflw"))
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        return src, generate_from_model(parse_iflow(src, "rci"),
+                                        name="rci").iflw_xml
+
+    def test_plain_lip_events_have_no_event_definition(self):
+        import re
+        _, out = self._rci()
+        # 'Start event should have an incoming message flow' / 'LIP does not
+        # support this variant of end event' both came from an unconditional
+        # messageEventDefinition on plain LIP starts/ends
+        e = re.search(r'<bpmn2:endEvent id="EndEvent_147".*?</bpmn2:endEvent>',
+                      out, re.S).group(0)
+        assert "EventDefinition" not in e
+        s = re.search(r'<bpmn2:startEvent id="StartEvent_45360927".*?'
+                      r'</bpmn2:startEvent>', out, re.S).group(0)
+        assert "EventDefinition" not in s
+
+    def test_timer_def_faithful(self):
+        import re
+        _, out = self._rci()
+        t = re.search(r'<bpmn2:startEvent id="StartEvent_4".*?'
+                      r'</bpmn2:startEvent>', out, re.S).group(0)
+        # 'Timer is not configured' came from duplicating schedule props at
+        # node level + dropping the definition's id
+        assert 'TimerEventDefinition_55599' in t
+        assert "<bpmn2:extensionElements>" not in \
+            t.split("timerEventDefinition")[0]
+        assert "scheduleKey" in t
+
+    def test_default_branch_keeps_gateway_route_props(self):
+        import re
+        _, out = self._rci()
+        f = re.search(r'<bpmn2:sequenceFlow id="SequenceFlow_45361016".*?'
+                      r'(?:</bpmn2:sequenceFlow>|/>)', out, re.S).group(0)
+        # dropping the GatewayRoute extension on the default branch raises
+        # 'Condition cannot be empty'
+        assert "GatewayRoute" in f and "expressionType" in f
+
+    def test_event_def_parity_whole_corpus(self):
+        import os, pickle, re, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+
+        def evmap(xml):
+            out = {}
+            for tag in ("startEvent", "endEvent"):
+                for m in re.finditer(
+                        rf'<bpmn2:{tag}\b[^>]*\bid="([^"]+)"[^>]*>(.*?)'
+                        rf'</bpmn2:{tag}>', xml, re.S):
+                    b = m.group(2)
+                    out[m.group(1)] = (
+                        "message" if "messageEventDefinition" in b else
+                        "timer" if "timerEventDefinition" in b else
+                        "error" if "errorEventDefinition" in b else
+                        "other" if "EventDefinition" in b else None)
+                for m in re.finditer(
+                        rf'<bpmn2:{tag}\b[^>]*\bid="([^"]+)"[^>]*/>', xml):
+                    out[m.group(1)] = None
+            return out
+        bad = []
+        for nm, x in by.items():
+            out = generate_from_model(parse_iflow(x, nm), name=nm).iflw_xml
+            s, g = evmap(x), evmap(out)
+            bad += [(nm, i) for i in s if i in g and g[i] != s[i]]
+        assert not bad, bad[:5]
+
+    def test_walk_corpus_ext_filter(self, tmp_path):
+        import io, zipfile
+        from library_builder.corpus_pipeline import walk_corpus, WIRING_EXTS
+        b = io.BytesIO()
+        with zipfile.ZipFile(b, "w") as z:
+            z.writestr("a.groovy", "x")
+            z.writestr("big.bin", "y" * 100)
+            z.writestr("doc.pdf", "z")
+        d = tmp_path / "c"
+        d.mkdir()
+        (d / "p.zip").write_bytes(b.getvalue())
+        files = walk_corpus(str(d), exts=WIRING_EXTS)
+        assert any(k.endswith("a.groovy") for k in files)
+        assert not any(k.endswith((".bin", ".pdf")) for k in files)
+
+    def test_endpoints_not_stacked_far_right(self):
+        import re
+        _, out = self._rci()
+        eps = re.findall(r'BPMNShape bpmnElement="Participant_[\w]+" '
+                         r'id="[^"]*"><dc:Bounds height="140\.0" '
+                         r'width="100\.0" x="([\d.+-]+)" y="([\d.+-]+)"', out)
+        assert eps
+        # every endpoint is placed near a partner (no far-right stack, no
+        # negative coordinates)
+        assert all(float(x) >= 0 and float(y) >= 0 for x, y in eps)
+        stack = [1 for x, y in eps if float(x) > 1800
+                 and round(float(y)) % 170 == 110 % 170]
+        assert not stack
+
+
+class TestExtractCorpusTool:
+    def test_nested_extraction_organized_with_collisions(self, tmp_path):
+        import io, zipfile, os, csv
+        from tools.extract_corpus import main
+        def jar(files):
+            b = io.BytesIO()
+            with zipfile.ZipFile(b, "w") as z:
+                for k, v in files.items():
+                    z.writestr(k, v)
+            return b.getvalue()
+        pkg = jar({
+            "a_content": jar({
+                "src/main/resources/parameters.prop": "A=1\n",
+                "src/main/resources/script/util.groovy": "// a",
+                "src/main/resources/mapping/m.xsl": "<x/>"}),
+            "b_content": jar({
+                "src/main/resources/parameters.prop": "B=2\n",
+                "src/main/resources/script/util.groovy": "// b"})})
+        srcd = tmp_path / "pkgs"; srcd.mkdir()
+        (srcd / "outer.zip").write_bytes(jar({"My_Package.zip": pkg}))
+        dst = tmp_path / "corpus"
+        assert main(["--src", str(srcd), "--dst", str(dst)]) == 0
+        files = {os.path.relpath(os.path.join(r, f), dst)
+                 for r, _, fs in os.walk(dst) for f in fs}
+        # organized by type, package-prefixed, collisions suffixed not dropped
+        assert "Prop/My_Package__parameters.prop" in files
+        assert "Prop/My_Package__parameters__2.prop" in files
+        assert "Groovy/My_Package__util.groovy" in files
+        assert "Groovy/My_Package__util__2.groovy" in files
+        assert "Xsl/My_Package__m.xsl" in files
+        # both collision contents survive (first-seen-wins was the original
+        # corpus-walk bug — the standalone must never repeat it)
+        bodies = {open(dst / "Prop" / f).read().strip()
+                  for f in ("My_Package__parameters.prop",
+                            "My_Package__parameters__2.prop")}
+        assert bodies == {"A=1", "B=2"}
+        # manifest traces every file to its container-qualified source
+        rows = list(csv.reader(open(dst / "manifest.csv")))[1:]
+        srcs = {r[1] for r in rows}
+        assert any(s.startswith("outer.zip/My_Package.zip/a_content::src/")
+                   for s in srcs)

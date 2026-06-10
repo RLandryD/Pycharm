@@ -1,0 +1,1017 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" name="CorrespondenceExternalBasicSF" targetNamespace="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10">
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/2009/10">
+      <xsd:element name="Test">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="TestResponse">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://www.altinn.no/services/common/fault/2009/10" elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/common/fault/2009/10">
+      <xsd:complexType name="AltinnFault">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="AltinnErrorMessage" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="AltinnExtendedErrorMessage" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="AltinnLocalizedErrorMessage" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ErrorGuid" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ErrorID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="UserGuid" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="UserId" nillable="true" type="xsd:string">
+           </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="AltinnFault" nillable="true" type="tns:AltinnFault"/>
+    </xsd:schema>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/">
+      <xs:element name="anyType" nillable="true" type="xs:anyType"/>
+      <xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
+      <xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
+      <xs:element name="boolean" nillable="true" type="xs:boolean"/>
+      <xs:element name="byte" nillable="true" type="xs:byte"/>
+      <xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+      <xs:element name="decimal" nillable="true" type="xs:decimal"/>
+      <xs:element name="double" nillable="true" type="xs:double"/>
+      <xs:element name="float" nillable="true" type="xs:float"/>
+      <xs:element name="int" nillable="true" type="xs:int"/>
+      <xs:element name="long" nillable="true" type="xs:long"/>
+      <xs:element name="QName" nillable="true" type="xs:QName"/>
+      <xs:element name="short" nillable="true" type="xs:short"/>
+      <xs:element name="string" nillable="true" type="xs:string"/>
+      <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
+      <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
+      <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
+      <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
+      <xs:element name="char" nillable="true" type="tns:char"/>
+      <xs:simpleType name="char">
+        <xs:restriction base="xs:int"/>
+      </xs:simpleType>
+      <xs:element name="duration" nillable="true" type="tns:duration"/>
+      <xs:simpleType name="duration">
+        <xs:restriction base="xs:duration">
+          <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
+          <xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
+          <xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="guid" nillable="true" type="tns:guid"/>
+      <xs:simpleType name="guid">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:attribute name="FactoryType" type="xs:QName"/>
+      <xs:attribute name="Id" type="xs:ID"/>
+      <xs:attribute name="Ref" type="xs:IDREF"/>
+    </xs:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10">
+      <xsd:import namespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10"/>
+      <xsd:element name="ArchiveCorrespondenceForEndUserSystemBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="systemUserName" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="systemPassword" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="userSSN" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="userPassword" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="userPinCode" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="authMethod" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="CorrespondenceID" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ArchiveCorrespondenceForEndUserSystemBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element xmlns:q1="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10" minOccurs="0" name="ArchiveCorrespondenceForEndUserSystemBasicResult" nillable="true" type="q1:Receipt"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="DeleteCorrespondenceBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userSSN" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPinCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="authMethod" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="reporteeElementID" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="DeleteCorrespondenceBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetCorrespondenceForEndUserSystemsBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userSSN" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPinCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="authMethod" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="correspondenceID" type="xsd:int"/>
+            <xsd:element minOccurs="0" name="languageID" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetCorrespondenceForEndUserSystemsBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element xmlns:q2="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2009/10" minOccurs="0" name="GetCorrespondenceForEndUserSystemsBasicResult" nillable="true" type="q2:CorrespondenceForEndUserSystem"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetCorrespondenceForEndUserSystemsBasicV2">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" name="systemUserName" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="systemPassword" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="userSSN" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="userPassword" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="userPinCode" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="authMethod" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="correspondenceID" type="xsd:int"/>
+            <xsd:element minOccurs="1" name="languageID" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetCorrespondenceForEndUserSystemsBasicV2Response">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element xmlns:q3="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10" minOccurs="0" name="GetCorrespondenceForEndUserSystemsBasicV2Result" nillable="true" type="q3:CorrespondenceForEndUserSystemV2"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SaveCorrespondenceConfirmationBasic">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userSSN" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPassword" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="userPinCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="authMethod" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="reporteeElementID" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SaveCorrespondenceConfirmationBasicResponse">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10">
+      <xsd:import namespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10"/>
+      <xsd:complexType name="Receipt">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="LastChanged" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ParentReceiptId" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptHistory" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptId" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptStatusCode" type="tns:ReceiptStatusEnum">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptTemplate" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptText" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiptTypeName" type="tns:ReceiptTypeEnum">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptList">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="Receipt" nillable="true" type="tns:Receipt"/>
+      <xsd:simpleType name="ReceiptStatusEnum">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NotSet"/>
+          <xsd:enumeration value="OK"/>
+          <xsd:enumeration value="UnExpectedError"/>
+          <xsd:enumeration value="ValidationFailed"/>
+          <xsd:enumeration value="Rejected"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ReceiptStatusEnum" nillable="true" type="tns:ReceiptStatusEnum"/>
+      <xsd:simpleType name="ReceiptTypeEnum">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NotSet"/>
+          <xsd:enumeration value="FormTask"/>
+          <xsd:enumeration value="Correspondence"/>
+          <xsd:enumeration value="PINCODE"/>
+          <xsd:enumeration value="Subscription"/>
+          <xsd:enumeration value="Outbound"/>
+          <xsd:enumeration value="PreFill"/>
+          <xsd:enumeration value="RegisterDLS"/>
+          <xsd:enumeration value="RegisterDSF"/>
+          <xsd:enumeration value="RegisterER"/>
+          <xsd:enumeration value="RegisterDSFProperty"/>
+          <xsd:enumeration value="RegisterDSFStreet"/>
+          <xsd:enumeration value="RegisterDSFCountry"/>
+          <xsd:enumeration value="RegisterDSFUser"/>
+          <xsd:enumeration value="LookUp"/>
+          <xsd:enumeration value="RegisterDSFStreetAdd"/>
+          <xsd:enumeration value="RegisterDSFPropertyAdd"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ReceiptTypeEnum" nillable="true" type="tns:ReceiptTypeEnum"/>
+      <xsd:complexType name="ReferenceList">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Reference" nillable="true" type="tns:Reference"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReferenceList" nillable="true" type="tns:ReferenceList"/>
+      <xsd:complexType name="Reference">
+        <xsd:sequence>
+          <xsd:element xmlns:q4="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10" minOccurs="0" name="ReferenceTypeName" type="q4:ReferenceType">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReferenceValue" nillable="true" type="xsd:string">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="Reference" nillable="true" type="tns:Reference"/>
+      <xsd:complexType name="ReceiptList">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Receipt" nillable="true" type="tns:Receipt"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReceiptList" nillable="true" type="tns:ReceiptList"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10">
+      <xsd:simpleType name="ReferenceType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NotSet"/>
+          <xsd:enumeration value="ExternalShipmentReference"/>
+          <xsd:enumeration value="EndUserSystemReference"/>
+          <xsd:enumeration value="ParentReference"/>
+          <xsd:enumeration value="SendersReference"/>
+          <xsd:enumeration value="WorkFlowReference"/>
+          <xsd:enumeration value="BatchReference"/>
+          <xsd:enumeration value="OutboundShipmentReference"/>
+          <xsd:enumeration value="ReceiversReference"/>
+          <xsd:enumeration value="Altinn1Reference"/>
+          <xsd:enumeration value="OwnerPartyReference"/>
+          <xsd:enumeration value="PartyReference"/>
+          <xsd:enumeration value="ArchiveReference"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ReferenceType" nillable="true" type="tns:ReferenceType"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2009/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2009/10">
+      <xsd:import namespace="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/ServiceEngine/Notification/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/serviceEntity/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/ServiceDevelopment/Service/2009/10"/>
+      <xsd:complexType name="CorrespondenceForEndUserSystem">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="Correspondence" nillable="true" type="tns:Correspondence">
+          </xsd:element>
+          <xsd:element xmlns:q5="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10" minOccurs="0" name="CorrespondenceAttachments" nillable="true" type="q5:AttachmentBEList">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CorrespondenceLinks" nillable="true" type="tns:CorrespondenceLinkBEList">          
+          </xsd:element>
+          <xsd:element xmlns:q6="http://schemas.altinn.no/services/ServiceEngine/Notification/2009/10" minOccurs="0" name="CorrespondenceNotifications" nillable="true" type="q6:InternalNotificationBEList">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="CorrespondenceForEndUserSystem" nillable="true" type="tns:CorrespondenceForEndUserSystem"/>
+      <xsd:complexType name="Correspondence">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="ArchiveReference" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AuthenticatedUser" nillable="true" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ConfirmationDate" nillable="true" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CorrespondenceID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CorrespondenceName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element xmlns:q7="http://schemas.altinn.no/services/serviceEntity/2009/10" minOccurs="0" name="CorrespondenceStatus" type="q7:CorrespondenceStatusType">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CorrespondenceSubject" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CorrespondenceSummary" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CorrespondenceTitle" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CorrespondenceTxt" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="CustomMessageData" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="DateSent" type="xsd:dateTime">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="Description" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="DueDate" nillable="true" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ExternalSystemReference" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Header" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="IsConfirmationNeeded" type="xsd:boolean">
+         </xsd:element>
+          <xsd:element xmlns:q8="http://schemas.altinn.no/ServiceDevelopment/Service/2009/10" minOccurs="0" name="LanguageID" type="q8:LanguageType">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="Reportee" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="SentBy" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SentTo" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="UserID" nillable="true" type="xsd:int">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="Correspondence" nillable="true" type="tns:Correspondence"/>
+      <xsd:complexType name="CorrespondenceLinkBEList">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="CorrespondenceLink" nillable="true" type="tns:CorrespondenceLink"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="CorrespondenceLinkBEList" nillable="true" type="tns:CorrespondenceLinkBEList"/>
+      <xsd:complexType name="CorrespondenceLink">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="LinkText" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element xmlns:q9="http://schemas.altinn.no/services/serviceEntity/2009/10" minOccurs="0" name="LinkType" type="q9:ReplyOptionType">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="LinkURL" nillable="true" type="xsd:string">
+           </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="CorrespondenceLink" nillable="true" type="tns:CorrespondenceLink"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10" elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2009/10">
+      <xsd:import namespace="http://schemas.altinn.no/services/ServiceEngine/Subscription/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/serviceEntity/2009/10"/>
+      <xsd:complexType name="AttachmentBEList">
+         <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="AttachmentBE" nillable="true" type="tns:AttachmentBE"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="AttachmentBEList" nillable="true" type="tns:AttachmentBEList"/>
+      <xsd:complexType name="AttachmentBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="AttachmentData" nillable="true" type="xsd:base64Binary">
+          </xsd:element>
+          <xsd:element xmlns:q10="http://schemas.altinn.no/services/ServiceEngine/Subscription/2009/10" minOccurs="0" name="AttachmentFunctionTypeID" type="q10:AttachmentFunctionType">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AttachmentID" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="AttachmentName" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element xmlns:q11="http://schemas.altinn.no/services/serviceEntity/2009/10" minOccurs="0" name="AttachmentTypeID" type="q11:AttachmentType">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="CreatedDateTime" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="FileName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="IsEncrypted" type="xsd:boolean">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ReporteeElementID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SendersReference" nillable="true" type="xsd:string">
+           </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="AttachmentBE" nillable="true" type="tns:AttachmentBE"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/ServiceEngine/Subscription/2009/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/ServiceEngine/Subscription/2009/10">
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      <xsd:simpleType name="AttachmentFunctionType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Unspecified">
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="AttachmentFunctionType" nillable="true" type="tns:AttachmentFunctionType"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/serviceEntity/2009/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/serviceEntity/2009/10">
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      <xsd:simpleType name="CorrespondenceStatusType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="Created"/>
+          <xsd:enumeration value="Read"/>
+          <xsd:enumeration value="Replied"/>
+          <xsd:enumeration value="ChangedByGovAgency"/>
+          <xsd:enumeration value="ChangedByUser"/>
+          <xsd:enumeration value="Confirmed"/>
+          <xsd:enumeration value="DeletedByUser"/>
+          <xsd:enumeration value="DeletedByAltinn"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="CorrespondenceStatusType" nillable="true" type="tns:CorrespondenceStatusType"/>
+      <xsd:simpleType name="AttachmentType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="application_None"/>
+          <xsd:enumeration value="application_pdf"/>
+          <xsd:enumeration value="application_msword"/>
+          <xsd:enumeration value="application_vnd_ms_excel"/>
+          <xsd:enumeration value="application_vnd_oasis_opendocument_text"/>
+          <xsd:enumeration value="application_vnd_oasis_opendocument_presentation"/>
+          <xsd:enumeration value="application_vnd_oasis_opendocument_spreadsheet"/>
+          <xsd:enumeration value="application_rtf"/>
+          <xsd:enumeration value="application_vnd_ms_powerpoint"/>
+          <xsd:enumeration value="application_postscript"/>
+          <xsd:enumeration value="application_zip"/>
+          <xsd:enumeration value="text_plain"/>
+          <xsd:enumeration value="text_html"/>
+          <xsd:enumeration value="text_xml"/>
+          <xsd:enumeration value="text_rtf"/>
+          <xsd:enumeration value="text_richtext"/>
+          <xsd:enumeration value="binary_octet_stream"/>
+          <xsd:enumeration value="not_Applicable"/>
+          <xsd:enumeration value="MTOM"/>
+          <xsd:enumeration value="BASE64"/>
+          <xsd:enumeration value="image_jpeg"/>
+          <xsd:enumeration value="image_gif"/>
+          <xsd:enumeration value="image_bmp"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="AttachmentType" nillable="true" type="tns:AttachmentType"/>
+      <xsd:simpleType name="ReplyOptionType">
+         <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Form">
+          </xsd:enumeration>
+          <xsd:enumeration value="ServiceCode">
+          </xsd:enumeration>
+          <xsd:enumeration value="ServiceURL">
+          </xsd:enumeration>
+          <xsd:enumeration value="ArchiveReference">
+           </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ReplyOptionType" nillable="true" type="tns:ReplyOptionType"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/ServiceEngine/Notification/2009/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/ServiceEngine/Notification/2009/10">
+      <xsd:import namespace="http://schemas.altinn.no/serviceengine/formsengine/2009/10"/>
+      <xsd:complexType name="InternalNotificationBEList">
+         <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="InternalNotification" nillable="true" type="tns:InternalNotification"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="InternalNotificationBEList" nillable="true" type="tns:InternalNotificationBEList"/>
+      <xsd:complexType name="InternalNotification">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="FromAddress" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="LanguageCode" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="NotificationTypeName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReceiverEndPointList" nillable="true" type="tns:InternalReceiverEndPointBEList">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ShipmentDateTime" type="xsd:dateTime">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="TextTokenSubstitutionList" nillable="true" type="tns:TextTokenSubstitutionBEList">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="InternalNotification" nillable="true" type="tns:InternalNotification"/>
+      <xsd:complexType name="InternalReceiverEndPointBEList">
+         <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="InternalReceiverEndPoint" nillable="true" type="tns:InternalReceiverEndPoint"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="InternalReceiverEndPointBEList" nillable="true" type="tns:InternalReceiverEndPointBEList"/>
+      <xsd:complexType name="InternalReceiverEndPoint">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="ReceiverAddress" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SentDateTime" nillable="true" type="xsd:dateTime">
+           </xsd:element>
+          <xsd:element xmlns:q12="http://schemas.altinn.no/serviceengine/formsengine/2009/10" minOccurs="0" name="TransportId" nillable="true" type="q12:TransportType">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="InternalReceiverEndPoint" nillable="true" type="tns:InternalReceiverEndPoint"/>
+      <xsd:complexType name="TextTokenSubstitutionBEList">
+         <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="TextToken" nillable="true" type="tns:TextToken"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="TextTokenSubstitutionBEList" nillable="true" type="tns:TextTokenSubstitutionBEList"/>
+      <xsd:complexType name="TextToken">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="TokenNum" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="TokenValue" nillable="true" type="xsd:string">
+           </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="TextToken" nillable="true" type="tns:TextToken"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/serviceengine/formsengine/2009/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/serviceengine/formsengine/2009/10">
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      <xsd:simpleType name="TransportType">
+         <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="SMS">
+          </xsd:enumeration>
+          <xsd:enumeration value="Email">
+           </xsd:enumeration>
+          <xsd:enumeration value="IM">
+           </xsd:enumeration>
+          <xsd:enumeration value="Both">
+           </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="TransportType" nillable="true" type="tns:TransportType"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/ServiceDevelopment/Service/2009/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/ServiceDevelopment/Service/2009/10">
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      <xsd:simpleType name="LanguageType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="English">
+          </xsd:enumeration>
+          <xsd:enumeration value="NorwegianNO">
+           </xsd:enumeration>
+          <xsd:enumeration value="NorwegianNN">
+           </xsd:enumeration>
+          <xsd:enumeration value="Sami">
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="LanguageType" nillable="true" type="tns:LanguageType"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10">
+      <xsd:import namespace="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/ServiceEngine/Notification/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/serviceEntity/2010/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/ServiceDevelopment/Service/2009/10"/>
+      <xsd:complexType name="CorrespondenceForEndUserSystemV2">
+         <xsd:sequence>
+          <xsd:element minOccurs="0" name="Correspondence" nillable="true" type="tns:CorrespondenceV2">
+          </xsd:element>
+          <xsd:element xmlns:q13="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10" minOccurs="0" name="CorrespondenceAttachments" nillable="true" type="q13:AttachmentBEV2List">
+          </xsd:element>
+          <xsd:element xmlns:q14="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2009/10" minOccurs="0" name="CorrespondenceLinks" nillable="true" type="q14:CorrespondenceLinkBEList">
+         </xsd:element>
+          <xsd:element xmlns:q15="http://schemas.altinn.no/services/ServiceEngine/Notification/2009/10" minOccurs="0" name="CorrespondenceNotifications" nillable="true" type="q15:InternalNotificationBEList">
+           </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="CorrespondenceForEndUserSystemV2" nillable="true" type="tns:CorrespondenceForEndUserSystemV2"/>
+      <xsd:complexType name="CorrespondenceV2">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="AllowForwarding" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ArchiveReference" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AuthenticatedUser" nillable="true" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="CaseID" nillable="true" type="xsd:int">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="ConfirmationDate" nillable="true" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CorrespondenceID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CorrespondenceName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element xmlns:q16="http://schemas.altinn.no/services/serviceEntity/2010/10" minOccurs="0" name="CorrespondenceStatus" type="q16:CorrespondenceStatusTypeV2">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="CorrespondenceSubject" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="CorrespondenceSummary" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="CorrespondenceTitle" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="CorrespondenceTxt" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="CustomMessageData" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="DateSent" type="xsd:dateTime">
+         </xsd:element>
+          <xsd:element minOccurs="0" name="Description" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="DueDate" nillable="true" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ExternalSystemReference" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Header" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="IsConfirmationNeeded" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element xmlns:q17="http://schemas.altinn.no/ServiceDevelopment/Service/2009/10" minOccurs="0" name="LanguageID" type="q17:LanguageType">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="Reportee" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SentBy" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="SentTo" type="xsd:int">
+         </xsd:element>
+          <xsd:element minOccurs="0" name="UserID" nillable="true" type="xsd:int">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="CorrespondenceV2" nillable="true" type="tns:CorrespondenceV2"/>
+      <xsd:simpleType name="UserTypeRestriction">
+         <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="PortalOnly"/>
+          <xsd:enumeration value="EndUserSystemOnly"/>
+          <xsd:enumeration value="ShowToAll"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="UserTypeRestriction" nillable="true" type="tns:UserTypeRestriction"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10" elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10">
+      <xsd:import namespace="http://schemas.altinn.no/services/ServiceEngine/Subscription/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/serviceEntity/2009/10"/>
+      <xsd:import namespace="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10"/>
+      <xsd:complexType name="AttachmentBEV2List">
+         <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="AttachmentBEV2" nillable="true" type="tns:AttachmentBEV2"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="AttachmentBEV2List" nillable="true" type="tns:AttachmentBEV2List"/>
+      <xsd:complexType name="AttachmentBEV2">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="AttachmentData" nillable="true" type="xsd:base64Binary">
+          </xsd:element>
+          <xsd:element xmlns:q18="http://schemas.altinn.no/services/ServiceEngine/Subscription/2009/10" minOccurs="0" name="AttachmentFunctionTypeID" type="q18:AttachmentFunctionType">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AttachmentID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AttachmentName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element xmlns:q19="http://schemas.altinn.no/services/serviceEntity/2009/10" minOccurs="0" name="AttachmentTypeID" type="q19:AttachmentType">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CreatedByUserID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="CreatedDateTime" type="xsd:dateTime">
+         </xsd:element>
+          <xsd:element xmlns:q20="http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10" minOccurs="0" name="DestinationType" type="q20:UserTypeRestriction">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="FileName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="IsAddedAfterFormFillin" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="IsAssociatedToFormSet" type="xsd:boolean">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="IsEncrypted" type="xsd:boolean">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ReporteeElementID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SendersReference" nillable="true" type="xsd:string">
+           </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="AttachmentBEV2" nillable="true" type="tns:AttachmentBEV2"/>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/serviceEntity/2010/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/serviceEntity/2010/10">
+      <xsd:simpleType name="CorrespondenceStatusTypeV2">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Default"/>
+          <xsd:enumeration value="Created"/>
+          <xsd:enumeration value="Read"/>
+          <xsd:enumeration value="Replied"/>
+          <xsd:enumeration value="ChangedByGovAgency"/>
+          <xsd:enumeration value="ChangedByUser"/>
+          <xsd:enumeration value="Confirmed"/>
+          <xsd:enumeration value="DeletedByUser"/>
+          <xsd:enumeration value="DeletedByAltinn"/>
+          <xsd:enumeration value="Archived"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="CorrespondenceStatusTypeV2" nillable="true" type="tns:CorrespondenceStatusTypeV2"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ICorrespondenceExternalBasic_Test_InputMessage">
+    <wsdl:part xmlns:q21="http://www.altinn.no/services/2009/10" name="parameters" element="q21:Test"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_Test_OutputMessage">
+    <wsdl:part xmlns:q22="http://www.altinn.no/services/2009/10" name="parameters" element="q22:TestResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_Test_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q23="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q23:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_ArchiveCorrespondenceForEndUserSystemBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:ArchiveCorrespondenceForEndUserSystemBasic"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_ArchiveCorrespondenceForEndUserSystemBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ArchiveCorrespondenceForEndUserSystemBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_ArchiveCorrespondenceForEndUserSystemBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q24="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q24:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_DeleteCorrespondenceBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteCorrespondenceBasic"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_DeleteCorrespondenceBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteCorrespondenceBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_DeleteCorrespondenceBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q25="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q25:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_GetCorrespondenceForEndUserSystemsBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCorrespondenceForEndUserSystemsBasic"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_GetCorrespondenceForEndUserSystemsBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCorrespondenceForEndUserSystemsBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_GetCorrespondenceForEndUserSystemsBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q26="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q26:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_GetCorrespondenceForEndUserSystemsBasicV2_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCorrespondenceForEndUserSystemsBasicV2"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_GetCorrespondenceForEndUserSystemsBasicV2_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCorrespondenceForEndUserSystemsBasicV2Response"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_GetCorrespondenceForEndUserSystemsBasicV2_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q27="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q27:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_SaveCorrespondenceConfirmationBasic_InputMessage">
+    <wsdl:part name="parameters" element="tns:SaveCorrespondenceConfirmationBasic"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_SaveCorrespondenceConfirmationBasic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SaveCorrespondenceConfirmationBasicResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ICorrespondenceExternalBasic_SaveCorrespondenceConfirmationBasic_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q28="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q28:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:portType name="ICorrespondenceExternalBasic">
+    <wsdl:documentation>&lt;summary&gt;&#13;
+            Service contract for Correspondence on basic binding. Used for end user systems to get handle correspondences.&#13;
+            &lt;/summary&gt;</wsdl:documentation>
+    <wsdl:operation name="Test">
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test" message="tns:ICorrespondenceExternalBasic_Test_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestResponse" message="tns:ICorrespondenceExternalBasic_Test_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestAltinnFaultFault" name="AltinnFaultFault" message="tns:ICorrespondenceExternalBasic_Test_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="ArchiveCorrespondenceForEndUserSystemBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            Operation for archiving a correspondence.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="systemUserName"&gt;&#13;
+            System user name is the system identifier for the end user system as registered in Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;&#13;
+            System password is the password for the registered end user system - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userSSN"&gt;&#13;
+            User SSN is the end user's social security number - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPassword"&gt;&#13;
+            User password is the end user's own password for authentication as set in the profile - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPinCode"&gt;&#13;
+            User Pin Code is the requested authentication challenge token requested by Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="authMethod"&gt;&#13;
+            It is the selected authentication method for the authentication challenge (AltinnPin, TaxPin, SMSPin) - mandatory&#13;
+            parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="CorrespondenceID"&gt;&#13;
+            Identifier for the correspondence to archive - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;returns&gt;&#13;
+            A receipt entity with reference information for the archived correspondence&#13;
+            &lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/ArchiveCorrespondenceForEndUserSystemBasic" message="tns:ICorrespondenceExternalBasic_ArchiveCorrespondenceForEndUserSystemBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/ArchiveCorrespondenceForEndUserSystemBasicResponse" message="tns:ICorrespondenceExternalBasic_ArchiveCorrespondenceForEndUserSystemBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/ArchiveCorrespondenceForEndUserSystemBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:ICorrespondenceExternalBasic_ArchiveCorrespondenceForEndUserSystemBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCorrespondenceBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            Operation for deleting a correspondence.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="systemUserName"&gt;&#13;
+            System user name is the system identifier for the end user system as registered in Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;&#13;
+            System password is the password for the registered end user system - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userSSN"&gt;&#13;
+            User SSN is the end user's social security number - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPassword"&gt;&#13;
+            User password is the end user's own password for authentication as set in the profile - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPinCode"&gt;&#13;
+            User Pin Code is the requested authentication challenge token requested by Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="authMethod"&gt;&#13;
+            It is the selected authentication method for the authentication challenge (AltinnPin, TaxPin, SMSPin) - mandatory&#13;
+            parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="reporteeElementID"&gt;&#13;
+            Identifier for the correspondence to delete - mandatory parameter&#13;
+            &lt;/param&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/DeleteCorrespondenceBasic" message="tns:ICorrespondenceExternalBasic_DeleteCorrespondenceBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/DeleteCorrespondenceBasicResponse" message="tns:ICorrespondenceExternalBasic_DeleteCorrespondenceBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/DeleteCorrespondenceBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:ICorrespondenceExternalBasic_DeleteCorrespondenceBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetCorrespondenceForEndUserSystemsBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            Operation for returning a correspondence, its attachments, its notifications and links to EndUserSystems.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="systemUserName"&gt;&#13;
+            System user name is the system identifier for the end user system as registered in Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;&#13;
+            System password is the password for the registered end user system - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userSSN"&gt;&#13;
+            User SSN is the end user's social security number - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPassword"&gt;&#13;
+            User password is the end user's own password for authentication as set in the profile - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPinCode"&gt;&#13;
+            User Pin Code is the requested authentication challenge token requested by Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="authMethod"&gt;&#13;
+            It is the selected authentication method for the authentication challenge (AltinnPin, TaxPin, SMSPin) - mandatory&#13;
+            parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="correspondenceID"&gt;&#13;
+            Identifier for the correspondence to get - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="languageID"&gt;&#13;
+            Localization Language (English 1033, Bokmål 1044, Nynorsk 2068) - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;returns&gt;&#13;
+            Entity containing the correspondence, its attachments, notifications and links if any.&#13;
+            &lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/GetCorrespondenceForEndUserSystemsBasic" message="tns:ICorrespondenceExternalBasic_GetCorrespondenceForEndUserSystemsBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/GetCorrespondenceForEndUserSystemsBasicResponse" message="tns:ICorrespondenceExternalBasic_GetCorrespondenceForEndUserSystemsBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/GetCorrespondenceForEndUserSystemsBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:ICorrespondenceExternalBasic_GetCorrespondenceForEndUserSystemsBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetCorrespondenceForEndUserSystemsBasicV2">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            Operation for returning a correspondence, its attachments, its notifications and links to EndUserSystems.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;remarks&gt;&#13;
+            This operation is versioned as V2 as it contain some additional information. Preferred over GetCorrespondenceForEndUserSystemsBasic.&#13;
+            &lt;/remarks&gt;&#13;
+            &lt;param name="systemUserName"&gt;&#13;
+            System user name is the system identifier for the end user system as registered in Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;&#13;
+            System password is the password for the registered end user system - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userSSN"&gt;&#13;
+            User SSN is the end user's social security number - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPassword"&gt;&#13;
+            User password is the end user's own password for authentication as set in the profile - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPinCode"&gt;&#13;
+            User Pin Code is the requested authentication challenge token requested by Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="authMethod"&gt;&#13;
+            It is the selected authentication method for the authentication challenge (AltinnPin, TaxPin, SMSPin) - mandatory&#13;
+            parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="correspondenceID"&gt;&#13;
+            Identifier for the correspondence to get - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="languageID"&gt;&#13;
+            Localization Language (English 1033, Bokmål 1044, Nynorsk 2068) - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;returns&gt;&#13;
+            Entity containing the correspondence, its attachments, notifications and links if any.&#13;
+            &lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/GetCorrespondenceForEndUserSystemsBasicV2" message="tns:ICorrespondenceExternalBasic_GetCorrespondenceForEndUserSystemsBasicV2_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/GetCorrespondenceForEndUserSystemsBasicV2Response" message="tns:ICorrespondenceExternalBasic_GetCorrespondenceForEndUserSystemsBasicV2_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/GetCorrespondenceForEndUserSystemsBasicV2AltinnFaultFault" name="AltinnFaultFault" message="tns:ICorrespondenceExternalBasic_GetCorrespondenceForEndUserSystemsBasicV2_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="SaveCorrespondenceConfirmationBasic">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            Operation for setting a correspondence as confirmed.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="systemUserName"&gt;&#13;
+            System user name is the system identifier for the end user system as registered in Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="systemPassword"&gt;&#13;
+            System password is the password for the registered end user system - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userSSN"&gt;&#13;
+            User SSN is the end user's social security number - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPassword"&gt;&#13;
+            User password is the end user's own password for authentication as set in the profile - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="userPinCode"&gt;&#13;
+            User Pin Code is the requested authentication challenge token requested by Altinn - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="authMethod"&gt;&#13;
+            It is the selected authentication method for the authentication challenge (AltinnPin, TaxPin, SMSPin) - mandatory&#13;
+            parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;param name="reporteeElementID"&gt;&#13;
+            Identifier for the correspondence to confirm - mandatory parameter&#13;
+            &lt;/param&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/SaveCorrespondenceConfirmationBasic" message="tns:ICorrespondenceExternalBasic_SaveCorrespondenceConfirmationBasic_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/SaveCorrespondenceConfirmationBasicResponse" message="tns:ICorrespondenceExternalBasic_SaveCorrespondenceConfirmationBasic_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/SaveCorrespondenceConfirmationBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:ICorrespondenceExternalBasic_SaveCorrespondenceConfirmationBasic_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_ICorrespondenceExternalBasic" type="tns:ICorrespondenceExternalBasic">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Test">
+      <soap:operation soapAction="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ArchiveCorrespondenceForEndUserSystemBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/ArchiveCorrespondenceForEndUserSystemBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCorrespondenceBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/DeleteCorrespondenceBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetCorrespondenceForEndUserSystemsBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/GetCorrespondenceForEndUserSystemsBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetCorrespondenceForEndUserSystemsBasicV2">
+      <soap:operation soapAction="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/GetCorrespondenceForEndUserSystemsBasicV2" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SaveCorrespondenceConfirmationBasic">
+      <soap:operation soapAction="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceExternalBasic/SaveCorrespondenceConfirmationBasic" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CorrespondenceExternalBasicSF">
+    <wsdl:port name="BasicHttpBinding_ICorrespondenceExternalBasic" binding="tns:BasicHttpBinding_ICorrespondenceExternalBasic">
+      <soap:address location="http://tt02.altinn.basefarm.net/ServiceEngineExternal/CorrespondenceExternalBasic.svc"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

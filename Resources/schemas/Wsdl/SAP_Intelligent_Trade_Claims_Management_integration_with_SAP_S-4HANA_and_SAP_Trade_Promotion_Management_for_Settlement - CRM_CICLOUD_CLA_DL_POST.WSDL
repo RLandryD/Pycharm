@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="urn:sap-com:document:sap:rfc:functions" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="urn:sap-com:document:sap:rfc:functions" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+ <wsdl:documentation>
+  <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+ </wsdl:documentation>
+ <wsp:UsingPolicy wsdl:required="true"/>
+ <wsp:Policy wsu:Id="IF_IF_z_test">
+  <sapsession:Session xmlns:sapsession="http://www.sap.com/webas/630/soap/features/session/">
+   <sapsession:enableSession>false</sapsession:enableSession>
+  </sapsession:Session>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_CRM_CICLOUD_CLA_DL_POST">
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsdl:types>
+  <xsd:schema attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:rfc:functions">
+   <xsd:simpleType name="RfcException.Message.Number">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char1">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char10">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="10"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char2">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="2"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char20">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="20"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char220">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="220"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char255">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="255"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char3">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char32">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="32"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char36">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="36"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char4">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="4"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char40">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="40"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char50">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="50"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char6">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="6"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="cuky5">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="5"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="curr19.2">
+    <xsd:restriction base="xsd:decimal">
+     <xsd:totalDigits value="19"/>
+     <xsd:fractionDigits value="2"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="date10">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="10"/>
+     <xsd:pattern value="\d\d\d\d-\d\d-\d\d"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="decimal21.7">
+    <xsd:restriction base="xsd:decimal">
+     <xsd:totalDigits value="21"/>
+     <xsd:fractionDigits value="7"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric10">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="10"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric3">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric6">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="6"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="CRMS_CICLOUD_SETTLEMENT_ITEM">
+    <xsd:sequence>
+     <xsd:element name="ITEM_TYPE" type="tns:char4"/>
+     <xsd:element name="ITEM_NUMBER" type="tns:numeric10"/>
+     <xsd:element name="SETTLEMENT_HEADER_UUID" type="tns:char36"/>
+     <xsd:element name="FUND_USAGE_ITEM_GUID" type="tns:char36"/>
+     <xsd:element name="TRADE_PROMO_GUID" type="tns:char36"/>
+     <xsd:element name="PRODUCT_ID" type="tns:char40"/>
+     <xsd:element name="PROD_HIERARCHY" type="tns:char20"/>
+     <xsd:element name="PRODUCT_GROUP" type="tns:char3"/>
+     <xsd:element name="CURRENCY" type="tns:cuky5"/>
+     <xsd:element name="EXPENSE_TYPE" type="tns:char4"/>
+     <xsd:element name="VALIDATED_AMOUNT" type="tns:curr19.2"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="CRMS_CICLOUD_SETTLEMENT_HEADER">
+    <xsd:sequence>
+     <xsd:element name="IDEM_KEY" type="tns:char36"/>
+     <xsd:element name="SETTLEMENT_UUID" type="tns:char36"/>
+     <xsd:element name="SETTLEMENT_ID" type="tns:char10"/>
+     <xsd:element name="CLAIM_TYPE" type="tns:char4"/>
+     <xsd:element name="PAYMENT_TERMS" type="tns:char4"/>
+     <xsd:element name="PAYEE" type="tns:char32"/>
+     <xsd:element name="CLAIMING_ACCOUNT" type="tns:char32"/>
+     <xsd:element name="SALES_ORG" type="tns:char4"/>
+     <xsd:element name="DIST_CHANNEL" type="tns:char2"/>
+     <xsd:element name="DIVISION" type="tns:char2"/>
+     <xsd:element name="SETTLEMENT_TIMEZONE" type="tns:char6"/>
+     <xsd:element name="POSTING_DATE" type="tns:date10"/>
+     <xsd:element name="CREATED_ON" type="tns:decimal21.7"/>
+     <xsd:element name="CHANGED_ON" type="tns:decimal21.7"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="CRMS_CICLOUD_SETTLEMENT_MSG">
+    <xsd:sequence>
+     <xsd:element name="SETTLEMENT_HEADER_UUID" type="tns:char36"/>
+     <xsd:element name="TYPE" type="tns:char1"/>
+     <xsd:element name="ID" type="tns:char20"/>
+     <xsd:element name="NUMBER" type="tns:numeric3"/>
+     <xsd:element name="MESSAGE" type="tns:char220"/>
+     <xsd:element name="LOG_NO" type="tns:char20"/>
+     <xsd:element name="LOG_MSG_NO" type="tns:numeric6"/>
+     <xsd:element name="MESSAGE_V1" type="tns:char50"/>
+     <xsd:element name="MESSAGE_V2" type="tns:char50"/>
+     <xsd:element name="MESSAGE_V3" type="tns:char50"/>
+     <xsd:element name="MESSAGE_V4" type="tns:char50"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="CRMS_CICLOUD_SETTLEMENT_RETURN">
+    <xsd:sequence>
+     <xsd:element name="SETTLEMENT_HEADER_UUID" type="tns:char36"/>
+     <xsd:element name="ITEM_NUMBER" type="tns:numeric10"/>
+     <xsd:element name="BILL_DOC_ID" type="tns:char10"/>
+     <xsd:element name="ERROR" type="tns:char255"/>
+     <xsd:element name="TIMESTAMP" type="tns:decimal21.7"/>
+     <xsd:element name="LOGSYS" type="tns:char10"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RfcException.Message">
+    <xsd:sequence>
+     <xsd:element name="ID" type="xsd:string"/>
+     <xsd:element name="Number" type="tns:RfcException.Message.Number"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="CRM_CICLOUD_CLA_DL_POST.RfcException">
+    <xsd:sequence>
+     <xsd:element name="Name" type="tns:CRM_CICLOUD_CLA_DL_POST.RfcExceptions"/>
+     <xsd:element name="Text" type="xsd:string" minOccurs="0"/>
+     <xsd:element name="Message" type="tns:RfcException.Message" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="CRMT_CICLOUD_SETTLEMENT_ITEMS">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:CRMS_CICLOUD_SETTLEMENT_ITEM" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="CRMT_CICLOUD_SETTLEMENT_MSG">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:CRMS_CICLOUD_SETTLEMENT_MSG" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="CRMT_CICLOUD_SETTLEMENT_RETURN">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:CRMS_CICLOUD_SETTLEMENT_RETURN" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:simpleType name="CRM_CICLOUD_CLA_DL_POST.RfcExceptions">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="AUTHORITY_CHECK_RFC_ERROR"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:element name="CRM_CICLOUD_CLA_DL_POST.Exception" type="tns:CRM_CICLOUD_CLA_DL_POST.RfcException"/>
+   <xsd:element name="CRM_CICLOUD_CLA_DL_POST">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="IS_SETTLEMENT_HEADER" type="tns:CRMS_CICLOUD_SETTLEMENT_HEADER"/>
+      <xsd:element name="IT_SETTLEMENT_ITEMS" type="tns:CRMT_CICLOUD_SETTLEMENT_ITEMS"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="CRM_CICLOUD_CLA_DL_POSTResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="ET_SETTLEMENT_MSG" type="tns:CRMT_CICLOUD_SETTLEMENT_MSG"/>
+      <xsd:element name="ET_SETTLEMENT_RETURN" type="tns:CRMT_CICLOUD_SETTLEMENT_RETURN"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="CRM_CICLOUD_CLA_DL_POST">
+  <wsdl:part name="parameters" element="tns:CRM_CICLOUD_CLA_DL_POST"/>
+ </wsdl:message>
+ <wsdl:message name="CRM_CICLOUD_CLA_DL_POSTResponse">
+  <wsdl:part name="parameter" element="tns:CRM_CICLOUD_CLA_DL_POSTResponse"/>
+ </wsdl:message>
+ <wsdl:message name="CRM_CICLOUD_CLA_DL_POST.Exception">
+  <wsdl:part name="CRM_CICLOUD_CLA_DL_POST.Exception" element="tns:CRM_CICLOUD_CLA_DL_POST.Exception"/>
+ </wsdl:message>
+ <wsdl:portType name="z_test">
+  <wsdl:documentation>
+   <sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+    <sapdoc:docitem docURL="http://vhcalcr4ci.dummy.nodomain:8000/sap/bc/esdt/docu/sd_text?sap-client=100&amp;sd_name=Z_TEST"/>
+   </sapdoc:sapdoc>
+  </wsdl:documentation>
+  <wsp:Policy>
+   <wsp:PolicyReference URI="#IF_IF_z_test"/>
+  </wsp:Policy>
+  <wsdl:operation name="CRM_CICLOUD_CLA_DL_POST">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_CRM_CICLOUD_CLA_DL_POST"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:CRM_CICLOUD_CLA_DL_POST"/>
+   <wsdl:output message="tns:CRM_CICLOUD_CLA_DL_POSTResponse"/>
+   <wsdl:fault name="CRM_CICLOUD_CLA_DL_POST.Exception" message="tns:CRM_CICLOUD_CLA_DL_POST.Exception"/>
+  </wsdl:operation>
+ </wsdl:portType>
+</wsdl:definitions>

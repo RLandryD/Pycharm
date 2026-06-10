@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="http://sap.com/xi/GTS" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://sap.com/xi/GTS">
+ <wsdl:documentation>
+  <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+ </wsdl:documentation>
+ <wsdl:types>
+  <xsd:schema targetNamespace="http://sap.com/xi/GTS" xmlns="http://sap.com/xi/GTS">
+   <xsd:element name="SLL_SPL_DATA_FILE" type="SLL_SPL_DATA_FILE"/>
+   <xsd:element name="StandardMessageFault">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="standard" type="ExchangeFaultData"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="ExchangeFaultData">
+    <xsd:sequence>
+     <xsd:element name="faultText" type="xsd:string"/>
+     <xsd:element name="faultUrl" minOccurs="0" type="xsd:string"/>
+     <xsd:element name="faultDetail" minOccurs="0" maxOccurs="unbounded" type="ExchangeLogData"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="ExchangeLogData">
+    <xsd:sequence>
+     <xsd:element name="severity" minOccurs="0" type="xsd:string"/>
+     <xsd:element name="text" type="xsd:string"/>
+     <xsd:element name="url" minOccurs="0" type="xsd:string"/>
+     <xsd:element name="id" minOccurs="0" type="xsd:string"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="SLL_SPL_ADDRESS">
+    <xsd:sequence>
+     <xsd:element name="SLL_SPL_DATA_REF_ID">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_ZIP" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="10"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_CITY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_DISTRICT" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_PO_CODE" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="10"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_PO_BOX" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="10"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_STREET" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="180"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_HOUSE_NUMBER" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="10"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_BUILDING" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="20"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_ROOM_NUMBER" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="10"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_COUNTRY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="3"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_REGION" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="3"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_LANGUAGE" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:language">
+        <xsd:maxLength value="9"/>
+        <xsd:minLength value="2"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="SLL_SPL_CONTROL">
+    <xsd:sequence>
+     <xsd:element name="SLL_SPL_DATA_PROVIDER_ID">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="10"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_FILE_ID">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_VRSIO">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="10"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_BASE_URL" minOccurs="0" type="xsd:anyURI"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="SLL_SPL_DATA_FILE">
+    <xsd:sequence>
+     <xsd:element name="SLL_SPL_CONTROL" type="SLL_SPL_CONTROL"/>
+     <xsd:element name="SLL_SPL_ENTITY" maxOccurs="unbounded" type="SLL_SPL_ENTITY"/>
+     <xsd:element name="SLL_SPL_STATUS" type="SLL_SPL_STATUS"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="SLL_SPL_DATE_OF_BIRTH">
+    <xsd:sequence>
+     <xsd:element name="SLL_SPL_DOB_FROM" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:date">
+        <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_DOB_TO" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:date">
+        <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_DOB_ISSUING_CITY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_DOB_ISSUING_REGION" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="3"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_DOB_ISSUING_COUNTRY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="3"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="SLL_SPL_ENTITY">
+    <xsd:sequence>
+     <xsd:element name="SLL_SPL_HEADER" type="SLL_SPL_HEADER"/>
+     <xsd:element name="SLL_SPL_NAME" maxOccurs="unbounded" type="SLL_SPL_NAME"/>
+     <xsd:element name="SLL_SPL_ADDRESS" maxOccurs="unbounded" type="SLL_SPL_ADDRESS"/>
+     <xsd:element name="SLL_SPL_IDENTIFICATION" minOccurs="0" maxOccurs="unbounded" type="SLL_SPL_IDENTIFICATION"/>
+     <xsd:element name="SLL_SPL_DATE_OF_BIRTH" minOccurs="0" maxOccurs="unbounded" type="SLL_SPL_DATE_OF_BIRTH"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="SLL_SPL_HEADER">
+    <xsd:sequence>
+     <xsd:element name="SLL_SPL_DATA_REF_ID">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_LIST_TYPE">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="5"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_AUTHORITY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="10"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_LAW1" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="60"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_LAW2" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="60"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_LAW3" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="60"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_ENTRY_DATE" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:date">
+        <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_VALID_FROM">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:date">
+        <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_VALID_TO" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:date">
+        <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_COMMENT1" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="60"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_COMMENT2" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="60"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_COMMENT3" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="60"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_URL" minOccurs="0" type="xsd:anyURI"/>
+     <xsd:element name="SLL_SPL_ENTITY_TYPE" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:enumeration value="PERSON"/>
+        <xsd:enumeration value="ORGANIZATION"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_GROUP" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="6"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="SLL_SPL_IDENTIFICATION">
+    <xsd:sequence>
+     <xsd:element name="SLL_SPL_ID_TYPE">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="2"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_ID_NUMBER">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="60"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_ID_ISSUING_CITY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_ID_ISSUING_REGION" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="3"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_ID_ISSUING_COUNTRY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="3"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="SLL_SPL_NAME">
+    <xsd:sequence>
+     <xsd:element name="SLL_SPL_DATA_REF_ID">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_REF_TYPE" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="6"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_NAME1">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="160"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_NAME2" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_NAME3" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_NAME4" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_NAME_CO" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_EXTERNAL_ID" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="10"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_PASSPORT_COUNTRY" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="3"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_IDENTIFICATION_NUMBER" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="20"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_PASSPORT_NUMBER" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="20"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SLL_SPL_NAME_LANGUAGE" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:language">
+        <xsd:maxLength value="9"/>
+        <xsd:minLength value="2"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="SLL_SPL_STATUS">
+    <xsd:sequence>
+     <xsd:element name="SLL_SPL_HEAD_NUMBER" type="xsd:unsignedInt"/>
+     <xsd:element name="SLL_SPL_NAME_NUMBER" type="xsd:unsignedInt"/>
+     <xsd:element name="SLL_SPL_ADDR_NUMBER" type="xsd:unsignedInt"/>
+    </xsd:sequence>
+   </xsd:complexType>
+  </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="SLL_SPL_DATA_FILE">
+  <wsdl:part name="SLL_SPL_DATA_FILE" element="tns:SLL_SPL_DATA_FILE"/>
+ </wsdl:message>
+ <wsdl:message name="StandardMessageFault">
+  <wsdl:part name="StandardMessageFault" element="tns:StandardMessageFault"/>
+ </wsdl:message>
+ <wsdl:portType name="SanctionedPartyListUpdateIn">
+  <wsdl:documentation>
+   <sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+    <sapdoc:docitem applicationComponent="SLL-LEG-CON-SPL"/>
+   </sapdoc:sapdoc>
+  </wsdl:documentation>
+  <wsdl:operation name="SanctionedPartyListUpdateIn">
+   <wsdl:input message="tns:SLL_SPL_DATA_FILE"/>
+  </wsdl:operation>
+ </wsdl:portType>
+</wsdl:definitions>

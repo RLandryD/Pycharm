@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema 
+	targetNamespace="urn:sunat:names:specification:ubl:peru:schema:xsd:SunatAggregateComponents-1" 
+	elementFormDefault="qualified" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns="urn:sunat:names:specification:ubl:peru:schema:xsd:SunatAggregateComponents-1" 
+	xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" 
+	xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+
+    <xsd:include schemaLocation=""></xsd:include>
+    <xsd:import schemaLocation="UBL-CommonAggregateComponents-2.1.xsd" namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"></xsd:import>
+    <xsd:import schemaLocation="UBL-CommonBasicComponents-2.1.xsd" namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"></xsd:import>
+    <xsd:complexType name="AdditionalMonetaryTotalType">
+    	<xsd:sequence>
+    		<xsd:element ref="cbc:ID" minOccurs="1" maxOccurs="1"></xsd:element>
+    		<xsd:element ref="cbc:Name" minOccurs="0" maxOccurs="1"></xsd:element>
+    		<xsd:element name="ReferenceAmount" type="cbc:AmountType" minOccurs="0" maxOccurs="1"></xsd:element>
+    		<xsd:element ref="cbc:PayableAmount" minOccurs="1" maxOccurs="1"></xsd:element>
+            <xsd:element ref="cbc:Percent" minOccurs="0" maxOccurs="1"></xsd:element>
+    		<xsd:element name="TotalAmount" type="cbc:AmountType" minOccurs="0" maxOccurs="1"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="AdditionalPropertyType">
+    	<xsd:sequence>
+    		<xsd:element ref="cbc:ID" minOccurs="1" maxOccurs="1"></xsd:element>
+    		<xsd:element ref="cbc:Name" minOccurs="0" maxOccurs="1"></xsd:element>
+    		<xsd:element ref="cbc:Value" minOccurs="1" maxOccurs="1"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+	<xsd:complexType name="SUNATRoadTransportType">
+		<xsd:sequence>
+			<xsd:element ref="cbc:LicensePlateID" minOccurs="0" maxOccurs="1"></xsd:element>
+			<xsd:element ref="cbc:TransportAuthorizationCode" minOccurs="0" maxOccurs="1"></xsd:element>
+			<xsd:element ref="cbc:BrandName" minOccurs="0" maxOccurs="1"></xsd:element>					
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="SUNATCarrierPartyType">
+		<xsd:sequence>
+			<xsd:element ref="cbc:CustomerAssignedAccountID" minOccurs="0" maxOccurs="1"></xsd:element>
+			<xsd:element ref="cbc:AdditionalAccountID" minOccurs="0" maxOccurs="1"></xsd:element>
+			<xsd:element ref="cac:Party" minOccurs="0" maxOccurs="1"></xsd:element>					
+		</xsd:sequence>
+	</xsd:complexType>				
+
+	<xsd:complexType name="SUNATEmbededDespatchAdviceType">
+		<xsd:sequence>
+			<xsd:element ref="cac:OriginAddress" minOccurs="0" maxOccurs="1"></xsd:element>
+			<xsd:element ref="cac:DeliveryAddress" minOccurs="0" maxOccurs="1"></xsd:element>
+			<xsd:element name="SUNATRoadTransport" type="SUNATRoadTransportType" minOccurs="0" maxOccurs="1"></xsd:element>
+			<xsd:element name="DriverParty" type="cac:PartyType" minOccurs="0" maxOccurs="1"></xsd:element>
+			<xsd:element name="SUNATCarrierParty" type="SUNATCarrierPartyType" minOccurs="0" maxOccurs="1"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="SUNATTransactionType">
+		<xsd:sequence>
+			<xsd:element ref="cbc:ID" minOccurs="0" maxOccurs="1"></xsd:element>					
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+    <xsd:simpleType name="DocumentSerialIDType">
+    	<xsd:restriction base="xsd:string"></xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="DocumentNumberIDType">
+    	<xsd:restriction base="xsd:string"></xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="VoidReasonDescriptionType">
+    	<xsd:restriction base="xsd:string"></xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="VoidedDocumentsLineType">
+    	<xsd:sequence>
+    		<xsd:element ref="cbc:LineID" minOccurs="1" maxOccurs="1"></xsd:element>
+    		<xsd:element ref="cbc:DocumentTypeCode" minOccurs="1" maxOccurs="1"></xsd:element>
+    		<xsd:element name="DocumentSerialID" type="DocumentSerialIDType" minOccurs="1" maxOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="DocumentNumberID" type="DocumentNumberIDType" minOccurs="1" maxOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="VoidReasonDescription" type="VoidReasonDescriptionType" minOccurs="1" maxOccurs="1"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="VoidedDocumentsLine" type="VoidedDocumentsLineType"></xsd:element>
+
+
+    <xsd:complexType name="SummaryDocumentsLineType">
+    	<xsd:sequence>
+    		<xsd:element ref="cbc:LineID" minOccurs="1" maxOccurs="1"></xsd:element>
+    		<xsd:element ref="cbc:DocumentTypeCode" minOccurs="0" maxOccurs="1"></xsd:element>
+    		<xsd:element name="DocumentSerialID"
+    			type="DocumentSerialIDType" minOccurs="1" maxOccurs="1">
+    		</xsd:element>
+
+    		<xsd:element name="TotalAmount" type="cbc:AmountType"
+    			minOccurs="0" maxOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="BillingPayment"
+    			type="BillingPaymentType" minOccurs="1" maxOccurs="unbounded">
+    		</xsd:element>
+    		<xsd:element ref="cac:AllowanceCharge" minOccurs="1" maxOccurs="unbounded"></xsd:element>
+    		<xsd:element ref="cac:TaxTotal" minOccurs="1" maxOccurs="unbounded"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="BillingPaymentType">
+    	<xsd:sequence>
+    		<xsd:element ref="cbc:PaidAmount" minOccurs="1" maxOccurs="1"></xsd:element>
+    		<xsd:element ref="cbc:InstructionID" minOccurs="1" maxOccurs="1"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="SummaryDocumentsLine" type="SummaryDocumentsLineType"></xsd:element>
+
+
+    <xsd:complexType name="AdditionalInformationType">
+    	<xsd:sequence>
+    		<xsd:element name="AdditionalMonetaryTotal" type="AdditionalMonetaryTotalType" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+    		<xsd:element name="AdditionalProperty" type="AdditionalPropertyType" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+    		<xsd:element name="SUNATEmbededDespatchAdvice" type="SUNATEmbededDespatchAdviceType" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+			<xsd:element name="SUNATTransaction" type="SUNATTransactionType" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+    	</xsd:sequence>
+    	
+    </xsd:complexType>
+
+    <xsd:element name="AdditionalInformation" type="AdditionalInformationType"></xsd:element>
+
+    <xsd:complexType name="SUNATRetentionDocumentReferenceType">
+    	<xsd:sequence>
+    		<xsd:element ref="cbc:ID" minOccurs="1" maxOccurs="1"></xsd:element>
+    		<xsd:element ref="cbc:IssueDate" minOccurs="1"
+    			maxOccurs="1">
+    		</xsd:element>
+    		<xsd:element ref="cbc:TotalInvoiceAmount" minOccurs="1"
+    			maxOccurs="1">
+    		</xsd:element>
+    		<xsd:element ref="cac:Payment" minOccurs="1"
+    			maxOccurs="1">
+    		</xsd:element>
+    		<xsd:element ref="SUNATRetentionInformation" minOccurs="1" maxOccurs="unbounded"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="SUNATRetentionSystemCodeType">
+    	<xsd:restriction base="xsd:string">
+    		<xsd:length value="2"></xsd:length>
+    		<xsd:enumeration value="01"></xsd:enumeration>
+    	</xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="SUNATRetentionPercentType">
+    	<xsd:restriction base="xsd:string">
+    		<xsd:minLength value="0"></xsd:minLength>
+    		<xsd:maxLength value="4"></xsd:maxLength>
+    	</xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:element name="SUNATRetentionSystemCode" type="SUNATRetentionSystemCodeType"></xsd:element>
+
+
+    <xsd:element name="SUNATRetentionPercent" type="SUNATRetentionPercentType"></xsd:element>
+
+
+    <xsd:complexType name="SUNATTotalPaidType">
+    	<xsd:simpleContent>
+    		<xsd:extension base="cbc:AmountType"></xsd:extension>
+    	</xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:element name="SUNATTotalPaid" type="SUNATTotalPaidType"></xsd:element>
+
+
+    <xsd:complexType name="SUNATRetentionInformationType">
+    	<xsd:sequence>
+    		<xsd:element ref="SUNATRetentionAmount"></xsd:element>
+    		<xsd:element ref="SUNATRetentionDate"></xsd:element>
+    		<xsd:element ref="SUNATNetTotalPaid"></xsd:element>
+    		<xsd:element ref="cac:ExchangeRate"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SUNATRetentionAmountType">
+    	<xsd:simpleContent>
+    		<xsd:extension base="cbc:AmountType"></xsd:extension>
+    	</xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:element name="SUNATRetentionAmount" type="SUNATRetentionAmountType"></xsd:element>
+
+    <xsd:simpleType name="SUNATRetentionDateType">
+    	<xsd:restriction base="xsd:date"></xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:element name="SUNATRetentionDate" type="SUNATRetentionDateType"></xsd:element>
+
+    <xsd:complexType name="SUNATNetTotalPaidType">
+    	<xsd:simpleContent>
+    		<xsd:extension base="cbc:AmountType"></xsd:extension>
+    	</xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:element name="SUNATNetTotalPaid" type="SUNATNetTotalPaidType"></xsd:element>
+
+    <xsd:element name="SUNATRetentionDocumentReference" type="SUNATRetentionDocumentReferenceType"></xsd:element>
+
+    <xsd:element name="SUNATRetentionInformation" type="SUNATRetentionInformationType"></xsd:element>
+
+    <xsd:simpleType name="SUNATPerceptionSystemCodeType">
+    	<xsd:restriction base="xsd:string"></xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="SUNATPerceptionPercentType">
+    	<xsd:restriction base="xsd:string"></xsd:restriction>
+    </xsd:simpleType>
+
+
+    <xsd:complexType name="SUNATPerceptionDocumentReferenceType">
+    	<xsd:sequence>
+    		<xsd:element ref="cbc:ID"></xsd:element>
+    		<xsd:element ref="cbc:IssueDate"></xsd:element>
+    		<xsd:element ref="cbc:TotalInvoiceAmount"></xsd:element>
+    		<xsd:element ref="cac:Payment"></xsd:element>
+    		<xsd:element ref="SUNATPerceptionInformation"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SUNATPerceptionInformationType">
+    	<xsd:sequence>
+    		<xsd:element ref="SUNATPerceptionAmount"></xsd:element>
+    		<xsd:element ref="SUNATPerceptionDate"></xsd:element>
+    		<xsd:element ref="SUNATNetTotalCashed"></xsd:element>
+    		<xsd:element ref="cac:ExchangeRate"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SUNATPerceptionAmountType">
+    	<xsd:simpleContent>
+    		<xsd:extension base="cbc:AmountType"></xsd:extension>
+    	</xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:simpleType name="SUNATPerceptionDateType">
+    	<xsd:restriction base="xsd:date"></xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="SUNATNetTotalCashedType">
+    	<xsd:simpleContent>
+    		<xsd:extension base="cbc:AmountType"></xsd:extension>
+    	</xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="SUNATTotalCashedType">
+    	<xsd:simpleContent>
+    		<xsd:extension base="cbc:AmountType"></xsd:extension>
+    	</xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:element name="SUNATotalCashed" type="SUNATTotalCashedType"></xsd:element>
+
+    <xsd:element name="SUNATPerceptionDocumentReference" type="SUNATPerceptionDocumentReferenceType"></xsd:element>
+
+    <xsd:element name="SUNATPerceptionInformation" type="SUNATPerceptionInformationType"></xsd:element>
+
+    <xsd:element name="SUNATPerceptionAmount" type="SUNATPerceptionAmountType"></xsd:element>
+
+    <xsd:element name="SUNATNetTotalCashed" type="SUNATNetTotalCashedType"></xsd:element>
+
+    <xsd:element name="SUNATPerceptionSystemCode" type="SUNATPerceptionSystemCodeType"></xsd:element>
+
+    <xsd:element name="SUNATPerceptionPercent" type="SUNATPerceptionPercentType"></xsd:element>
+
+    <xsd:element name="SUNATTotalCashed" type="SUNATTotalCashedType"></xsd:element>
+
+    <xsd:element name="SUNATPerceptionDate" type="SUNATPerceptionDateType"></xsd:element>
+</xsd:schema>

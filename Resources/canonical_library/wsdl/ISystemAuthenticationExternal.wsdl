@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.altinn.no/services/Authentication/SystemAuthentication/2009/10" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" name="SystemAuthenticationSI" targetNamespace="http://www.altinn.no/services/Authentication/SystemAuthentication/2009/10">
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/2009/10">
+      <xsd:element name="Test">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="TestResponse">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://www.altinn.no/services/common/fault/2009/10" elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/common/fault/2009/10">
+      <xsd:complexType name="AltinnFault">
+         <xsd:sequence>
+          <xsd:element minOccurs="0" name="AltinnErrorMessage" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AltinnExtendedErrorMessage" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AltinnLocalizedErrorMessage" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ErrorGuid" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ErrorID" type="xsd:int">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="UserGuid" nillable="true" type="xsd:string">
+           </xsd:element>
+          <xsd:element minOccurs="0" name="UserId" nillable="true" type="xsd:string">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="AltinnFault" nillable="true" type="tns:AltinnFault"/>
+    </xsd:schema>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/">
+      <xs:element name="anyType" nillable="true" type="xs:anyType"/>
+      <xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
+      <xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
+      <xs:element name="boolean" nillable="true" type="xs:boolean"/>
+      <xs:element name="byte" nillable="true" type="xs:byte"/>
+      <xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+      <xs:element name="decimal" nillable="true" type="xs:decimal"/>
+      <xs:element name="double" nillable="true" type="xs:double"/>
+      <xs:element name="float" nillable="true" type="xs:float"/>
+      <xs:element name="int" nillable="true" type="xs:int"/>
+      <xs:element name="long" nillable="true" type="xs:long"/>
+      <xs:element name="QName" nillable="true" type="xs:QName"/>
+      <xs:element name="short" nillable="true" type="xs:short"/>
+      <xs:element name="string" nillable="true" type="xs:string"/>
+      <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
+      <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
+      <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
+      <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
+      <xs:element name="char" nillable="true" type="tns:char"/>
+      <xs:simpleType name="char">
+        <xs:restriction base="xs:int"/>
+      </xs:simpleType>
+      <xs:element name="duration" nillable="true" type="tns:duration"/>
+      <xs:simpleType name="duration">
+        <xs:restriction base="xs:duration">
+          <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
+          <xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
+          <xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="guid" nillable="true" type="tns:guid"/>
+      <xs:simpleType name="guid">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:attribute name="FactoryType" type="xs:QName"/>
+      <xs:attribute name="Id" type="xs:ID"/>
+      <xs:attribute name="Ref" type="xs:IDREF"/>
+    </xs:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/Authentication/SystemAuthentication/2009/10">
+      <xsd:import namespace="http://schemas.altinn.no/services/Authentication/2009/10"/>
+      <xsd:element name="GetAuthenticationChallenge">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element xmlns:q1="http://schemas.altinn.no/services/Authentication/2009/10" minOccurs="0" name="challengeRequest" nillable="true" type="q1:AuthenticationChallengeRequestBE"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetAuthenticationChallengeResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element xmlns:q2="http://schemas.altinn.no/services/Authentication/2009/10" minOccurs="0" name="GetAuthenticationChallengeResult" nillable="true" type="q2:AuthenticationChallengeBE"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://schemas.altinn.no/services/Authentication/2009/10" elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/Authentication/2009/10">
+      <xsd:complexType name="AuthenticationChallengeRequestBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="AuthMethod" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="SystemUserName" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="UserPassword" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="UserSSN" nillable="true" type="xsd:string">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="AuthenticationChallengeRequestBE" nillable="true" type="tns:AuthenticationChallengeRequestBE"/>
+      <xsd:complexType name="AuthenticationChallengeBE">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="Message" nillable="true" type="xsd:string">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Status" type="tns:ChallengeRequestResult">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ValidFrom" type="xsd:dateTime">
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ValidTo" type="xsd:dateTime">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="AuthenticationChallengeBE" nillable="true" type="tns:AuthenticationChallengeBE"/>
+      <xsd:simpleType name="ChallengeRequestResult">
+           <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Ok"/>
+          <xsd:enumeration value="InvalidCredentials"/>
+          <xsd:enumeration value="NoPinFound"/>
+          <xsd:enumeration value="NoPhoneNumber"/>
+          <xsd:enumeration value="UserLockedOut"/>
+          <xsd:enumeration value="InvalidPinType"/>
+          <xsd:enumeration value="StatusDead"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="ChallengeRequestResult" nillable="true" type="tns:ChallengeRequestResult"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ISystemAuthenticationExternal_Test_InputMessage">
+    <wsdl:part xmlns:q3="http://www.altinn.no/services/2009/10" name="parameters" element="q3:Test"/>
+  </wsdl:message>
+  <wsdl:message name="ISystemAuthenticationExternal_Test_OutputMessage">
+    <wsdl:part xmlns:q4="http://www.altinn.no/services/2009/10" name="parameters" element="q4:TestResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ISystemAuthenticationExternal_Test_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q5="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q5:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:message name="ISystemAuthenticationExternal_GetAuthenticationChallenge_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAuthenticationChallenge"/>
+  </wsdl:message>
+  <wsdl:message name="ISystemAuthenticationExternal_GetAuthenticationChallenge_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAuthenticationChallengeResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ISystemAuthenticationExternal_GetAuthenticationChallenge_AltinnFaultFault_FaultMessage">
+    <wsdl:part xmlns:q6="http://www.altinn.no/services/common/fault/2009/10" name="detail" element="q6:AltinnFault"/>
+  </wsdl:message>
+  <wsdl:portType name="ISystemAuthenticationExternal">
+    <wsdl:documentation>&lt;summary&gt;&#13;
+            Service Contract for system authentication.&#13;
+            &lt;/summary&gt;&#13;
+            &lt;remarks&gt;&#13;
+            This contract is specially created to support the GetAuthenticationChallenge method that will be called by end user systems&#13;
+            when needing to authenticate the end user system user&#13;
+            &lt;/remarks&gt;</wsdl:documentation>
+    <wsdl:operation name="Test">
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test" message="tns:ISystemAuthenticationExternal_Test_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestResponse" message="tns:ISystemAuthenticationExternal_Test_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestAltinnFaultFault" name="AltinnFaultFault" message="tns:ISystemAuthenticationExternal_Test_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetAuthenticationChallenge">
+      <wsdl:documentation>&lt;summary&gt;&#13;
+            This method is used to get information about what authentication token to use&#13;
+            &lt;/summary&gt;&#13;
+            &lt;param name="challengeRequest"&gt;&#13;
+            Entity that is used to state authentication information and define the authentication method - mandatory parameter&#13;
+            &lt;/param&gt;&#13;
+            &lt;returns&gt;&#13;
+            AuthenticationChallengeExternalBE that contains information about how to proceed with authentication&#13;
+            &lt;/returns&gt;</wsdl:documentation>
+      <wsdl:input wsaw:Action="http://www.altinn.no/services/Authentication/SystemAuthentication/2009/10/ISystemAuthenticationExternal/GetAuthenticationChallenge" message="tns:ISystemAuthenticationExternal_GetAuthenticationChallenge_InputMessage"/>
+      <wsdl:output wsaw:Action="http://www.altinn.no/services/Authentication/SystemAuthentication/2009/10/ISystemAuthenticationExternal/GetAuthenticationChallengeResponse" message="tns:ISystemAuthenticationExternal_GetAuthenticationChallenge_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Authentication/SystemAuthentication/2009/10/ISystemAuthenticationExternal/GetAuthenticationChallengeAltinnFaultFault" name="AltinnFaultFault" message="tns:ISystemAuthenticationExternal_GetAuthenticationChallenge_AltinnFaultFault_FaultMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_ISystemAuthenticationExternal" type="tns:ISystemAuthenticationExternal">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Test">
+      <soap:operation soapAction="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetAuthenticationChallenge">
+      <soap:operation soapAction="http://www.altinn.no/services/Authentication/SystemAuthentication/2009/10/ISystemAuthenticationExternal/GetAuthenticationChallenge" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AltinnFaultFault">
+        <soap:fault name="AltinnFaultFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SystemAuthenticationSI">
+    <wsdl:port name="BasicHttpBinding_ISystemAuthenticationExternal" binding="tns:BasicHttpBinding_ISystemAuthenticationExternal">
+      <soap:address location="http://tt02.altinn.basefarm.net/AuthenticationExternal/SystemAuthentication.svc"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

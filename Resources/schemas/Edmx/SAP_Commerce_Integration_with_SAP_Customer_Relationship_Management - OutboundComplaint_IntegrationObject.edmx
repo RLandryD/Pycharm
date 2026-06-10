@@ -1,0 +1,81 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="HybrisCommerceOData">
+            <EntityType Name="SAPCpiOutboundComplaintOrderItem">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="quantity" Nullable="true" Type="Edm.String"/>
+                <Property Name="productId" Nullable="true" Type="Edm.String"/>
+                <Property IsUnique="true" Name="itemNumber" Nullable="false" Type="Edm.String"/>
+                <Property Name="itemUnit" Nullable="true" Type="Edm.String"/>
+                <Property Alias="SAPCpiOutboundComplaintOrderItem_itemNumber" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="SAPCpiOutboundComplaint">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="customer" Nullable="true" Type="Edm.String"/>
+                <Property Name="state" Nullable="true" Type="Edm.String"/>
+                <Property Name="category" Nullable="true" Type="Edm.String"/>
+                <Property Name="itemNumber" Nullable="true" Type="Edm.String"/>
+                <Property Name="priority" Nullable="true" Type="Edm.String"/>
+                <Property Name="productId" Nullable="true" Type="Edm.String"/>
+                <Property IsUnique="true" Name="complaintId" Nullable="false" Type="Edm.String"/>
+                <Property Name="headline" Nullable="true" Type="Edm.String"/>
+                <Property Name="isComplaintReplicated" Nullable="true" Type="Edm.String"/>
+                <Property Name="b2bunit" Nullable="true" Type="Edm.String"/>
+                <Property Name="itemUnit" Nullable="true" Type="Edm.String"/>
+                <Property Name="quantity" Nullable="true" Type="Edm.String"/>
+                <Property Name="orderId" Nullable="true" Type="Edm.String"/>
+                <Property Name="responseStatus" Nullable="true" Type="Edm.String"/>
+                <Property Name="responseMessage" Nullable="true" Type="Edm.String"/>
+                <Property Name="notes" Nullable="true" Type="Edm.String"/>
+                <Property Alias="SAPCpiOutboundComplaint_complaintId" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+                <NavigationProperty FromRole="SAPCpiOutboundComplaint" IsPartOf="true" Name="sapCpiOutboundComplaintOrderItems" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundComplaint_sapCpiOutboundComplaintOrderItems" ToRole="SAPCpiOutboundComplaintOrderItem"/>
+                <NavigationProperty FromRole="SAPCpiOutboundComplaint" Name="sapCpiConfig" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundComplaint_sapCpiConfig" ToRole="SAPCpiOutboundComplaintConfig"/>
+            </EntityType>
+            <EntityType Name="SAPCpiOutboundComplaintConfig">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="senderPort" Nullable="true" Type="Edm.String"/>
+                <Property Name="complaintCatagoryCatalogType" Nullable="true" Type="Edm.String"/>
+                <Property Name="salesOrg" Nullable="true" Type="Edm.String"/>
+                <Property Name="url" Nullable="true" Type="Edm.String"/>
+                <Property IsUnique="true" Name="comp_serviceOrg" Nullable="false" Type="Edm.String"/>
+                <Property Name="client" Nullable="true" Type="Edm.String"/>
+                <Property Name="distributionChannel" Nullable="true" Type="Edm.String"/>
+                <Property Name="senderName" Nullable="true" Type="Edm.String"/>
+                <Property Name="userName" Nullable="true" Type="Edm.String"/>
+                <Property Name="complaintCatagoryCodeGroup" Nullable="true" Type="Edm.String"/>
+                <Property Name="comp_servOrgShort" Nullable="true" Type="Edm.String"/>
+                <Property Name="receiverName" Nullable="true" Type="Edm.String"/>
+                <Property Name="comp_ProcessType" Nullable="true" Type="Edm.String"/>
+                <Property IsUnique="true" Name="comp_serviceOrgResp" Nullable="false" Type="Edm.String"/>
+                <Property Alias="SAPCpiOutboundComplaintConfig_comp_serviceOrg|SAPCpiOutboundComplaintConfig_comp_serviceOrgResp" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+            </EntityType>
+            <Association Name="FK_SAPCpiOutboundComplaint_sapCpiOutboundComplaintOrderItems">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundComplaint" Type="HybrisCommerceOData.SAPCpiOutboundComplaint"/>
+                <End Multiplicity="*" Role="SAPCpiOutboundComplaintOrderItem" Type="HybrisCommerceOData.SAPCpiOutboundComplaintOrderItem"/>
+            </Association>
+            <Association Name="FK_SAPCpiOutboundComplaint_sapCpiConfig">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundComplaint" Type="HybrisCommerceOData.SAPCpiOutboundComplaint"/>
+                <End Multiplicity="0..1" Role="SAPCpiOutboundComplaintConfig" Type="HybrisCommerceOData.SAPCpiOutboundComplaintConfig"/>
+            </Association>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundComplaintOrderItem" Name="SAPCpiOutboundComplaintOrderItems"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundComplaint" Name="SAPCpiOutboundComplaints"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundComplaintConfig" Name="SAPCpiOutboundComplaintConfigs"/>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundComplaint_sapCpiOutboundComplaintOrderItems" Name="SAPCpiOutboundComplaint_SAPCpiOutboundComplaintOrderItems">
+                    <End EntitySet="SAPCpiOutboundComplaints" Role="SAPCpiOutboundComplaint"/>
+                    <End EntitySet="SAPCpiOutboundComplaintOrderItems" Role="SAPCpiOutboundComplaintOrderItem"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundComplaint_sapCpiConfig" Name="SAPCpiOutboundComplaint_SAPCpiOutboundComplaintConfigs">
+                    <End EntitySet="SAPCpiOutboundComplaints" Role="SAPCpiOutboundComplaint"/>
+                    <End EntitySet="SAPCpiOutboundComplaintConfigs" Role="SAPCpiOutboundComplaintConfig"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

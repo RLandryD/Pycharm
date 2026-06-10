@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:n1="urn:sap-com:document:sap:rfc:functions">
+ <wsdl:documentation>
+  <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+ </wsdl:documentation>
+ <wsp:UsingPolicy wsdl:required="true"/>
+ <wsp:Policy wsu:Id="IF_IF_ISU_C4C_V2_INVOICES">
+  <sapsession:Session xmlns:sapsession="http://www.sap.com/webas/630/soap/features/session/">
+   <sapsession:enableSession>false</sapsession:enableSession>
+  </sapsession:Session>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_IsuC4cV2InvoiceRevAdj">
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_IsuC4cV2InvoiceRevFull">
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_IsuC4cV2InvoiceCreate">
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_IsuC4cV2InvoicePdfGet">
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_IsuC4cV2InvoicesGet">
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsdl:types>
+  <xsd:schema attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:rfc:functions" xmlns:tns="urn:sap-com:document:sap:rfc:functions">
+   <xsd:simpleType name="char1">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char10">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="10"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char12">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="12"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char2">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="2"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char20">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="20"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char220">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="220"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char30">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="30"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char32">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="32"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char4">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="4"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char40">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="40"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char50">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="50"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char6">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="6"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char60">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="60"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char80">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="80"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="cuky5">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="5"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="curr13.2">
+    <xsd:restriction base="xsd:decimal">
+     <xsd:totalDigits value="13"/>
+     <xsd:fractionDigits value="2"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="lang">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric1">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric2">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="2"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric3">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="numeric6">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="6"/>
+     <xsd:pattern value="\d*"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+  </xsd:schema>
+  <xsd:schema attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:n0="urn:sap-com:document:sap:rfc:functions">
+   <xsd:import namespace="urn:sap-com:document:sap:rfc:functions"/>
+   <xsd:simpleType name="char1">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char1000">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="1000"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char132">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="132"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char2">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="2"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char30">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="30"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char4">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="4"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="char45">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="45"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="IsuC4cV2SFilter">
+    <xsd:sequence>
+     <xsd:element name="FieldName" type="tns:char30" minOccurs="0"/>
+     <xsd:element name="FieldValue" type="tns:char1000" minOccurs="0"/>
+     <xsd:element name="Sign" type="tns:char1" minOccurs="0"/>
+     <xsd:element name="Option" type="tns:char2" minOccurs="0"/>
+     <xsd:element name="Low" type="tns:char132" minOccurs="0"/>
+     <xsd:element name="High" type="tns:char132" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2SInvoices">
+    <xsd:sequence>
+     <xsd:element name="TotalNumberOfInvoices" type="n0:char6" minOccurs="0"/>
+     <xsd:element name="InvoicesDetails" type="tns:IsuC4cV2TInvoice" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2SInvoice">
+    <xsd:sequence>
+     <xsd:element name="ContractAccount" type="n0:char12" minOccurs="0"/>
+     <xsd:element name="InvoiceNo" type="n0:char12" minOccurs="0"/>
+     <xsd:element name="InvoiceDate" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="StatusCd" type="n0:numeric1" minOccurs="0"/>
+     <xsd:element name="StatusText" type="n0:char60" minOccurs="0"/>
+     <xsd:element name="InvoiceDueAmount" type="tns:IsuC4cUtilAmount" minOccurs="0"/>
+     <xsd:element name="InvoiceDueDate" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="AmountPaid" type="tns:IsuC4cUtilAmount" minOccurs="0"/>
+     <xsd:element name="CollectiveInvoice" type="n0:char1" minOccurs="0"/>
+     <xsd:element name="InvoiceOpenAmount" type="tns:IsuC4cUtilAmount" minOccurs="0"/>
+     <xsd:element name="Reversed" type="n0:char1" minOccurs="0"/>
+     <xsd:element name="InvoiceSimulated" type="n0:char1" minOccurs="0"/>
+     <xsd:element name="Payments" type="tns:IsuC4cUtilAmount" minOccurs="0"/>
+     <xsd:element name="Contracts" type="tns:IsuC4cV2TContracts" minOccurs="0"/>
+     <xsd:element name="BillingDocuments" type="tns:IsuC4cV2TBillDoc" minOccurs="0"/>
+     <xsd:element name="ReversalReason" type="n0:char2" minOccurs="0"/>
+     <xsd:element name="ReversalPostingDate" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="InvoiceDocDate" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="Langu" type="n0:lang" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cUtilAmount">
+    <xsd:sequence>
+     <xsd:element name="Amount" type="n0:curr13.2" minOccurs="0"/>
+     <xsd:element name="Currency" type="n0:cuky5" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2SBillDoc">
+    <xsd:sequence>
+     <xsd:element name="BillDocument" type="n0:char12" minOccurs="0"/>
+     <xsd:element name="Contract" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="DivisionCategory" type="n0:numeric2" minOccurs="0"/>
+     <xsd:element name="BillAmount" type="tns:IsuC4cUtilAmount" minOccurs="0"/>
+     <xsd:element name="BillStartDate" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="BillEndDate" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="BillPeriod" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="Invoice" type="n0:char12" minOccurs="0"/>
+     <xsd:element name="ContractAccount" type="n0:char12" minOccurs="0"/>
+     <xsd:element name="SelectedForReversal" type="n0:char1" minOccurs="0"/>
+     <xsd:element name="ReversalReason" type="n0:char2" minOccurs="0"/>
+     <xsd:element name="Reversed" type="n0:char1" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2SContracts">
+    <xsd:sequence>
+     <xsd:element name="Contract" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="CompanyCode" type="n0:char4" minOccurs="0"/>
+     <xsd:element name="Division" type="n0:char2" minOccurs="0"/>
+     <xsd:element name="DivisionCategory" type="n0:numeric2" minOccurs="0"/>
+     <xsd:element name="AccountDeterminationId" type="n0:char2" minOccurs="0"/>
+     <xsd:element name="Installation" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="ContractAccount" type="n0:char12" minOccurs="0"/>
+     <xsd:element name="MoveInDate" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="MoveOutDate" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="BlockingReason" type="n0:char2" minOccurs="0"/>
+     <xsd:element name="Premise" type="n0:char10" minOccurs="0"/>
+     <xsd:element name="PremiseAddress" type="n0:char80" minOccurs="0"/>
+     <xsd:element name="ContractLock" type="n0:char1" minOccurs="0"/>
+     <xsd:element name="TotalCount" type="n0:char6" minOccurs="0"/>
+     <xsd:element name="RateCategory" type="n0:char10" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="Bapiret2">
+    <xsd:sequence>
+     <xsd:element name="Type" type="n0:char1" minOccurs="0"/>
+     <xsd:element name="Id" type="n0:char20" minOccurs="0"/>
+     <xsd:element name="Number" type="n0:numeric3" minOccurs="0"/>
+     <xsd:element name="Message" type="n0:char220" minOccurs="0"/>
+     <xsd:element name="LogNo" type="n0:char20" minOccurs="0"/>
+     <xsd:element name="LogMsgNo" type="n0:numeric6" minOccurs="0"/>
+     <xsd:element name="MessageV1" type="n0:char50" minOccurs="0"/>
+     <xsd:element name="MessageV2" type="n0:char50" minOccurs="0"/>
+     <xsd:element name="MessageV3" type="n0:char50" minOccurs="0"/>
+     <xsd:element name="MessageV4" type="n0:char50" minOccurs="0"/>
+     <xsd:element name="Parameter" type="n0:char32" minOccurs="0"/>
+     <xsd:element name="Row" type="xsd:int" minOccurs="0"/>
+     <xsd:element name="Field" type="n0:char30" minOccurs="0"/>
+     <xsd:element name="System" type="n0:char10" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2SAuditLog">
+    <xsd:sequence>
+     <xsd:element name="UserName" type="n0:char40" minOccurs="0"/>
+     <xsd:element name="SystemId" type="n0:char50" minOccurs="0"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2TFilter">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:IsuC4cV2SFilter" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2TInvoice">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:IsuC4cV2SInvoice" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2TBillDoc">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:IsuC4cV2SBillDoc" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="IsuC4cV2TContracts">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:IsuC4cV2SContracts" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="Bapiret2T">
+    <xsd:sequence>
+     <xsd:element name="item" type="tns:Bapiret2" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="IsuC4cV2InvoicesGet">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="ItAdditionalFilter" type="tns:IsuC4cV2TFilter" minOccurs="0"/>
+      <xsd:element name="IvBilldocNumber" type="n0:char12" minOccurs="0"/>
+      <xsd:element name="IvBusinessPartner" type="n0:char10" minOccurs="0"/>
+      <xsd:element name="IvContractAccount" type="n0:char12" minOccurs="0"/>
+      <xsd:element name="IvDueDateFrom" type="n0:char10" minOccurs="0"/>
+      <xsd:element name="IvDueDateTo" type="n0:char10" minOccurs="0"/>
+      <xsd:element name="IvInvoiceNumber" type="n0:char12" minOccurs="0"/>
+      <xsd:element name="IvMaximumCount" type="xsd:int" minOccurs="0"/>
+      <xsd:element name="IvPostingDateFrom" type="n0:char10" minOccurs="0"/>
+      <xsd:element name="IvPostingDateTo" type="n0:char10" minOccurs="0"/>
+      <xsd:element name="IvSearchValue" type="tns:char45" minOccurs="0"/>
+      <xsd:element name="IvSkip" type="xsd:int" minOccurs="0"/>
+      <xsd:element name="IvSortField" type="tns:char30" minOccurs="0"/>
+      <xsd:element name="IvSortType" type="tns:char4" minOccurs="0"/>
+      <xsd:element name="IvTop" type="xsd:int" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="IsuC4cV2InvoicesGetResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="EsInvoices" type="tns:IsuC4cV2SInvoices" minOccurs="0"/>
+      <xsd:element name="EtMessages" type="tns:Bapiret2T" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="IsuC4cV2InvoicePdfGet">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="IvInvoiceId" type="n0:char12" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="IsuC4cV2InvoicePdfGetResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="EtMessages" type="tns:Bapiret2T" minOccurs="0"/>
+      <xsd:element name="EvInvpdfcontent" type="xsd:base64Binary" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="IsuC4cV2InvoiceCreate">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="IsAudit" type="tns:IsuC4cV2SAuditLog" minOccurs="0"/>
+      <xsd:element name="IsInvoiceData" type="tns:IsuC4cV2SInvoice" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="IsuC4cV2InvoiceCreateResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="EsInvoiceData" type="tns:IsuC4cV2SInvoice" minOccurs="0"/>
+      <xsd:element name="EtMessages" type="tns:Bapiret2T" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="IsuC4cV2InvoiceRevFull">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="IsAudit" type="tns:IsuC4cV2SAuditLog" minOccurs="0"/>
+      <xsd:element name="IsInvoiceData" type="tns:IsuC4cV2SInvoice" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="IsuC4cV2InvoiceRevFullResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="EtMessages" type="tns:Bapiret2T" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="IsuC4cV2InvoiceRevAdj">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="IsAudit" type="tns:IsuC4cV2SAuditLog" minOccurs="0"/>
+      <xsd:element name="IsInvoiceData" type="tns:IsuC4cV2SInvoice" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="IsuC4cV2InvoiceRevAdjResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="EtMessages" type="tns:Bapiret2T" minOccurs="0"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="IsuC4cV2InvoicesGet">
+  <wsdl:part name="parameters" element="tns:IsuC4cV2InvoicesGet"/>
+ </wsdl:message>
+ <wsdl:message name="IsuC4cV2InvoicesGetResponse">
+  <wsdl:part name="parameter" element="tns:IsuC4cV2InvoicesGetResponse"/>
+ </wsdl:message>
+ <wsdl:message name="IsuC4cV2InvoicePdfGet">
+  <wsdl:part name="parameters" element="tns:IsuC4cV2InvoicePdfGet"/>
+ </wsdl:message>
+ <wsdl:message name="IsuC4cV2InvoicePdfGetResponse">
+  <wsdl:part name="parameter" element="tns:IsuC4cV2InvoicePdfGetResponse"/>
+ </wsdl:message>
+ <wsdl:message name="IsuC4cV2InvoiceCreate">
+  <wsdl:part name="parameters" element="tns:IsuC4cV2InvoiceCreate"/>
+ </wsdl:message>
+ <wsdl:message name="IsuC4cV2InvoiceCreateResponse">
+  <wsdl:part name="parameter" element="tns:IsuC4cV2InvoiceCreateResponse"/>
+ </wsdl:message>
+ <wsdl:message name="IsuC4cV2InvoiceRevFull">
+  <wsdl:part name="parameters" element="tns:IsuC4cV2InvoiceRevFull"/>
+ </wsdl:message>
+ <wsdl:message name="IsuC4cV2InvoiceRevFullResponse">
+  <wsdl:part name="parameter" element="tns:IsuC4cV2InvoiceRevFullResponse"/>
+ </wsdl:message>
+ <wsdl:message name="IsuC4cV2InvoiceRevAdj">
+  <wsdl:part name="parameters" element="tns:IsuC4cV2InvoiceRevAdj"/>
+ </wsdl:message>
+ <wsdl:message name="IsuC4cV2InvoiceRevAdjResponse">
+  <wsdl:part name="parameter" element="tns:IsuC4cV2InvoiceRevAdjResponse"/>
+ </wsdl:message>
+ <wsdl:portType name="ISU_C4C_V2_INVOICES">
+  <wsdl:documentation>
+   <sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+    <sapdoc:docitem docURL="http://ldciemt.wdf.sap.corp:50022/sap/bc/esdt/docu/sd_text?sap-client=350&amp;sd_name=ISU_C4C_V2_INVOICES"/>
+    <sapdoc:docitem applicationComponent="IS-U-CS-C4C"/>
+   </sapdoc:sapdoc>
+  </wsdl:documentation>
+  <wsp:Policy>
+   <wsp:PolicyReference URI="#IF_IF_ISU_C4C_V2_INVOICES"/>
+  </wsp:Policy>
+  <wsdl:operation name="IsuC4cV2InvoicesGet">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_IsuC4cV2InvoicesGet"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:IsuC4cV2InvoicesGet"/>
+   <wsdl:output message="tns:IsuC4cV2InvoicesGetResponse"/>
+  </wsdl:operation>
+  <wsdl:operation name="IsuC4cV2InvoicePdfGet">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_IsuC4cV2InvoicePdfGet"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:IsuC4cV2InvoicePdfGet"/>
+   <wsdl:output message="tns:IsuC4cV2InvoicePdfGetResponse"/>
+  </wsdl:operation>
+  <wsdl:operation name="IsuC4cV2InvoiceCreate">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_IsuC4cV2InvoiceCreate"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:IsuC4cV2InvoiceCreate"/>
+   <wsdl:output message="tns:IsuC4cV2InvoiceCreateResponse"/>
+  </wsdl:operation>
+  <wsdl:operation name="IsuC4cV2InvoiceRevFull">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_IsuC4cV2InvoiceRevFull"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:IsuC4cV2InvoiceRevFull"/>
+   <wsdl:output message="tns:IsuC4cV2InvoiceRevFullResponse"/>
+  </wsdl:operation>
+  <wsdl:operation name="IsuC4cV2InvoiceRevAdj">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_IsuC4cV2InvoiceRevAdj"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:IsuC4cV2InvoiceRevAdj"/>
+   <wsdl:output message="tns:IsuC4cV2InvoiceRevAdjResponse"/>
+  </wsdl:operation>
+ </wsdl:portType>
+</wsdl:definitions>

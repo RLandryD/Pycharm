@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0" xmlns:sap="http://www.sap.com/Protocols/SAPData" xmlns:ux="http://www.sap.com/Protocols/OData4SAP/UX" xmlns:gp="http://www.sap.com/Protocols/SAPData/GenericPlayer">
+    <edmx:DataServices m:DataServiceVersion="2.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+        <Schema Namespace="API_EWM_SINGLE_ORDER_STAGING" xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+            <EntityType Name="ewmSingleOrderStagingRequestType" sap:label="Ewm Single Order Staging Request">
+               <Key>
+                   <PropertyRef Name="ewmProgramId"/>
+               </Key>
+			   <Property Name="ewmProgramId" Type="Edm.String" sap:label="Ewm System Id"/>
+               <Property Name="plant" Type="Edm.String" Nullable="false" sap:label="plant"/>
+               <Property Name="warehouseNumber" Type="Edm.String" Nullable="false" sap:display-format="NonNegative" sap:label="Warehouse Number"/>
+               <Property Name="shopOrder" Type="Edm.String" Nullable="true" sap:display-format="NonNegative" sap:label="Shop Order Number"/>
+               <NavigationProperty Name="ewmStagingComponents" Relationship="API_EWM_SINGLE_ORDER_STAGING.RS_REQ_COMP" FromRole="R_Request" ToRole="R_Component"/>
+            </EntityType>
+            <EntityType Name="ewmStagingComponentType" sap:label="Ewm Staging Request Component">
+               <Key>
+                   <PropertyRef Name="ewmProgramId"/>
+               </Key>
+			   <Property Name="ewmProgramId" Type="Edm.String" sap:label="Ewm System Id"/>
+               <Property Name="reservationItemNumber" Type="Edm.String" Nullable="false" sap:display-format="NonNegative" sap:label="Reservation Item Number"/>
+               <Property Name="quantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="Uom" sap:label="Quantity"/>
+               <Property Name="unitOfMeasure" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure"/>
+               <Property Name="item" Type="Edm.String" sap:label="item name"/>
+               <Property Name="qtyReserved" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Reserved quantity"/>
+               <Property Name="warehouseTaskId" Type="Edm.String" sap:label="WarehouseTasks id"/>
+               <Property Name="status" Type="Edm.String" sap:label="status"/>
+               <Property Name="shopOrder" Type="Edm.String" sap:label="ShopOrder number"/>
+               <Property Name="productionSupplyArea" Type="Edm.String" sap:label="Production Supply Area"/>
+            </EntityType>
+            <Association Name="RS_REQ_COMP">
+               <End Type="API_EWM_SINGLE_ORDER_STAGING.ewmSingleOrderStagingRequestType" Multiplicity="1" Role="R_Request"/>
+               <End Type="API_EWM_SINGLE_ORDER_STAGING.ewmStagingComponentType" Multiplicity="*" Role="R_Component"/>
+            </Association>
+            <EntityContainer Name="API_EWM_SINGLE_ORDER_STAGING_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="ewmSingleOrderStagingRequest" EntityType="API_EWM_SINGLE_ORDER_STAGING.ewmSingleOrderStagingRequestType" sap:updatable="false" sap:deletable="false"/>
+                <EntitySet Name="ewmStagingComponent" EntityType="API_EWM_SINGLE_ORDER_STAGING.ewmStagingComponentType" sap:creatable="false" sap:updatable="false" sap:deletable="false"/>
+                <AssociationSet Name="Request_Component" Association="API_EWM_SINGLE_ORDER_STAGING.RS_REQ_COMP">
+                   <End EntitySet="ewmSingleOrderStagingRequest" Role="R_Request"/>
+                   <End EntitySet="ewmStagingComponent" Role="R_Component"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

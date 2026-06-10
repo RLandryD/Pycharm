@@ -1,0 +1,149 @@
+<wsdl:definitions targetNamespace="insite:soapws:connectorn:v1" xmlns="insite:soapws:connectorn:v1" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <wsdl:types>
+    <xs:schema>
+      <xs:import namespace="insite:soapws:connectorn:v1" schemaLocation="/xsd/v1_xsd.xsd"/>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="dataTransferStatusRequestMsg">
+    <wsdl:part name="dataTransferStatusRequestType" element="dataTransferStatusRequestType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="dataTransferStatusResponseMsg">
+    <wsdl:part name="dataTransferStatusResponseType" element="dataTransferStatusResponseType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="acknowledgementMsg">
+    <wsdl:part name="acknowledgementType" element="acknowledgementType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="faultMsg">
+    <wsdl:part name="fault" element="insiteFaultType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="echoResponse">
+    <wsdl:part name="echoMsg" element="echoMsg">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="dataTransferStatusDetailsRequestMsg">
+    <wsdl:part name="dataTransferStatusDetailsRequestType" element="dataTransferStatusDetailsRequestType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="echoRequest">
+    <wsdl:part name="echoMsg" element="echoMsg">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="dataTransferResponseMsg">
+    <wsdl:part name="dataTransferResponseType" element="dataTransferResponseType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="dataTransferRequestMsg">
+    <wsdl:part name="dataTransferRequestType" element="dataTransferRequestType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="dataTransferStatusDetailsResponseMsg">
+    <wsdl:part name="dataTransferStatusDetailsResponseType" element="dataTransferStatusDetailsResponseType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getDataByTransactionIdMsg">
+    <wsdl:part name="getDataByTransactionIdType" element="getDataByTransactionIdType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="dataTransferPortType">
+    <wsdl:operation name="dataTransfer">
+      <wsdl:input message="dataTransferRequestMsg">
+    </wsdl:input>
+      <wsdl:output message="dataTransferResponseMsg">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDataByTransactionId">
+      <wsdl:input message="getDataByTransactionIdMsg">
+    </wsdl:input>
+      <wsdl:output message="dataTransferResponseMsg">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="acknowledge">
+      <wsdl:input message="acknowledgementMsg">
+    </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="dataTransferStatus">
+      <wsdl:input message="dataTransferStatusRequestMsg">
+    </wsdl:input>
+      <wsdl:output message="dataTransferStatusResponseMsg">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="dataTransferStatusExtraDetails">
+      <wsdl:input message="dataTransferStatusDetailsRequestMsg">
+    </wsdl:input>
+      <wsdl:output message="dataTransferStatusDetailsResponseMsg">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="echo">
+      <wsdl:input message="echoRequest">
+    </wsdl:input>
+      <wsdl:output message="echoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="dataTransferSOAP12Binding" type="dataTransferPortType">
+    <wsoap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="dataTransfer">
+      <wsoap12:operation soapAction="http://insite.partner.webservice/dataTransfer" style="document"/>
+      <wsdl:input>
+        <wsoap12:body parts="dataTransferRequestType" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsoap12:body parts="dataTransferResponseType" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="dataTransferStatus">
+      <wsoap12:operation soapAction="http://insite.partner.webservice/dataTransferStatus" style="document"/>
+      <wsdl:input>
+        <wsoap12:body parts="dataTransferStatusRequestType" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsoap12:body parts="dataTransferStatusResponseType" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="dataTransferStatusExtraDetails">
+      <wsoap12:operation soapAction="http://insite.partner.webservice/dataTransferStatusExtraDetails" style="document"/>
+      <wsdl:input>
+        <wsoap12:body parts="dataTransferStatusDetailsRequestType" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsoap12:body parts="dataTransferStatusDetailsResponseType" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDataByTransactionId">
+      <wsoap12:operation soapAction="http://insite.partner.webservice/getDataByTransactionId" style="document"/>
+      <wsdl:input>
+        <wsoap12:body parts="getDataByTransactionIdType" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsoap12:body parts="dataTransferResponseType" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="acknowledge">
+      <wsoap12:operation soapAction="http://insite.partner.webservice/acknowledge" style="document"/>
+      <wsdl:input>
+        <wsoap12:body parts="acknowledgementType" use="literal"/>
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="echo">
+      <wsoap12:operation soapAction="http://insite.partner.webservice/echo" style="document"/>
+      <wsdl:input name="echoRequest">
+        <wsoap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="echoResponse">
+        <wsoap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="connectorn">
+    <wsdl:port name="Prod" binding="dataTransferSOAP12Binding">
+      <wsoap12:address location="https://ws.fieldglass.net/ws2/services/connectorn"/>
+    </wsdl:port>
+    <wsdl:port name="Local" binding="dataTransferSOAP12Binding">
+      <wsoap12:address location="https://ws.fieldglass.net/ws2/services/connectorn"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

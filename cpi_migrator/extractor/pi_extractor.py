@@ -39,6 +39,11 @@ class InterfaceRecord:
     has_multi_mapping: bool = False
     channel_count: int = 1
     description: str = ""
+    steps_spec: str = ""   # explicit CPI step pipeline (Steps column)
+    # Real source CPI iFlow XML, when this record came from an uploaded CPI
+    # package. Present → the scaffolder regenerates from the true structure +
+    # config (clean-room) instead of sizing a placeholder from metadata.
+    source_iflow_xml: str = ""
     # Real SAP Migration Assessment figures, when imported from an MA export.
     # When ma_weight is set, the workbench uses the engine's Mode 1
     # (assess_true_ma) — calibrated SAP weight/size/category/effort — instead of
@@ -148,6 +153,7 @@ class PIRestExtractor:
             has_bpm="BPM" in str(raw).upper() or "CCBPM" in str(raw).upper(),
             has_multi_mapping=raw.get("HasMultiMapping", False),
             channel_count=int(raw.get("NumberOfChannels", 1)),
+            steps_spec=raw.get("Steps", "") or "",
             description=raw.get("Description", ""),
             raw=raw,
         )
@@ -181,6 +187,7 @@ class PIFileExtractor:
         "hasbpm":           "has_bpm",
         "hasmultimapping":  "has_multi_mapping",
         "numberofchannels": "channel_count",
+        "steps":            "steps_spec",
     }
 
     def __init__(self, file_path: str):
@@ -260,6 +267,7 @@ class PIFileExtractor:
                 has_bpm=get_bool("has_bpm"),
                 has_multi_mapping=get_bool("has_multi_mapping"),
                 channel_count=get_int("channel_count", 1),
+                steps_spec=get("steps_spec"),
             ))
 
         logger.info("Loaded %d records from file.", len(records))

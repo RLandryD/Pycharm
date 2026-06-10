@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid Technologies Online Tools 1.0 (https://www.liquid-technologies.com) -->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="MessageHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ID" type="xs:string" />
+        <xs:element name="CreationDateTime" type="xs:dateTime" />
+        <xs:element name="SenderBusinessSystemID" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Delivery">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="DeliveryDocument" type="xs:unsignedInt" />
+        <xs:element name="SalesOrganization" type="xs:unsignedShort" />
+        <xs:element name="ShippingPoint" type="xs:unsignedShort" />
+        <xs:element maxOccurs="unbounded" name="Party">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="BuyerPartyID" type="xs:unsignedInt" />
+              <xs:element name="SupplierPartyID" type="xs:unsignedInt" />
+              <xs:element name="Address">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="FormOfAddress" type="xs:string" />
+                    <xs:element name="AddressName" type="xs:string" />
+                    <xs:element name="StreetName" type="xs:string" />
+                    <xs:element name="HouseNumber" type="xs:unsignedByte" />
+                    <xs:element name="StreetAddressName" type="xs:string" />
+                    <xs:element name="PostalCode" type="xs:string" />
+                    <xs:element name="CityName" type="xs:string" />
+                    <xs:element name="Country" type="xs:string" />
+                    <xs:element name="Region" type="xs:string" />
+                    <xs:element name="PhoneNumber" type="xs:string" />
+                    <xs:element name="CorrespondenceLanguage" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="PartyType" type="xs:string" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PickingDateTime">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:dateTime">
+                <xs:attribute name="timeZoneCode" type="xs:string" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="LoadingDateTime">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:dateTime">
+                <xs:attribute name="timeZoneCode" type="xs:string" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="GoodsIssueDateTime">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:dateTime">
+                <xs:attribute name="timeZoneCode" type="xs:string" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ActualGoodsMovementDateTime">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:dateTime">
+                <xs:attribute name="timeZoneCode" type="xs:string" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="DeliveryDateTime">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:dateTime">
+                <xs:attribute name="timeZoneCode" type="xs:string" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="DocumentDate" type="xs:date" />
+        <xs:element name="HeaderGrossWeight">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:decimal">
+                <xs:attribute name="unitCode" type="xs:string" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="HeaderNetWeight">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:decimal">
+                <xs:attribute name="unitCode" type="xs:string" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="HeaderVolume">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:decimal">
+                <xs:attribute name="unitCode" type="xs:string" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Incoterms">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="IncotermsClassification" type="xs:string" />
+              <xs:element name="IncotermsLocation1" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ProposedDeliveryRoute" type="xs:string" />
+        <xs:element name="ShippingCondition" type="xs:unsignedByte" />
+        <xs:element name="DeliveryPriority" type="xs:unsignedByte" />
+        <xs:element name="DeliveryItem">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="DeliveryDocumentItem" type="xs:unsignedByte" />
+              <xs:element name="Material">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="BuyerProductID" type="xs:string" />
+                    <xs:element name="SupplierProductID" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ActualDeliveryQuantity">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:decimal">
+                      <xs:attribute name="unitCode" type="xs:string" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ActualDeliveredQtyInBaseUnit">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:decimal">
+                      <xs:attribute name="unitCode" type="xs:string" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="OriginalDeliveryQuantity">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:decimal">
+                      <xs:attribute name="unitCode" type="xs:string" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="DeliveryDocumentItemCategory" type="xs:string" />
+              <xs:element name="DeliveryDocumentItemText" type="xs:string" />
+              <xs:element name="ItemNetWeight">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:decimal">
+                      <xs:attribute name="unitCode" type="xs:string" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ItemGrossWeight">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:decimal">
+                      <xs:attribute name="unitCode" type="xs:string" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ItemVolume">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:decimal">
+                      <xs:attribute name="unitCode" type="xs:string" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Plant" type="xs:unsignedShort" />
+              <xs:element name="StorageLocation" type="xs:string" />
+              <xs:element name="DistributionChannel" type="xs:unsignedByte" />
+              <xs:element name="Division" type="xs:unsignedByte" />
+              <xs:element name="LoadingGroup" type="xs:unsignedByte" />
+              <xs:element name="TransportationGroup" type="xs:unsignedByte" />
+              <xs:element name="DeliveryGroup" type="xs:unsignedByte" />
+              <xs:element name="UnderlyingPurchaseOrder" type="xs:unsignedInt" />
+              <xs:element name="ReferenceSDDocument" type="xs:unsignedByte" />
+              <xs:element name="ReferenceSDDocumentItem" type="xs:unsignedByte" />
+              <xs:element name="DeliveryToBaseQuantityDnmntr" type="xs:unsignedByte" />
+              <xs:element name="DeliveryToBaseQuantityNmrtr" type="xs:unsignedByte" />
+              <xs:element name="MaterialGroup" type="xs:string" />
+              <xs:element name="PrecedingDocumentCategory" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ShippingPointAddress">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AddressName" type="xs:string" />
+              <xs:element name="StreetName" type="xs:string" />
+              <xs:element name="PostalCode" type="xs:string" />
+              <xs:element name="CityName" type="xs:string" />
+              <xs:element name="Country" type="xs:string" />
+              <xs:element name="District" type="xs:string" />
+              <xs:element name="Region" type="xs:string" />
+              <xs:element name="CorrespondenceLanguage" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

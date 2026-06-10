@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="urn:server.sfapi.successfactors.com" xmlns:ens="urn:sfobject.sfapi.successfactors.com"
+	xmlns:fns="urn:fault.sfapi.successfactors.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	name="SFSFModify" targetNamespace="urn:server.sfapi.successfactors.com">
+	<wsdl:types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema"
+			elementFormDefault="qualified" targetNamespace="urn:fault.sfapi.successfactors.com">
+			<complexType name="SFWebServiceFaultException">
+				<sequence>
+					<element name="errorCode" type="xsd:string" />
+					<element name="errorMessage" type="xsd:string" />
+				</sequence>
+			</complexType>
+			<element name="SFWebServiceFault" type="fns:SFWebServiceFaultException" />
+		</schema>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+			xmlns:swaRef="http://ws-i.org/profiles/basic/1.1/xsd"
+			targetNamespace="urn:sfobject.sfapi.successfactors.com"
+			elementFormDefault="qualified">
+			<import namespace="urn:fault.sfapi.successfactors.com" />
+			<simpleType name="featureType">
+				<restriction base="xsd:string">
+					<enumeration value="insert" />
+					<enumeration value="update" />
+					<enumeration value="upsert" />
+					<enumeration value="delete" />
+					<enumeration value="query" />
+					<enumeration value="queryMore" />
+				</restriction>
+			</simpleType>
+			<simpleType name="dataType">
+				<restriction base="xsd:string">
+					<enumeration value="string" />
+					<enumeration value="date" />
+					<enumeration value="datetime" />
+					<enumeration value="int" />
+					<enumeration value="long" />
+					<enumeration value="float" />
+					<enumeration value="double" />
+					<enumeration value="boolean" />
+					<enumeration value="binary" />
+				</restriction>
+			</simpleType>
+			<complexType name="SFCredential">
+				<sequence>
+					<element name="companyId" type="xsd:string" />
+					<element name="username" type="xsd:string" />
+					<element name="password" type="xsd:string" />
+					<element name="developerKey" type="xsd:string" minOccurs="0"
+						maxOccurs="1" />
+				</sequence>
+			</complexType>
+			<complexType name="SFParameter">
+				<sequence>
+					<element name="name" type="xsd:string" />
+					<element name="value" type="xsd:string" />
+				</sequence>
+			</complexType>
+			<complexType name="Error">
+				<sequence>
+					<element name="errorCode" type="xsd:string" />
+					<element name="errorMessage" type="xsd:string" />
+				</sequence>
+			</complexType>
+			<complexType name="LoginResult">
+				<sequence>
+					<element name="sessionId" type="xsd:string" nillable="true" />
+					<element name="msUntilPwdExpiration" type="xsd:string"
+						nillable="true" />
+					<element name="error" type="ens:Error" nillable="true"
+						minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<complexType name="ObjectEditResult">
+				<sequence>
+					<element name="id" type="xsd:string" minOccurs="0"
+						maxOccurs="1" />
+					<element name="errorStatus" type="xsd:string" />
+					<element name="editStatus" type="xsd:string" />
+					<element name="index" type="xsd:int" nillable="true" />
+					<element name="message" type="xsd:string" nillable="true" />
+				</sequence>
+			</complexType>
+			<complexType name="ModifyRequest">
+				<sequence>
+					<element name="type" type="xsd:string" />
+					<element name="sfobject" type="xsd:anyType" maxOccurs="unbounded" />
+					<element name="processingParam" type="ens:SFParameter"
+						minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<!--//////////////////////////////////////// -->
+			<!--Generic result type of modifying operations, as standard explicit -->
+			<!--types are equal -->
+			<!-- /////////////////////////////////////// -->
+			<complexType name="ModifyResult">
+				<sequence>
+					<element name="jobStatus" type="xsd:string" />
+					<element name="message" type="xsd:string" nillable="true" />
+					<element name="objectEditResult" type="ens:ObjectEditResult"
+						nillable="true" minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<!--//////////////////////////////////////// -->
+			<!--Special type for Delete, as only fields ID and TYPE make sense -->
+			<!--Less effort within back end implementation expected -->
+			<!-- /////////////////////////////////////// -->
+			<complexType name="DeleteObject">
+				<sequence>
+					<choice minOccurs="0" maxOccurs="1">
+						<element name="id" type="xsd:string" minOccurs="0"
+							maxOccurs="1" />
+						<element name="businessKeys" type="xsd:anyType" minOccurs="0"
+							maxOccurs="1" />
+					</choice>
+					<element name="type" type="xsd:string" />
+				</sequence>
+			</complexType>
+			<element name="login">
+				<complexType>
+					<sequence>
+						<element name="credential" type="ens:SFCredential" />
+						<element name="param" type="ens:SFParameter" minOccurs="0"
+							maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="loginResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:LoginResult" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="logout">
+				<complexType />
+			</element>
+			<element name="logoutResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="xsd:boolean" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="isValidSession">
+				<complexType />
+			</element>
+			<element name="isValidSessionResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="xsd:boolean" />
+					</sequence>
+				</complexType>
+			</element>
+			<!--//////////////////////////////////////// -->
+			<!--Begin Typed Insert Types -->
+			<!-- /////////////////////////////////////// -->
+			<element name="insertRequest">
+				<complexType>
+					<sequence>
+						<element name="sessionId" type="xsd:string" />
+						<element name="insert" type="ens:ModifyRequest" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="insertResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:ModifyResult" />
+					</sequence>
+				</complexType>
+			</element>
+			<!--//////////////////////////////////////// -->
+			<!--Begin Typed Update Types -->
+			<!-- /////////////////////////////////////// -->
+			<element name="updateRequest">
+				<complexType>
+					<sequence>
+						<element name="sessionId" type="xsd:string" />
+						<element name="update" type="ens:ModifyRequest" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="updateResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:ModifyResult" />
+					</sequence>
+				</complexType>
+			</element>
+			<!--//////////////////////////////////////// -->
+			<!--Begin Typed Upsert Types -->
+			<!-- /////////////////////////////////////// -->
+			<element name="upsertRequest">
+				<complexType>
+					<sequence>
+						<element name="sessionId" type="xsd:string" />
+						<element name="upsert" type="ens:ModifyRequest" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="upsertResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:ModifyResult" />
+					</sequence>
+				</complexType>
+			</element>
+			<!--//////////////////////////////////////// -->
+			<!--Begin Typed delete Types -->
+			<!-- /////////////////////////////////////// -->
+			<element name="deleteRequest">
+				<complexType>
+					<sequence>
+						<element name="sessionId" type="xsd:string" />
+						<element name="delete" type="ens:ModifyRequest">
+						</element>	
+					</sequence>
+				</complexType>
+			</element>
+			<element name="deleteResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:ModifyResult" />
+					</sequence>
+				</complexType>
+			</element>
+		</schema>
+	</wsdl:types>
+	<wsdl:message name="logoutResponse">
+		<wsdl:part name="parameters" element="ens:logoutResponse" />
+	</wsdl:message>
+	<wsdl:message name="isValidSessionResponse">
+		<wsdl:part name="parameters" element="ens:isValidSessionResponse" />
+	</wsdl:message>
+	<wsdl:message name="loginRequest">
+		<wsdl:part name="parameters" element="ens:login" />
+	</wsdl:message>
+	<wsdl:message name="logoutRequest">
+		<wsdl:part name="parameters" element="ens:logout" />
+	</wsdl:message>
+	<!--/////////////////////////////////////// -->
+	<!--Begin Typed Upsert Request Messages -->
+	<!-- /////////////////////////////////////// -->
+	<wsdl:message name="genericUpsertRequest">
+		<wsdl:part name="parameters" element="ens:upsertRequest" />
+	</wsdl:message>
+	<wsdl:message name="genericUpsertResponse">
+		<wsdl:part name="parameters" element="ens:upsertResponse" />
+	</wsdl:message>
+	<wsdl:message name="isValidSessionRequest">
+		<wsdl:part name="parameters" element="ens:isValidSession" />
+	</wsdl:message>
+	<wsdl:message name="loginResponse">
+		<wsdl:part name="parameters" element="ens:loginResponse" />
+	</wsdl:message>
+	<wsdl:message name="genericInsertRequest">
+		<wsdl:part name="parameters" element="ens:insertRequest" />
+	</wsdl:message>
+	<wsdl:message name="genericInsertResponse">
+		<wsdl:part name="parameters" element="ens:insertResponse" />
+	</wsdl:message>
+	<wsdl:message name="genericUpdateRequest">
+		<wsdl:part name="parameters" element="ens:updateRequest" />
+	</wsdl:message>
+	<wsdl:message name="genericUpdateResponse">
+		<wsdl:part name="parameters" element="ens:updateResponse" />
+	</wsdl:message>
+	<wsdl:message name="genericDeleteRequest">
+		<wsdl:part name="parameters" element="ens:deleteRequest" />
+	</wsdl:message>
+	<wsdl:message name="genericDeleteResponse">
+		<wsdl:part name="parameters" element="ens:deleteResponse" />
+	</wsdl:message>
+	<wsdl:message name="SFWebServiceFaultException">
+		<wsdl:part name="SFWebServiceFault" element="fns:SFWebServiceFault" />
+	</wsdl:message>
+	<wsdl:portType name="SFSFModify">
+		<wsdl:operation name="login">
+			<wsdl:input name="loginRequest" message="tns:loginRequest" />
+			<wsdl:output name="loginResponse" message="tns:loginResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="isValidSession">
+			<wsdl:input name="isValidSessionRequest" message="tns:isValidSessionRequest" />
+			<wsdl:output name="isValidSessionResponse" message="tns:isValidSessionResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="logout">
+			<wsdl:input name="logoutRequest" message="tns:logoutRequest" />
+			<wsdl:output name="logoutResponse" message="tns:logoutResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="insert">
+			<wsdl:input name="genericInsertRequest" message="tns:genericInsertRequest" />
+			<wsdl:output name="genericInsertResponse" message="tns:genericInsertResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="update">
+			<wsdl:input name="genericUpdateRequest" message="tns:genericUpdateRequest" />
+			<wsdl:output name="genericUpdateResponse" message="tns:genericUpdateResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="upsert">
+			<wsdl:input name="genericUpsertRequest" message="tns:genericUpsertRequest" />
+			<wsdl:output name="genericUpsertResponse" message="tns:genericUpsertResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="delete">
+			<wsdl:input name="genericDeleteRequest" message="tns:genericDeleteRequest" />
+			<wsdl:output name="genericDeleteResponse" message="tns:genericDeleteResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SFSFModifySOAP" type="tns:SFSFModify">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="login">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="loginRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="loginResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="isValidSession">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="isValidSessionRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="isValidSessionResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="logout">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="logoutRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="logoutResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="insert">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="genericInsertRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="genericInsertResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="update">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="genericUpdateRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="genericUpdateResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="upsert">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="genericUpsertRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="genericUpsertResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="delete">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="genericDeleteRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="genericDeleteResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SFSFModify">
+		<wsdl:port binding="tns:SFSFModifySOAP" name="SFSFModifySOAP">
+			<wsdlsoap:address
+				location="https://salesdemo4.successfactors.com:443/sfapi/v1/soap" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,64 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="HybrisCommerceOData">
+            <EntityType Name="SAPCpiOutboundServiceTicket">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="baseStore" Nullable="true" Type="Edm.String"/>
+                <Property Name="b2bunit" Nullable="true" Type="Edm.String"/>
+                <Property Name="category" Nullable="true" Type="Edm.String"/>
+                <Property Name="customer" Nullable="true" Type="Edm.String"/>
+                <Property Name="responseStatus" Nullable="true" Type="Edm.String"/>
+                <Property Name="headline" Nullable="true" Type="Edm.String"/>
+                <Property Name="order" Nullable="true" Type="Edm.String"/>
+                <Property IsUnique="true" Name="ticketID" Nullable="false" Type="Edm.String"/>
+                <Property Name="componentId" Nullable="true" Type="Edm.String"/>
+                <Property Name="responseMessage" Nullable="true" Type="Edm.String"/>
+                <Property Name="modifiedTs" Nullable="true" Type="Edm.String"/>
+                <Property Name="textId" Nullable="true" Type="Edm.String"/>
+                <Property Name="isTicketReplicated" Nullable="true" Type="Edm.String"/>
+                <Property Name="notes" Nullable="true" Type="Edm.String"/>
+                <Property Name="cartId" Nullable="true" Type="Edm.String"/>
+                <Property Name="installedBaseId" Nullable="true" Type="Edm.String"/>
+                <Property Name="priority" Nullable="true" Type="Edm.String"/>
+                <Property Name="state" Nullable="true" Type="Edm.String"/>
+                <Property Alias="SAPCpiOutboundServiceTicket_ticketID" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+                <NavigationProperty FromRole="SAPCpiOutboundServiceTicket" Name="sapCpiConfig" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundServiceTicket_sapCpiConfig" ToRole="SAPCpiServiceTicketOutboundConfig"/>
+            </EntityType>
+            <EntityType Name="SAPCpiServiceTicketOutboundConfig">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property IsUnique="true" Name="sap_serviceOrg" Nullable="false" Type="Edm.String"/>
+                <Property Name="client" Nullable="true" Type="Edm.String"/>
+                <Property Name="url" Nullable="true" Type="Edm.String"/>
+                <Property Name="receiverName" Nullable="true" Type="Edm.String"/>
+                <Property Name="receiverPort" Nullable="true" Type="Edm.String"/>
+                <Property IsUnique="true" Name="sap_serviceOrgResp" Nullable="false" Type="Edm.String"/>
+                <Property Name="distributionChannel" Nullable="true" Type="Edm.String"/>
+                <Property Name="sap_servOrgShort" Nullable="true" Type="Edm.String"/>
+                <Property Name="sap_serviceProcessType" Nullable="true" Type="Edm.String"/>
+                <Property Name="serviceRequestCatalogName" Nullable="true" Type="Edm.String"/>
+                <Property Name="serviceRequestCategorySchemaId" Nullable="true" Type="Edm.String"/>
+                <Property Name="salesOrg" Nullable="true" Type="Edm.String"/>
+                <Property Name="senderName" Nullable="true" Type="Edm.String"/>
+                <Property Name="userName" Nullable="true" Type="Edm.String"/>
+                <Property Name="senderPort" Nullable="true" Type="Edm.String"/>
+                <Property Alias="SAPCpiServiceTicketOutboundConfig_sap_serviceOrg|SAPCpiServiceTicketOutboundConfig_sap_serviceOrgResp" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+            </EntityType>
+            <Association Name="FK_SAPCpiOutboundServiceTicket_sapCpiConfig">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundServiceTicket" Type="HybrisCommerceOData.SAPCpiOutboundServiceTicket"/>
+                <End Multiplicity="0..1" Role="SAPCpiServiceTicketOutboundConfig" Type="HybrisCommerceOData.SAPCpiServiceTicketOutboundConfig"/>
+            </Association>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundServiceTicket" Name="SAPCpiOutboundServiceTickets"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiServiceTicketOutboundConfig" Name="SAPCpiServiceTicketOutboundConfigs"/>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundServiceTicket_sapCpiConfig" Name="SAPCpiOutboundServiceTicket_SAPCpiServiceTicketOutboundConfigs">
+                    <End EntitySet="SAPCpiOutboundServiceTickets" Role="SAPCpiOutboundServiceTicket"/>
+                    <End EntitySet="SAPCpiServiceTicketOutboundConfigs" Role="SAPCpiServiceTicketOutboundConfig"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

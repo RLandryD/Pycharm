@@ -1,0 +1,286 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:s="http://schemas.sap.com/commerce" Namespace="HybrisCommerceOData" s:schema-version="1">
+            <EntityType Name="BusinessAgreementHeader">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="addresspayerguid" Nullable="true" Type="Edm.String"/>
+                <Property Name="replicationNumberHeader" Nullable="true" Type="Edm.String"/>
+                <Property Name="addressrecipientguid" Nullable="true" Type="Edm.String"/>
+                <Property Name="businessagreementdefault" Nullable="true" Type="Edm.Boolean"/>
+                <Property Name="bankidinc" Nullable="true" Type="Edm.String"/>
+                <Property Name="refnumber" Nullable="true" Type="Edm.String"/>
+                <Property Name="addresstaxguid" Nullable="true" Type="Edm.String"/>
+                <Property Name="validto" Nullable="false" Type="Edm.String"/>
+                <Property Name="addressdunningguid" Nullable="true" Type="Edm.String"/>
+                <Property Name="bankidout" Nullable="true" Type="Edm.String"/>
+                <Property Name="addressirguid" Nullable="true" Type="Edm.String"/>
+                <Property Name="creditcardinc" Nullable="true" Type="Edm.String"/>
+                <Property Name="addresscorrespondenceguid" Nullable="true" Type="Edm.String"/>
+                <Property Name="businessagreementpayer" Nullable="true" Type="Edm.String"/>
+                <Property Name="creditcardout" Nullable="true" Type="Edm.String"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="BusinessAgreement_guid"/>
+                <NavigationProperty FromRole="BusinessAgreementHeader" Name="businessagreementclass" Nullable="false" Relationship="HybrisCommerceOData.FK_BusinessAgreementHeader_businessagreementclass" ToRole="CRMBusinessAgreementClass"/>
+                <NavigationProperty FromRole="BusinessAgreementHeader" Name="taxcode" Nullable="true" Relationship="HybrisCommerceOData.FK_BusinessAgreementHeader_taxcode" ToRole="CRMBusinessAgreementTaxCode"/>
+                <NavigationProperty FromRole="BusinessAgreementHeader" Name="businessruleHeader" Nullable="true" Relationship="HybrisCommerceOData.FK_BusinessAgreementHeader_businessruleHeader" ToRole="BusinessAgreementRuleHeader" s:IsAutoCreate="true" s:IsPartOf="true"/>
+                <NavigationProperty FromRole="BusinessAgreementHeader" Name="businessagreementpartners" Nullable="true" Relationship="HybrisCommerceOData.FK_BusinessAgreementHeader_businessagreementpartners" ToRole="BusinessAgreementPartners" s:IsAutoCreate="true" s:IsPartOf="true"/>
+                <NavigationProperty FromRole="BusinessAgreementHeader" Name="businessagreement" Nullable="false" Relationship="HybrisCommerceOData.FK_BusinessAgreementHeader_businessagreement" ToRole="BusinessAgreement" s:IsUnique="true"/>
+                <NavigationProperty FromRole="BusinessAgreementHeader" Name="taxcategory" Nullable="true" Relationship="HybrisCommerceOData.FK_BusinessAgreementHeader_taxcategory" ToRole="CRMBusinessAgreementTaxCategory"/>
+            </EntityType>
+            <EntityType Name="CRMBusinessAgreementCorrepondingVariant">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CRMBusinessAgreementCorrepondingVariant_code"/>
+            </EntityType>
+            <EntityType Name="CRMBusinessAgreementTaxCategory">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CRMBusinessAgreementTaxCategory_code"/>
+            </EntityType>
+            <EntityType Name="PartnerFunction">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="PartnerFunction_code"/>
+            </EntityType>
+            <EntityType Name="CRMBusinessAgreementTaxCode">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CRMBusinessAgreementTaxCode_code"/>
+            </EntityType>
+            <EntityType Name="CRMBusinessAgreementTermsPayment">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CRMBusinessAgreementTermsPayment_code"/>
+            </EntityType>
+            <EntityType Name="BusinessAgreementPartners">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="replicationNumberPartners" Nullable="true" Type="Edm.String"/>
+                <Property Name="businessagreementpartnercat" Nullable="true" Type="Edm.String"/>
+                <Property Name="partnerguid1" Nullable="false" Type="Edm.String"/>
+                <Property Name="businesspartnerfunctionguid" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="partnerid2" Nullable="false" Type="Edm.String"/>
+                <Property Name="bprelationshipnum" Nullable="true" Type="Edm.String"/>
+                <Property Name="relationTask" Nullable="true" Type="Edm.String"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="BusinessAgreementPartners_businesspartnerfunctionguid|PartnerFunction_code"/>
+                <NavigationProperty FromRole="BusinessAgreementPartners" Name="partnerfunction" Nullable="false" Relationship="HybrisCommerceOData.FK_BusinessAgreementPartners_partnerfunction" ToRole="PartnerFunction" s:IsUnique="true"/>
+                <NavigationProperty FromRole="BusinessAgreementPartners" Name="businessagreementheader" Nullable="false" Relationship="HybrisCommerceOData.FK_BusinessAgreementPartners_businessagreementheader" ToRole="BusinessAgreementHeader"/>
+            </EntityType>
+            <EntityType Name="BusinessAgreementRuleHeader">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="validto" Nullable="false" Type="Edm.String"/>
+                <Property Name="replicationNumberRuleHeader" Nullable="true" Type="Edm.String"/>
+                <Property Name="businessruleguid" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="text" Nullable="true" Type="Edm.String"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="BusinessAgreementRuleHeader_businessruleguid"/>
+                <NavigationProperty FromRole="BusinessAgreementRuleHeader" Name="paymentmethodout" Nullable="true" Relationship="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_paymentmethodout" ToRole="CRMBusinessAgreementPaymentMethod"/>
+                <NavigationProperty FromRole="BusinessAgreementRuleHeader" Name="businessagHeader" Nullable="false" Relationship="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_businessagHeader" ToRole="BusinessAgreementHeader"/>
+                <NavigationProperty FromRole="BusinessAgreementRuleHeader" Name="shippingcontrolbr" Nullable="true" Relationship="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_shippingcontrolbr" ToRole="CRMBusinessAgreementShippingControl"/>
+                <NavigationProperty FromRole="BusinessAgreementRuleHeader" Name="shippingcontroldr" Nullable="true" Relationship="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_shippingcontroldr" ToRole="CRMBusinessAgreementShippingControl"/>
+                <NavigationProperty FromRole="BusinessAgreementRuleHeader" Name="correpondencevariant" Nullable="true" Relationship="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_correpondencevariant" ToRole="CRMBusinessAgreementCorrepondingVariant"/>
+                <NavigationProperty FromRole="BusinessAgreementRuleHeader" Name="shippingcontrolbp" Nullable="true" Relationship="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_shippingcontrolbp" ToRole="CRMBusinessAgreementShippingControl"/>
+                <NavigationProperty FromRole="BusinessAgreementRuleHeader" Name="termofpayment" Nullable="false" Relationship="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_termofpayment" ToRole="CRMBusinessAgreementTermsPayment"/>
+                <NavigationProperty FromRole="BusinessAgreementRuleHeader" Name="paymentmethodinc" Nullable="true" Relationship="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_paymentmethodinc" ToRole="CRMBusinessAgreementPaymentMethod"/>
+            </EntityType>
+            <EntityType Name="CRMBusinessAgreementClass">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CRMBusinessAgreementClass_code"/>
+            </EntityType>
+            <EntityType Name="CRMBusinessAgreementShippingControl">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CRMBusinessAgreementShippingControl_code"/>
+            </EntityType>
+            <EntityType Name="BusinessAgreement">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="guid" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="partnerid" Nullable="true" Type="Edm.String"/>
+                <Property Name="id" Nullable="false" Type="Edm.String"/>
+                <Property Name="replicationNumber" Nullable="true" Type="Edm.String"/>
+                <Property Name="text" Nullable="true" Type="Edm.String"/>
+                <Property Name="sapIsReplicated" Nullable="true" Type="Edm.Boolean"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="BusinessAgreement_guid"/>
+                <NavigationProperty FromRole="BusinessAgreement" Name="businessagreementheader" Nullable="true" Relationship="HybrisCommerceOData.FK_BusinessAgreement_businessagreementheader" ToRole="BusinessAgreementHeader" s:IsAutoCreate="true" s:IsPartOf="true"/>
+            </EntityType>
+            <EntityType Name="CRMBusinessAgreementPaymentMethod">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="country" Nullable="true" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CRMBusinessAgreementPaymentMethod_code|CRMBusinessAgreementPaymentMethod_country"/>
+            </EntityType>
+            <Association Name="FK_BusinessAgreementRuleHeader_paymentmethodout">
+                <End Multiplicity="0..1" Role="BusinessAgreementRuleHeader" Type="HybrisCommerceOData.BusinessAgreementRuleHeader"/>
+                <End Multiplicity="0..1" Role="CRMBusinessAgreementPaymentMethod" Type="HybrisCommerceOData.CRMBusinessAgreementPaymentMethod"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementRuleHeader_businessagHeader">
+                <End Multiplicity="0..1" Role="BusinessAgreementRuleHeader" Type="HybrisCommerceOData.BusinessAgreementRuleHeader"/>
+                <End Multiplicity="0..1" Role="BusinessAgreementHeader" Type="HybrisCommerceOData.BusinessAgreementHeader"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementRuleHeader_shippingcontrolbr">
+                <End Multiplicity="0..1" Role="BusinessAgreementRuleHeader" Type="HybrisCommerceOData.BusinessAgreementRuleHeader"/>
+                <End Multiplicity="0..1" Role="CRMBusinessAgreementShippingControl" Type="HybrisCommerceOData.CRMBusinessAgreementShippingControl"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementRuleHeader_shippingcontroldr">
+                <End Multiplicity="0..1" Role="BusinessAgreementRuleHeader" Type="HybrisCommerceOData.BusinessAgreementRuleHeader"/>
+                <End Multiplicity="0..1" Role="CRMBusinessAgreementShippingControl" Type="HybrisCommerceOData.CRMBusinessAgreementShippingControl"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementRuleHeader_correpondencevariant">
+                <End Multiplicity="0..1" Role="BusinessAgreementRuleHeader" Type="HybrisCommerceOData.BusinessAgreementRuleHeader"/>
+                <End Multiplicity="0..1" Role="CRMBusinessAgreementCorrepondingVariant" Type="HybrisCommerceOData.CRMBusinessAgreementCorrepondingVariant"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementRuleHeader_shippingcontrolbp">
+                <End Multiplicity="0..1" Role="BusinessAgreementRuleHeader" Type="HybrisCommerceOData.BusinessAgreementRuleHeader"/>
+                <End Multiplicity="0..1" Role="CRMBusinessAgreementShippingControl" Type="HybrisCommerceOData.CRMBusinessAgreementShippingControl"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementRuleHeader_termofpayment">
+                <End Multiplicity="0..1" Role="BusinessAgreementRuleHeader" Type="HybrisCommerceOData.BusinessAgreementRuleHeader"/>
+                <End Multiplicity="0..1" Role="CRMBusinessAgreementTermsPayment" Type="HybrisCommerceOData.CRMBusinessAgreementTermsPayment"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementRuleHeader_paymentmethodinc">
+                <End Multiplicity="0..1" Role="BusinessAgreementRuleHeader" Type="HybrisCommerceOData.BusinessAgreementRuleHeader"/>
+                <End Multiplicity="0..1" Role="CRMBusinessAgreementPaymentMethod" Type="HybrisCommerceOData.CRMBusinessAgreementPaymentMethod"/>
+            </Association>
+            <Association Name="FK_BusinessAgreement_businessagreementheader">
+                <End Multiplicity="1" Role="BusinessAgreement" Type="HybrisCommerceOData.BusinessAgreement"/>
+                <End Multiplicity="*" Role="BusinessAgreementHeader" Type="HybrisCommerceOData.BusinessAgreementHeader"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementHeader_businessagreementclass">
+                <End Multiplicity="0..1" Role="BusinessAgreementHeader" Type="HybrisCommerceOData.BusinessAgreementHeader"/>
+                <End Multiplicity="0..1" Role="CRMBusinessAgreementClass" Type="HybrisCommerceOData.CRMBusinessAgreementClass"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementHeader_taxcode">
+                <End Multiplicity="0..1" Role="BusinessAgreementHeader" Type="HybrisCommerceOData.BusinessAgreementHeader"/>
+                <End Multiplicity="0..1" Role="CRMBusinessAgreementTaxCode" Type="HybrisCommerceOData.CRMBusinessAgreementTaxCode"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementHeader_businessruleHeader">
+                <End Multiplicity="1" Role="BusinessAgreementHeader" Type="HybrisCommerceOData.BusinessAgreementHeader"/>
+                <End Multiplicity="*" Role="BusinessAgreementRuleHeader" Type="HybrisCommerceOData.BusinessAgreementRuleHeader"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementHeader_businessagreementpartners">
+                <End Multiplicity="1" Role="BusinessAgreementHeader" Type="HybrisCommerceOData.BusinessAgreementHeader"/>
+                <End Multiplicity="*" Role="BusinessAgreementPartners" Type="HybrisCommerceOData.BusinessAgreementPartners"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementHeader_businessagreement">
+                <End Multiplicity="0..1" Role="BusinessAgreementHeader" Type="HybrisCommerceOData.BusinessAgreementHeader"/>
+                <End Multiplicity="0..1" Role="BusinessAgreement" Type="HybrisCommerceOData.BusinessAgreement"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementHeader_taxcategory">
+                <End Multiplicity="0..1" Role="BusinessAgreementHeader" Type="HybrisCommerceOData.BusinessAgreementHeader"/>
+                <End Multiplicity="0..1" Role="CRMBusinessAgreementTaxCategory" Type="HybrisCommerceOData.CRMBusinessAgreementTaxCategory"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementPartners_partnerfunction">
+                <End Multiplicity="0..1" Role="BusinessAgreementPartners" Type="HybrisCommerceOData.BusinessAgreementPartners"/>
+                <End Multiplicity="0..1" Role="PartnerFunction" Type="HybrisCommerceOData.PartnerFunction"/>
+            </Association>
+            <Association Name="FK_BusinessAgreementPartners_businessagreementheader">
+                <End Multiplicity="0..1" Role="BusinessAgreementPartners" Type="HybrisCommerceOData.BusinessAgreementPartners"/>
+                <End Multiplicity="0..1" Role="BusinessAgreementHeader" Type="HybrisCommerceOData.BusinessAgreementHeader"/>
+            </Association>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet EntityType="HybrisCommerceOData.BusinessAgreementHeader" Name="BusinessAgreementHeaders"/>
+                <EntitySet EntityType="HybrisCommerceOData.CRMBusinessAgreementCorrepondingVariant" Name="CRMBusinessAgreementCorrepondingVariants"/>
+                <EntitySet EntityType="HybrisCommerceOData.CRMBusinessAgreementTaxCategory" Name="CRMBusinessAgreementTaxCategories"/>
+                <EntitySet EntityType="HybrisCommerceOData.PartnerFunction" Name="PartnerFunctions"/>
+                <EntitySet EntityType="HybrisCommerceOData.CRMBusinessAgreementTaxCode" Name="CRMBusinessAgreementTaxCodes"/>
+                <EntitySet EntityType="HybrisCommerceOData.CRMBusinessAgreementTermsPayment" Name="CRMBusinessAgreementTermsPayments"/>
+                <EntitySet EntityType="HybrisCommerceOData.BusinessAgreementPartners" Name="BusinessAgreementPartnerses"/>
+                <EntitySet EntityType="HybrisCommerceOData.BusinessAgreementRuleHeader" Name="BusinessAgreementRuleHeaders"/>
+                <EntitySet EntityType="HybrisCommerceOData.CRMBusinessAgreementClass" Name="CRMBusinessAgreementClasses"/>
+                <EntitySet EntityType="HybrisCommerceOData.CRMBusinessAgreementShippingControl" Name="CRMBusinessAgreementShippingControls"/>
+                <EntitySet EntityType="HybrisCommerceOData.BusinessAgreement" Name="BusinessAgreements"/>
+                <EntitySet EntityType="HybrisCommerceOData.CRMBusinessAgreementPaymentMethod" Name="CRMBusinessAgreementPaymentMethods"/>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_paymentmethodout" Name="BusinessAgreementRuleHeader_CRMBusinessAgreementPaymentMethods">
+                    <End EntitySet="BusinessAgreementRuleHeaders" Role="BusinessAgreementRuleHeader"/>
+                    <End EntitySet="CRMBusinessAgreementPaymentMethods" Role="CRMBusinessAgreementPaymentMethod"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_businessagHeader" Name="BusinessAgreementRuleHeader_BusinessAgreementHeaders">
+                    <End EntitySet="BusinessAgreementRuleHeaders" Role="BusinessAgreementRuleHeader"/>
+                    <End EntitySet="BusinessAgreementHeaders" Role="BusinessAgreementHeader"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_shippingcontrolbr" Name="BusinessAgreementRuleHeader_CRMBusinessAgreementShippingControls">
+                    <End EntitySet="BusinessAgreementRuleHeaders" Role="BusinessAgreementRuleHeader"/>
+                    <End EntitySet="CRMBusinessAgreementShippingControls" Role="CRMBusinessAgreementShippingControl"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_shippingcontroldr" Name="BusinessAgreementRuleHeader_CRMBusinessAgreementShippingControls">
+                    <End EntitySet="BusinessAgreementRuleHeaders" Role="BusinessAgreementRuleHeader"/>
+                    <End EntitySet="CRMBusinessAgreementShippingControls" Role="CRMBusinessAgreementShippingControl"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_correpondencevariant" Name="BusinessAgreementRuleHeader_CRMBusinessAgreementCorrepondingVariants">
+                    <End EntitySet="BusinessAgreementRuleHeaders" Role="BusinessAgreementRuleHeader"/>
+                    <End EntitySet="CRMBusinessAgreementCorrepondingVariants" Role="CRMBusinessAgreementCorrepondingVariant"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_shippingcontrolbp" Name="BusinessAgreementRuleHeader_CRMBusinessAgreementShippingControls">
+                    <End EntitySet="BusinessAgreementRuleHeaders" Role="BusinessAgreementRuleHeader"/>
+                    <End EntitySet="CRMBusinessAgreementShippingControls" Role="CRMBusinessAgreementShippingControl"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_termofpayment" Name="BusinessAgreementRuleHeader_CRMBusinessAgreementTermsPayments">
+                    <End EntitySet="BusinessAgreementRuleHeaders" Role="BusinessAgreementRuleHeader"/>
+                    <End EntitySet="CRMBusinessAgreementTermsPayments" Role="CRMBusinessAgreementTermsPayment"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementRuleHeader_paymentmethodinc" Name="BusinessAgreementRuleHeader_CRMBusinessAgreementPaymentMethods">
+                    <End EntitySet="BusinessAgreementRuleHeaders" Role="BusinessAgreementRuleHeader"/>
+                    <End EntitySet="CRMBusinessAgreementPaymentMethods" Role="CRMBusinessAgreementPaymentMethod"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreement_businessagreementheader" Name="BusinessAgreement_BusinessAgreementHeaders">
+                    <End EntitySet="BusinessAgreements" Role="BusinessAgreement"/>
+                    <End EntitySet="BusinessAgreementHeaders" Role="BusinessAgreementHeader"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementHeader_businessagreementclass" Name="BusinessAgreementHeader_CRMBusinessAgreementClasses">
+                    <End EntitySet="BusinessAgreementHeaders" Role="BusinessAgreementHeader"/>
+                    <End EntitySet="CRMBusinessAgreementClasses" Role="CRMBusinessAgreementClass"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementHeader_taxcode" Name="BusinessAgreementHeader_CRMBusinessAgreementTaxCodes">
+                    <End EntitySet="BusinessAgreementHeaders" Role="BusinessAgreementHeader"/>
+                    <End EntitySet="CRMBusinessAgreementTaxCodes" Role="CRMBusinessAgreementTaxCode"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementHeader_businessruleHeader" Name="BusinessAgreementHeader_BusinessAgreementRuleHeaders">
+                    <End EntitySet="BusinessAgreementHeaders" Role="BusinessAgreementHeader"/>
+                    <End EntitySet="BusinessAgreementRuleHeaders" Role="BusinessAgreementRuleHeader"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementHeader_businessagreementpartners" Name="BusinessAgreementHeader_BusinessAgreementPartnerses">
+                    <End EntitySet="BusinessAgreementHeaders" Role="BusinessAgreementHeader"/>
+                    <End EntitySet="BusinessAgreementPartnerses" Role="BusinessAgreementPartners"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementHeader_businessagreement" Name="BusinessAgreementHeader_BusinessAgreements">
+                    <End EntitySet="BusinessAgreementHeaders" Role="BusinessAgreementHeader"/>
+                    <End EntitySet="BusinessAgreements" Role="BusinessAgreement"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementHeader_taxcategory" Name="BusinessAgreementHeader_CRMBusinessAgreementTaxCategories">
+                    <End EntitySet="BusinessAgreementHeaders" Role="BusinessAgreementHeader"/>
+                    <End EntitySet="CRMBusinessAgreementTaxCategories" Role="CRMBusinessAgreementTaxCategory"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementPartners_partnerfunction" Name="BusinessAgreementPartners_PartnerFunctions">
+                    <End EntitySet="BusinessAgreementPartnerses" Role="BusinessAgreementPartners"/>
+                    <End EntitySet="PartnerFunctions" Role="PartnerFunction"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BusinessAgreementPartners_businessagreementheader" Name="BusinessAgreementPartners_BusinessAgreementHeaders">
+                    <End EntitySet="BusinessAgreementPartnerses" Role="BusinessAgreementPartners"/>
+                    <End EntitySet="BusinessAgreementHeaders" Role="BusinessAgreementHeader"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

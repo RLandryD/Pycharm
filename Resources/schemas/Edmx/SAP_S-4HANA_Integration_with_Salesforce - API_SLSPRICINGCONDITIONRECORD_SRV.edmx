@@ -1,0 +1,1101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+ </edmx:Reference>
+ <edmx:DataServices m:DataServiceVersion="2.0">
+  <Schema Namespace="API_SLSPRICINGCONDITIONRECORD_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+   <EntityType Name="A_SlsPrcgCndnRecdSuplmntType" sap:label="Condition Record Supplement for Pricing in Sales" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="ConditionRecord"/>
+     <PropertyRef Name="ConditionSequentialNumber"/>
+    </Key>
+    <Property Name="ConditionRecord" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Condition Record No." sap:quickinfo="Condition record number">
+     <Documentation>
+      <Summary>Number that uniquely identifies a condition record.</Summary>
+      <LongDescription>The system uses the condition record number to store and retrieve information during processing (pricing, for example).</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionSequentialNumber" Type="Edm.String" Nullable="false" MaxLength="2" sap:display-format="NonNegative" sap:label="Sequent.no. of cond." sap:quickinfo="Sequential number of the condition">
+     <Documentation>
+      <Summary>The sequential number that uniquely identifies the condition if a condition supplement exists.</Summary>
+      <LongDescription>If you have assigned a condition supplement to the condition, the system automatically assigns the number.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionTable" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Table" sap:quickinfo="Condition Table"/>
+    <Property Name="ConditionApplication" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Application">
+     <Documentation>
+      <Summary>Subdivides the usage of a condition (for example, pricing) for use in different application areas (for example, sales &amp; distribution or purchasing).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Condition Type">
+     <Documentation>
+      <Summary>The key that uniquely identifies the condition.</Summary>
+      <LongDescription>The condition type indicates, for example, whether, during pricing, the system applies a price, a discount, a surcharge, or other pricing elements, such as freight costs and sales taxes. For each of these pricing elements, there is a condition type defined in the system.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionValidityEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid To" sap:quickinfo="Valid To Date">
+     <Documentation>
+      <Summary>Date indicating up to when an entry is valid.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionValidityStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid From" sap:quickinfo="Valid-From Date">
+     <Documentation>
+      <Summary>Date indicating as of when an entry is valid.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="CreatedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Created By" sap:quickinfo="Name of Person Who Created Object"/>
+    <Property Name="CreationDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Created On" sap:quickinfo="Date on Which Record Was Created"/>
+    <Property Name="ConditionTextID" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Text number" sap:quickinfo="Number of texts"/>
+    <Property Name="PricingScaleType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Scale Type">
+     <Documentation>
+      <Summary>Indicator that controls the validity of the scale value or percentage:</Summary>
+      <LongDescription>From a certain quantity or value (base scale)Up to a certain quantity or value (to-scale)Alternatively, it is possible to work with interval scales. Interval scales must be stored in the condition type, that is, the scale type "interval scale" cannot be changed in the condition record. The reason for this is technical restrictions resulting from the programming within pricing.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PricingScaleBasis" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Scale Basis" sap:quickinfo="Scale Basis Indicator">
+     <Documentation>
+      <Summary>Determines how the system interprets a pricing scale in a condition. For example, the scale can be based on quantity, weight, or volume.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleQuantity" Type="Edm.Decimal" Precision="15" Scale="3" sap:unit="BaseUnit" sap:label="Scale quantity" sap:quickinfo="Condition scale quantity">
+     <Documentation>
+      <Summary>Scale quantity (for example, number of pieces) to which a scale refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleQuantityUnit" Type="Edm.String" MaxLength="3" sap:label="Scale Unit of Meas." sap:quickinfo="Condition Scale Unit of Measure" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Unit of measure to which the quantity scale refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="ConditionRateValueUnit" sap:label="Scale value">
+     <Documentation>
+      <Summary>A value that is part of a pricing scale. The value is an amount in a particular currency.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleAmountCurrency" Type="Edm.String" MaxLength="5" sap:label="Scale Currency" sap:semantics="currency-code">
+     <Documentation>
+      <Summary>Specifies a currency for a pricing scale in a condition record.</Summary>
+      <LongDescription>If a pricing scale is based on a value instead of a quantity, you can specify a currency for the value. In the standard version of the SAP System, this field is only relevant in condition records for the following discounts:Price groupPrice group/Material pricing groupYou apply a price group discount to customers in a particular foreign country. When you create a condition record for this discount and enter values in the pricing scale, you can also enter the corresponding foreign currency. During pricing, the system then calculates discounts based on scale values in the foreign currency. The discount amount is then converted into the currency you are using in the sales document.After you enter a currency in this field and save the condition record, you cannot change the currency without deleting the record and creating it again.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionCalculationType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Calculation Type" sap:quickinfo="Calculation Type for Condition">
+     <Documentation>
+      <Summary>Determines how the system calculates prices, discounts, or surcharges in a  condition. For example, the system can calculate a price as a fixed amount or as a percentage based on quantity, volume, or weight.</Summary>
+      <LongDescription>The calculation type can be set when generating new condition records. If this does not happen, the calculation type maintained here is valid for the condition record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionRateValue" Type="Edm.Decimal" Precision="12" Scale="3" sap:unit="ConditionRateValueUnit" sap:label="Condition Amount" sap:quickinfo="Condition amount or percentage where no scale exists">
+     <Documentation>
+      <Summary>The rate that determines how the system calculates pricing using this condition. Depending on the condition type, the rate can be a fixed amount or a percentage. If the condition includes a pricing scale, the rate displays the first line of the scale.</Summary>
+      <LongDescription>The following examples illustrate how you can use the rate in different condition types:If you create a condition that includes prices (for example, prices for a material), you enter an amount.If you are creating a condition based on percentage discounts or surcharges (for example, a customer-specific discount), you enter the value of a percentage. If the condition is a discount, the system automatically enters a minus sign behind the amount and a percent sign in the Rate unit field.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionRateValueUnit" Type="Edm.String" MaxLength="5" sap:label="Condition currency" sap:quickinfo="Condition unit (currency or percentage)" sap:semantics="currency-code">
+     <Documentation>
+      <Summary>The unit that determines whether the condition for a material is based on a percentage or on an amount in a particular currency. The use of the condition unit depends on the  condition type (for example, whether the condition is a material price or a customer discount).</Summary>
+      <LongDescription>The following examples illustrate what you can do when using different condition types.If you create a condition that includes prices (for example, prices for a material), you enter the currency that applies to the condition (for example, "USD" for US dollars)If you are creating a condition based on percentage discounts or surcharges (for example, a customer-specific discount), you cannot enter a value in the Condition unit field. Instead, the system automatically enters a percent sign as the condition unit when you enter a value in the Condition Amount field.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionQuantity" Type="Edm.Decimal" Precision="5" Scale="0" sap:unit="ConditionQuantityUnit" sap:label="Pricing Unit" sap:quickinfo="Condition Pricing Unit">
+     <Documentation>
+      <Summary>The quantity on which the amount or percentage is based. The quantity is expressed in sales units (for example, bottles).</Summary>
+      <LongDescription>You want to create a condition record for a material price of US$8 for 1 piece. You enter "8" in the Rate field, "USD" in the Unit field, and "1" as the condition pricing unit in this field.You create a condition record that gives a fixed discount of $10 to a customer who buys 1000 bottles. In this case, the condition pricing unit is 1000.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionQuantityUnit" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:quickinfo="Condition Unit" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Quantity unit to which the condition amount refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionToBaseQtyNmrtr" Type="Edm.Decimal" Precision="5" Scale="0" sap:label="NumeratorForConvers." sap:quickinfo="Numerator for converting condition units to base units">
+     <Documentation>
+      <Summary>The numerator of the conversion factor that the system uses to convert condition units into base units of measure.</Summary>
+      <LongDescription>Many material processing functions, such as creating production requirements, may require that sales units are converted into base units.You store a soft drink in gallons, but sell it in 1 pint bottles. The conversion factor looks like this:8  Pt &lt;=&gt; 1 GThe first number (the denominator) represents the sales units, in this case, pints. The second number (the numerator) represents the equivalent quantity of base units, in this case, gallons.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionToBaseQtyDnmntr" Type="Edm.Decimal" Precision="5" Scale="0" sap:label="Denom.for Conversion" sap:quickinfo="Denominator for converting condition units to base units">
+     <Documentation>
+      <Summary>The denominator of the conversion factor that the system uses to convert condition units into  base units of measure.</Summary>
+      <LongDescription>Many material processing functions, such as the creation of production requirements, may require that sales units are converted into base units of measure.You produce a soft-drink in gallons, but sell it in 1 pint bottles. The conversion factor looks like this:8  Pt &lt;=&gt; 1 GThe first number (the denominator) represents the sales units, in this case, pints. The second number (the numerator) represents the equivalent quantity of base units of measure, in this case, gallons.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="BaseUnit" Type="Edm.String" MaxLength="3" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Unit of measure in which stocks of the material are managed. The system converts all the quantities you enter in other units of measure (alternative units of measure) to the base unit of measure.</Summary>
+      <LongDescription>You define the base unit of measure and also alternative units of measure and their conversion factors in the material master record.Since all data is updated in the base unit of measure, your entry is particularly important for the conversion of alternative units of measure. A quantity in the alternative unit of measure can only be shown precisely if its value can be shown with the decimal places available. To ensure this, please note the following:The base unit of measure is the unit satisfying the highest necessary requirement for precision.The conversion of alternative units of measure to the base unit should result in simple decimal fractions (not, for example, 1/3 = 0.333...).Inventory ManagementIn Inventory Management, the base unit of measure is the same as the stockkeeping unit.ServicesServices have units of measure of their own, including the following:Service unitUnit of measure at the higher item level. The precise quantities of the individual services are each at the detailed service line level.BlanketUnit of measure at service line level for services to be provided once only, and for which no precise quantities can or are to be specified.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionLowerLimit" Type="Edm.Decimal" Precision="12" Scale="3" sap:unit="ConditionRateValueUnit" sap:label="Lower limit" sap:quickinfo="Lower limit of the condition rate/amount">
+     <Documentation>
+      <Summary>Indicates whether, during document processing, the system checks if manual changes fall short of the lower limit allowed for the corresponding condition record.</Summary>
+      <LongDescription>When you maintain the scales in a condition record, the system checks whether the scale value falls below the lower limit.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionUpperLimit" Type="Edm.Decimal" Precision="12" Scale="3" sap:unit="ConditionRateValueUnit" sap:label="Upper limit" sap:quickinfo="Upper limit for the condition rate">
+     <Documentation>
+      <Summary>Indicates, during document processing, whether a manually entered price exceeds the upper limit allowed for the corresponding condition record and/or the condition type.</Summary>
+      <LongDescription>When you maintain a condition record, the system checks automatically whether the scale value exceeds the upper limit.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionAlternativeCurrency" Type="Edm.String" MaxLength="5" sap:label="Condition Currency" sap:quickinfo="Condition Currency (for Cumulation Fields)" sap:semantics="currency-code"/>
+    <Property Name="ConditionExclusion" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Exclusion" sap:quickinfo="Condition exclusion indicator">
+     <Documentation>
+      <Summary>Indicates whether the system automatically excludes the discounts that are proposed during pricing.</Summary>
+      <LongDescription>You can set this indicator in two ways:For a particular condition record (the field appears on the Details screen)For all records of a particular condition type (the field appears on the screen where you define the condition type)If you set the indicator to exclude conditions, there are several things to consider:The system will still take into account any condition supplements that are part of the condition record for the price (condition type PR00, for example)You can allow for exceptions where you want to include discounts in spite of the condition exclusion indicator (for a particular discount condition you can specify a requirement that applies the discount ONLY when the indicator is set)</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionIsDeleted" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Deletion Indicator" sap:quickinfo="Deletion Indicator for Condition Record">
+     <Documentation>
+      <Summary>Indicates whether the condition is no longer taken into account during document processing. The condition is deleted during the next reorganization run.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="AdditionalValueDays" Type="Edm.String" MaxLength="2" sap:display-format="NonNegative" sap:label="Addit. Value Days" sap:quickinfo="Additional Value Days">
+     <Documentation>
+      <Summary>The number of days between the billing date and the date on which the terms of payment for the sales document become effective.</Summary>
+      <LongDescription>If you enter a value in this field, you cannot enter a date in the fixed value date field.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="FixedValueDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Fixed Value Date">
+     <Documentation>
+      <Summary>The date on which the terms of payment related to the sales document become effective.</Summary>
+      <LongDescription>If you enter a date in this field, you cannot enter a value in the additional value days field.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PaymentTerms" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Terms of Payment" sap:quickinfo="Terms of Payment Key">
+     <Documentation>
+      <Summary>Key for defining payment terms composed of cash discount percentages and payment periods.</Summary>
+      <LongDescription>It is used in sales orders, purchase orders, and invoices. Terms of payment provide information for:Cash managementDunning proceduresPayment transactionsData can be entered in the field for the terms of payment key in various ways as you enter a business transaction:In most business transactions, the system defaults the key specified in the master record of the customer/vendor in question.In some transactions (for example, credit memos), however, the system does not default the key from the master record. Despite this, you can use the key from the customer/vendor master record by entering "*" in the field.Regardless of whether or not a key is defaulted from the master record, you can manually enter a key during document entry at:item level in sales ordersheader level in purchase orders and invoicesMaster records have separate areas for Financial Accounting, Sales, and Purchasing. You can specify different terms of payment keys in each of these areas. When you then enter a business transaction, the application in question will use the key specified in its area of the master record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CndnMaxNumberOfSalesOrders" Type="Edm.String" MaxLength="2" sap:display-format="NonNegative" sap:label="Max.number.of.orders" sap:quickinfo="Maximum number of sales orders per condition record">
+     <Documentation>
+      <Summary>Specifies - up to a maximum of three - the number of sales orders that can benefit from this condition record.</Summary>
+      <LongDescription>You introduce a new product for which you offer an introductory discount. The customer gets this discount only on the first two orders - the initial order and the first replenishment order. Thereafter, the discount is inactive. In this case, you enter '2' in this field.To see how many orders have already benefitted from a particular condition record, you select Details -&gt; Cumulative values in the overview screen of the condition record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="MinimumConditionBasisValue" Type="Edm.Decimal" Precision="15" Scale="3" sap:unit="BaseUnit" sap:label="Min.cond.base value" sap:quickinfo="Minimum condition base value"/>
+    <Property Name="MaximumConditionBasisValue" Type="Edm.Decimal" Precision="15" Scale="3" sap:unit="BaseUnit" sap:label="Max.cond.base value" sap:quickinfo="Maximum condition base value">
+     <Documentation>
+      <Summary>Specifies the maximum condition base value for this condition record.</Summary>
+      <LongDescription>You use this field to specify a maximum cumulative quantity, weight, or volume for a condition record.You offer a customer a special discount on a certain product but want to limit this discount to a specified total number of cases. You enter the maximum number of cases in this field. As you process orders that use this condition record, the system updates the cumulative quantity. When the maximum quantity is reached, the system automatically deactivates the condition record in subsequent orders.To see the current cumulative condition base value for a particular condition record, you select Extras -&gt; Cumulative values in the overview screen of the condition record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="MaximumConditionAmount" Type="Edm.Decimal" Precision="14" Scale="3" sap:unit="ConditionAlternativeCurrency" sap:label="Max.condition value" sap:quickinfo="Maximum condition value">
+     <Documentation>
+      <Summary>Specifies the maximum condition value for this condition record.</Summary>
+      <LongDescription>You use this field to limit the use of a particular condition record to a specified total value.You offer a customer a special discount on a certain product but want to limit this discount to a specified total amount. You enter the maximum amount (for example, 1000 USD) in this field. As you process orders that use this condition record, the system updates the cumulative value. When the maximum value is reached, the system automatically deactivates the condition record in subsequent orders.To see the current cumulative value for a particular condition record, you select Details -&gt; Cumulative values in the overview screen of the condition record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="IncrementalScale" Type="Edm.String" MaxLength="4" sap:display-format="NonNegative" sap:label="Incremental scale" sap:quickinfo="Number of incremental scale"/>
+    <Property Name="PricingScaleLine" Type="Edm.String" MaxLength="4" sap:display-format="NonNegative" sap:label="Pricing scale" sap:quickinfo="Scale number for pricing"/>
+    <Property Name="ConditionReleaseStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Release status">
+     <Documentation>
+      <Summary>The release status controls in which scenarios the condition records are found.</Summary>
+      <LongDescription>If the status is set at 'B', for example, then the corresponding records are taken into account during a pricing simulation, but are not used in current documents.The release status can only be maintained directly for agreements (sales deals). For condition records, this is done via the processing status for conditions.</LongDescription>
+     </Documentation>
+    </Property>
+    <NavigationProperty Name="to_SlsPrcgCndnRecdValidity" Relationship="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_66BDC3B09DE48CB469A4D23A8CBBD859" FromRole="FromRole_assoc_66BDC3B09DE48CB469A4D23A8CBBD859" ToRole="ToRole_assoc_66BDC3B09DE48CB469A4D23A8CBBD859"/>
+    <NavigationProperty Name="to_SlsPrcgCndnRecordScale" Relationship="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_D07DD6E36895AFEB989C4F6388E6468D" FromRole="FromRole_assoc_D07DD6E36895AFEB989C4F6388E6468D" ToRole="ToRole_assoc_D07DD6E36895AFEB989C4F6388E6468D"/>
+    <NavigationProperty Name="to_SlsPrcgConditionRecord" Relationship="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_7A2D768E758D5C99F26B0CE1C6B396C8" FromRole="FromRole_assoc_7A2D768E758D5C99F26B0CE1C6B396C8" ToRole="ToRole_assoc_7A2D768E758D5C99F26B0CE1C6B396C8"/>
+   </EntityType>
+   <EntityType Name="A_SlsPrcgCndnRecdValidityType" sap:label="Condition Record Validity for Pricing in Sales" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="ConditionRecord"/>
+     <PropertyRef Name="ConditionValidityEndDate"/>
+    </Key>
+    <Property Name="ConditionRecord" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Condition Record No." sap:quickinfo="Condition record number">
+     <Documentation>
+      <Summary>Number that uniquely identifies a condition record.</Summary>
+      <LongDescription>The system uses the condition record number to store and retrieve information during processing (pricing, for example).</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionValidityEndDate" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Valid To" sap:quickinfo="Validity end date of the condition record">
+     <Documentation>
+      <Summary>The date up to which the condition is valid.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionValidityStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid From" sap:quickinfo="Validity start date of the condition record">
+     <Documentation>
+      <Summary>Date from which the condition is valid.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionApplication" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Application">
+     <Documentation>
+      <Summary>Subdivides the usage of a condition (for example, pricing) for use in different application areas (for example, sales &amp; distribution or purchasing).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Condition Type">
+     <Documentation>
+      <Summary>The key that uniquely identifies the condition.</Summary>
+      <LongDescription>The condition type indicates, for example, whether, during pricing, the system applies a price, a discount, a surcharge, or other pricing elements, such as freight costs and sales taxes. For each of these pricing elements, there is a condition type defined in the system.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionReleaseStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Release status">
+     <Documentation>
+      <Summary>The release status controls in which scenarios the condition records are found.</Summary>
+      <LongDescription>If the status is set at 'B', for example, then the corresponding records are taken into account during a pricing simulation, but are not used in current documents.The release status can only be maintained directly for agreements (sales deals). For condition records, this is done via the processing status for conditions.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="DepartureCountry" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Country" sap:quickinfo="Departure country (country from which the goods are sent)">
+     <Documentation>
+      <Summary>Identifies the country in which the delivery originates.</Summary>
+      <LongDescription>You can define the country key in a table. As a rule, it is a good idea to use the existing international standards for identifying vehicles from different countries (for example: USA = United States, I = Italy, and so on). The system uses the key tohelp determine the relevant taxes during pricingdetermine important country-specific standards (the length of postal codes and bank account numbers, for example)</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesDocument" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales Document">
+     <Documentation>
+      <Summary>The number that uniquely identifies the sales document.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="SalesDocumentItem" Type="Edm.String" MaxLength="6" sap:display-format="NonNegative" sap:label="Sales Document Item">
+     <Documentation>
+      <Summary>The number that uniquely identifies the item in the sales document.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="BillableControl" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Accounting Indicator">
+     <Documentation>
+      <Summary>Key that uniquely identifies the accounting indicator.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="Industry" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Industry" sap:quickinfo="Industry key">
+     <Documentation>
+      <Summary>An industry is a distinct group of companies with the same basic business activity. The industry key is used in selecting data for evaluations (for example, a vendor master data list). You can specify industries such as trade, banking, service, manufacturing, health care, public service, media and so on.</Summary>
+      <LongDescription>The industry field belongs to the general data area of customer and vendor master records.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CityCode" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="City Code">
+     <Documentation>
+      <Summary>This key is used for classifying cities from a tax point of view. This is a finer sub-division than the county code.</Summary>
+      <LongDescription>Currently the key is used only in the USA for handling city tax.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionContract" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Condition Contract"/>
+    <Property Name="County" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="County Code">
+     <Documentation>
+      <Summary>Key used to classify cities from the point of view of taxes.</Summary>
+      <LongDescription>Currently the county code is used in the USA for handling county tax, and in Denmark to define the municipality number of the employee's first place of residence.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="EngagementProject" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Customer Project ID" sap:quickinfo="Commercial Project ID">
+     <Documentation>
+      <Summary>Identifies a master project.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConfigurationNumber" Type="Edm.String" MaxLength="18" sap:display-format="NonNegative" sap:label="Internal object no." sap:quickinfo="Configuration (internal object number)">
+     <Documentation>
+      <Summary>Consecutive number used to assign objects within a class type.</Summary>
+      <LongDescription>Here, the object number refers to the assignment of a variant to a plant-specific configurable material via the values assigned.The value assignment is as follows:General configurable material  Racing bicycleVariant  Blue racing bicycleCharacteristic value  BlueThe system stores, for example, the number 20 internally. Behind this number lies the characteristic value "blue" for the variant "blue racing bicycle".</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="BR_NFDocumentType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Document type">
+     <Documentation>
+      <Summary>Identify the document type accordingly.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="BRSpcfcFreeDefinedField1" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Dynamic Key Field 1"/>
+    <Property Name="BRSpcfcFreeDefinedField2" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Dynamic Key Field 2"/>
+    <Property Name="BRSpcfcFreeDefinedField3" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Dynamic Key Field 3"/>
+    <Property Name="InternationalArticleNumber" Type="Edm.String" MaxLength="18" sap:display-format="UpperCase" sap:label="EAN/UPC" sap:quickinfo="International Article Number (EAN/UPC)">
+     <Documentation>
+      <Summary>Glossary definition</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="TechnicalObjectType" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Object Type" sap:quickinfo="Type of Technical Object">
+     <Documentation>
+      <Summary>Key that describes the type of technical object.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="Equipment" Type="Edm.String" MaxLength="18" sap:display-format="UpperCase" sap:label="Equipment" sap:quickinfo="Equipment Number">
+     <Documentation>
+      <Summary>Number by which a piece of equipment can be clearly identified.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="CustomerHierarchy" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer">
+     <Documentation>
+      <Summary>Number that uniquely identifies the node in a customer hierarchy. A node can be defined for</Summary>
+      <LongDescription>an existing customer master recordan organizational unit in the customer's structureIn this case, you need to create a master record for the organizational unit.When you create a master record for a node in a customer hierarchy, you are creating a kind of scaled down customer master record. If a node represents a particular organizational unit in the customer's own structure (for example, a regional sales office), you can specify basic information, such as address and contact person data as well as indicators to say whether the node is relevant for pricing and rebate processing.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="IncotermsClassification" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Incoterms" sap:quickinfo="Incoterms (Part 1)">
+     <Documentation>
+      <Summary>Commonly used trading terms that comply with the standards established by the International Chamber of Commerce (ICC).</Summary>
+      <LongDescription>Incoterms specify internationally recognized procedures that the shipper and the receiving party must follow for the shipping transaction to be completed successfully.If goods are shipped through a port of departure, the appropriate Incoterm might be: FOB ("Free On Board"). You can provide further details (for example, the name of the port) in the secondary Incoterm field: FOB Boston, for example.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="IncotermsTransferLocation" Type="Edm.String" MaxLength="28" sap:label="Incoterms (Part 2)">
+     <Documentation>
+      <Summary>Additional information for the primary Incoterm.</Summary>
+      <LongDescription>If the primary Incoterm is, for example, FOB ("Free on Board"), then the second field provides details of the port from which the delivery leaves (for example, "FOB Boston").</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="AccountTaxType" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Tax type">
+     <Documentation>
+      <Summary>Classification of companies according to tax aspects.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="TxRlvnceClassfctnForArgentina" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Tax Rel. Classif." sap:quickinfo="Tax relevant classification">
+     <Documentation>
+      <Summary>The tax relevant classification could be used in the condition technique to determine prices and taxes. For further information please contact your SAP consultant.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="BR_TaxCode" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Tax Code" sap:quickinfo="SD tax code">
+     <Documentation>
+      <Summary>The SD tax code triggers which tax types (ICMS/IPI/Sub.Trib./ISS) are calculated for a specific SD line item and how the calculation is done (industrialization / consumption).</Summary>
+      <LongDescription>If the indicator for ISS is marked, no other tax type must be activated.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="LocalSalesTaxApplicabilityCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="LST CST appl. code" sap:quickinfo="LST CST applicability code">
+     <Documentation>
+      <Summary>Local sales tax applicability code.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="CustomerGroup" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Customer Group">
+     <Documentation>
+      <Summary>Identifies a particular group of customers (for example, wholesale or retail) for the purpose of pricing or generating statistics.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="CustomerPriceGroup" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Price Group" sap:quickinfo="Customer Price Group">
+     <Documentation>
+      <Summary>A grouping of pricing conditions that you can apply to customers who share the same pricing requirements.</Summary>
+      <LongDescription>You can define groups according to the needs of your organization. For example, you can define a group of customers to whom you want to give the same kind of discount. You can then use the price group to apply the special discount during sales order processing.The system proposes the price group from the customer master record. You can change the proposed value manually in the sales document in both the header and at the item level.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="MaterialPricingGroup" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Material Price Grp" sap:quickinfo="Material Price Group">
+     <Documentation>
+      <Summary>Enter the code for the material price group for which you want the condition record to apply.</Summary>
+      <LongDescription>You assign the material price group to a material on the Sales 2 screen in the material master record in the Mat. Price Group field.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SoldToParty" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Sold-To Party">
+     <Documentation>
+      <Summary>The customer who orders the goods or services. The sold-to party is contractually responsible for sales orders.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="Customer" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer" sap:quickinfo="Customer number">
+     <Documentation>
+      <Summary>The customer to whom the condition or the customer-material info record applies.</Summary>
+      <LongDescription>Enter the number of your customer.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PayerParty" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Payer">
+     <Documentation>
+      <Summary>The party who is responsible for actually paying the bill.</Summary>
+      <LongDescription>The payer may differ from the bill-to party who receives the bill.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ShipToParty" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Ship-To Party">
+     <Documentation>
+      <Summary>The party who receives delivery of the goods.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="Supplier" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Supplier" sap:quickinfo="Vendor Account Number">
+     <Documentation>
+      <Summary>Alphanumeric key uniquely identifying the document.</Summary>
+      <LongDescription>With the supplier number, information from the supplier master record (such as the supplier's address and bank details) is copied into a purchasing document (such as a request for quotation or a purchase order).You can use the supplier number to keep track of requests for quotation, purchase orders and outline agreements.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="DestinationCountry" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Destination Country">
+     <Documentation>
+      <Summary>Identifies the destination country in which the goods are delivered to the customer.</Summary>
+      <LongDescription>As a general rule, it is best to use the existing international standards for identifying vehicles from different countries (for example: USA = United States, I = Italy, and so on).The system uses the country key identifier to:Help determine the appropriate taxes during pricingDetermine important country-specific standards (the length of postal codes and bank account numbers, for example)When you process billing documents collectively, you can use the destination country as one of the selection criteria.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="MaterialGroup" Type="Edm.String" MaxLength="9" sap:display-format="UpperCase" sap:label="Material Group">
+     <Documentation>
+      <Summary>Key that you use to group together several materials or services with the same attributes, and to assign them to a particular material group.</Summary>
+      <LongDescription>You can use material groups to:Restrict the scope of analysesSearch specifically for material master records via search helps</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="Material" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number">
+     <Documentation>
+      <Summary>Alphanumeric key uniquely identifying the material.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ReturnsRefundExtent" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Refund Code" sap:quickinfo="Returns Refund Code">
+     <Documentation>
+      <Summary>Can be used in pricing to calculate the refund amount.</Summary>
+      <LongDescription>The system can determine the returns refund code automatically from the combination of inspection code and return reason, but the user can also select it manually.You define a returns refund code R01 with description 10% reduction = 90% refund.If the item value of the original order item were 100 euros, then the customer would receive a credit memo for 90 euros.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="AdditionalMaterialGroup1" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Material Group 1" sap:quickinfo="Material group 1">
+     <Documentation>
+      <Summary>You can use material groups when maintaining a material master record. Since these material groups are not used in the standard SAP System, you can use them as required, for example, for analyses.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="AdditionalMaterialGroup2" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Material Group 2" sap:quickinfo="Material group 2">
+     <Documentation>
+      <Summary>You can use material groups when maintaining a material master record. Since these material groups are not used in the standard SAP System, you can use them as required, for example, for analyses.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="AdditionalMaterialGroup3" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Material Group 3" sap:quickinfo="Material group 3">
+     <Documentation>
+      <Summary>You can use material groups when maintaining a material master record. Since these material groups are not used in the standard SAP System, you can use them as required, for example, for analyses.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="AdditionalMaterialGroup4" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Material Group 4" sap:quickinfo="Material group 4">
+     <Documentation>
+      <Summary>You can use material groups when maintaining a material master record. Since these material groups are not used in the standard SAP System, you can use them as required, for example, for analyses.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="AdditionalMaterialGroup5" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Material Group 5" sap:quickinfo="Material group 5">
+     <Documentation>
+      <Summary>You can use material groups when maintaining a material master record. Since these material groups are not used in the standard SAP System, you can use them as required, for example, for analyses.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="Personnel" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:label="Personnel Number">
+     <Documentation>
+      <Summary>The personnel number is the only feature within a client which is unique to an employee. You have to enter a personnel number before you can display and maintain an employee's master data and time data.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="PriceListType" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Price List Type">
+     <Documentation>
+      <Summary>Identifies a price list or other condition type (for example, a surcharge or discount).</Summary>
+      <LongDescription>You can define price list types according to the needs of your own organization. Price list types can be grouped according to:the kind of price list (for example, wholesale or retail)the currency in which the price appearsthe number of the price list typeYou can use price list types to apply conditions during pricing or to generate statistics.In the customer master record, enter one of the values predefined for your system. The system proposes the value automatically during sales order processing. You can change the value manually in the sales document header.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PostalCode" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Postal Code">
+     <Documentation>
+      <Summary>Postal code</Summary>
+      <LongDescription>This field contains the postal (zip) code for the house address(street and city).This entry is checked against the country-specific entry in table005 (indicator PLZCTL).</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="Region" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Region" sap:quickinfo="Region (State, Province, County)">
+     <Documentation>
+      <Summary>In some countries, the region forms part of the address. The meaning depends on the country.</Summary>
+      <LongDescription>The automatic address formatting function prints the region in addresses in the USA, Canada, Italy, Brazil or Australia, and the county in Great Britain.For more information, see the examples in the documentation on the Address Layout Key.Meaning of the regional code in ...Australia       -&gt;  ProvinceBrazil          -&gt;  StateCanada          -&gt;  ProvinceGermany         -&gt;  StateGreat Britain   -&gt;  CountyItaly           -&gt;  ProvinceJapan           -&gt;  PrefectureSwitzerland     -&gt;  CantonUSA             -&gt;  State</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="EngagementProjectServiceOrg" Type="Edm.String" MaxLength="5" sap:display-format="UpperCase" sap:label="Service Organization">
+     <Documentation>
+      <Summary>This field links master project data with the company code and plant.</Summary>
+      <LongDescription>This field links master project data with the company code and plant.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="RequirementSegment" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Requirement Segment">
+     <Documentation>
+      <Summary>Indicates additional information about the type of requirement. You can freely define which  requirement segments are satisfied by which  stock segments using  segmentation strategies in the transaction Segmentation Strategy Maintenance .</Summary>
+      <LongDescription>Customer 1 accepts quality 1 and 2 while customer 2 accepts only quality 1. This results in 2 different requirement segments which can be assigned to different stock segments.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="StockSegment" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Stock Segment">
+     <Documentation>
+      <Summary>Segment assigned to a stockable item. The valid stock segment is defined in the   segmentation strategy   and the strategy is assigned to the material in the material master.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="Division" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Division">
+     <Documentation>
+      <Summary>A way of grouping materials, products, or services. The system uses divisions to determine the sales areas and the business areas for a material, product, or service.</Summary>
+      <LongDescription>A product or service is always assigned to just one division. From the point of view of sales and distribution, the use of divisions lets you organize your sales structure around groups of similar products or product lines. This allows the people in a division who process orders and service customers to specialize within a manageable area of expertise.If a sales organization sells food and non-food products through both retail and wholesaledistribution channels each distribution channel could then be further split into food and non-food divisions.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CommodityCode" Type="Edm.String" MaxLength="17" sap:display-format="UpperCase" sap:label="Commodity Code">
+     <Documentation>
+      <Summary>Official code number based on the Harmonized Commodity Description and Coding System (HS).</Summary>
+      <LongDescription>The Harmonized System contains code numbers for all goods that an be transported across national or regional boundaries. Goods are coded according to this nomenclature when declaring the import or export of goods to the proper authorities. The specification of standard commodity codes in declarations enables the authority to tally the quantities of imported or exported goods of specific goods categories for statistical purposes (INTRASTAT).</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConsumptionTaxCtrlCode" Type="Edm.String" MaxLength="16" sap:display-format="UpperCase" sap:label="Control code" sap:quickinfo="Control code for consumption taxes in foreign trade"/>
+    <Property Name="BRSpcfcTaxBasePercentageCode" Type="Edm.String" MaxLength="1" sap:display-format="NonNegative" sap:label="Tax base" sap:quickinfo="Tax Base in Percentage">
+     <Documentation>
+      <Summary>Tax calculation for Brazil:</Summary>
+      <LongDescription>In the invoice verification, the ICMS tax value is calculated with a reduced tax base for freight charges (Conhecimento) only. The law stipulates a reduced tax base of 80% of the transport invoice.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="BRSpcfcTxGrpDynTaxExceptions" Type="Edm.String" MaxLength="2" sap:display-format="NonNegative" sap:label="Tax Group" sap:quickinfo="Tax Group for Dynamic Tax Exceptions">
+     <Documentation>
+      <Summary>Groups together up to three key fields that the system uses to determine the appropriate tax rate in the case of dynamic exceptions. The key fields refer to information stored in the customer, vendor, and material master records (except for the tax code, which is taken from the item level in the transactions).</Summary>
+      <LongDescription>Tax rates are maintained for each of the tax types IPI, ICMS, SubTrib, and ISS, as defined by these factors or combination of factors. In addition to these rates, dynamic exceptions allow you to define tax rates according to additional factors. To do so, you define tax groups, which contain up to three factors (key fields), and which you activate for the different tax types.To define a tax group, specify:A number for it in the range from 10 to 89Which key field(s) are to be used (up to three)Calling application used to calculate the taxWhich tax types the tax group is to be activated for (IPI, ICMS, SubTrib, and/or ISS)After you have defined tax groups, you enter tax rates applicable for a particular tax type and tax group combination.Several tax groups can be activated for a tax type. If this is the case, the system finds the relevant tax rate based on the following information:If you use condition-based tax calculation, you need to adjust the access sequences that belong to the conditions that store the rates whenever you create or change a tax group.If you do not use condition-based tax calculation, you do not have to maintain the corresponding access sequences. Instead, the system reads the entries in the list, starting at the top. The first entry that it finds data for is used to determine the tax rate. Assume, for example, that tax group 50 contains the key field NCM code and tax group 51 contains the key field material class. If, during tax calculation, the system finds a record for both tax groups, 50 and 51, it takes the lower number, 50.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CustomerTaxClassification1" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="TaxClass1-Cust." sap:quickinfo="Tax Classification 1 for Customer">
+     <Documentation>
+      <Summary>Indicates whether, during pricing, the system takes into account taxes that relate to the customer (for example, state sales taxes).</Summary>
+      <LongDescription>The system copies the tax classification from the tax information stored in the customer master record of the ship-to party. During pricing, the system uses the tax classification together with the country key (identifies where the customer is located) to calculate relevant taxes.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CustomerTaxClassification2" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="TaxClass2-Cust." sap:quickinfo="Tax Classification 2 for Customer">
+     <Documentation>
+      <Summary>Indicates whether, during pricing, the system takes into account taxes that relate to the customer (for example, state sales taxes).</Summary>
+      <LongDescription>The system copies the tax classification from the tax information stored in the customer master record of the ship-to party. During pricing, the system uses the tax classification together with the country key (identifies where the customer is located) to calculate relevant taxes.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CustomerTaxClassification3" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="TaxClass3-Cust." sap:quickinfo="Tax classification 3 for customer">
+     <Documentation>
+      <Summary>Indicates whether, during pricing, the system takes into account taxes that relate to the customer (for example, state sales taxes).</Summary>
+      <LongDescription>The system copies the tax classification from the tax information stored in the customer master record of the ship-to party. During pricing, the system uses the tax classification together with the country key (identifies where the customer is located) to calculate relevant taxes.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CustomerTaxClassification4" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="TaxClass4-Cust." sap:quickinfo="Tax Classification 4 Customer">
+     <Documentation>
+      <Summary>Indicates whether, during pricing, the system takes into account taxes that relate to the customer (for example, state sales taxes).</Summary>
+      <LongDescription>The system copies the tax classification from the tax information stored in the customer master record of the ship-to party. During pricing, the system uses the tax classification together with the country key (identifies where the customer is located) to calculate relevant taxes.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ProductTaxClassification1" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Tax Class. Material" sap:quickinfo="Tax Classification Material">
+     <Documentation>
+      <Summary>Indicates whether, during sales order processing, the system determines taxes that relate to the material (for example, state sales taxes).</Summary>
+      <LongDescription>The system copies the tax classification from the tax information stored in the material master record. During pricing, the system uses the tax classification to calculate relevant taxes.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ProductTaxClassification2" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="TaxClass2-Matl." sap:quickinfo="Tax classification 2 for material">
+     <Documentation>
+      <Summary>Indicates whether, during sales order processing, the system determines taxes that relate to the material (for example, VAT in the UK or state sales taxes in the USA).</Summary>
+      <LongDescription>The system copies the tax classification from the tax information stored in the material master record. During pricing, the system uses the tax classification to calculate relevant taxes.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ProductTaxClassification3" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="TaxClass3-Matl." sap:quickinfo="Tax classification 3 for material">
+     <Documentation>
+      <Summary>Indicates whether, during sales order processing, the system determines taxes that relate to the material (for example, VAT in the UK or state sales taxes in the USA).</Summary>
+      <LongDescription>The system copies the tax classification from the tax information stored in the material master record. During pricing, the system uses the tax classification to calculate relevant taxes.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ProductTaxClassification4" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="TaxClass4-Matl." sap:quickinfo="Tax Classification 4 Material">
+     <Documentation>
+      <Summary>Indicates whether, during sales order processing, the system determines taxes that relate to the material (for example, VAT in the UK or state sales taxes in the USA).</Summary>
+      <LongDescription>The system copies the tax classification from the tax information stored in the material master record. During pricing, the system uses the tax classification to calculate relevant taxes.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="TradingContract" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Trading Contract">
+     <Documentation>
+      <Summary>Number used to clearly identify a trading contract.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="TradingContractItem" Type="Edm.String" MaxLength="6" sap:display-format="NonNegative" sap:label="Item Number" sap:quickinfo="Trading Contract: Item Number">
+     <Documentation>
+      <Summary>The number used to clearly identify an item in a trading contract.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="TaxJurisdiction" Type="Edm.String" MaxLength="15" sap:display-format="UpperCase" sap:label="Tax Jurisdiction">
+     <Documentation>
+      <Summary>The tax jurisdiction is used for determining the tax rates in the USA. It defines to which tax authorities you must pay your taxes. It is always the city to which the goods are supplied.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="BRSpcfcTaxDepartureRegion" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Ship from" sap:quickinfo="Ship from location (tax region)">
+     <Documentation>
+      <Summary>Tax region of the delivering entity. Vendor (MM) or plant (SD).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="BRSpcfcTaxDestinationRegion" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Ship to" sap:quickinfo="Ship to location (tax region)">
+     <Documentation>
+      <Summary>Tax region of the receiving entity. Customer (SD) or plant (MM).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="MainItemMaterialPricingGroup" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="MnItem MatPricingGrp" sap:quickinfo="Material pricing group of main item">
+     <Documentation>
+      <Summary>Enter a grouping of main item materials for which the same price conditions should apply.</Summary>
+      <LongDescription>You can create price conditions fora material pricing group (for example, non-food products)a combination of customer and material pricing groupa combination of price group and material pricing group (for example, wholesale customers and all non-food products)</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="MainItemPricingRefMaterial" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="MnItm PrcRefMatl" sap:quickinfo="Pricing reference material of main item">
+     <Documentation>
+      <Summary>Enter the number of the material master record for the pricing reference material on which the system should base its calculations for pricing for the main item.</Summary>
+      <LongDescription>The pricing reference material is stored in the master record of the main item material. All pricing conditions which apply to reference material apply to the material in the main item.You must first of all create a material master record for the pricing reference material.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="VariantCondition" Type="Edm.String" MaxLength="26" sap:label="Variant" sap:quickinfo="Variant condition"/>
+    <Property Name="ValueAddedServiceChargeCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="VAS Charge Code" sap:quickinfo="VAS Charge Codes">
+     <Documentation>
+      <Summary>Indicates the VAS charge code.</Summary>
+      <LongDescription>You can use the charge code to specify your customer's or vendor's surcharge per value-added service type for the execution of value-added services.You can define a charge code in the sales or purchasing document itself. If you have defined this in your VAS conditions per value-added service, the system determines the charge code along with the other value-added service details in the document.For example, you can create charge codes for each VAS-type. That means, the key and short text of the codes show which codes you want to use for ticketing/labeling, packing or special services.You should only delete a charge code if you no longer use it in valid VAS-conditions.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SDDocument" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="SD Document" sap:quickinfo="Sales and Distribution Document Number">
+     <Documentation>
+      <Summary>The number that uniquely identifies the sales, delivery, or billing document.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ReferenceSDDocument" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Reference Document" sap:quickinfo="Document Number of the Reference Document">
+     <Documentation>
+      <Summary>Identifies the sales order to which the delivery refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ReferenceSDDocumentItem" Type="Edm.String" MaxLength="6" sap:display-format="NonNegative" sap:label="Reference Item" sap:quickinfo="Item Number of the Reference Item">
+     <Documentation>
+      <Summary>The number of the sales order item to which the delivery item refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="SalesOffice" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Sales Office">
+     <Documentation>
+      <Summary>A physical location (for example, a branch office) that has responsibility for the sale of certain products or services within a given geographical area.</Summary>
+      <LongDescription>When you create sales statistics, you can use a sales office as one of the selection criteria. When you print out order confirmations, you can include the address of the sales office.You can assign each customer to a sales office in the customer master record.Within a sales office you can establish sales groups (for example, departments) with specific sales responsibilities. Each person who works in the sales office can be assigned to a sales group in his or her user master record. Each customer can also be assigned to a particular sales group in the customer master record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesGroup" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Sales Group">
+     <Documentation>
+      <Summary>A group of sales people who are responsible for processing sales of certain products or services.</Summary>
+      <LongDescription>By using sales groups you can designate different areas of responsibility within a sales office.  When you generate sales statistics, you can use the sales group as one of the selection criteria.If sales office personnel service both retail and wholesale markets, you can assign a sales group to each market.You assign each salesperson to a sales group in his or her user master record. You assign each customer to a particular sales group in the customer's master record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesOrganization" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Sales Organization">
+     <Documentation>
+      <Summary>An organizational unit responsible for the sale of certain products or services. The responsibility of a sales organization may include legal liability for products and customer claims.</Summary>
+      <LongDescription>You can assign any number of distribution channels and divisions to a sales organization. A particular combination of sales organization, distribution channel, and division is known as a sales area.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="SalesOrderSalesOrganization" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Sales Org. of Order" sap:quickinfo="Sales organization of sales order">
+     <Documentation>
+      <Summary>Specifies the sales organization responsible for processing the sales order.</Summary>
+      <LongDescription>When you create condition records to define prices for inter-company billing, you specify the sales organization that is responsible for processing the sales order.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="OrderQuantityUnit" Type="Edm.String" MaxLength="3" sap:label="Sales Unit" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Unit of measure  in which the material is sold.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="DistributionChannel" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Distribution Channel">
+     <Documentation>
+      <Summary>The way in which products or services reach the customer. Typical examples of distribution channels are wholesale, retail, or direct sales.</Summary>
+      <LongDescription>You can maintain information about customers and materials by sales organization and distribution channel. Within a sales organization you can deliver goods to a given customer through more than one distribution channel.You can assign a distribution channel to one or more sales organizations. If, for example, you have numerous sales organizations, each sales organization may use the "Wholesale" distribution channel.For each combination of sales organization and distribution channel, you can further assign one or more of the divisions that are defined for the sales organization. You can, for example, assign "Food" and "Non-food" divisions to the "Wholesale" distribution channel. A particular combination of sales organization, distribution channel, and division is known as a sales area.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="TransactionCurrency" Type="Edm.String" MaxLength="5" sap:label="Document Currency" sap:quickinfo="SD document currency" sap:semantics="currency-code">
+     <Documentation>
+      <Summary>The currency that applies to the document (for example, to a sales order or an invoice).</Summary>
+      <LongDescription>The system proposes the document currency from the customer master record of the sold-to party. You can change the currency manually in the document. If you change the currency, the system recalculates prices for the entire document.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="WBSElementInternalID" Type="Edm.String" MaxLength="24" sap:display-format="NonNegative" sap:label="WBS Bill Elem." sap:quickinfo="WBS Billing Element"/>
+    <Property Name="WorkPackage" Type="Edm.String" MaxLength="24" sap:display-format="NonNegative" sap:label="WBS Work Packg." sap:quickinfo="WBS Work Package"/>
+    <Property Name="Plant" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Plant">
+     <Documentation>
+      <Summary>Key uniquely identifying a plant.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="PlantRegion" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Region of Dlv. Plant" sap:quickinfo="Region in which plant is located"/>
+    <Property Name="WorkItem" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Work Item ID"/>
+    <Property Name="ConditionProcessingStatus" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Processing Status" sap:quickinfo="Processing status for conditions">
+     <Documentation>
+      <Summary>The processing status can be freely assigned for condition records.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="PricingDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Conditn pricing date" sap:quickinfo="Condition pricing date">
+     <Documentation>
+      <Summary>Gives the date for which this condition is calculated. Which date is used here is controlled in Customizing by condition category.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionIsExclusive" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Exclusive" sap:quickinfo="Indicator condition exclusive"/>
+    <Property Name="ConditionScaleBasisValue" Type="Edm.String" MaxLength="7" sap:display-format="NonNegative" sap:label="Scale base value" sap:quickinfo="Condition scale base value"/>
+    <Property Name="TaxCode" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Tax Code" sap:quickinfo="Tax on Sales/Purchases Code">
+     <Documentation>
+      <Summary>The tax code represents a tax category which must be taken into consideration when making a tax return to the tax authorities.</Summary>
+      <LongDescription>Tax codes are unique per country. The tax rate calculation rules and further features are stored in a table for each tax code.For tax-exempt or non-taxable transactions, you should use tax codes with a 0 percentage rate if the corresponding transactions are to be displayed in the tax returns.You must define new tax codes if tax rates are changed by the state. The old codes with the old tax rates must remain in the system until no more open items which use this tax code exist.</LongDescription>
+     </Documentation>
+    </Property>
+    <NavigationProperty Name="to_SlsPrcgCndnRecdSuplmnt" Relationship="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_C9E8E350233D126D1870D9591D1CA300" FromRole="FromRole_assoc_C9E8E350233D126D1870D9591D1CA300" ToRole="ToRole_assoc_C9E8E350233D126D1870D9591D1CA300"/>
+    <NavigationProperty Name="to_SlsPrcgConditionRecord" Relationship="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_5F47B9A276FCBC7051E5300BA9BCCCD7" FromRole="FromRole_assoc_5F47B9A276FCBC7051E5300BA9BCCCD7" ToRole="ToRole_assoc_5F47B9A276FCBC7051E5300BA9BCCCD7"/>
+   </EntityType>
+   <EntityType Name="A_SlsPrcgCndnRecordScaleType" sap:label="Condition Record Scale for Pricing in Sales" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="ConditionRecord"/>
+     <PropertyRef Name="ConditionSequentialNumber"/>
+     <PropertyRef Name="ConditionScaleLine"/>
+    </Key>
+    <Property Name="ConditionRecord" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Condition Record No." sap:quickinfo="Condition record number">
+     <Documentation>
+      <Summary>Number that uniquely identifies a condition record.</Summary>
+      <LongDescription>The system uses the condition record number to store and retrieve information during processing (pricing, for example).</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionSequentialNumber" Type="Edm.String" Nullable="false" MaxLength="2" sap:display-format="NonNegative" sap:label="Sequent.no. of cond." sap:quickinfo="Sequential number of the condition">
+     <Documentation>
+      <Summary>The sequential number that uniquely identifies the condition if a condition supplement exists.</Summary>
+      <LongDescription>If you have assigned a condition supplement to the condition, the system automatically assigns the number.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleLine" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="NonNegative" sap:label="Line number" sap:quickinfo="Current number of the line scale">
+     <Documentation>
+      <Summary>Identifies the sequence of lines within a scale.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleQuantity" Type="Edm.Decimal" Precision="15" Scale="3" sap:label="Scale quantity" sap:quickinfo="Condition scale quantity">
+     <Documentation>
+      <Summary>Scale quantity (for example, number of pieces) to which a scale refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:label="Scale value">
+     <Documentation>
+      <Summary>A value that is part of a pricing scale. The value is an amount in a particular currency.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionRateValue" Type="Edm.Decimal" Precision="12" Scale="3" sap:label="Amount" sap:quickinfo="Condition Amount or Percentage">
+     <Documentation>
+      <Summary>Determines how the system calculates prices using this condition. Depending on the condition type, it can be a fixed amount or a percentage. If the condition includes a pricing scale, the condition amount or percentage displays the first line of the scale.</Summary>
+      <LongDescription>The following examples illustrate how you can use the condition amount or percentage in different condition types:If you create a condition that includes prices (for example, prices for a material), you enter an amount.If you create a condition based on percentage discounts or surcharges (for example, a customer-specific discount), you enter the value of a percentage. If the condition is a discount, the system automatically enters a minus sign behind the amount and a percent sign in the Condition Unit field.</LongDescription>
+     </Documentation>
+    </Property>
+    <NavigationProperty Name="to_SlsPrcgCndnRecdSuplmnt" Relationship="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_2A2E895BB4BD1650AF5FD8F07A8053C6" FromRole="FromRole_assoc_2A2E895BB4BD1650AF5FD8F07A8053C6" ToRole="ToRole_assoc_2A2E895BB4BD1650AF5FD8F07A8053C6"/>
+    <NavigationProperty Name="to_SlsPrcgConditionRecord" Relationship="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_A8740D8F3567BFDDA7CB94F012A7DBB6" FromRole="FromRole_assoc_A8740D8F3567BFDDA7CB94F012A7DBB6" ToRole="ToRole_assoc_A8740D8F3567BFDDA7CB94F012A7DBB6"/>
+   </EntityType>
+   <EntityType Name="A_SlsPrcgConditionRecordType" sap:label="Condition Record for Pricing in Sales" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="ConditionRecord"/>
+    </Key>
+    <Property Name="ConditionRecord" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Condition Record No." sap:quickinfo="Condition record number">
+     <Documentation>
+      <Summary>Number that uniquely identifies a condition record.</Summary>
+      <LongDescription>The system uses the condition record number to store and retrieve information during processing (pricing, for example).</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionSequentialNumber" Type="Edm.String" MaxLength="2" sap:display-format="NonNegative" sap:label="Sequent.no. of cond." sap:quickinfo="Sequential number of the condition">
+     <Documentation>
+      <Summary>The sequential number that uniquely identifies the condition if a condition supplement exists.</Summary>
+      <LongDescription>If you have assigned a condition supplement to the condition, the system automatically assigns the number.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionTable" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Table" sap:quickinfo="Condition Table"/>
+    <Property Name="ConditionApplication" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Application">
+     <Documentation>
+      <Summary>Subdivides the usage of a condition (for example, pricing) for use in different application areas (for example, sales &amp; distribution or purchasing).</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Condition Type">
+     <Documentation>
+      <Summary>The key that uniquely identifies the condition.</Summary>
+      <LongDescription>The condition type indicates, for example, whether, during pricing, the system applies a price, a discount, a surcharge, or other pricing elements, such as freight costs and sales taxes. For each of these pricing elements, there is a condition type defined in the system.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionValidityEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid To" sap:quickinfo="Valid To Date">
+     <Documentation>
+      <Summary>Date indicating up to when an entry is valid.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionValidityStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Valid From" sap:quickinfo="Valid-From Date">
+     <Documentation>
+      <Summary>Date indicating as of when an entry is valid.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="CreatedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Created By" sap:quickinfo="Name of Person Who Created Object"/>
+    <Property Name="CreationDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Created On" sap:quickinfo="Date on Which Record Was Created"/>
+    <Property Name="ConditionTextID" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Text number" sap:quickinfo="Number of texts"/>
+    <Property Name="PricingScaleType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Scale Type">
+     <Documentation>
+      <Summary>Indicator that controls the validity of the scale value or percentage:</Summary>
+      <LongDescription>From a certain quantity or value (base scale)Up to a certain quantity or value (to-scale)Alternatively, it is possible to work with interval scales. Interval scales must be stored in the condition type, that is, the scale type "interval scale" cannot be changed in the condition record. The reason for this is technical restrictions resulting from the programming within pricing.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PricingScaleBasis" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Scale Basis" sap:quickinfo="Scale Basis Indicator">
+     <Documentation>
+      <Summary>Determines how the system interprets a pricing scale in a condition. For example, the scale can be based on quantity, weight, or volume.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleQuantity" Type="Edm.Decimal" Precision="15" Scale="3" sap:unit="ConditionScaleQuantityUnit" sap:label="Scale quantity" sap:quickinfo="Condition scale quantity">
+     <Documentation>
+      <Summary>Scale quantity (for example, number of pieces) to which a scale refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleQuantityUnit" Type="Edm.String" MaxLength="3" sap:label="Scale Unit of Meas." sap:quickinfo="Condition Scale Unit of Measure" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Unit of measure to which the quantity scale refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleAmount" Type="Edm.Decimal" Precision="16" Scale="3" sap:unit="ConditionScaleAmountCurrency" sap:label="Scale value">
+     <Documentation>
+      <Summary>A value that is part of a pricing scale. The value is an amount in a particular currency.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionScaleAmountCurrency" Type="Edm.String" MaxLength="5" sap:label="Scale Currency" sap:semantics="currency-code">
+     <Documentation>
+      <Summary>Specifies a currency for a pricing scale in a condition record.</Summary>
+      <LongDescription>If a pricing scale is based on a value instead of a quantity, you can specify a currency for the value. In the standard version of the SAP System, this field is only relevant in condition records for the following discounts:Price groupPrice group/Material pricing groupYou apply a price group discount to customers in a particular foreign country. When you create a condition record for this discount and enter values in the pricing scale, you can also enter the corresponding foreign currency. During pricing, the system then calculates discounts based on scale values in the foreign currency. The discount amount is then converted into the currency you are using in the sales document.After you enter a currency in this field and save the condition record, you cannot change the currency without deleting the record and creating it again.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionCalculationType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Calculation Type" sap:quickinfo="Calculation Type for Condition">
+     <Documentation>
+      <Summary>Determines how the system calculates prices, discounts, or surcharges in a  condition. For example, the system can calculate a price as a fixed amount or as a percentage based on quantity, volume, or weight.</Summary>
+      <LongDescription>The calculation type can be set when generating new condition records. If this does not happen, the calculation type maintained here is valid for the condition record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionRateValue" Type="Edm.Decimal" Precision="12" Scale="3" sap:unit="ConditionRateValueUnit" sap:label="Condition Amount" sap:quickinfo="Condition amount or percentage where no scale exists">
+     <Documentation>
+      <Summary>The rate that determines how the system calculates pricing using this condition. Depending on the condition type, the rate can be a fixed amount or a percentage. If the condition includes a pricing scale, the rate displays the first line of the scale.</Summary>
+      <LongDescription>The following examples illustrate how you can use the rate in different condition types:If you create a condition that includes prices (for example, prices for a material), you enter an amount.If you are creating a condition based on percentage discounts or surcharges (for example, a customer-specific discount), you enter the value of a percentage. If the condition is a discount, the system automatically enters a minus sign behind the amount and a percent sign in the Rate unit field.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionRateValueUnit" Type="Edm.String" MaxLength="5" sap:label="Condition currency" sap:quickinfo="Condition unit (currency or percentage)" sap:semantics="currency-code">
+     <Documentation>
+      <Summary>The unit that determines whether the condition for a material is based on a percentage or on an amount in a particular currency. The use of the condition unit depends on the  condition type (for example, whether the condition is a material price or a customer discount).</Summary>
+      <LongDescription>The following examples illustrate what you can do when using different condition types.If you create a condition that includes prices (for example, prices for a material), you enter the currency that applies to the condition (for example, "USD" for US dollars)If you are creating a condition based on percentage discounts or surcharges (for example, a customer-specific discount), you cannot enter a value in the Condition unit field. Instead, the system automatically enters a percent sign as the condition unit when you enter a value in the Condition Amount field.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionQuantity" Type="Edm.Decimal" Precision="5" Scale="0" sap:label="Pricing Unit" sap:quickinfo="Condition Pricing Unit">
+     <Documentation>
+      <Summary>The quantity on which the amount or percentage is based. The quantity is expressed in sales units (for example, bottles).</Summary>
+      <LongDescription>You want to create a condition record for a material price of US$8 for 1 piece. You enter "8" in the Rate field, "USD" in the Unit field, and "1" as the condition pricing unit in this field.You create a condition record that gives a fixed discount of $10 to a customer who buys 1000 bottles. In this case, the condition pricing unit is 1000.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionQuantityUnit" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:quickinfo="Condition Unit" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Quantity unit to which the condition amount refers.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionToBaseQtyNmrtr" Type="Edm.Decimal" Precision="5" Scale="0" sap:label="NumeratorForConvers." sap:quickinfo="Numerator for converting condition units to base units">
+     <Documentation>
+      <Summary>The numerator of the conversion factor that the system uses to convert condition units into base units of measure.</Summary>
+      <LongDescription>Many material processing functions, such as creating production requirements, may require that sales units are converted into base units.You store a soft drink in gallons, but sell it in 1 pint bottles. The conversion factor looks like this:8  Pt &lt;=&gt; 1 GThe first number (the denominator) represents the sales units, in this case, pints. The second number (the numerator) represents the equivalent quantity of base units, in this case, gallons.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionToBaseQtyDnmntr" Type="Edm.Decimal" Precision="5" Scale="0" sap:label="Denom.for Conversion" sap:quickinfo="Denominator for converting condition units to base units">
+     <Documentation>
+      <Summary>The denominator of the conversion factor that the system uses to convert condition units into  base units of measure.</Summary>
+      <LongDescription>Many material processing functions, such as the creation of production requirements, may require that sales units are converted into base units of measure.You produce a soft-drink in gallons, but sell it in 1 pint bottles. The conversion factor looks like this:8  Pt &lt;=&gt; 1 GThe first number (the denominator) represents the sales units, in this case, pints. The second number (the numerator) represents the equivalent quantity of base units of measure, in this case, gallons.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="BaseUnit" Type="Edm.String" MaxLength="3" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure">
+     <Documentation>
+      <Summary>Unit of measure in which stocks of the material are managed. The system converts all the quantities you enter in other units of measure (alternative units of measure) to the base unit of measure.</Summary>
+      <LongDescription>You define the base unit of measure and also alternative units of measure and their conversion factors in the material master record.Since all data is updated in the base unit of measure, your entry is particularly important for the conversion of alternative units of measure. A quantity in the alternative unit of measure can only be shown precisely if its value can be shown with the decimal places available. To ensure this, please note the following:The base unit of measure is the unit satisfying the highest necessary requirement for precision.The conversion of alternative units of measure to the base unit should result in simple decimal fractions (not, for example, 1/3 = 0.333...).Inventory ManagementIn Inventory Management, the base unit of measure is the same as the stockkeeping unit.ServicesServices have units of measure of their own, including the following:Service unitUnit of measure at the higher item level. The precise quantities of the individual services are each at the detailed service line level.BlanketUnit of measure at service line level for services to be provided once only, and for which no precise quantities can or are to be specified.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionLowerLimit" Type="Edm.Decimal" Precision="12" Scale="3" sap:unit="ConditionAlternativeCurrency" sap:label="Lower limit" sap:quickinfo="Lower limit of the condition rate/amount">
+     <Documentation>
+      <Summary>Indicates whether, during document processing, the system checks if manual changes fall short of the lower limit allowed for the corresponding condition record.</Summary>
+      <LongDescription>When you maintain the scales in a condition record, the system checks whether the scale value falls below the lower limit.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionUpperLimit" Type="Edm.Decimal" Precision="12" Scale="3" sap:unit="ConditionAlternativeCurrency" sap:label="Upper limit" sap:quickinfo="Upper limit for the condition rate">
+     <Documentation>
+      <Summary>Indicates, during document processing, whether a manually entered price exceeds the upper limit allowed for the corresponding condition record and/or the condition type.</Summary>
+      <LongDescription>When you maintain a condition record, the system checks automatically whether the scale value exceeds the upper limit.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionAlternativeCurrency" Type="Edm.String" MaxLength="5" sap:label="Condition Currency" sap:quickinfo="Condition Currency (for Cumulation Fields)" sap:semantics="currency-code"/>
+    <Property Name="ConditionExclusion" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Exclusion" sap:quickinfo="Condition exclusion indicator">
+     <Documentation>
+      <Summary>Indicates whether the system automatically excludes the discounts that are proposed during pricing.</Summary>
+      <LongDescription>You can set this indicator in two ways:For a particular condition record (the field appears on the Details screen)For all records of a particular condition type (the field appears on the screen where you define the condition type)If you set the indicator to exclude conditions, there are several things to consider:The system will still take into account any condition supplements that are part of the condition record for the price (condition type PR00, for example)You can allow for exceptions where you want to include discounts in spite of the condition exclusion indicator (for a particular discount condition you can specify a requirement that applies the discount ONLY when the indicator is set)</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="ConditionIsDeleted" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Deletion Indicator" sap:quickinfo="Deletion Indicator for Condition Record">
+     <Documentation>
+      <Summary>Indicates whether the condition is no longer taken into account during document processing. The condition is deleted during the next reorganization run.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+    <Property Name="AdditionalValueDays" Type="Edm.String" MaxLength="2" sap:display-format="NonNegative" sap:label="Addit. Value Days" sap:quickinfo="Additional Value Days">
+     <Documentation>
+      <Summary>The number of days between the billing date and the date on which the terms of payment for the sales document become effective.</Summary>
+      <LongDescription>If you enter a value in this field, you cannot enter a date in the fixed value date field.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="FixedValueDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Fixed Value Date">
+     <Documentation>
+      <Summary>The date on which the terms of payment related to the sales document become effective.</Summary>
+      <LongDescription>If you enter a date in this field, you cannot enter a value in the additional value days field.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="PaymentTerms" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Terms of Payment" sap:quickinfo="Terms of Payment Key">
+     <Documentation>
+      <Summary>Key for defining payment terms composed of cash discount percentages and payment periods.</Summary>
+      <LongDescription>It is used in sales orders, purchase orders, and invoices. Terms of payment provide information for:Cash managementDunning proceduresPayment transactionsData can be entered in the field for the terms of payment key in various ways as you enter a business transaction:In most business transactions, the system defaults the key specified in the master record of the customer/vendor in question.In some transactions (for example, credit memos), however, the system does not default the key from the master record. Despite this, you can use the key from the customer/vendor master record by entering "*" in the field.Regardless of whether or not a key is defaulted from the master record, you can manually enter a key during document entry at:item level in sales ordersheader level in purchase orders and invoicesMaster records have separate areas for Financial Accounting, Sales, and Purchasing. You can specify different terms of payment keys in each of these areas. When you then enter a business transaction, the application in question will use the key specified in its area of the master record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="CndnMaxNumberOfSalesOrders" Type="Edm.String" MaxLength="2" sap:display-format="NonNegative" sap:label="Max.number.of.orders" sap:quickinfo="Maximum number of sales orders per condition record">
+     <Documentation>
+      <Summary>Specifies - up to a maximum of three - the number of sales orders that can benefit from this condition record.</Summary>
+      <LongDescription>You introduce a new product for which you offer an introductory discount. The customer gets this discount only on the first two orders - the initial order and the first replenishment order. Thereafter, the discount is inactive. In this case, you enter '2' in this field.To see how many orders have already benefitted from a particular condition record, you select Details -&gt; Cumulative values in the overview screen of the condition record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="MinimumConditionBasisValue" Type="Edm.Decimal" Precision="15" Scale="3" sap:unit="ConditionQuantityUnit" sap:label="Min.cond.base value" sap:quickinfo="Minimum condition base value"/>
+    <Property Name="MaximumConditionBasisValue" Type="Edm.Decimal" Precision="15" Scale="3" sap:unit="ConditionQuantityUnit" sap:label="Max.cond.base value" sap:quickinfo="Maximum condition base value">
+     <Documentation>
+      <Summary>Specifies the maximum condition base value for this condition record.</Summary>
+      <LongDescription>You use this field to specify a maximum cumulative quantity, weight, or volume for a condition record.You offer a customer a special discount on a certain product but want to limit this discount to a specified total number of cases. You enter the maximum number of cases in this field. As you process orders that use this condition record, the system updates the cumulative quantity. When the maximum quantity is reached, the system automatically deactivates the condition record in subsequent orders.To see the current cumulative condition base value for a particular condition record, you select Extras -&gt; Cumulative values in the overview screen of the condition record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="MaximumConditionAmount" Type="Edm.Decimal" Precision="14" Scale="3" sap:unit="ConditionAlternativeCurrency" sap:label="Max.condition value" sap:quickinfo="Maximum condition value">
+     <Documentation>
+      <Summary>Specifies the maximum condition value for this condition record.</Summary>
+      <LongDescription>You use this field to limit the use of a particular condition record to a specified total value.You offer a customer a special discount on a certain product but want to limit this discount to a specified total amount. You enter the maximum amount (for example, 1000 USD) in this field. As you process orders that use this condition record, the system updates the cumulative value. When the maximum value is reached, the system automatically deactivates the condition record in subsequent orders.To see the current cumulative value for a particular condition record, you select Details -&gt; Cumulative values in the overview screen of the condition record.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="IncrementalScale" Type="Edm.String" MaxLength="4" sap:display-format="NonNegative" sap:label="Incremental scale" sap:quickinfo="Number of incremental scale"/>
+    <Property Name="PricingScaleLine" Type="Edm.String" MaxLength="4" sap:display-format="NonNegative" sap:label="Pricing scale" sap:quickinfo="Scale number for pricing"/>
+    <Property Name="ConditionReleaseStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Release status">
+     <Documentation>
+      <Summary>The release status controls in which scenarios the condition records are found.</Summary>
+      <LongDescription>If the status is set at 'B', for example, then the corresponding records are taken into account during a pricing simulation, but are not used in current documents.The release status can only be maintained directly for agreements (sales deals). For condition records, this is done via the processing status for conditions.</LongDescription>
+     </Documentation>
+    </Property>
+    <NavigationProperty Name="to_SlsPrcgCndnRecdSuplmnt" Relationship="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_B431A6489012C00DAEA40C6C0011021C" FromRole="FromRole_assoc_B431A6489012C00DAEA40C6C0011021C" ToRole="ToRole_assoc_B431A6489012C00DAEA40C6C0011021C"/>
+    <NavigationProperty Name="to_SlsPrcgCndnRecdValidity" Relationship="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_0B464C6B7360065BE8B8C6DF3BF967F2" FromRole="FromRole_assoc_0B464C6B7360065BE8B8C6DF3BF967F2" ToRole="ToRole_assoc_0B464C6B7360065BE8B8C6DF3BF967F2"/>
+    <NavigationProperty Name="to_SlsPricingCndnRecdScale" Relationship="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_CBEBE4D9BD1F096712751A2DE58CC074" FromRole="FromRole_assoc_CBEBE4D9BD1F096712751A2DE58CC074" ToRole="ToRole_assoc_CBEBE4D9BD1F096712751A2DE58CC074"/>
+   </EntityType>
+   <Association Name="assoc_D07DD6E36895AFEB989C4F6388E6468D" sap:content-version="1">
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecdSuplmntType" Multiplicity="1" Role="FromRole_assoc_D07DD6E36895AFEB989C4F6388E6468D"/>
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecordScaleType" Multiplicity="*" Role="ToRole_assoc_D07DD6E36895AFEB989C4F6388E6468D"/>
+   </Association>
+   <Association Name="assoc_7A2D768E758D5C99F26B0CE1C6B396C8" sap:content-version="1">
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecdSuplmntType" Multiplicity="1" Role="FromRole_assoc_7A2D768E758D5C99F26B0CE1C6B396C8"/>
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgConditionRecordType" Multiplicity="0..1" Role="ToRole_assoc_7A2D768E758D5C99F26B0CE1C6B396C8"/>
+   </Association>
+   <Association Name="assoc_66BDC3B09DE48CB469A4D23A8CBBD859" sap:content-version="1">
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecdSuplmntType" Multiplicity="1" Role="FromRole_assoc_66BDC3B09DE48CB469A4D23A8CBBD859"/>
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecdValidityType" Multiplicity="*" Role="ToRole_assoc_66BDC3B09DE48CB469A4D23A8CBBD859"/>
+   </Association>
+   <Association Name="assoc_B431A6489012C00DAEA40C6C0011021C" sap:content-version="1">
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgConditionRecordType" Multiplicity="1" Role="FromRole_assoc_B431A6489012C00DAEA40C6C0011021C"/>
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecdSuplmntType" Multiplicity="*" Role="ToRole_assoc_B431A6489012C00DAEA40C6C0011021C"/>
+   </Association>
+   <Association Name="assoc_0B464C6B7360065BE8B8C6DF3BF967F2" sap:content-version="1">
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgConditionRecordType" Multiplicity="1" Role="FromRole_assoc_0B464C6B7360065BE8B8C6DF3BF967F2"/>
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecdValidityType" Multiplicity="*" Role="ToRole_assoc_0B464C6B7360065BE8B8C6DF3BF967F2"/>
+   </Association>
+   <Association Name="assoc_CBEBE4D9BD1F096712751A2DE58CC074" sap:content-version="1">
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgConditionRecordType" Multiplicity="1" Role="FromRole_assoc_CBEBE4D9BD1F096712751A2DE58CC074"/>
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecordScaleType" Multiplicity="*" Role="ToRole_assoc_CBEBE4D9BD1F096712751A2DE58CC074"/>
+   </Association>
+   <Association Name="assoc_C9E8E350233D126D1870D9591D1CA300" sap:content-version="1">
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecdValidityType" Multiplicity="1" Role="FromRole_assoc_C9E8E350233D126D1870D9591D1CA300"/>
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecdSuplmntType" Multiplicity="*" Role="ToRole_assoc_C9E8E350233D126D1870D9591D1CA300"/>
+   </Association>
+   <Association Name="assoc_5F47B9A276FCBC7051E5300BA9BCCCD7" sap:content-version="1">
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecdValidityType" Multiplicity="1" Role="FromRole_assoc_5F47B9A276FCBC7051E5300BA9BCCCD7"/>
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgConditionRecordType" Multiplicity="0..1" Role="ToRole_assoc_5F47B9A276FCBC7051E5300BA9BCCCD7"/>
+   </Association>
+   <Association Name="assoc_2A2E895BB4BD1650AF5FD8F07A8053C6" sap:content-version="1">
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecordScaleType" Multiplicity="1" Role="FromRole_assoc_2A2E895BB4BD1650AF5FD8F07A8053C6"/>
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecdSuplmntType" Multiplicity="0..1" Role="ToRole_assoc_2A2E895BB4BD1650AF5FD8F07A8053C6"/>
+   </Association>
+   <Association Name="assoc_A8740D8F3567BFDDA7CB94F012A7DBB6" sap:content-version="1">
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecordScaleType" Multiplicity="1" Role="FromRole_assoc_A8740D8F3567BFDDA7CB94F012A7DBB6"/>
+    <End Type="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgConditionRecordType" Multiplicity="0..1" Role="ToRole_assoc_A8740D8F3567BFDDA7CB94F012A7DBB6"/>
+   </Association>
+   <EntityContainer Name="API_SLSPRICINGCONDITIONRECORD_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+    <EntitySet Name="A_SlsPrcgCndnRecdSuplmnt" EntityType="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecdSuplmntType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+    <EntitySet Name="A_SlsPrcgCndnRecdValidity" EntityType="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecdValidityType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+    <EntitySet Name="A_SlsPrcgCndnRecordScale" EntityType="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgCndnRecordScaleType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+    <EntitySet Name="A_SlsPrcgConditionRecord" EntityType="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgConditionRecordType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+    <AssociationSet Name="assoc_66BDC3B09DE48CB469A4D23A8CBBD859" Association="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_66BDC3B09DE48CB469A4D23A8CBBD859" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SlsPrcgCndnRecdSuplmnt" Role="FromRole_assoc_66BDC3B09DE48CB469A4D23A8CBBD859"/>
+     <End EntitySet="A_SlsPrcgCndnRecdValidity" Role="ToRole_assoc_66BDC3B09DE48CB469A4D23A8CBBD859"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_CBEBE4D9BD1F096712751A2DE58CC074" Association="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_CBEBE4D9BD1F096712751A2DE58CC074" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SlsPrcgConditionRecord" Role="FromRole_assoc_CBEBE4D9BD1F096712751A2DE58CC074"/>
+     <End EntitySet="A_SlsPrcgCndnRecordScale" Role="ToRole_assoc_CBEBE4D9BD1F096712751A2DE58CC074"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_A8740D8F3567BFDDA7CB94F012A7DBB6" Association="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_A8740D8F3567BFDDA7CB94F012A7DBB6" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SlsPrcgCndnRecordScale" Role="FromRole_assoc_A8740D8F3567BFDDA7CB94F012A7DBB6"/>
+     <End EntitySet="A_SlsPrcgConditionRecord" Role="ToRole_assoc_A8740D8F3567BFDDA7CB94F012A7DBB6"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_7A2D768E758D5C99F26B0CE1C6B396C8" Association="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_7A2D768E758D5C99F26B0CE1C6B396C8" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SlsPrcgCndnRecdSuplmnt" Role="FromRole_assoc_7A2D768E758D5C99F26B0CE1C6B396C8"/>
+     <End EntitySet="A_SlsPrcgConditionRecord" Role="ToRole_assoc_7A2D768E758D5C99F26B0CE1C6B396C8"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_0B464C6B7360065BE8B8C6DF3BF967F2" Association="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_0B464C6B7360065BE8B8C6DF3BF967F2" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SlsPrcgConditionRecord" Role="FromRole_assoc_0B464C6B7360065BE8B8C6DF3BF967F2"/>
+     <End EntitySet="A_SlsPrcgCndnRecdValidity" Role="ToRole_assoc_0B464C6B7360065BE8B8C6DF3BF967F2"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_C9E8E350233D126D1870D9591D1CA300" Association="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_C9E8E350233D126D1870D9591D1CA300" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SlsPrcgCndnRecdValidity" Role="FromRole_assoc_C9E8E350233D126D1870D9591D1CA300"/>
+     <End EntitySet="A_SlsPrcgCndnRecdSuplmnt" Role="ToRole_assoc_C9E8E350233D126D1870D9591D1CA300"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_2A2E895BB4BD1650AF5FD8F07A8053C6" Association="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_2A2E895BB4BD1650AF5FD8F07A8053C6" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SlsPrcgCndnRecordScale" Role="FromRole_assoc_2A2E895BB4BD1650AF5FD8F07A8053C6"/>
+     <End EntitySet="A_SlsPrcgCndnRecdSuplmnt" Role="ToRole_assoc_2A2E895BB4BD1650AF5FD8F07A8053C6"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_D07DD6E36895AFEB989C4F6388E6468D" Association="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_D07DD6E36895AFEB989C4F6388E6468D" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SlsPrcgCndnRecdSuplmnt" Role="FromRole_assoc_D07DD6E36895AFEB989C4F6388E6468D"/>
+     <End EntitySet="A_SlsPrcgCndnRecordScale" Role="ToRole_assoc_D07DD6E36895AFEB989C4F6388E6468D"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_B431A6489012C00DAEA40C6C0011021C" Association="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_B431A6489012C00DAEA40C6C0011021C" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SlsPrcgConditionRecord" Role="FromRole_assoc_B431A6489012C00DAEA40C6C0011021C"/>
+     <End EntitySet="A_SlsPrcgCndnRecdSuplmnt" Role="ToRole_assoc_B431A6489012C00DAEA40C6C0011021C"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_5F47B9A276FCBC7051E5300BA9BCCCD7" Association="API_SLSPRICINGCONDITIONRECORD_SRV.assoc_5F47B9A276FCBC7051E5300BA9BCCCD7" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_SlsPrcgCndnRecdValidity" Role="FromRole_assoc_5F47B9A276FCBC7051E5300BA9BCCCD7"/>
+     <End EntitySet="A_SlsPrcgConditionRecord" Role="ToRole_assoc_5F47B9A276FCBC7051E5300BA9BCCCD7"/>
+    </AssociationSet>
+   </EntityContainer>
+   <Annotations Target="API_SLSPRICINGCONDITIONRECORD_SRV.API_SLSPRICINGCONDITIONRECORD_SRV_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Aggregation.ApplySupported">
+     <Record>
+      <PropertyValue Property="Transformations">
+       <Collection>
+        <String>aggregate</String>
+        <String>groupby</String>
+        <String>filter</String>
+       </Collection>
+      </PropertyValue>
+      <PropertyValue Property="Rollup" EnumMember="None"/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgConditionRecordType/ConditionRecord" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+   </Annotations>
+   <Annotations Target="API_SLSPRICINGCONDITIONRECORD_SRV.A_SlsPrcgConditionRecordType/ConditionSequentialNumber" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+   </Annotations>
+   <atom:link rel="self" href="https://host:port/sap/opu/odata/sap/API_SLSPRICINGCONDITIONRECORD_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+   <atom:link rel="latest-version" href="https://host:port/sap/opu/odata/sap/API_SLSPRICINGCONDITIONRECORD_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+  </Schema>
+ </edmx:DataServices>
+</edmx:Edmx>

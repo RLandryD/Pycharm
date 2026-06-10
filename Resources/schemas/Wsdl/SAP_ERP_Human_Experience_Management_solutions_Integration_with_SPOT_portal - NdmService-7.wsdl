@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions targetNamespace="http://www.src.si/schemas/evem/ndm/wsdl/20160107" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:ndm="http://www.src.si/schemas/evem/ndm/wsdl/20160107" xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+ <types>
+  <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.src.si/schemas/evem/ndm/wsdl/20160107">
+   <xs:element name="getEBolRes" type="xs:string"/>
+   <xs:element name="getEBolPDFRes" type="xs:string"/>
+   <xs:element name="getListEBolRes" type="xs:string"/>
+   <xs:element name="getListMeseciEBolRes" type="xs:string"/>
+   <xs:element name="getEBol" type="xs:string"/>
+   <xs:element name="getEBolPDF" type="xs:string"/>
+   <xs:element name="getListEBol" type="xs:string"/>
+   <xs:element name="getListMeseciEBol" type="xs:string"/>
+   <xs:element name="submitVloga" type="xs:string"/>
+   <xs:element name="statusiVlog" type="xs:string"/>
+   <xs:element name="statusiVlogRes" type="xs:string"/>
+   <xs:element name="getOddanaVlogaRes" type="xs:string"/>
+   <xs:element name="echo" type="xs:string"/>
+   <xs:simpleType name="eVemStevilkaType">
+    <xs:restriction base="xs:string">
+     <xs:pattern value="\d{4}-\d{2}-\d{8}-\d{6}"/>
+    </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="MaticnaType">
+    <xs:restriction base="xs:string">
+     <xs:pattern value="\d{10}"/>
+    </xs:restriction>
+   </xs:simpleType>
+   <xs:element name="SubmitVlogaRes">
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="evem-st" type="ndm:eVemStevilkaType"/>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="GetOddanaVlogaReq">
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="evem-st" type="ndm:eVemStevilkaType"/>
+      <xs:element name="ms" type="ndm:MaticnaType"/>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+  </xs:schema>
+ </types>
+ <message name="submitVlogaIn">
+  <part element="ndm:submitVloga" name="request"/>
+ </message>
+ <message name="submitVlogaOut">
+  <part element="ndm:SubmitVlogaRes" name="response"/>
+ </message>
+ <message name="getStatusiVlogIn">
+  <part element="ndm:statusiVlog" name="request"/>
+ </message>
+ <message name="getStatusiVlogOut">
+  <part element="ndm:statusiVlogRes" name="response"/>
+ </message>
+ <message name="getOddanaVlogaIn">
+  <part element="ndm:GetOddanaVlogaReq" name="request"/>
+ </message>
+ <message name="getOddanaVlogaOut">
+  <part element="ndm:getOddanaVlogaRes" name="response"/>
+ </message>
+ <message name="echoIn">
+  <part element="ndm:echo" name="request"/>
+ </message>
+ <message name="echoOut">
+  <part element="ndm:echo" name="response"/>
+ </message>
+ <message name="getEBolIn">
+  <part element="ndm:getEBol" name="request"/>
+ </message>
+ <message name="getEBolOut">
+  <part element="ndm:getEBolRes" name="response"/>
+ </message>
+ <message name="getEBolPDFIn">
+  <part element="ndm:getEBolPDF" name="request"/>
+ </message>
+ <message name="getEBolPDFOut">
+  <part element="ndm:getEBolPDFRes" name="response"/>
+ </message>
+ <message name="getListEBolIn">
+  <part element="ndm:getListEBol" name="request"/>
+ </message>
+ <message name="getListEBolOut">
+  <part element="ndm:getListEBolRes" name="response"/>
+ </message>
+ <message name="getListMeseciEBolIn">
+  <part element="ndm:getListMeseciEBol" name="request"/>
+ </message>
+ <message name="getListMeseciEBolOut">
+  <part element="ndm:getListMeseciEBolRes" name="response"/>
+ </message>
+ <portType name="NdmServiceInterface">
+  <operation name="submitVloga">
+   <input message="ndm:submitVlogaIn"/>
+   <output message="ndm:submitVlogaOut"/>
+  </operation>
+  <operation name="getStatusiVlog">
+   <input message="ndm:getStatusiVlogIn"/>
+   <output message="ndm:getStatusiVlogOut"/>
+  </operation>
+  <operation name="getOddanaVloga">
+   <input message="ndm:getOddanaVlogaIn"/>
+   <output message="ndm:getOddanaVlogaOut"/>
+  </operation>
+  <operation name="echo">
+   <input message="ndm:echoIn"/>
+   <output message="ndm:echoOut"/>
+  </operation>
+  <operation name="getEBol">
+   <input message="ndm:getEBolIn"/>
+   <output message="ndm:getEBolOut"/>
+  </operation>
+  <operation name="getEBolPDF">
+   <input message="ndm:getEBolPDFIn"/>
+   <output message="ndm:getEBolPDFOut"/>
+  </operation>
+  <operation name="getListEBol">
+   <input message="ndm:getListEBolIn"/>
+   <output message="ndm:getListEBolOut"/>
+  </operation>
+  <operation name="getListMeseciEBol">
+   <input message="ndm:getListMeseciEBolIn"/>
+   <output message="ndm:getListMeseciEBolOut"/>
+  </operation>
+ </portType>
+ <binding name="NdmService" type="ndm:NdmServiceInterface">
+  <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+  <operation name="submitVloga">
+   <soap:operation style="document"/>
+   <input>
+    <soap:body use="literal"/>
+   </input>
+   <output>
+    <soap:body use="literal"/>
+   </output>
+  </operation>
+  <operation name="getStatusiVlog">
+   <soap:operation style="document"/>
+   <input>
+    <soap:body use="literal"/>
+   </input>
+   <output>
+    <soap:body use="literal"/>
+   </output>
+  </operation>
+  <operation name="getOddanaVloga">
+   <soap:operation style="document"/>
+   <input>
+    <soap:body use="literal"/>
+   </input>
+   <output>
+    <soap:body use="literal"/>
+   </output>
+  </operation>
+  <operation name="echo">
+   <soap:operation style="document"/>
+   <input>
+    <soap:body use="literal"/>
+   </input>
+   <output>
+    <soap:body use="literal"/>
+   </output>
+  </operation>
+  <operation name="getEBol">
+   <soap:operation style="document"/>
+   <input>
+    <soap:body use="literal"/>
+   </input>
+   <output>
+    <soap:body use="literal"/>
+   </output>
+  </operation>
+  <operation name="getEBolPDF">
+   <soap:operation style="document"/>
+   <input>
+    <soap:body use="literal"/>
+   </input>
+   <output>
+    <soap:body use="literal"/>
+   </output>
+  </operation>
+  <operation name="getListEBol">
+   <soap:operation style="document"/>
+   <input>
+    <soap:body use="literal"/>
+   </input>
+   <output>
+    <soap:body use="literal"/>
+   </output>
+  </operation>
+  <operation name="getListMeseciEBol">
+   <soap:operation style="document"/>
+   <input>
+    <soap:body use="literal"/>
+   </input>
+   <output>
+    <soap:body use="literal"/>
+   </output>
+  </operation>
+ </binding>
+ <service name="NdmService">
+  <port binding="ndm:NdmService" name="NdmService">
+   <soap:address location="https://spot-sola.gov.si/spot-ndm/services/NdmService"/>
+  </port>
+ </service>
+</definitions>

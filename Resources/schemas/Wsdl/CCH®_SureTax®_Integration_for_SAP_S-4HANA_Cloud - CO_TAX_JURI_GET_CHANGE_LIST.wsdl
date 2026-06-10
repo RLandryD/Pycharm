@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="http://sap.com/xi/FotETaxUS" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://sap.com/xi/FotETaxUS" xmlns:n1="http://sap.com/xi/SAPGlobal20/Global">
+ <wsdl:documentation>
+  <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+ </wsdl:documentation>
+ <wsdl:types>
+  <xsd:schema targetNamespace="http://sap.com/xi/FotETaxUS" xmlns="http://sap.com/xi/FotETaxUS" xmlns:xi0="http://sap.com/xi/SAPGlobal20/Global">
+   <xsd:element name="TAX_JUR_GETCHANGELIST_RECEIVE" type="TAX_JUR_GETCHANGELIST_RECEIVE"/>
+   <xsd:element name="TAX_JUR_GETCHANGELIST_SEND" type="TAX_JUR_GETCHANGELIST_SEND"/>
+   <xsd:complexType name="ExchangeFaultData">
+    <xsd:sequence>
+     <xsd:element name="faultText" type="xsd:string"/>
+     <xsd:element name="faultUrl" minOccurs="0" type="xsd:string"/>
+     <xsd:element name="faultDetail" minOccurs="0" maxOccurs="unbounded" type="ExchangeLogData"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="ExchangeLogData">
+    <xsd:sequence>
+     <xsd:element name="severity" minOccurs="0" type="xsd:string"/>
+     <xsd:element name="text" type="xsd:string"/>
+     <xsd:element name="url" minOccurs="0" type="xsd:string"/>
+     <xsd:element name="id" minOccurs="0" type="xsd:string"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="LOCATION_HEADER">
+    <xsd:sequence>
+     <xsd:element name="RETCODE" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="1"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="ERRCODE" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="4"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="ERRMSG" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="72"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TAX_JURI_CODE">
+    <xsd:sequence>
+     <xsd:element name="TXJCD" minOccurs="0" maxOccurs="unbounded">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="15"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TAX_JUR_GETCHANGELIST_RECEIVE">
+    <xsd:sequence>
+     <xsd:element name="MSG_RETURN" minOccurs="0" type="LOCATION_HEADER"/>
+     <xsd:element name="TAX_JURI_CODE" minOccurs="0" type="TAX_JURI_CODE"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TAX_JUR_GETCHANGELIST_SEND">
+    <xsd:sequence>
+     <xsd:element name="API_VERSION" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="10"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="JCD_UNIFY_IND" minOccurs="0">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="1"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="LAST_UPDATED_DATE">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:date">
+        <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+     <xsd:element name="SEND_DATE">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:date">
+        <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://sap.com/xi/SAPGlobal20/Global" xmlns="http://sap.com/xi/SAPGlobal20/Global" xmlns:xi0="http://sap.com/xi/SAPGlobal20/Global">
+   <xsd:import namespace="http://sap.com/xi/FotETaxUS"/>
+   <xsd:element name="StandardMessageFault">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="standard" type="tns:ExchangeFaultData"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="TAX_JUR_GETCHANGELIST_SEND">
+  <wsdl:part name="TAX_JUR_GETCHANGELIST_SEND" element="tns:TAX_JUR_GETCHANGELIST_SEND"/>
+ </wsdl:message>
+ <wsdl:message name="TAX_JUR_GETCHANGELIST_RECEIVE">
+  <wsdl:part name="TAX_JUR_GETCHANGELIST_RECEIVE" element="tns:TAX_JUR_GETCHANGELIST_RECEIVE"/>
+ </wsdl:message>
+ <wsdl:message name="StandardMessageFault">
+  <wsdl:part name="StandardMessageFault" element="n1:StandardMessageFault"/>
+ </wsdl:message>
+ <wsdl:portType name="Tax_Juri_GetChangeList">
+  <wsdl:documentation>
+   <sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+    <sapdoc:docitem applicationComponent="FI-GL-GL-F"/>
+   </sapdoc:sapdoc>
+  </wsdl:documentation>
+  <wsdl:operation name="Tax_Juri_GetChangList">
+   <wsdl:input message="tns:TAX_JUR_GETCHANGELIST_SEND"/>
+   <wsdl:output message="tns:TAX_JUR_GETCHANGELIST_RECEIVE"/>
+   <wsdl:fault name="StandardMessageFault" message="tns:StandardMessageFault"/>
+  </wsdl:operation>
+ </wsdl:portType>
+ <wsdl:binding type="tns:Tax_Juri_GetChangeList" name="CO_TAX_JURI_GET_CHANGE_LIST">
+  <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+  <wsdl:operation name="Tax_Juri_GetChangList">
+   <wsdl:input>
+    <soap:body use="literal"/>
+   </wsdl:input>
+  </wsdl:operation>
+ </wsdl:binding>
+ <wsdl:binding type="tns:Tax_Juri_GetChangeList" name="CO_TAX_JURI_GET_CHANGE_LIST_S12">
+  <wsoap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+  <wsdl:operation name="Tax_Juri_GetChangList">
+   <wsdl:input>
+    <wsoap12:body use="literal"/>
+   </wsdl:input>
+   <wsdl:output>
+    <wsoap12:body use="literal"/>
+   </wsdl:output>
+   <wsdl:fault name="StandardMessageFault">
+    <wsoap12:fault name="StandardMessageFault" use="literal"/>
+   </wsdl:fault>
+  </wsdl:operation>
+ </wsdl:binding>
+ <wsdl:service name="CO_TAX_JURI_GET_CHANGE_LIST_service">
+  <wsdl:port name="CO_TAX_JURI_GET_CHANGE_LIST_port_soap11" binding="CO_TAX_JURI_GET_CHANGE_LIST">
+   <soap:address location="https://myhost.com/"/>
+  </wsdl:port>
+  <wsdl:port name="CO_TAX_JURI_GET_CHANGE_LIST_port_soap12" binding="CO_TAX_JURI_GET_CHANGE_LIST_S12">
+   <wsoap12:address location="https://myhost.com/"/>
+  </wsdl:port>
+ </wsdl:service>
+</wsdl:definitions>

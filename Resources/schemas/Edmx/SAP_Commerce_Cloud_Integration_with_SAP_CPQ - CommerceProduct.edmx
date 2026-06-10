@@ -1,0 +1,196 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:s="http://schemas.sap.com/commerce" Namespace="HybrisCommerceOData" s:schema-version="1">
+            <EntityType Name="LocalizedProduct">
+                <Key>
+                    <PropertyRef Name="language"/>
+                </Key>
+                <Property Name="name" Nullable="true" Type="Edm.String" s:IsLanguageDependent="true"/>
+                <Property Name="summary" Nullable="true" Type="Edm.String" s:IsLanguageDependent="true"/>
+                <Property Name="description" Nullable="true" Type="Edm.String" s:IsLanguageDependent="true"/>
+                <Property Name="language" Nullable="false" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="ArticleApprovalStatus">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="ArticleApprovalStatus_code"/>
+            </EntityType>
+            <EntityType Name="Category">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CatalogVersion_version|Catalog_id|Category_code"/>
+                <NavigationProperty FromRole="Category" Name="catalogVersion" Nullable="false" Relationship="HybrisCommerceOData.FK_Category_catalogVersion" ToRole="CatalogVersion" s:IsUnique="true"/>
+            </EntityType>
+            <EntityType Name="BaseStore">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="uid" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="BaseStore_uid"/>
+                <NavigationProperty FromRole="BaseStore" Name="SAPConfiguration" Nullable="true" Relationship="HybrisCommerceOData.FK_BaseStore_SAPConfiguration" ToRole="SAPConfiguration"/>
+            </EntityType>
+            <EntityType Name="SAPConfiguration">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="core_name" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="saporderexchange_itemPriceConditionType" Nullable="true" Type="Edm.String"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="SAPConfiguration_core_name"/>
+            </EntityType>
+            <EntityType Name="Media">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="realFileName" Nullable="true" Type="Edm.String"/>
+                <Property Name="code" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CatalogVersion_version|Catalog_id|Media_code"/>
+                <NavigationProperty FromRole="Media" Name="catalogVersion" Nullable="false" Relationship="HybrisCommerceOData.FK_Media_catalogVersion" ToRole="CatalogVersion" s:IsUnique="true"/>
+            </EntityType>
+            <EntityType Name="CatalogVersion">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="version" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CatalogVersion_version|Catalog_id"/>
+                <NavigationProperty FromRole="CatalogVersion" Name="catalog" Nullable="false" Relationship="HybrisCommerceOData.FK_CatalogVersion_catalog" ToRole="Catalog" s:IsUnique="true"/>
+            </EntityType>
+            <EntityType Name="Product">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="summary" Nullable="true" Type="Edm.String" s:IsLanguageDependent="true"/>
+                <Property Name="onlineDate" Nullable="true" Type="Edm.DateTime"/>
+                <Property Name="description" Nullable="true" Type="Edm.String" s:IsLanguageDependent="true"/>
+                <Property Name="code" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="name" Nullable="true" Type="Edm.String" s:IsLanguageDependent="true"/>
+                <Property Name="offlineDate" Nullable="true" Type="Edm.DateTime"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="CatalogVersion_version|Catalog_id|Product_code"/>
+                <NavigationProperty FromRole="Product" Name="unit" Nullable="true" Relationship="HybrisCommerceOData.FK_Product_unit" ToRole="Unit"/>
+                <NavigationProperty FromRole="Product" Name="approvalStatus" Nullable="true" Relationship="HybrisCommerceOData.FK_Product_approvalStatus" ToRole="ArticleApprovalStatus"/>
+                <NavigationProperty FromRole="Product" Name="picture" Nullable="true" Relationship="HybrisCommerceOData.FK_Product_picture" ToRole="Media"/>
+                <NavigationProperty FromRole="Product" Name="catalogVersion" Nullable="false" Relationship="HybrisCommerceOData.FK_Product_catalogVersion" ToRole="CatalogVersion" s:IsUnique="true"/>
+                <NavigationProperty FromRole="Product" Name="supercategories" Nullable="true" Relationship="HybrisCommerceOData.FK_Product_supercategories" ToRole="Category"/>
+                <NavigationProperty FromRole="Product" Name="localizedAttributes" Nullable="true" Relationship="HybrisCommerceOData.FK_Product_localizedAttributes" ToRole="LocalizedProduct"/>
+            </EntityType>
+            <EntityType Name="Unit">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="Unit_code"/>
+            </EntityType>
+            <EntityType Name="Catalog">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="id" Nullable="false" Type="Edm.String" s:IsUnique="true"/>
+                <Property Name="integrationKey" Nullable="false" Type="Edm.String" s:Alias="Catalog_id"/>
+                <NavigationProperty FromRole="Catalog" Name="baseStores" Nullable="true" Relationship="HybrisCommerceOData.FK_Catalog_baseStores" ToRole="BaseStore"/>
+            </EntityType>
+            <Association Name="FK_Media_catalogVersion">
+                <End Multiplicity="0..1" Role="Media" Type="HybrisCommerceOData.Media"/>
+                <End Multiplicity="0..1" Role="CatalogVersion" Type="HybrisCommerceOData.CatalogVersion"/>
+            </Association>
+            <Association Name="FK_Product_unit">
+                <End Multiplicity="0..1" Role="Product" Type="HybrisCommerceOData.Product"/>
+                <End Multiplicity="0..1" Role="Unit" Type="HybrisCommerceOData.Unit"/>
+            </Association>
+            <Association Name="FK_Product_approvalStatus">
+                <End Multiplicity="0..1" Role="Product" Type="HybrisCommerceOData.Product"/>
+                <End Multiplicity="0..1" Role="ArticleApprovalStatus" Type="HybrisCommerceOData.ArticleApprovalStatus"/>
+            </Association>
+            <Association Name="FK_Product_picture">
+                <End Multiplicity="0..1" Role="Product" Type="HybrisCommerceOData.Product"/>
+                <End Multiplicity="0..1" Role="Media" Type="HybrisCommerceOData.Media"/>
+            </Association>
+            <Association Name="FK_Product_catalogVersion">
+                <End Multiplicity="0..1" Role="Product" Type="HybrisCommerceOData.Product"/>
+                <End Multiplicity="0..1" Role="CatalogVersion" Type="HybrisCommerceOData.CatalogVersion"/>
+            </Association>
+            <Association Name="FK_Product_supercategories">
+                <End Multiplicity="0..1" Role="Product" Type="HybrisCommerceOData.Product"/>
+                <End Multiplicity="*" Role="Category" Type="HybrisCommerceOData.Category"/>
+            </Association>
+            <Association Name="FK_Catalog_baseStores">
+                <End Multiplicity="0..1" Role="Catalog" Type="HybrisCommerceOData.Catalog"/>
+                <End Multiplicity="*" Role="BaseStore" Type="HybrisCommerceOData.BaseStore"/>
+            </Association>
+            <Association Name="FK_CatalogVersion_catalog">
+                <End Multiplicity="0..1" Role="CatalogVersion" Type="HybrisCommerceOData.CatalogVersion"/>
+                <End Multiplicity="0..1" Role="Catalog" Type="HybrisCommerceOData.Catalog"/>
+            </Association>
+            <Association Name="FK_BaseStore_SAPConfiguration">
+                <End Multiplicity="0..1" Role="BaseStore" Type="HybrisCommerceOData.BaseStore"/>
+                <End Multiplicity="0..1" Role="SAPConfiguration" Type="HybrisCommerceOData.SAPConfiguration"/>
+            </Association>
+            <Association Name="FK_Category_catalogVersion">
+                <End Multiplicity="0..1" Role="Category" Type="HybrisCommerceOData.Category"/>
+                <End Multiplicity="0..1" Role="CatalogVersion" Type="HybrisCommerceOData.CatalogVersion"/>
+            </Association>
+            <Association Name="FK_Product_localizedAttributes">
+                <End Multiplicity="1" Role="Product" Type="HybrisCommerceOData.Product"/>
+                <End Multiplicity="*" Role="LocalizedProduct" Type="HybrisCommerceOData.LocalizedProduct"/>
+            </Association>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet EntityType="HybrisCommerceOData.LocalizedProduct" Name="LocalizedProducts"/>
+                <EntitySet EntityType="HybrisCommerceOData.ArticleApprovalStatus" Name="ArticleApprovalStatuses"/>
+                <EntitySet EntityType="HybrisCommerceOData.Category" Name="Categories"/>
+                <EntitySet EntityType="HybrisCommerceOData.BaseStore" Name="BaseStores"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPConfiguration" Name="SAPConfigurations"/>
+                <EntitySet EntityType="HybrisCommerceOData.Media" Name="Medias"/>
+                <EntitySet EntityType="HybrisCommerceOData.CatalogVersion" Name="CatalogVersions"/>
+                <EntitySet EntityType="HybrisCommerceOData.Product" Name="Products"/>
+                <EntitySet EntityType="HybrisCommerceOData.Unit" Name="Units"/>
+                <EntitySet EntityType="HybrisCommerceOData.Catalog" Name="Catalogs"/>
+                <AssociationSet Association="HybrisCommerceOData.FK_Media_catalogVersion" Name="Media_CatalogVersions">
+                    <End EntitySet="Medias" Role="Media"/>
+                    <End EntitySet="CatalogVersions" Role="CatalogVersion"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_Product_unit" Name="Product_Units">
+                    <End EntitySet="Products" Role="Product"/>
+                    <End EntitySet="Units" Role="Unit"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_Product_approvalStatus" Name="Product_ArticleApprovalStatuses">
+                    <End EntitySet="Products" Role="Product"/>
+                    <End EntitySet="ArticleApprovalStatuses" Role="ArticleApprovalStatus"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_Product_picture" Name="Product_Medias">
+                    <End EntitySet="Products" Role="Product"/>
+                    <End EntitySet="Medias" Role="Media"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_Product_catalogVersion" Name="Product_CatalogVersions">
+                    <End EntitySet="Products" Role="Product"/>
+                    <End EntitySet="CatalogVersions" Role="CatalogVersion"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_Product_supercategories" Name="Product_Categories">
+                    <End EntitySet="Products" Role="Product"/>
+                    <End EntitySet="Categories" Role="Category"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_Catalog_baseStores" Name="Catalog_BaseStores">
+                    <End EntitySet="Catalogs" Role="Catalog"/>
+                    <End EntitySet="BaseStores" Role="BaseStore"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_CatalogVersion_catalog" Name="CatalogVersion_Catalogs">
+                    <End EntitySet="CatalogVersions" Role="CatalogVersion"/>
+                    <End EntitySet="Catalogs" Role="Catalog"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_BaseStore_SAPConfiguration" Name="BaseStore_SAPConfigurations">
+                    <End EntitySet="BaseStores" Role="BaseStore"/>
+                    <End EntitySet="SAPConfigurations" Role="SAPConfiguration"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_Category_catalogVersion" Name="Category_CatalogVersions">
+                    <End EntitySet="Categories" Role="Category"/>
+                    <End EntitySet="CatalogVersions" Role="CatalogVersion"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_Product_localizedAttributes" Name="Product_LocalizedProducts">
+                    <End EntitySet="Products" Role="Product"/>
+                    <End EntitySet="LocalizedProducts" Role="LocalizedProduct"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

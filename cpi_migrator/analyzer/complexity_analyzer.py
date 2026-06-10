@@ -148,6 +148,17 @@ class ComplexityAnalyzer:
         extra_channels = max(0, record.channel_count - 1)
         score += extra_channels * 2
 
+        # Structure-aware signal: when the REAL iFlow is available (uploaded
+        # path), score its actual topology. Metadata alone (adapters/mappings)
+        # badly underweights complex flows — a 12-step multi-process flow with
+        # gateways would otherwise score like a 2-step passthrough and land at
+        # ~1 day. Additive; the xlsx/MA inventory path (no source_iflow_xml) is
+        # unchanged.
+        struct_pts, struct_note = self._structural_score(record)
+        if struct_pts:
+            score += struct_pts
+            notes.append(struct_note)
+
         # Specific adapter notes
         for adapter in [record.sender_adapter, record.receiver_adapter]:
             if adapter in MIGRATION_NOTES and MIGRATION_NOTES[adapter] not in notes:
@@ -167,6 +178,8 @@ class ComplexityAnalyzer:
             reasoning.append(f"Message mapping '{record.mapping_program}' +5 pts: must be re-implemented in CPI.")
         if extra_channels > 0:
             reasoning.append(f"{extra_channels} extra channel(s) +{extra_channels*2} pts: each adds configuration effort.")
+        if struct_pts:
+            reasoning.append(f"Real iFlow structure +{struct_pts} pts ({struct_note}).")
         if record.sender_adapter not in ADAPTER_SCORES:
             reasoning.append(f"Unknown sender adapter '{record.sender_adapter}' +5 pts: needs manual investigation.")
         if record.receiver_adapter not in ADAPTER_SCORES:
@@ -204,6 +217,36 @@ class ComplexityAnalyzer:
             recommended_pattern=pattern,
             reasoning=reasoning,
         )
+
+    def _structural_score(self, record) -> tuple:
+        """Score the REAL iFlow topology when source XML is present. Returns
+        (points, note). The design effort metadata can't see lives here: local
+        integration processes (multi-process), gateways/routing, exception
+        subprocesses, mappings and scripts each add real migration work."""
+        xml = getattr(record, "source_iflow_xml", "") or ""
+        if not xml:
+            return 0, ""
+        try:
+            from extractor.iflow_parser import parse_iflow
+            m = parse_iflow(xml, record.name)
+        except Exception:
+            return 0, ""
+        bound = {"StartEvent", "StartTimerEvent", "EndEvent"}
+        mids = [s for s in m.steps.values() if s.kind not in bound]
+        n_steps = len(mids)
+        n_extra_proc = max(0, len(m.processes) - 1)   # LIPs + exception subprocs
+        n_routes = len(m.routes)
+        n_excp = sum(1 for s in m.steps.values()
+                     if s.kind == "ErrorEventSubProcessTemplate")
+        n_map = sum(1 for s in mids if s.kind == "Mapping")
+        n_script = sum(1 for s in mids if s.kind == "Script")
+        n_recv = sum(1 for e in m.endpoints if e.direction == "receiver")
+        pts = (n_steps * 1 + n_extra_proc * 4 + n_routes * 2
+               + n_excp * 3 + n_map * 2 + n_script * 1 + max(0, n_recv - 1) * 1)
+        note = (f"{n_steps} steps, {n_extra_proc} local process(es), "
+                f"{n_routes} route(s), {n_excp} exception subprocess(es), "
+                f"{n_map} mapping(s), {n_script} script(s), {n_recv} receiver(s)")
+        return pts, note
 
     def assess_all(self, records: list[InterfaceRecord]) -> list[MigrationAssessment]:
         assessments = [self.assess(r) for r in records]

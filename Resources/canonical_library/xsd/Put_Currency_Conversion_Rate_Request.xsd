@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:nyw="urn:com.netyourwork/aod" xmlns:wd="urn:com.workday/bsvc" xmlns:wd-wsdl="urn:com.workday/bsvc/Financial_Management" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="urn:com.workday/bsvc">
+<xsd:element name="Put_Currency_Conversion_Rate_Request" type="wd:Put_Currency_Conversion_Rate_RequestType"/>
+<xsd:complexType name="Currency_Rate_TypeObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Currency_Rate_TypeObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Currency_Rate_TypeObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:Currency_Rate_TypeReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Currency_Conversion_RateObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Currency_Conversion_RateObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Currency_Conversion_RateObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:Currency_Conversion_RateReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:simpleType name="CurrencyReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Currency_ID"/>
+<wd:enumeration value="Currency_Numeric_Code"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="Currency_Conversion_Rate_DataType">
+<xsd:annotation>
+<xsd:documentation>Element containing Currency Conversion Rate reference for update and all Currency Conversion Rate data items</xsd:documentation>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element maxOccurs="1" name="Effective_Timestamp" type="xsd:dateTime">
+<xsd:annotation>
+<xsd:documentation>The Effective Date must be in a date format, example: 2011-01-01, or date and time format. Example: 2011-01-01T15:30:00. A time containing seconds is valid, however, seconds are dropped when saving the time-stamp as the Effective Date precision is in minutes.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element name="From_Currency_Reference" type="wd:CurrencyObjectType">
+<xsd:annotation>
+<xsd:documentation>Reference to an existing Currency Rate for the purposes of setting the conversion From Currency</xsd:documentation>
+<xsd:appinfo>
+<wd:Common_Reference_ID_Type>Currency_ID</wd:Common_Reference_ID_Type>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:element name="Target_Currency_Reference" type="wd:CurrencyObjectType">
+<xsd:annotation>
+<xsd:documentation>Reference to an existing Currency Rate for the purposes of setting the conversion Target Currency</xsd:documentation>
+<xsd:appinfo>
+<wd:Common_Reference_ID_Type>Currency_ID</wd:Common_Reference_ID_Type>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:element name="Currency_Rate_Type_Reference" type="wd:Currency_Rate_TypeObjectType">
+<xsd:annotation>
+<xsd:documentation>Reference to an existing Currency Rate Type</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" name="Currency_Rate">
+<xsd:annotation>
+<xsd:documentation>Numeric attribute specifying the Currency Rate</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleType>
+<xsd:restriction base="xsd:decimal">
+<xsd:totalDigits value="18"/>
+<xsd:minInclusive value="0"/>
+<xsd:fractionDigits value="6"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Calculate_Inverse_Rate" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Specifies whether the inverse rate of this rate should be derived from this rate.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="CurrencyObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:CurrencyObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="CurrencyObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:CurrencyReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Put_Currency_Conversion_Rate_RequestType">
+<xsd:annotation>
+<xsd:documentation>Reference to an existing Currency Conversion Rate for update only purposes</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<wd:Validation_Message>The Web Service is set to Add Only; but the Currency Conversion Rate already exists.</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element minOccurs="0" name="Currency_Conversion_Rate_Reference" type="wd:Currency_Conversion_RateObjectType">
+<xsd:annotation>
+<xsd:documentation>Reference to an existing Currency Conversion Rate</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element name="Currency_Conversion_Rate_Data" type="wd:Currency_Conversion_Rate_DataType">
+<xsd:annotation>
+<xsd:documentation>Currency Conversion Rate Data</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+<xsd:attribute name="Add_Only" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Add Only Flag.  Indicates that the service is an add only, not an update.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+<xsd:attribute ref="wd:version"/>
+</xsd:complexType>
+<xsd:simpleType name="Currency_Conversion_RateReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Currency_Conversion_Rate_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:attribute name="version" type="xsd:string" wd:fixed="v32.0"/>
+<xsd:simpleType name="Currency_Rate_TypeReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Currency_Rate_Type_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:schema>

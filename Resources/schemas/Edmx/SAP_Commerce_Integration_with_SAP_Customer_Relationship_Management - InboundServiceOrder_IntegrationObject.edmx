@@ -1,0 +1,291 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices m:DataServiceVersion="1.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+        <Schema Namespace="HybrisCommerceOData" xmlns="http://schemas.microsoft.com/ado/2008/09/edm" s:schema-version="1" xmlns:s="http://schemas.sap.com/commerce">
+            <EntityType Name="Order">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Order_code"/>
+            </EntityType>
+            <EntityType Name="B2BUnit">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="uid" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="B2BUnit_uid"/>
+            </EntityType>
+            <EntityType Name="Address">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="streetnumber" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="postalcode" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="duplicate" Type="Edm.Boolean" s:IsUnique="true" Nullable="true"/>
+                <Property Name="streetname" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="phone1" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="town" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="billingAddress" Type="Edm.Boolean" s:IsUnique="true" Nullable="true"/>
+                <Property Name="shippingAddress" Type="Edm.Boolean" s:IsUnique="true" Nullable="true"/>
+                <Property Name="publicKey" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Address_billingAddress|Address_duplicate|Address_phone1|Address_postalcode|Address_publicKey|Address_shippingAddress|Address_streetname|Address_streetnumber|Address_town|Country_isocode"/>
+                <NavigationProperty Name="country" Relationship="HybrisCommerceOData.FK_Address_country" FromRole="Address" ToRole="Country" s:IsUnique="true" Nullable="true"/>
+            </EntityType>
+            <EntityType Name="Customer">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="uid" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="customerID" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Customer_customerID|Customer_uid"/>
+            </EntityType>
+            <EntityType Name="ServiceOrder">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="ibase" Type="Edm.String" Nullable="true"/>
+                <Property Name="totalTax" Type="Edm.Double" Nullable="true"/>
+                <Property Name="ibasecomponent" Type="Edm.String" Nullable="true"/>
+                <Property Name="servicerequestid" Type="Edm.String" Nullable="true"/>
+                <Property Name="netPrice" Type="Edm.Double" Nullable="true"/>
+                <Property Name="servicecontractid" Type="Edm.String" Nullable="true"/>
+                <Property Name="date" Type="Edm.DateTime" Nullable="false"/>
+                <Property Name="deleteOrderEntries" Type="Edm.Boolean" Nullable="true"/>
+                <Property Name="description" Type="Edm.String" Nullable="true"/>
+                <Property Name="code" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="totalPrice" Type="Edm.Double" Nullable="true"/>
+                <Property Name="b2bUnitID" Type="Edm.String" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="ServiceOrder_code"/>
+                <NavigationProperty Name="currency" Relationship="HybrisCommerceOData.FK_ServiceOrder_currency" FromRole="ServiceOrder" ToRole="Currency" Nullable="false"/>
+                <NavigationProperty Name="user" Relationship="HybrisCommerceOData.FK_ServiceOrder_user" FromRole="ServiceOrder" ToRole="Customer" Nullable="false"/>
+                <NavigationProperty Name="deliveryAddress" Relationship="HybrisCommerceOData.FK_ServiceOrder_deliveryAddress" FromRole="ServiceOrder" ToRole="Address" Nullable="true" s:IsAutoCreate="true"/>
+                <NavigationProperty Name="serviceOrderType" Relationship="HybrisCommerceOData.FK_ServiceOrder_serviceOrderType" FromRole="ServiceOrder" ToRole="ServiceType" Nullable="true"/>
+                <NavigationProperty Name="status" Relationship="HybrisCommerceOData.FK_ServiceOrder_status" FromRole="ServiceOrder" ToRole="OrderStatus" Nullable="true"/>
+                <NavigationProperty Name="paymentAddress" Relationship="HybrisCommerceOData.FK_ServiceOrder_paymentAddress" FromRole="ServiceOrder" ToRole="Address" Nullable="true" s:IsAutoCreate="true"/>
+            </EntityType>
+            <EntityType Name="ServiceOrderEntry">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="entryNumber" Type="Edm.Int32" s:IsUnique="true" Nullable="true"/>
+                <Property Name="basePrice" Type="Edm.Double" Nullable="true"/>
+                <Property Name="itemguid" Type="Edm.String" Nullable="true"/>
+                <Property Name="quantity" Type="Edm.Int64" Nullable="false"/>
+                <Property Name="totalPrice" Type="Edm.Double" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Order_code|ServiceOrderEntry_entryNumber"/>
+                <NavigationProperty Name="order" Relationship="HybrisCommerceOData.FK_ServiceOrderEntry_order" FromRole="ServiceOrderEntry" ToRole="Order" s:IsUnique="true" Nullable="false"/>
+                <NavigationProperty Name="ScheduleEntry" Relationship="HybrisCommerceOData.FK_ServiceOrderEntry_ScheduleEntry" FromRole="ServiceOrderEntry" ToRole="ScheduleEntry" Nullable="true" s:IsAutoCreate="true"/>
+                <NavigationProperty Name="product" Relationship="HybrisCommerceOData.FK_ServiceOrderEntry_product" FromRole="ServiceOrderEntry" ToRole="Product" Nullable="false"/>
+                <NavigationProperty Name="unit" Relationship="HybrisCommerceOData.FK_ServiceOrderEntry_unit" FromRole="ServiceOrderEntry" ToRole="Unit" Nullable="false"/>
+            </EntityType>
+            <EntityType Name="Product">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="guid" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="CatalogVersion_version|Catalog_id|Product_guid"/>
+                <NavigationProperty Name="catalogVersion" Relationship="HybrisCommerceOData.FK_Product_catalogVersion" FromRole="Product" ToRole="CatalogVersion" s:IsUnique="true" Nullable="false"/>
+            </EntityType>
+            <EntityType Name="Unit">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Unit_code"/>
+            </EntityType>
+            <EntityType Name="Catalog">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="id" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Catalog_id"/>
+            </EntityType>
+            <EntityType Name="OrderStatus">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="OrderStatus_code"/>
+            </EntityType>
+            <EntityType Name="ScheduleEntry">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="startdate" Type="Edm.DateTime" Nullable="false"/>
+                <Property Name="itemnumber" Type="Edm.String" Nullable="true"/>
+                <Property Name="assignmentid" Type="Edm.String" s:IsUnique="true" Nullable="true"/>
+                <Property Name="enddate" Type="Edm.DateTime" Nullable="true"/>
+                <Property Name="ordernumber" Type="Edm.String" Nullable="true"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="ScheduleEntry_assignmentid"/>
+                <NavigationProperty Name="status" Relationship="HybrisCommerceOData.FK_ScheduleEntry_status" FromRole="ScheduleEntry" ToRole="ScheduleStatus" Nullable="true"/>
+            </EntityType>
+            <EntityType Name="ServiceType">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="ServiceType_code"/>
+            </EntityType>
+            <EntityType Name="Currency">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="isocode" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Currency_isocode"/>
+            </EntityType>
+            <EntityType Name="Country">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="isocode" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="Country_isocode"/>
+            </EntityType>
+            <EntityType Name="CatalogVersion">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="version" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="CatalogVersion_version|Catalog_id"/>
+                <NavigationProperty Name="catalog" Relationship="HybrisCommerceOData.FK_CatalogVersion_catalog" FromRole="CatalogVersion" ToRole="Catalog" s:IsUnique="true" Nullable="false"/>
+            </EntityType>
+            <EntityType Name="ScheduleStatus">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="code" Type="Edm.String" s:IsUnique="true" Nullable="false"/>
+                <Property Name="integrationKey" Type="Edm.String" Nullable="false" s:Alias="ScheduleStatus_code"/>
+            </EntityType>
+            <Association Name="FK_ServiceOrderEntry_order">
+                <End Type="HybrisCommerceOData.ServiceOrderEntry" Multiplicity="0..1" Role="ServiceOrderEntry"/>
+                <End Type="HybrisCommerceOData.Order" Multiplicity="0..1" Role="Order"/>
+            </Association>
+            <Association Name="FK_ServiceOrderEntry_ScheduleEntry">
+                <End Type="HybrisCommerceOData.ServiceOrderEntry" Multiplicity="0..1" Role="ServiceOrderEntry"/>
+                <End Type="HybrisCommerceOData.ScheduleEntry" Multiplicity="*" Role="ScheduleEntry"/>
+            </Association>
+            <Association Name="FK_ServiceOrderEntry_product">
+                <End Type="HybrisCommerceOData.ServiceOrderEntry" Multiplicity="0..1" Role="ServiceOrderEntry"/>
+                <End Type="HybrisCommerceOData.Product" Multiplicity="0..1" Role="Product"/>
+            </Association>
+            <Association Name="FK_ServiceOrderEntry_unit">
+                <End Type="HybrisCommerceOData.ServiceOrderEntry" Multiplicity="0..1" Role="ServiceOrderEntry"/>
+                <End Type="HybrisCommerceOData.Unit" Multiplicity="0..1" Role="Unit"/>
+            </Association>
+            <Association Name="FK_ScheduleEntry_status">
+                <End Type="HybrisCommerceOData.ScheduleEntry" Multiplicity="0..1" Role="ScheduleEntry"/>
+                <End Type="HybrisCommerceOData.ScheduleStatus" Multiplicity="0..1" Role="ScheduleStatus"/>
+            </Association>
+            <Association Name="FK_Address_country">
+                <End Type="HybrisCommerceOData.Address" Multiplicity="0..1" Role="Address"/>
+                <End Type="HybrisCommerceOData.Country" Multiplicity="0..1" Role="Country"/>
+            </Association>
+            <Association Name="FK_ServiceOrder_currency">
+                <End Type="HybrisCommerceOData.ServiceOrder" Multiplicity="0..1" Role="ServiceOrder"/>
+                <End Type="HybrisCommerceOData.Currency" Multiplicity="0..1" Role="Currency"/>
+            </Association>
+            <Association Name="FK_ServiceOrder_user">
+                <End Type="HybrisCommerceOData.ServiceOrder" Multiplicity="0..1" Role="ServiceOrder"/>
+                <End Type="HybrisCommerceOData.Customer" Multiplicity="0..1" Role="Customer"/>
+            </Association>
+            <Association Name="FK_ServiceOrder_deliveryAddress">
+                <End Type="HybrisCommerceOData.ServiceOrder" Multiplicity="0..1" Role="ServiceOrder"/>
+                <End Type="HybrisCommerceOData.Address" Multiplicity="0..1" Role="Address"/>
+            </Association>
+            <Association Name="FK_ServiceOrder_serviceOrderType">
+                <End Type="HybrisCommerceOData.ServiceOrder" Multiplicity="0..1" Role="ServiceOrder"/>
+                <End Type="HybrisCommerceOData.ServiceType" Multiplicity="0..1" Role="ServiceType"/>
+            </Association>
+            <Association Name="FK_ServiceOrder_status">
+                <End Type="HybrisCommerceOData.ServiceOrder" Multiplicity="0..1" Role="ServiceOrder"/>
+                <End Type="HybrisCommerceOData.OrderStatus" Multiplicity="0..1" Role="OrderStatus"/>
+            </Association>
+            <Association Name="FK_ServiceOrder_paymentAddress">
+                <End Type="HybrisCommerceOData.ServiceOrder" Multiplicity="0..1" Role="ServiceOrder"/>
+                <End Type="HybrisCommerceOData.Address" Multiplicity="0..1" Role="Address"/>
+            </Association>
+            <Association Name="FK_Product_catalogVersion">
+                <End Type="HybrisCommerceOData.Product" Multiplicity="0..1" Role="Product"/>
+                <End Type="HybrisCommerceOData.CatalogVersion" Multiplicity="0..1" Role="CatalogVersion"/>
+            </Association>
+            <Association Name="FK_CatalogVersion_catalog">
+                <End Type="HybrisCommerceOData.CatalogVersion" Multiplicity="0..1" Role="CatalogVersion"/>
+                <End Type="HybrisCommerceOData.Catalog" Multiplicity="0..1" Role="Catalog"/>
+            </Association>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="Orders" EntityType="HybrisCommerceOData.Order"/>
+                <EntitySet Name="B2BUnits" EntityType="HybrisCommerceOData.B2BUnit"/>
+                <EntitySet Name="Addresses" EntityType="HybrisCommerceOData.Address"/>
+                <EntitySet Name="Customers" EntityType="HybrisCommerceOData.Customer"/>
+                <EntitySet Name="ServiceOrders" EntityType="HybrisCommerceOData.ServiceOrder"/>
+                <EntitySet Name="ServiceOrderEntries" EntityType="HybrisCommerceOData.ServiceOrderEntry"/>
+                <EntitySet Name="Products" EntityType="HybrisCommerceOData.Product"/>
+                <EntitySet Name="Units" EntityType="HybrisCommerceOData.Unit"/>
+                <EntitySet Name="Catalogs" EntityType="HybrisCommerceOData.Catalog"/>
+                <EntitySet Name="OrderStatuses" EntityType="HybrisCommerceOData.OrderStatus"/>
+                <EntitySet Name="ScheduleEntries" EntityType="HybrisCommerceOData.ScheduleEntry"/>
+                <EntitySet Name="ServiceTypes" EntityType="HybrisCommerceOData.ServiceType"/>
+                <EntitySet Name="Currencies" EntityType="HybrisCommerceOData.Currency"/>
+                <EntitySet Name="Countries" EntityType="HybrisCommerceOData.Country"/>
+                <EntitySet Name="CatalogVersions" EntityType="HybrisCommerceOData.CatalogVersion"/>
+                <EntitySet Name="ScheduleStatuses" EntityType="HybrisCommerceOData.ScheduleStatus"/>
+                <AssociationSet Name="ServiceOrderEntry_Orders" Association="HybrisCommerceOData.FK_ServiceOrderEntry_order">
+                    <End EntitySet="ServiceOrderEntries" Role="ServiceOrderEntry"/>
+                    <End EntitySet="Orders" Role="Order"/>
+                </AssociationSet>
+                <AssociationSet Name="ServiceOrderEntry_ScheduleEntries" Association="HybrisCommerceOData.FK_ServiceOrderEntry_ScheduleEntry">
+                    <End EntitySet="ServiceOrderEntries" Role="ServiceOrderEntry"/>
+                    <End EntitySet="ScheduleEntries" Role="ScheduleEntry"/>
+                </AssociationSet>
+                <AssociationSet Name="ServiceOrderEntry_Products" Association="HybrisCommerceOData.FK_ServiceOrderEntry_product">
+                    <End EntitySet="ServiceOrderEntries" Role="ServiceOrderEntry"/>
+                    <End EntitySet="Products" Role="Product"/>
+                </AssociationSet>
+                <AssociationSet Name="ServiceOrderEntry_Units" Association="HybrisCommerceOData.FK_ServiceOrderEntry_unit">
+                    <End EntitySet="ServiceOrderEntries" Role="ServiceOrderEntry"/>
+                    <End EntitySet="Units" Role="Unit"/>
+                </AssociationSet>
+                <AssociationSet Name="ScheduleEntry_ScheduleStatuses" Association="HybrisCommerceOData.FK_ScheduleEntry_status">
+                    <End EntitySet="ScheduleEntries" Role="ScheduleEntry"/>
+                    <End EntitySet="ScheduleStatuses" Role="ScheduleStatus"/>
+                </AssociationSet>
+                <AssociationSet Name="Address_Countries" Association="HybrisCommerceOData.FK_Address_country">
+                    <End EntitySet="Addresses" Role="Address"/>
+                    <End EntitySet="Countries" Role="Country"/>
+                </AssociationSet>
+                <AssociationSet Name="ServiceOrder_Currencies" Association="HybrisCommerceOData.FK_ServiceOrder_currency">
+                    <End EntitySet="ServiceOrders" Role="ServiceOrder"/>
+                    <End EntitySet="Currencies" Role="Currency"/>
+                </AssociationSet>
+                <AssociationSet Name="ServiceOrder_Customers" Association="HybrisCommerceOData.FK_ServiceOrder_user">
+                    <End EntitySet="ServiceOrders" Role="ServiceOrder"/>
+                    <End EntitySet="Customers" Role="Customer"/>
+                </AssociationSet>
+                <AssociationSet Name="ServiceOrder_Addresses" Association="HybrisCommerceOData.FK_ServiceOrder_deliveryAddress">
+                    <End EntitySet="ServiceOrders" Role="ServiceOrder"/>
+                    <End EntitySet="Addresses" Role="Address"/>
+                </AssociationSet>
+                <AssociationSet Name="ServiceOrder_ServiceTypes" Association="HybrisCommerceOData.FK_ServiceOrder_serviceOrderType">
+                    <End EntitySet="ServiceOrders" Role="ServiceOrder"/>
+                    <End EntitySet="ServiceTypes" Role="ServiceType"/>
+                </AssociationSet>
+                <AssociationSet Name="ServiceOrder_OrderStatuses" Association="HybrisCommerceOData.FK_ServiceOrder_status">
+                    <End EntitySet="ServiceOrders" Role="ServiceOrder"/>
+                    <End EntitySet="OrderStatuses" Role="OrderStatus"/>
+                </AssociationSet>
+                <AssociationSet Name="ServiceOrder_Addresses" Association="HybrisCommerceOData.FK_ServiceOrder_paymentAddress">
+                    <End EntitySet="ServiceOrders" Role="ServiceOrder"/>
+                    <End EntitySet="Addresses" Role="Address"/>
+                </AssociationSet>
+                <AssociationSet Name="Product_CatalogVersions" Association="HybrisCommerceOData.FK_Product_catalogVersion">
+                    <End EntitySet="Products" Role="Product"/>
+                    <End EntitySet="CatalogVersions" Role="CatalogVersion"/>
+                </AssociationSet>
+                <AssociationSet Name="CatalogVersion_Catalogs" Association="HybrisCommerceOData.FK_CatalogVersion_catalog">
+                    <End EntitySet="CatalogVersions" Role="CatalogVersion"/>
+                    <End EntitySet="Catalogs" Role="Catalog"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

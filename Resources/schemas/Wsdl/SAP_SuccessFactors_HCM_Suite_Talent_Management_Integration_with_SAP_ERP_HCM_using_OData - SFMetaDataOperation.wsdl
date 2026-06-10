@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+    xmlns:p1="http://sap.com/xi/SFIHCM03" 
+    xmlns:p2="http://sap.com/xi/SFIHCM01" 
+    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" 
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" name="DescribeExOperation" 
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://sap.com/xi/SFIHCM03">
+    <wsdl:documentation />
+    <wsp:UsingPolicy wsdl:required="true" />
+    <wsp:Policy wsu:Id="OP_DescribeExOperation" />
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://sap.com/xi/SFIHCM01" 
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+            xmlns="http://sap.com/xi/SFIHCM01">
+            <xsd:element name="describeSFObjectsExRequest" type="describeSFObjectsExRequest" />
+            <xsd:complexType name="SFParameter">
+                <xsd:annotation>
+                    <xsd:documentation xml:lang="EN">
+						SF Parameter
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="name" type="xsd:string" />
+                    <xsd:element name="value" type="xsd:string" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="describeSFObjectsExRequest">
+                <xsd:complexType>
+                    <xsd:annotation>
+                        <xsd:documentation xml:lang="EN">
+							Describe SFObjects
+							Ex
+							Request
+                        </xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:sequence>
+                        <xsd:element name="sessionId" type="xsd:string" />
+                        <xsd:element name="describeSFObjectsEx">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="type" type="xsd:string" />
+                                    <xsd:element name="param" type="SFParameter" minOccurs="0" maxOccurs="unbounded" />
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+        <xsd:schema targetNamespace="http://sap.com/xi/SFIHCM01" 
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+            xmlns="http://sap.com/xi/SFIHCM01">
+            <xsd:element name="describeSFObjectsExResponse">
+                <xsd:complexType>
+                    <xsd:annotation>
+                        <xsd:documentation xml:lang="EN">
+							Describe SFObjects
+							Ex
+							Response
+                        </xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:sequence>
+                        <xsd:element name="type" type="xsd:string" />
+                        <xsd:element name="entityInfo" type="entityInfo" minOccurs="0" />
+                        <xsd:element name="field" type="FieldEx" maxOccurs="unbounded" />
+                        <xsd:element name="feature" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+                        <xsd:element name="error" type="Error" minOccurs="0" maxOccurs="unbounded" />
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:complexType name="Label">
+                <xsd:annotation>
+                    <xsd:documentation xml:lang="EN">
+						Label
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="value" type="xsd:string" />
+                    <xsd:element name="locale" type="xsd:string" />
+                    <xsd:element name="mimeType" type="xsd:string" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="any_field">
+                <xsd:annotation>
+                    <xsd:documentation xml:lang="EN">
+						Generic structure for
+						type any elements
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="fieldName" type="xsd:string" />
+                    <xsd:element name="fieldValue" type="xsd:string" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="PickListOption">
+                <xsd:annotation>
+                    <xsd:documentation xml:lang="EN">
+						Picklist option
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:long" />
+                    <xsd:element name="label" type="Label" minOccurs="0" maxOccurs="unbounded" />
+                    <xsd:element name="status" type="xsd:string" />
+                    <xsd:element name="value" type="xsd:double" />
+                    <xsd:element name="externalCode" type="xsd:string" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="entityInfo">
+                <xsd:annotation>
+                    <xsd:documentation xml:lang="EN">
+						entityInfo
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="info" type="any_field" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="Picklist">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:string" />
+                    <xsd:element name="source" type="xsd:string" />
+                    <xsd:element name="picklistOption" type="PickListOption" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="Error">
+                <xsd:annotation>
+                    <xsd:documentation xml:lang="EN">
+						Error
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="errorCode" type="xsd:string" />
+                    <xsd:element name="errorMessage" type="xsd:string" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="FieldEx">
+                <xsd:annotation>
+                    <xsd:documentation xml:lang="EN">
+						FieldEx
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="name" type="xsd:string" />
+                    <xsd:element name="dataType" type="xsd:string" />
+                    <xsd:element name="picklist" type="Picklist" minOccurs="0" />
+                    <xsd:element name="label" type="Label" minOccurs="0" maxOccurs="unbounded" />
+                    <xsd:element name="maxlength" type="xsd:integer" minOccurs="0" />
+                    <xsd:element name="required" type="xsd:boolean" />
+                    <xsd:element name="additionalInfo" type="any_field" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="p2.describeSFObjectsExRequest_Out">
+        <wsdl:documentation />
+        <wsdl:part element="p5:describeSFObjectsExRequest" name="parameters" 
+            xmlns:p5="http://sap.com/xi/SFIHCM01" />
+    </wsdl:message>
+    <wsdl:message name="p2.describeSFObjectsExResponse_In">
+        <wsdl:documentation />
+        <wsdl:part element="p5:describeSFObjectsExResponse" name="parameters" 
+            xmlns:p5="http://sap.com/xi/SFIHCM01" />
+    </wsdl:message>
+    <wsdl:portType name="DescribeExOperation">
+        <wsdl:documentation>DescribeExOperation</wsdl:documentation>
+        <wsdl:operation name="DescribeExOperation">
+            <wsdl:documentation />
+            <wsp:Policy>
+                <wsp:PolicyReference URI="#OP_DescribeExOperation" />
+            </wsp:Policy>
+            <wsdl:input message="p1:p2.describeSFObjectsExRequest_Out" />
+            <wsdl:output message="p1:p2.describeSFObjectsExResponse_In" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="SFMetaDataOperationSOAPBinding" type="p1:DescribeExOperation">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" 
+            xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+        <wsdl:operation name="DescribeExOperation">
+            <soap:operation soapAction="http://sap.com/xi/WebService/soap1.1" 
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+            <wsdl:input>
+                <soap:body use="literal" 
+                    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" 
+                    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="DescribeExService">
+        <wsdl:port binding="p1:SFMetaDataOperationSOAPBinding" name="DescribeExOperation">
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

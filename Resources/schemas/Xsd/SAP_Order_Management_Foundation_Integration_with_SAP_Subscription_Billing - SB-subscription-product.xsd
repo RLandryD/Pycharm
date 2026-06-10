@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.1" version="1.0">
+  <xsd:element name="products">
+    <xsd:annotation>
+      <xsd:documentation>Information about the physical products to be transferred from the SAP back-end system to SAP Cloud Platform.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element maxOccurs="unbounded" minOccurs="1" name="product">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="id">
+                <xsd:annotation>
+                  <xsd:documentation>The unique identifier of the product.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                    <xsd:minLength value="1"/>
+                    <xsd:maxLength value="200"/>
+                  </xsd:restriction>
+                </xsd:simpleType>
+              </xsd:element>
+              <xsd:element name="code">
+                <xsd:annotation>
+                  <xsd:documentation>The user-defined unique identifier of the product. This identifier is case insensitive. Uppercase and lowercase letters are regarded as the same. For example, ABC is regarded the same as abc. Besides, if a numeric value is specified, the leading zeros will also be ignored for uniqueness check. For example, 00100 is regarded the same as 100.</xsd:documentation>
+                </xsd:annotation>  
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                    <xsd:minLength value="1"/>
+                    <xsd:maxLength value="200"/>
+                  </xsd:restriction>
+                </xsd:simpleType>
+              </xsd:element>
+              <xsd:element name="name">
+                <xsd:annotation>
+                  <xsd:documentation>The name of the product.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="255"/>
+                  </xsd:restriction>
+                </xsd:simpleType>
+              </xsd:element>
+              <xsd:element name="description">
+                <xsd:annotation>
+                  <xsd:documentation>The description of the product.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="5000"/>
+                  </xsd:restriction>
+                </xsd:simpleType>
+              </xsd:element>
+              <xsd:element maxOccurs="10000" minOccurs="1" name="names">
+                      <xsd:annotation>
+                        <xsd:documentation>Custom References</xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:complexType>
+                        <xsd:sequence>
+                          <xsd:element name="lang" type="xsd:string">
+                            <xsd:annotation>
+                              <xsd:documentation>One of the language code of the names. The language code must be available in the Language Settings of the Business Configuration app.</xsd:documentation>
+                            </xsd:annotation>
+                          </xsd:element>
+                          <xsd:element name="content" type="xsd:string">
+                            <xsd:annotation>
+                              <xsd:documentation>One of the content of the names.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                              <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="255"/>
+                              </xsd:restriction>
+                            </xsd:simpleType>
+                          </xsd:element>
+                        </xsd:sequence>
+                      </xsd:complexType>
+              </xsd:element>
+              <xsd:element maxOccurs="10000" minOccurs="1" name="descriptions">
+                      <xsd:annotation>
+                        <xsd:documentation>Custom References</xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:complexType>
+                        <xsd:sequence>
+                          <xsd:element minOccurs="1" name="lang" type="xsd:string">
+                            <xsd:annotation>
+                              <xsd:documentation>One of the language code of the descriptions. The language code must be available in the Language Settings of the Business Configuration app.</xsd:documentation>
+                            </xsd:annotation>
+                          </xsd:element>
+                          <xsd:element minOccurs="1" name="content">
+                            <xsd:annotation>
+                              <xsd:documentation>One of the content of the descriptions.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                              <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="5000"/>
+                              </xsd:restriction>
+                            </xsd:simpleType>
+                          </xsd:element>
+                        </xsd:sequence>
+                      </xsd:complexType>
+              </xsd:element>
+              <xsd:element maxOccurs="10000" minOccurs="1" name="generatedDescriptions">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element minOccurs="1" name="languageCode">
+                      <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                          <xsd:maxLength value="2"/>
+                        </xsd:restriction>
+                      </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element minOccurs="1" name="name">
+                      <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                          <xsd:maxLength value="255"/>
+                        </xsd:restriction>
+                      </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element minOccurs="1" name="description">
+                      <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                          <xsd:maxLength value="5000"/>
+                        </xsd:restriction>
+                      </xsd:simpleType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element minOccurs="0" name="soldElectronically" type="xsd:boolean">
+                <xsd:annotation>
+                  <xsd:documentation>If true, the product is sold electronically. Default value is true.</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <!-- TODO Check how to handle published-->
+              <xsd:element minOccurs="0" name="published" type="xsd:boolean">
+                <xsd:annotation>
+                  <xsd:documentation>If true, the product is published and available for further processing. Default value is false.</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" name="version" type="xsd:integer">
+                <xsd:annotation>
+                  <xsd:documentation>The version of the product, used for optimitic locking.</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" name="metadata">                
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="createdAt" type="xsd:string">
+                      <xsd:annotation>
+                        <xsd:documentation>The date and time the product was created.</xsd:documentation>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="changedAt" type="xsd:string">
+                      <xsd:annotation>
+                        <xsd:documentation>The date and time the product was last changed.</xsd:documentation>
+                      </xsd:annotation>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="markets">
+                      <xsd:annotation>
+                        <xsd:documentation>Markets data</xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:complexType>
+                        <xsd:sequence>
+                          <xsd:element minOccurs="1" name="marketId">
+                            <xsd:simpleType>
+                              <xsd:restriction base="xsd:string">
+                                <xsd:minLength value="1"/>
+                                <xsd:maxLength value="255"/>
+                              </xsd:restriction>
+                            </xsd:simpleType>
+                          </xsd:element>
+                          <xsd:element minOccurs="0" name="active" type="xsd:boolean">
+                            <xsd:annotation>
+                              <xsd:documentation>If true, the market is active and the product can be offered in the respective market.</xsd:documentation>
+                            </xsd:annotation>
+                          </xsd:element>
+                        </xsd:sequence>
+                      </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="customReferences">
+                      <xsd:annotation>
+                        <xsd:documentation>Custom References</xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:complexType>
+                        <xsd:sequence>
+                          <xsd:element minOccurs="1" name="typeCode">
+                            <xsd:annotation>
+                              <xsd:documentation>The code representing the type of the reference.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                              <xsd:restriction base="xsd:string">
+                                <xsd:minLength value="1"/>
+                                <xsd:maxLength value="50"/>
+                              </xsd:restriction>
+                            </xsd:simpleType>
+                          </xsd:element>
+                          <xsd:element minOccurs="1" name="id">
+                            <xsd:annotation>
+                              <xsd:documentation>The identifier of the reference.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                              <xsd:restriction base="xsd:string">
+                                <xsd:minLength value="1"/>
+                                <xsd:maxLength value="255"/>
+                              </xsd:restriction>
+                            </xsd:simpleType>
+                          </xsd:element>
+                        </xsd:sequence>
+                      </xsd:complexType>
+              </xsd:element>             
+              <xsd:element name="mixins">
+                <xsd:annotation>
+                  <xsd:documentation>Lists the aspectsData services used to transfer products from the SAP back-end system to SAP Cloud Platform.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="subscriptionProduct">
+                      <xsd:annotation>
+                        <xsd:documentation>The name of the aspectsData service for the Subscription Product Aspect service.</xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:complexType>
+                        <xsd:sequence>
+                          <xsd:element minOccurs="0" name="externalReference">
+                            <xsd:simpleType>
+                              <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="255"/>
+                              </xsd:restriction>
+                            </xsd:simpleType>
+                          </xsd:element>
+                          <xsd:element minOccurs="0" name="subscriptionType">
+                            <xsd:annotation>
+                              <xsd:documentation>The type of subscription that governs follow-up processes such as rating and billing.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                              <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="255"/>
+                              </xsd:restriction>
+                            </xsd:simpleType>
+                          </xsd:element>
+                          <xsd:element minOccurs="0" name="ratePlanManagedExternally" type="xsd:boolean">
+                            <xsd:annotation>
+                              <xsd:documentation>If true, the rate plan of the product is managed externally, the market and rate plan information in markets and marketAttributesList should not be maintained, and ratePlanTemplateId should be provided. The ratePlanManagedExternally cannot be changed once it is set. Note that this field is used for internal SAP integration scenarios only. The defaultvalue is false</xsd:documentation>
+                            </xsd:annotation>
+                          </xsd:element>
+                          <xsd:element maxOccurs="999" minOccurs="0" name="marketAttributesList">
+                            <xsd:annotation>
+                              <xsd:documentation>Information related the market attributes for the product in the SAP back-end system.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:complexType>
+                              <xsd:sequence>
+                                <xsd:element minOccurs="1" name="marketId">
+                                  <xsd:annotation>
+                                    <xsd:documentation>The unique identifier of the market.</xsd:documentation>
+                                  </xsd:annotation>
+                                  <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                      <xsd:minLength value="1"/>
+                                      <xsd:maxLength value="255"/>
+                                    </xsd:restriction>
+                                  </xsd:simpleType>
+                                </xsd:element>
+                                <xsd:element minOccurs="1" name="ratePlanId">
+                                  <xsd:annotation>
+                                    <xsd:documentation>The unique identifier of the rate plan.</xsd:documentation>
+                                  </xsd:annotation>
+                                  <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                      <xsd:maxLength value="255"/>
+                                    </xsd:restriction>
+                                  </xsd:simpleType>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="ratePlanDescription">
+                                  <xsd:annotation>
+                                    <xsd:documentation>The description of the rate plan.</xsd:documentation>
+                                  </xsd:annotation>
+                                  <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                      <xsd:maxLength value="255"/>
+                                    </xsd:restriction>
+                                  </xsd:simpleType>
+                                </xsd:element>
+                              </xsd:sequence>
+                            </xsd:complexType>
+                          </xsd:element>
+                          <xsd:element minOccurs="0" name="contractTerm">
+                            <xsd:annotation>
+                              <xsd:documentation>The period during which a customer is contractually bound to hold a subscription, defined in months.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:restriction base="xsd:integer">
+                              <xsd:minExclusive value="1"/>
+                              <xsd:maxExclusive value="999"/>
+                            </xsd:restriction>
+                          </xsd:element>  
+                          <xsd:element minOccurs="0" name="renewalTerm">
+                            <xsd:annotation>
+                              <xsd:documentation>The period by which the subscription extends automatically after the initial contract term, defined in months.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:restriction base="xsd:integer">
+                              <xsd:minExclusive value="1"/>
+                              <xsd:maxExclusive value="999"/>
+                            </xsd:restriction>
+                          </xsd:element>
+                          <xsd:element minOccurs="0" name="withdrawalPeriod">
+                            <xsd:annotation>
+                              <xsd:documentation>The period during which a customer can withdraw the subscription, defined in months.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:restriction base="xsd:integer">
+                              <xsd:minExclusive value="1"/>
+                              <xsd:maxExclusive value="730"/>
+                            </xsd:restriction>
+                          </xsd:element>
+                          <xsd:element minOccurs="0" name="termOfNotice">
+                            <xsd:annotation>
+                              <xsd:documentation>The period of time to be observed if a customer wants to cancel a subscription, defined in days.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:restriction base="xsd:integer">
+                              <xsd:minExclusive value="1"/>
+                              <xsd:maxExclusive value="999"/>
+                            </xsd:restriction>
+                          </xsd:element>
+                          <xsd:element minOccurs="0" name="allowMidBillCycleException" type="xsd:boolean">
+                            <xsd:annotation>
+                              <xsd:documentation>If true, a subscription may expire during an active billing cycle.</xsd:documentation>
+                            </xsd:annotation>
+                          </xsd:element>
+                          <xsd:element maxOccurs="999" name="technicalResources">
+                            <xsd:annotation>
+                              <xsd:documentation>An ID or reference that identifies a subscriber and the subscribed service in an external technical system. Technical resources are used to record the usage of a service.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:complexType>
+                              <xsd:sequence>
+                                <xsd:element minOccurs="0" name="type">
+                                  <xsd:annotation>
+                                    <xsd:documentation>The identifier of the technical resource.</xsd:documentation>
+                                  </xsd:annotation>
+                                  <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                      <xsd:maxLength value="50"/>
+                                    </xsd:restriction>
+                                  </xsd:simpleType>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="idType">
+                                  <xsd:annotation>
+                                    <xsd:documentation>The type or format of the technical resource ID, for example, a phone number or an email address.</xsd:documentation>
+                                  </xsd:annotation>
+                                  <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                      <xsd:minLength value="1"/>
+                                      <xsd:maxLength value="50"/>
+                                    </xsd:restriction>
+                                  </xsd:simpleType>
+                                </xsd:element>
+                              </xsd:sequence>
+                            </xsd:complexType>
+                          </xsd:element> 
+                          <xsd:element maxOccurs="999" name="subscriptionParameters">
+                            <xsd:annotation>
+                              <xsd:documentation>Additional attributes that determine provisioning of a subscription.</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:complexType>
+                              <xsd:sequence>
+                                <xsd:element minOccurs="0" name="code">
+                                  <xsd:annotation>
+                                    <xsd:documentation>The user-defined identifier for the subscription parameter.</xsd:documentation>
+                                  </xsd:annotation>
+                                  <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                      <xsd:maxLength value="50"/>
+                                    </xsd:restriction>
+                                  </xsd:simpleType>
+                                </xsd:element>
+                              </xsd:sequence>
+                            </xsd:complexType>
+                          </xsd:element>
+                        </xsd:sequence>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

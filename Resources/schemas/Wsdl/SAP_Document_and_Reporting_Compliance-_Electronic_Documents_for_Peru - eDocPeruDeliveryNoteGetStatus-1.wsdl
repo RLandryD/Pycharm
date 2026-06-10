@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.sap.com/eDocument/Peru/DeliveryNoteGetStatus/v1.0" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="eDocPeruGetStatus" targetNamespace="http://www.sap.com/eDocument/Peru/DeliveryNoteGetStatus/v1.0">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.sap.com/eDocument/Peru/DeliveryNoteGetStatus/v1.0" xmlns:ar="urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2.1">
+            <xsd:element name="GetStatus">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="in" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetStatusResponse" type="tns:GetStatusResponseType">
+
+      </xsd:element>
+      <xsd:element name="Ticket" type="xsd:string"></xsd:element>
+    
+      <xsd:complexType name="GetStatusResponseType">
+      	<xsd:sequence>
+			<xsd:element name="EncodedZippedApplicationResponse" type="xsd:base64Binary" minOccurs="0" maxOccurs="1"> </xsd:element>
+			<xsd:element name="Error" type="tns:ErrorType" minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ErrorType">
+		<xsd:sequence>
+			<xsd:element name="ResponseFaultCode" type="xsd:string" minOccurs="0" maxOccurs="1"> </xsd:element>
+			<xsd:element name="ResponseMessage" type="xsd:string" minOccurs="0" maxOccurs="1"> </xsd:element>
+			<xsd:element name="Validation" type="tns:ValidationType" minOccurs="0" maxOccurs="unbounded"/>			
+      	</xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ValidationType">
+      	<xsd:sequence>
+			<xsd:element name="ErrorCode" type="xsd:string" minOccurs="0" maxOccurs="1"> </xsd:element>      	
+			<xsd:element name="ErrorDescription" type="xsd:string" minOccurs="0" maxOccurs="1"> </xsd:element>
+      	</xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetStatusRequest" type="tns:GetStatusRequestType"></xsd:element>
+       
+    
+            <xsd:complexType name="GetStatusRequestType">
+            	<xsd:sequence>
+            		<xsd:element name="Ticket" type="tns:TicketType" minOccurs="1" maxOccurs="1"></xsd:element>
+            		<xsd:element name="IssuerTaxNumber" type="xsd:string" minOccurs="1" maxOccurs="1"></xsd:element>
+            	</xsd:sequence>
+            </xsd:complexType>
+    
+            <xsd:complexType name="TicketType">
+            	<xsd:sequence>
+            		<xsd:element name="Ticket" type="xsd:string"></xsd:element>
+            	</xsd:sequence>            	
+            </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="GetStatusRequest">
+    <wsdl:part name="GetStatusRequestParameters"
+    	element="tns:GetStatusRequest" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusResponse">
+    <wsdl:part element="tns:GetStatusResponse" name="GetStatusResponseParameters"/>
+  </wsdl:message>
+  <wsdl:portType name="eDocPeruGetStatus">
+    <wsdl:operation name="GetStatus">
+      <wsdl:input message="tns:GetStatusRequest"/>
+      <wsdl:output message="tns:GetStatusResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="eDocPeruGetStatusSOAP" type="tns:eDocPeruGetStatus">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetStatus">
+      <soap:operation soapAction="http://www.sap.com/eDocument/Peru/DeliveryNoteGetStatus/v1.0/NewOperation"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="eDocPeruGetStatus">
+    <wsdl:port binding="tns:eDocPeruGetStatusSOAP" name="eDocPeruGetStatusSOAP">
+      <soap:address location="http://endpointaddress"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

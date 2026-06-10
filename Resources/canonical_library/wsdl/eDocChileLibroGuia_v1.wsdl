@@ -1,0 +1,782 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.sap.com/eDocument/Chile/WaybillLedger/v1.0"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	name="eDocChileLibroGuia_v1" targetNamespace="http://www.sap.com/eDocument/Chile/WaybillLedger/v1.0">
+	<wsdl:types>
+		<xs:schema targetNamespace="http://www.sap.com/eDocument/Chile/WaybillLedger/v1.0"
+			elementFormDefault="qualified" attributeFormDefault="unqualified">
+			<xs:element name="SignWaybillLedger">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="LibroGuia">
+							<xs:annotation>
+								<xs:documentation>Informacion Electronica del Libro de Guias
+								</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="EnvioLibro">
+										<xs:annotation>
+											<xs:documentation>Identificacion, Resumen y Detalles del
+												Libro Electronico
+											</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="Caratula">
+													<xs:annotation>
+														<xs:documentation>Identificacion del Envio del Libro
+															Electronico
+														</xs:documentation>
+													</xs:annotation>
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="RutEmisorLibro" type="tns:RUTType">
+																<xs:annotation>
+																	<xs:documentation>
+																		RUT
+																		del
+																		Emisor
+																		del
+																		Libro
+																		Electronico
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="RutEnvia" type="tns:RUTType">
+																<xs:annotation>
+																	<xs:documentation>RUT que Realiza el Envio del Libro
+																		Electronico
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="PeriodoTributario" type="xs:gYearMonth">
+																<xs:annotation>
+																	<xs:documentation>Periodo Tributario del Libro
+																		Electronico (AAAA-MM)
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="FchResol" type="xs:date">
+																<xs:annotation>
+																	<xs:documentation>Fecha de Resolucion que Autoriza el
+																		Envio de Libros Electronicos (AAAA-MM-DD)
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="NroResol" type="xs:nonNegativeInteger">
+																<xs:annotation>
+																	<xs:documentation>Numero de Resolucion que Autoriza el
+																		Envio de Libros Electronicos
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="TipoLibro">
+																<xs:annotation>
+																	<xs:documentation>Tipo de Libro de Guia Enviado
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="10" />
+																		<xs:enumeration value="ESPECIAL" />
+																		<xs:enumeration value="MENSUAL" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="TipoEnvio" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Tipo de Envio del Libro Electronico
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:enumeration value="PARCIAL">
+																			<xs:annotation>
+																				<xs:documentation>Indica que es un Envio Parcial del
+																					Libro y que Faltan Otros para Completar el Libro
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																		<xs:enumeration value="FINAL">
+																			<xs:annotation>
+																				<xs:documentation>Indica que es el Ultimo Envio. Con
+																					Esto se Completa el Libro.
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																		<xs:enumeration value="TOTAL">
+																			<xs:annotation>
+																				<xs:documentation>Indica que es el Unico Envio que
+																					Compone el Libro
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																		<xs:enumeration value="AJUSTE">
+																			<xs:annotation>
+																				<xs:documentation>Indica que es un Envio con
+																					Informacion para Corregir o Complementar un Libro
+																					Previamente Enviado
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="NroSegmento" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Correlativo del Segmento de Libro
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:positiveInteger">
+																		<xs:totalDigits value="6" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="FolioNotificacion">
+																<xs:annotation>
+																	<xs:documentation>Folio de la Notificacion con que se
+																		Solicita el Libro Especial
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:positiveInteger">
+																		<xs:totalDigits value="18" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+												<xs:element name="ResumenSegmento" minOccurs="0">
+													<xs:annotation>
+														<xs:documentation>Resumen de la Informacion de Detalle
+															Contenida en el Libro Electronico
+														</xs:documentation>
+													</xs:annotation>
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="TotFolAnulado" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Numero de Folios Anulados (Anulado=1)
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:integer">
+																		<xs:totalDigits value="10" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="TotGuiaAnulada" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Total Guias Anuladas (Anulado=2)
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:integer">
+																		<xs:totalDigits value="10" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="TotGuiaVenta">
+																<xs:annotation>
+																	<xs:documentation>Total de Guias Venta
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:integer">
+																		<xs:totalDigits value="10" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="TotMntGuiaVta" type="tns:ValorType">
+																<xs:annotation>
+																	<xs:documentation>Monto Total de Guias de Venta
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="TotMntModificado" type="tns:ValorType"
+																minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Monto Total de Totales Modificados
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="TotTraslado" minOccurs="0"
+																maxOccurs="6">
+																<xs:annotation>
+																	<xs:documentation>Totales para Diferentes Tipos de
+																		Guias No Venta
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="TpoTraslado">
+																			<xs:annotation>
+																				<xs:documentation>Indicador de Tipo de Traslado
+																				</xs:documentation>
+																			</xs:annotation>
+																			<xs:simpleType>
+																				<xs:restriction base="xs:positiveInteger">
+																					<xs:totalDigits value="1" />
+																					<xs:enumeration value="2">
+																						<xs:annotation>
+																							<xs:documentation>Venta por Efectuar
+																							</xs:documentation>
+																						</xs:annotation>
+																					</xs:enumeration>
+																					<xs:enumeration value="3">
+																						<xs:annotation>
+																							<xs:documentation>Consignaciones
+																							</xs:documentation>
+																						</xs:annotation>
+																					</xs:enumeration>
+																					<xs:enumeration value="4">
+																						<xs:annotation>
+																							<xs:documentation>Productos en Demostracion
+																							</xs:documentation>
+																						</xs:annotation>
+																					</xs:enumeration>
+																					<xs:enumeration value="5">
+																						<xs:annotation>
+																							<xs:documentation>Traslados Internos
+																							</xs:documentation>
+																						</xs:annotation>
+																					</xs:enumeration>
+																					<xs:enumeration value="6">
+																						<xs:annotation>
+																							<xs:documentation>Otros Traslados No Venta
+																							</xs:documentation>
+																						</xs:annotation>
+																					</xs:enumeration>
+																					<xs:enumeration value="7">
+																						<xs:annotation>
+																							<xs:documentation>Guias de Devolucion
+																							</xs:documentation>
+																						</xs:annotation>
+																					</xs:enumeration>
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="CantGuia">
+																			<xs:annotation>
+																				<xs:documentation>Cantidad de Guias del Tipo
+																				</xs:documentation>
+																			</xs:annotation>
+																			<xs:simpleType>
+																				<xs:restriction base="xs:integer">
+																					<xs:totalDigits value="10" />
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="MntGuia" type="tns:ValorType"
+																			minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation>Monto de Guias del Tipo
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:element>
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+												<xs:element name="ResumenPeriodo" minOccurs="0">
+													<xs:annotation>
+														<xs:documentation>Resumen de la Informacion Para el
+															Periodo
+														</xs:documentation>
+													</xs:annotation>
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="TotFolAnulado" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Numero de Folios Anulados (Anulado=1)
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:nonNegativeInteger">
+																		<xs:totalDigits value="10" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="TotGuiaAnulada" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Total Guias Anuladas (Anulado=2)
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:nonNegativeInteger">
+																		<xs:totalDigits value="10" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="TotGuiaVenta">
+																<xs:annotation>
+																	<xs:documentation>Total de Guias Venta
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:nonNegativeInteger">
+																		<xs:totalDigits value="10" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="TotMntGuiaVta" type="tns:MontoType">
+																<xs:annotation>
+																	<xs:documentation>Monto Total de Guias de Venta
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="TotMntModificado" type="tns:MontoType"
+																minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Monto Total de Totales Modificados
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="TotTraslado" minOccurs="0"
+																maxOccurs="6">
+																<xs:annotation>
+																	<xs:documentation>Totales para Diferentes Tipos de
+																		Guias No Venta
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="TpoTraslado">
+																			<xs:annotation>
+																				<xs:documentation>Indicador de Tipo de Traslado
+																				</xs:documentation>
+																			</xs:annotation>
+																			<xs:simpleType>
+																				<xs:restriction base="xs:positiveInteger">
+																					<xs:totalDigits value="1" />
+																					<xs:enumeration value="2">
+																						<xs:annotation>
+																							<xs:documentation>Ventas por Efectuar
+																							</xs:documentation>
+																						</xs:annotation>
+																					</xs:enumeration>
+																					<xs:enumeration value="3">
+																						<xs:annotation>
+																							<xs:documentation>Consignaciones
+																							</xs:documentation>
+																						</xs:annotation>
+																					</xs:enumeration>
+																					<xs:enumeration value="4">
+																						<xs:annotation>
+																							<xs:documentation>Productos en Demostracion
+																							</xs:documentation>
+																						</xs:annotation>
+																					</xs:enumeration>
+																					<xs:enumeration value="5">
+																						<xs:annotation>
+																							<xs:documentation>Traslados Internos
+																							</xs:documentation>
+																						</xs:annotation>
+																					</xs:enumeration>
+																					<xs:enumeration value="6">
+																						<xs:annotation>
+																							<xs:documentation>Otros Traslados No Venta
+																							</xs:documentation>
+																						</xs:annotation>
+																					</xs:enumeration>
+																					<xs:enumeration value="7">
+																						<xs:annotation>
+																							<xs:documentation>Guias de Devolucion
+																							</xs:documentation>
+																						</xs:annotation>
+																					</xs:enumeration>
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="CantGuia">
+																			<xs:annotation>
+																				<xs:documentation>Cantidad de Guias del Tipo
+																				</xs:documentation>
+																			</xs:annotation>
+																			<xs:simpleType>
+																				<xs:restriction base="xs:nonNegativeInteger">
+																					<xs:totalDigits value="10" />
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="MntGuia" type="tns:MontoType"
+																			minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation>Monto de Guias del Tipo
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:element>
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+												<xs:element name="Detalle" minOccurs="0"
+													maxOccurs="unbounded">
+													<xs:annotation>
+														<xs:documentation>Detalle de Documentos que Componen el
+															Libro Electronico
+														</xs:documentation>
+													</xs:annotation>
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="Folio">
+																<xs:annotation>
+																	<xs:documentation>Identificador del Documento
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:positiveInteger">
+																		<xs:totalDigits value="10" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="Anulado" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Indica que el Estado del Documento es
+																		Anulado
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:positiveInteger">
+																		<xs:totalDigits value="1" />
+																		<xs:enumeration value="1">
+																			<xs:annotation>
+																				<xs:documentation>Anulado Previo a su Envio al SII
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																		<xs:enumeration value="2">
+																			<xs:annotation>
+																				<xs:documentation>Anulado Posterior a su Envio al
+																					SII
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																		<xs:enumeration value="3">
+																			<xs:annotation>
+																				<xs:documentation>Productos Recibidos Parcialmente
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="Operacion" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Indica si Agrega o Elimina
+																		Informacion
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:positiveInteger">
+																		<xs:totalDigits value="1" />
+																		<xs:enumeration value="1">
+																			<xs:annotation>
+																				<xs:documentation>Agrega</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																		<xs:enumeration value="2">
+																			<xs:annotation>
+																				<xs:documentation>Elimina</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="TpoOper" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Tipo de Operacion Realizada
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:positiveInteger">
+																		<xs:totalDigits value="1" />
+																		<xs:enumeration value="1">
+																			<xs:annotation>
+																				<xs:documentation>Operacion Constituye Venta
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																		<xs:enumeration value="2">
+																			<xs:annotation>
+																				<xs:documentation>Ventas por Efectuar
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																		<xs:enumeration value="3">
+																			<xs:annotation>
+																				<xs:documentation>Consignaciones</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																		<xs:enumeration value="4">
+																			<xs:annotation>
+																				<xs:documentation>Productos en Demostracion
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																		<xs:enumeration value="5">
+																			<xs:annotation>
+																				<xs:documentation>Traslados Internos
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																		<xs:enumeration value="6">
+																			<xs:annotation>
+																				<xs:documentation>Otros Traslados No Venta
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																		<xs:enumeration value="7">
+																			<xs:annotation>
+																				<xs:documentation>Guias de Devolucion
+																				</xs:documentation>
+																			</xs:annotation>
+																		</xs:enumeration>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="FchDoc" type="xs:date"
+																minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Fecha del Documento (AAAA-MM-DD)
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="RUTDoc" type="tns:RUTType"
+																minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>RUT del Contraparte en la Operación
+																		Comercial
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="RznSoc" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Razon Social de la Contraparte del
+																		Documento
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="50" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="MntNeto" type="tns:MontoType"
+																minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Monto Neto del Documento
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="TasaImp" type="tns:PctType"
+																minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Tasa de IVA Utilizada en la Operacion
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="IVA" type="tns:MontoType"
+																minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Monto de IVA de la Operacion
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="MntTotal" type="tns:MontoType"
+																minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Monto Total del Documento
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="MntModificado" type="tns:MontoType"
+																minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Monto Total Modificado
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="TpoDocRef" type="tns:DoctoType"
+																minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Tipo de Documento de Referencia
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="FolioDocRef" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Folio del Documento de Referencia
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:positiveInteger">
+																		<xs:totalDigits value="10" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="FchDocRef" type="xs:date"
+																minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Fecha del Documento de Referencia
+																		(AAAA-MM-DD)
+																	</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+												<xs:element name="TmstFirma" type="xs:dateTime">
+													<xs:annotation>
+														<xs:documentation>Fecha y Hora en formato
+															AAAA-MM-DDTHH24:MI:SS de la Firma Electronica
+														</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+											<xs:attribute name="ID" type="xs:ID" use="required" />
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:attribute name="version" type="xs:decimal" use="required"
+									fixed="1.0" />
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			
+			<!-- Simple Type Definitions -->
+			<xs:simpleType name="RUTType">
+				<xs:annotation>
+					<xs:documentation>RUT 99999999-X</xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="10" />
+					<xs:pattern value="[0-9]+-([0-9]|K)" />
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="MontoType">
+				<xs:annotation>
+					<xs:documentation>Monto 18 digitos (positivo)</xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:nonNegativeInteger">
+					<xs:totalDigits value="18" />
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ValorType">
+				<xs:annotation>
+					<xs:documentation>Monto 18 digitos (positivo o negativo)
+					</xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:integer">
+					<xs:totalDigits value="18" />
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="DoctoType">
+				<xs:annotation>
+					<xs:documentation>Tipos de Documentos</xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:positiveInteger">
+					<xs:enumeration value="30" />
+					<xs:enumeration value="32" />
+					<xs:enumeration value="33" />
+					<xs:enumeration value="34" />
+					<xs:enumeration value="35" />
+					<xs:enumeration value="38" />
+					<xs:enumeration value="39" />
+					<xs:enumeration value="40" />
+					<xs:enumeration value="45" />
+					<xs:enumeration value="46" />
+					<xs:enumeration value="55" />
+					<xs:enumeration value="56" />
+					<xs:enumeration value="60" />
+					<xs:enumeration value="61" />
+					<xs:enumeration value="101" />
+					<xs:enumeration value="102" />
+					<xs:enumeration value="103" />
+					<xs:enumeration value="104" />
+					<xs:enumeration value="105" />
+					<xs:enumeration value="106" />
+					<xs:enumeration value="108" />
+					<xs:enumeration value="109" />
+					<xs:enumeration value="900" />
+					<xs:enumeration value="901" />
+					<xs:enumeration value="902" />
+					<xs:enumeration value="903" />
+					<xs:enumeration value="904" />
+					<xs:enumeration value="905" />
+					<xs:enumeration value="906" />
+					<xs:enumeration value="907" />
+					<xs:enumeration value="909" />
+					<xs:enumeration value="910" />
+					<xs:enumeration value="911" />
+					<xs:enumeration value="914" />
+					<xs:enumeration value="918" />
+					<xs:enumeration value="919" />
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="PctType">
+				<xs:annotation>
+					<xs:documentation>Porcentaje (3 enteros y 2 decimales)
+					</xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:decimal">
+					<xs:totalDigits value="5" />
+					<xs:fractionDigits value="2" />
+					<xs:minInclusive value="0" />
+					<xs:maxInclusive value="100" />
+				</xs:restriction>
+			</xs:simpleType>
+
+			<!-- Response Structure  -->
+			<xs:element name="SignWaybillLedgerResponse">
+				<xs:complexType>
+					<xs:sequence>						
+						<xs:element name="SignedWaybill" type="xs:base64Binary" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="LibroGuia" type="xs:string"></xs:element>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="SignWaybillLedgerRequest">
+		<wsdl:part element="tns:SignWaybillLedger" name="SignWaybillLedgerRequestParameters" />
+	</wsdl:message>
+	<wsdl:message name="SignWaybillLedgerResponse">
+		<wsdl:part element="tns:SignWaybillLedgerResponse" name="SignWaybillLedgerResponseParameters" />
+	</wsdl:message>
+	<wsdl:portType name="eDocChileLibroGuia_v1">
+		<wsdl:operation name="SignWaybillLedger">
+			<wsdl:input message="tns:SignWaybillLedgerRequest" />
+			<wsdl:output message="tns:SignWaybillLedgerResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="eDocChileLibroGuia_v1SOAP" type="tns:eDocChileLibroGuia_v1">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="SignWaybillLedger">
+			<soap:operation
+				soapAction="http://www.sap.com/eDocument/Chile/WaybillLedger/v1.0/NewOperation" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="eDocChileLibroGuia_v1">
+		<wsdl:port binding="tns:eDocChileLibroGuia_v1SOAP" name="eDocChileLibroGuia_v1SOAP">
+			<soap:address location="http://www.defaultnamespace/" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

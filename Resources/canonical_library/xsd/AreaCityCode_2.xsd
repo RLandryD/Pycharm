@@ -1,0 +1,757 @@
+<?xml version="1.0"?>
+<xsd:schema targetNamespace="http://ns.hr-xml.org/2004-08-02"
+	elementFormDefault="qualified" version="2004-08-02"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://ns.hr-xml.org/2004-08-02"
+	xmlns:oa="http://www.openapplications.org/oagis" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+	<!--Normalized (but non-normative) version of schema, with all "includes" 
+		inserted explicitly (with annotations). This file is auto-generated. It should 
+		be considered a "convenience" alternative to the normative versions. -->
+	<!-- "Copyright The HR-XML Consortium. All Rights Reserved. http://www.hr-xml.org" 
+		Name: PersonName.xsd Status: Recommendation Date this version: http://ns.hr-xml.org/2004-08-02 
+		Purpose: Defines the schema for PersonName Author(s): Paul Kiel, Kim Bartkus, 
+		CPO Workgroup Documentation: PersonName.html Terms of license can be found 
+		in license.txt. -->
+	<!-- "Copyright The HR-XML Consortium. All Rights Reserved. http://www.hr-xml.org" 
+		Name: PostalAddress.xsd Status: Recommendation Date this version: 2004-08-02 
+		Purpose: Defines the schema for Postal Address Author(s): Paul Kiel, Kim 
+		Bartkus, CPO Workgroup Documentation: PostalAddress.html Terms of license 
+		can be found in license.txt. -->
+	<!-- "Copyright The HR-XML Consortium. All Rights Reserved. http://www.hr-xml.org" 
+		Name: xStringPatternExtensionType.xsd Status: Recommendation Date this version: 
+		2004-08-02 Purpose: Defines the xStringPatternExtensionType enumeration extension 
+		schema. Author(s): Technical Steering Committee Documentation: While the 
+		name of the type is different, this schema's functionality is documented 
+		in the "Extended Enumerations" section of the SchemaDesignGuidelines.pdf. 
+		Terms of license can be found in license.txt. -->
+	<!-- "Copyright The HR-XML Consortium. All Rights Reserved. http://www.hr-xml.org" 
+		Name: TelcomNumber.xsd Status: Recommendation Date this version: 2004-08-02 
+		Purpose: Schema for Telecommunications data. Author(s): Don Simonson, Robert 
+		Half Int'l., CPO Workgroup Documentation: ContactMethod.html Terms of license 
+		can be found in license.txt. -->
+	<!-- "Copyright The HR-XML Consortium. All Rights Reserved. http://www.hr-xml.org" 
+		Name: OnlineAddress.xsd Status: Recommendation Date this version: 2004-08-02 
+		Purpose: Defines the schema for online addresses. Author(s): Don Simonson, 
+		Robert Half Int'l., CPO Workgroup Documentation: ContactMethod.html Terms 
+		of license can be found in license.txt. -->
+	<!-- "Copyright The HR-XML Consortium. All Rights Reserved. http://www.hr-xml.org" 
+		Name: ContactMethod.xsd Status: Recommendation Date this version: 2004-08-02 
+		Purpose: Defines the schema for contact methods Author(s): Don Simonson, 
+		Robert Half Int'l., CPO Workgroup Documentation: ContactMethod.html Terms 
+		of license can be found in license.txt. -->
+	<!-- Copyright The HR-XML Consortium. All Rights Reserved. http://www.hr-xml.org 
+		Name: DateTimeDataTypes.xsd Status: Recommendation Date Approved: 2004-08-02 
+		Purpose: Defines Date and Time datatypes to be used in HR-XML Consortium 
+		work. Author(s): Mark Marsden and Paul Kiel, Cross Process Work Group Documentation: 
+		DateTimeDataTypes.html Terms of license can be found in license.txt. -->
+	<!-- "Copyright The HR-XML Consortium. All Rights Reserved. http://www.hr-xml.org" 
+		Name: EntityIdType.xsd Status: Recommendation Date this version: 2004-08-02 
+		Purpose: Defines XSD for Entity Identifiers Editor: Karl Brophey, Kim Bartkus, 
+		CPO Workgroup Documentation: EntityIdentifiers.html (IdentifierTypes.html) 
+		Terms of license can be found in license.txt. -->
+	<!-- "Copyright The HR-XML Consortium. All Rights Reserved. http://www.hr-xml.org" 
+		Name: UserArea.xsd Status: Recommendation Date this version: 2004-08-02 Purpose: 
+		Defines the UserArea extension schema Author(s): Technical Steering Committee 
+		Documentation: HRXMLExtension.html Terms of license can be found in license.txt. -->
+	<!-- "Copyright The HR-XML Consortium. All Rights Reserved. http://www.hr-xml.org" 
+		Name: AssessmentStatus.xsd Status: Recommendation Date this version: 2004-08-02 
+		Author(s): Assessment Work Group Documentation: Assessments.html Terms of 
+		license can be found in license.txt. -->
+	<!-- "Copyright The HR-XML Consortium. All Rights Reserved. http://www.hr-xml.org" 
+		Name: AssessmentResult.xsd Status: Recommendation Date this version: 2004-08-02 
+		Author(s): Assessment Work Group Documentation: Assessments.html Terms of 
+		license can be found in license.txt. 2004-08-02: Score element changed from 
+		xsd:int to xsd:float. This is considered a bug fix. 2004-07-06: An optional 
+		attribute xml:lang was added to the root element. 2004-07-06: ScoreId element 
+		was added to AssessmentsResultType -->
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace"
+		schemaLocation="xml.xsd" />
+	<xsd:simpleType name="xStringPatternExtensionType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="x:\S.*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="InternetEmailAddressType">
+		<xsd:restriction base="xsd:string" />
+	</xsd:simpleType>
+	<xsd:simpleType name="InternetWebAddressType">
+		<xsd:restriction base="xsd:string" />
+	</xsd:simpleType>
+	<xsd:simpleType name="contactMethodUseType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="business" />
+			<xsd:enumeration value="businessDirect" />
+			<xsd:enumeration value="personal" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="contactMethodLocationType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="office" />
+			<xsd:enumeration value="vehicle" />
+			<xsd:enumeration value="onPerson" />
+			<xsd:enumeration value="home" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="contactMethodWhenAvailableType">
+		<xsd:restriction base="xsd:string" />
+	</xsd:simpleType>
+	<xsd:simpleType name="contactMethodUsePatternExtensionType">
+		<xsd:union memberTypes="contactMethodUseType xStringPatternExtensionType" />
+	</xsd:simpleType>
+	<xsd:simpleType name="contactMethodLocationPatternExtensionType">
+		<xsd:union memberTypes="contactMethodLocationType xStringPatternExtensionType" />
+	</xsd:simpleType>
+	<xsd:simpleType name="contactMethodWhenAvailablePatternExtensionType">
+		<xsd:union
+			memberTypes="contactMethodWhenAvailableType xStringPatternExtensionType" />
+	</xsd:simpleType>
+	<xsd:simpleType name="NotKnownLiteral">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="notKnown" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="NotApplicableLiteral">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="notApplicable" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="LocalDateType">
+		<xsd:restriction base="xsd:date">
+			<xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="LocalDateNkType">
+		<xsd:union memberTypes="LocalDateType NotKnownLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="LocalDateNaType">
+		<xsd:union memberTypes="LocalDateType NotApplicableLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="LocalDateNkNaType">
+		<xsd:union memberTypes="LocalDateType NotKnownLiteral NotApplicableLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="DateType">
+		<xsd:restriction base="xsd:date">
+			<xsd:pattern value="\d\d\d\d-\d\d-\d\d(Z|(\+|-)\d\d:\d\d)" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="DateNkType">
+		<xsd:union memberTypes="DateType NotKnownLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="DateNaType">
+		<xsd:union memberTypes="DateType NotApplicableLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="DateNkNaType">
+		<xsd:union memberTypes="DateType NotKnownLiteral NotApplicableLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="LocalTimeType">
+		<xsd:restriction base="xsd:time">
+			<xsd:pattern value="\d\d:\d\d:\d\d" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="LocalTimeNkType">
+		<xsd:union memberTypes="LocalTimeType NotKnownLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="LocalTimeNaType">
+		<xsd:union memberTypes="LocalTimeType NotApplicableLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="LocalTimeNkNaType">
+		<xsd:union memberTypes="LocalTimeType NotKnownLiteral NotApplicableLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="TimeType">
+		<xsd:restriction base="xsd:time">
+			<xsd:pattern value="\d\d:\d\d:\d\d(Z|(\+|-)\d\d:\d\d)" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TimeNkType">
+		<xsd:union memberTypes="TimeType NotKnownLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="TimeNaType">
+		<xsd:union memberTypes="TimeType NotApplicableLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="TimeNkNaType">
+		<xsd:union memberTypes="TimeType NotKnownLiteral NotApplicableLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="LocalDateTimeType">
+		<xsd:restriction base="xsd:dateTime">
+			<xsd:pattern value="\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="LocalDateTimeNkType">
+		<xsd:union memberTypes="LocalDateTimeType NotKnownLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="LocalDateTimeNaType">
+		<xsd:union memberTypes="LocalDateTimeType NotApplicableLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="LocalDateTimeNkNaType">
+		<xsd:union memberTypes="LocalDateTimeType NotKnownLiteral NotApplicableLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="DateTimeType">
+		<xsd:restriction base="xsd:dateTime">
+			<xsd:pattern value="\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(Z|(\+|-)\d\d:\d\d)" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="DateTimeNkType">
+		<xsd:union memberTypes="DateTimeType NotKnownLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="DateTimeNaType">
+		<xsd:union memberTypes="DateTimeType NotApplicableLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="DateTimeNkNaType">
+		<xsd:union memberTypes="DateTimeType NotKnownLiteral NotApplicableLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="AnyDateTimeType">
+		<xsd:union memberTypes="LocalDateType DateType LocalDateTimeType DateTimeType" />
+	</xsd:simpleType>
+	<xsd:simpleType name="AnyDateTimeNkType">
+		<xsd:union
+			memberTypes="LocalDateType DateType LocalDateTimeType DateTimeType NotKnownLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="AnyDateTimeNaType">
+		<xsd:union
+			memberTypes="LocalDateType DateType LocalDateTimeType DateTimeType NotApplicableLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="AnyDateTimeNkNaType">
+		<xsd:union
+			memberTypes="LocalDateType DateType LocalDateTimeType DateTimeType NotKnownLiteral NotApplicableLiteral" />
+	</xsd:simpleType>
+	<xsd:simpleType name="AssessmentResultTypes">
+		<xsd:union memberTypes="AssessmentResultTypeTypes xStringPatternExtensionType" />
+	</xsd:simpleType>
+	<xsd:simpleType name="AssessmentResultTypeTypes">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="percentile" />
+			<xsd:enumeration value="raw score" />
+			<xsd:enumeration value="other" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="PersonNameType">
+		<xsd:sequence>
+			<xsd:element name="FormattedName" minOccurs="0"
+				maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>The use of multiple occurrences are officially
+						deprecated and will be changed to single occurrence in a future
+						version.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:string">
+							<xsd:attribute name="type" default="presentation">
+								<xsd:annotation>
+									<xsd:documentation>Deprecated. "legal" is deprecated in favor
+										of LegalName element. "sortOrder" is deprecated in favor of
+										creating separate elements. Since "presentation" is the only
+										enumeration left, the need for this attribute no longer
+										exists.
+									</xsd:documentation>
+								</xsd:annotation>
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:enumeration value="presentation" />
+										<xsd:enumeration value="legal" />
+										<xsd:enumeration value="sortOrder" />
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:attribute>
+						</xsd:extension>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="LegalName" type="xsd:string"
+				minOccurs="0" />
+			<xsd:element name="GivenName" type="xsd:string"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xsd:element name="PreferredGivenName" type="xsd:string"
+				minOccurs="0" />
+			<xsd:element name="MiddleName" type="xsd:string"
+				minOccurs="0" />
+			<xsd:element name="FamilyName" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:string">
+							<xsd:attribute name="primary" default="undefined">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:enumeration value="true" />
+										<xsd:enumeration value="false" />
+										<xsd:enumeration value="undefined" />
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:attribute>
+							<xsd:attribute name="prefix" type="xsd:string" />
+						</xsd:extension>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="Affix" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:string">
+							<xsd:attribute name="type" use="required">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:enumeration value="academicGrade">
+											<xsd:annotation>
+												<xsd:documentation>Deprecated in favor of the
+													"qualification" enumeration.
+												</xsd:documentation>
+											</xsd:annotation>
+										</xsd:enumeration>
+										<xsd:enumeration value="aristocraticPrefix">
+											<xsd:annotation>
+												<xsd:documentation>Deprecated in favor of FamilyName
+													attribute "prefix".
+												</xsd:documentation>
+											</xsd:annotation>
+										</xsd:enumeration>
+										<xsd:enumeration value="aristocraticTitle" />
+										<xsd:enumeration value="familyNamePrefix">
+											<xsd:annotation>
+												<xsd:documentation>Deprecated in favor of FamilyName
+													attribute "prefix".
+												</xsd:documentation>
+											</xsd:annotation>
+										</xsd:enumeration>
+										<xsd:enumeration value="familyNameSuffix">
+											<xsd:annotation>
+												<xsd:documentation>Deprecated.</xsd:documentation>
+											</xsd:annotation>
+										</xsd:enumeration>
+										<xsd:enumeration value="formOfAddress" />
+										<xsd:enumeration value="generation" />
+										<xsd:enumeration value="qualification" />
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:attribute>
+						</xsd:extension>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PostalAddressType">
+		<xsd:sequence>
+			<xsd:element name="CountryCode">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:pattern value="[A-Z]{2}" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PostalCode" type="xsd:string"
+				minOccurs="0" />
+			<xsd:element name="Region" type="xsd:string" minOccurs="0"
+				maxOccurs="unbounded" />
+			<xsd:element name="Municipality" type="xsd:string"
+				minOccurs="0" />
+			<xsd:element name="DeliveryAddress" minOccurs="0">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="AddressLine" type="xsd:string"
+							minOccurs="0" maxOccurs="unbounded" />
+						<xsd:element name="StreetName" type="xsd:string"
+							minOccurs="0" />
+						<xsd:element name="BuildingNumber" type="xsd:string"
+							minOccurs="0" />
+						<xsd:element name="Unit" type="xsd:string" minOccurs="0" />
+						<xsd:element name="PostOfficeBox" type="xsd:string"
+							minOccurs="0" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="Recipient" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="PersonName" type="PersonNameType"
+							minOccurs="0" />
+						<xsd:element name="AdditionalText" type="xsd:string"
+							minOccurs="0" maxOccurs="unbounded" />
+						<xsd:element name="Organization" type="xsd:string"
+							minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>Deprecated in favor of OrganizationName
+									element.
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="OrganizationName" type="xsd:string"
+							minOccurs="0" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="type" default="undefined">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="postOfficeBoxAddress" />
+					<xsd:enumeration value="streetAddress" />
+					<xsd:enumeration value="militaryAddress" />
+					<xsd:enumeration value="undefined" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="TelcomNumberType">
+		<xsd:choice>
+			<xsd:element ref="FormattedNumber" />
+			<xsd:group ref="TelcomNumberGroup" />
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="MobileTelcomNumberType">
+		<xsd:complexContent>
+			<xsd:extension base="TelcomNumberType">
+				<xsd:attribute name="smsEnabled" type="xsd:boolean"
+					use="optional" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="TelcomNumberListType">
+		<xsd:sequence>
+			<xsd:element ref="Telephone" minOccurs="0" />
+			<xsd:element ref="Mobile" minOccurs="0" />
+			<xsd:element ref="Fax" minOccurs="0" />
+			<xsd:element ref="Pager" minOccurs="0" />
+			<xsd:element ref="TTYTDD" minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ContactMethodType">
+		<xsd:sequence>
+			<xsd:element ref="Use" minOccurs="0" />
+			<xsd:element ref="Location" minOccurs="0" />
+			<xsd:element ref="WhenAvailable" minOccurs="0" />
+			<xsd:element ref="Telephone" minOccurs="0" />
+			<xsd:element ref="Mobile" minOccurs="0" />
+			<xsd:element ref="Fax" minOccurs="0" />
+			<xsd:element ref="Pager" minOccurs="0" />
+			<xsd:element ref="TTYTDD" minOccurs="0" />
+			<xsd:element ref="InternetEmailAddress" minOccurs="0" />
+			<xsd:element ref="InternetWebAddress" minOccurs="0" />
+			<xsd:element ref="PostalAddress" minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="EntityIdType">
+		<xsd:sequence>
+			<xsd:element name="IdValue" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:string">
+							<xsd:attribute name="name" type="xsd:string" use="optional" />
+						</xsd:extension>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="validFrom" type="AnyDateTimeNkNaType"
+			use="optional" />
+		<xsd:attribute name="validTo" type="AnyDateTimeNkNaType"
+			use="optional" />
+		<xsd:attribute name="idOwner" type="xsd:string" use="optional" />
+	</xsd:complexType>
+	<xsd:complexType name="UserAreaType">
+		<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+			<xsd:annotation>
+				<xsd:documentation>In order to prevent a possible "ambiguous content
+					model" errors in an instance, unbounded sequences were either
+					eliminated from or deprecated in all HR-XML schemas. Removing
+					unbounded sequences ensures that ambiguous errors are not found in
+					an instance. The unbounded sequence here is officially deprecated
+					and will be changed to a single sequence.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:element name="PassThroughData" type="xsd:string"
+				minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation />
+
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ReportAccess" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+						<xsd:element name="InternetLink" type="xsd:string" />
+
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AssessmentStatusType">
+		<xsd:sequence>
+			<xsd:element name="Status">
+				<xsd:annotation>
+					<xsd:documentation>The name of the assessment status. It has to be
+						chosen among the list of possible status
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="Pending" />
+						<xsd:enumeration value="Error" />
+						<xsd:enumeration value="Acknowledged" />
+						<xsd:enumeration value="Scheduled" />
+						<xsd:enumeration value="In Progress" />
+						<xsd:enumeration value="Cancelled" />
+						<xsd:enumeration value="Declined" />
+						<xsd:enumeration value="Completed" />
+						<xsd:enumeration value="x:Deferred" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Details" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A textual description that provides additional
+						details
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="StatusDate" type="LocalDateNaType">
+				<xsd:annotation>
+					<xsd:documentation>The date the status last changed
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AssessmentRequestType">
+		<xsd:sequence>
+			<xsd:element name="ClientId" type="EntityIdType">
+				<xsd:annotation>
+					<xsd:documentation>A value that uniquely identifies a client for
+						the 3rd party vendor (assessor). It is up to the vendor to provide
+						the client its identifier.The client id is mandatory for all
+						messages going from a customer to an assessment vendor
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ProviderId" type="EntityIdType"
+				minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A value that uniquely identifies An assessment
+						provider for the customer. It is up to the client to provide the
+						provider its identifier.The provider id should be filled for all
+						messages going from a customer to an assessment vendor
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ClientOrderId" type="EntityIdType">
+				<xsd:annotation>
+					<xsd:documentation>A unique identifier, for the client, to identify
+						the order.There can be multiple order id for one request (e.g. PO
+						#, department)
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ReceiptId" type="EntityIdType"
+				minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A unique identifier supplied by the assessment
+						provider that will allow the client to know how to request updates
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="UserArea" minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AssessmentResultType">
+		<xsd:annotation>
+			<xsd:documentation>Root element for AssessmentResult schema, which is
+				designed to hold data necessary to convey information on the results
+				of the assessment
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ClientId" type="EntityIdType">
+				<xsd:annotation>
+					<xsd:documentation>A value that uniquely identifies a client for
+						the 3rd party vendor (assessor). It is up to the vendor to provide
+						the client its identifier.The client id is mandatory for all
+						messages going from a customer to an assessment vendor
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ProviderId" type="EntityIdType"
+				minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A value that uniquely identifies An assessment
+						provider for the customer. It is up to the client to provide the
+						provider its identifier.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ClientOrderId" type="EntityIdType">
+				<xsd:annotation>
+					<xsd:documentation>A unique identifier, for the client, to identify
+						the order.There can be multiple order id for one request (e.g. PO
+						#, department)
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ReceiptId" type="EntityIdType"
+				minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A unique identifier supplied by the assessment
+						provider that will allow the client to know how to request updates
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Results" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>The results of the assessment
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Profile" type="xsd:string"
+							minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>The name of this set of results. Commonly
+									used to distinguish between multiple Results elements, for
+									example to indicate the normative group applied to the scoring.
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="OverallResult" type="AssessmentResultsType"
+							minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>A summary or "high-level" view of the result
+									of the subject
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="DetailResult" type="AssessmentResultsType"
+							minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>The details of the subject's result,
+									assessment category per category.
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="AssessmentStatus" type="AssessmentStatusType">
+				<xsd:annotation>
+					<xsd:documentation>The status of tyhe request at this particular
+						moment
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="UserArea" minOccurs="0" />
+		</xsd:sequence>
+
+	</xsd:complexType>
+	<xsd:complexType name="AssessmentResultsType">
+		<xsd:annotation>
+			<xsd:documentation>Root element for AssessmentResults type, which is
+				designed to hold data necessary to convey information on assessment
+				results
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ScoreId" type="EntityIdType"
+				minOccurs="0" />
+			<xsd:element name="Passed" type="xsd:boolean" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A boolean expression that denotes whether the
+						subject passed or failed the assessment.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Description" type="xsd:string"
+				minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>"Label" of the score</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Score" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>The raw value (numeric) of the score
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:float">
+							<xsd:attribute name="type" type="AssessmentResultTypes"
+								use="required" />
+						</xsd:extension>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="Scale" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A textual label to indicate the range of
+						possible values for this score. For example, 0-100 for a
+						percentage scale.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Band" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Provides for categorizing or grouping of
+						results.For example, "beginner", "intermediate" and "expert" would
+						be three different bands
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Comments" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A textual description that provides the opinion
+						of the assessment vendor. It may be based on criteria that have
+						been defined between the client and the vendor
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="PersonName" type="PersonNameType" />
+	<xsd:element name="PostalAddress" type="PostalAddressType" />
+	<xsd:element name="FormattedNumber" type="xsd:string" />
+	<xsd:element name="InternationalCountryCode" type="xsd:string" />
+	<xsd:element name="NationalNumber" type="xsd:string" />
+	<xsd:element name="AreaCityCode" type="xsd:string" />
+	<xsd:element name="SubscriberNumber" type="xsd:string" />
+	<xsd:element name="Extension" type="xsd:string" />
+	<xsd:element name="Telephone" type="TelcomNumberType" />
+	<xsd:element name="Mobile" type="MobileTelcomNumberType" />
+	<xsd:element name="Fax" type="TelcomNumberType" />
+	<xsd:element name="Pager" type="TelcomNumberType" />
+	<xsd:element name="TTYTDD" type="TelcomNumberType" />
+	<xsd:element name="InternetEmailAddress" type="InternetEmailAddressType" />
+	<xsd:element name="InternetWebAddress" type="InternetWebAddressType" />
+	<xsd:element name="Use" type="contactMethodUsePatternExtensionType" />
+	<xsd:element name="Location"
+		type="contactMethodLocationPatternExtensionType" />
+	<xsd:element name="WhenAvailable" type="contactMethodWhenAvailableType" />
+	<xsd:element name="UserArea" type="UserAreaType">
+		<xsd:annotation>
+			<xsd:documentation>HR-XML Technical Steering Committee endorsed
+				extension element.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="AssessmentStatusRequest" type="AssessmentRequestType">
+		<xsd:annotation>
+			<xsd:documentation>Root element for AssessmentStatusRequest schema,
+				which is designed to hold data necessary to request the status of a
+				particular assessment.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="AssessmentResult" type="AssessmentResultType">
+		<xsd:annotation>
+			<xsd:documentation>Root element for AssessmentResult schema, which is
+				designed to hold data necessary to convey information on the results
+				of the assessment
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:group name="TelcomNumberGroup">
+		<xsd:sequence>
+			<xsd:element ref="InternationalCountryCode" minOccurs="0" />
+			<xsd:element ref="NationalNumber" minOccurs="0" />
+			<xsd:element ref="AreaCityCode" minOccurs="0" />
+			<xsd:element ref="SubscriberNumber" />
+			<xsd:element ref="Extension" minOccurs="0" />
+		</xsd:sequence>
+	</xsd:group>
+</xsd:schema>

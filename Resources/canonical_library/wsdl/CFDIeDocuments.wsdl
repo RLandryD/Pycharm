@@ -1,0 +1,2881 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="http://www.sap.com/eDocument/Mexico/CFDI/v1.0" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.sap.com/eDocument/Mexico/CFDI/v1.0" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:n1="http://www.sat.gob.mx/cfd/3" xmlns:n2="http://cancelacfd.sat.gob.mx" xmlns:n3="http://www.sat.gob.mx/ComercioExterior11" xmlns:n4="http://www.sat.gob.mx/divisas" xmlns:n5="http://www.sat.gob.mx/donat" xmlns:n6="http://www.sat.gob.mx/implocal" xmlns:n7="http://www.sat.gob.mx/Pagos" xmlns:n8="http://www.w3.org/2000/09/xmldsig#" xmlns:n9="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:n10="http://www.sat.gob.mx/detallista" xmlns:n11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:n12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:n13="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:n14="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+ <wsdl:documentation>
+  <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+ </wsdl:documentation>
+ <wsp:UsingPolicy wsdl:required="true"/>
+ <wsp:Policy wsu:Id="IF_IF_CFDIeDocuments">
+  <sapsession:Session xmlns:sapsession="http://www.sap.com/webas/630/soap/features/session/">
+   <sapsession:enableSession>false</sapsession:enableSession>
+  </sapsession:Session>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_GetViewEdoc">
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_GetStatusEdoc">
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_CancelEdoc">
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_SubmitEdoc">
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsdl:types>
+  <xsd:schema targetNamespace="http://www.sap.com/eDocument/Mexico/CFDI/v1.0" xmlns="http://www.sap.com/eDocument/Mexico/CFDI/v1.0" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:import namespace="http://www.sat.gob.mx/cfd/3"/>
+   <xsd:import namespace="http://www.sat.gob.mx/TimbreFiscalDigital"/>
+   <xsd:import namespace="http://cancelacfd.sat.gob.mx"/>
+   <xsd:element name="CFDCancelRequest">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element ref="xi1:Cancelacion"/>
+      <xsd:element name="ServiceProvider" form="qualified" type="xsd:string"/>
+      <xsd:element name="DocType" minOccurs="0" form="qualified" type="xsd:string"/>
+     </xsd:sequence>
+     <xsd:attribute name="version" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="PACResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="EncodedZippedResponse" minOccurs="0" form="qualified" type="xsd:base64Binary"/>
+      <xsd:element name="SignedDocument" minOccurs="0" form="qualified" type="xsd:base64Binary"/>
+      <xsd:element minOccurs="0" ref="xi8:TimbreFiscalDigital"/>
+      <xsd:element name="Error" minOccurs="0" form="qualified" maxOccurs="unbounded">
+       <xsd:complexType>
+        <xsd:attribute name="noIdentificacion" use="required">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:minLength value="1"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="descripcion" use="required">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:minLength value="1"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="StatusCode" minOccurs="0" form="qualified" type="xsd:double"/>
+      <xsd:element name="CFDResponseMulti" minOccurs="0" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="Folios" minOccurs="0" form="qualified" maxOccurs="unbounded">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="UUID" minOccurs="0" form="qualified" type="xsd:string"/>
+            <xsd:element name="StatusCode" minOccurs="0" form="qualified" type="xsd:double"/>
+            <xsd:element name="Error" minOccurs="0" form="qualified">
+             <xsd:complexType>
+              <xsd:attribute name="noIdentificacion" type="xsd:string"/>
+              <xsd:attribute name="decripcion" type="xsd:string"/>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="CFDGetStatusRequest">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="Folio" minOccurs="0" form="qualified" maxOccurs="unbounded">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="UUID" form="qualified" type="xsd:string"/>
+         <xsd:element name="Total" form="qualified" type="xsd:string"/>
+        </xsd:sequence>
+        <xsd:attribute name="RfcReceptor" type="xsd:string"/>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ServiceProvider" form="qualified" type="xsd:string"/>
+      <xsd:element name="DocType" minOccurs="0" form="qualified" type="xsd:string"/>
+     </xsd:sequence>
+     <xsd:attribute name="version" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="RfcEmisor" type="xsd:string"/>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="GetViewEdoc">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="UUID" form="qualified" type="xsd:string"/>
+      <xsd:element name="ServiceProvider" form="qualified" type="xsd:string"/>
+      <xsd:element name="DocType" minOccurs="0" form="qualified" type="xsd:string"/>
+     </xsd:sequence>
+     <xsd:attribute name="version" type="xsd:string"/>
+     <xsd:attribute name="RfcEmisor" type="xsd:string"/>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="GetViewEdocResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="DocData" form="qualified" type="xsd:base64Binary"/>
+      <xsd:element name="Error" form="qualified">
+       <xsd:complexType>
+        <xsd:attribute name="noIdentificacion" type="xsd:string"/>
+        <xsd:attribute name="descripcion" type="xsd:string"/>
+       </xsd:complexType>
+      </xsd:element>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="CFDSubmitRequest" type="CFDSubmitRequestType"/>
+   <xsd:complexType name="CFDSubmitRequestType">
+    <xsd:sequence>
+     <xsd:element name="Comprobante" form="qualified" type="xi0:t_Comprobante"/>
+     <xsd:element name="ServiceProvider" form="qualified" type="xsd:string"/>
+     <xsd:element name="DocType" minOccurs="0" form="qualified" type="xsd:string"/>
+    </xsd:sequence>
+   </xsd:complexType>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://www.sat.gob.mx/cfd/3" xmlns="http://www.sat.gob.mx/cfd/3" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:import namespace="http://www.sat.gob.mx/TimbreFiscalDigital"/>
+   <xsd:import namespace="http://www.sat.gob.mx/implocal"/>
+   <xsd:import namespace="http://www.sat.gob.mx/Pagos"/>
+   <xsd:import namespace="http://www.sat.gob.mx/donat"/>
+   <xsd:import namespace="http://www.sat.gob.mx/divisas"/>
+   <xsd:import namespace="http://www.sat.gob.mx/detallista"/>
+   <xsd:import namespace="http://www.sat.gob.mx/ComercioExterior11"/>
+   <xsd:import namespace="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI"/>
+   <xsd:import namespace="http://www.sat.gob.mx/sitio_internet/cfd/catalogos"/>
+   <xsd:element name="Comprobante">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="CfdiRelacionados" minOccurs="0" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="CfdiRelacionado" form="qualified" maxOccurs="unbounded">
+          <xsd:complexType>
+           <xsd:attribute name="UUID">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+              <xsd:length value="36"/>
+              <xsd:pattern value="[a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{12}"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="TipoRelacion" use="required" type="xi11:c_TipoRelacion"/>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Emisor" form="qualified">
+       <xsd:complexType>
+        <xsd:attribute name="Rfc" use="required" type="xi13:t_RFC"/>
+        <xsd:attribute name="Nombre">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="254"/>
+           <xsd:minLength value="1"/>
+           <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,254}"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="RegimenFiscal" use="required" type="xi11:c_RegimenFiscal"/>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Receptor" form="qualified">
+       <xsd:complexType>
+        <xsd:attribute name="Rfc" use="required" type="xi13:t_RFC"/>
+        <xsd:attribute name="Nombre">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="254"/>
+           <xsd:minLength value="1"/>
+           <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,254}"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="ResidenciaFiscal" type="xi11:c_Pais"/>
+        <xsd:attribute name="NumRegIdTrib">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="40"/>
+           <xsd:minLength value="1"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="UsoCFDI" use="required" type="xi11:c_UsoCFDI"/>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Conceptos" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="Concepto" form="qualified" maxOccurs="unbounded">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="Impuestos" minOccurs="0" form="qualified">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="Traslados" minOccurs="0" form="qualified">
+                <xsd:complexType>
+                 <xsd:sequence>
+                  <xsd:element name="Traslado" form="qualified" maxOccurs="unbounded">
+                   <xsd:complexType>
+                    <xsd:attribute name="Base" use="required" type="xi13:t_Importe"/>
+                    <xsd:attribute name="Impuesto" use="required" type="xi11:c_Impuesto"/>
+                    <xsd:attribute name="TipoFactor" use="required" type="xi11:c_TipoFactor"/>
+                    <xsd:attribute name="TasaOCuota" type="xi11:c_TasaOCuota"/>
+                    <xsd:attribute name="Importe" type="xi13:t_Importe"/>
+                   </xsd:complexType>
+                  </xsd:element>
+                 </xsd:sequence>
+                </xsd:complexType>
+               </xsd:element>
+               <xsd:element name="Retenciones" minOccurs="0" form="qualified">
+                <xsd:complexType>
+                 <xsd:sequence>
+                  <xsd:element name="Retencion" form="qualified" maxOccurs="unbounded">
+                   <xsd:complexType>
+                    <xsd:attribute name="Base" use="required" type="xi13:t_Importe"/>
+                    <xsd:attribute name="Impuesto" use="required" type="xi11:c_Impuesto"/>
+                    <xsd:attribute name="TipoFactor" use="required" type="xi11:c_TipoFactor"/>
+                    <xsd:attribute name="TasaOCuota" use="required">
+                     <xsd:simpleType>
+                      <xsd:restriction base="xsd:decimal">
+                       <xsd:fractionDigits value="6"/>
+                       <xsd:minInclusive value="0.000000"/>
+                       <xsd:whiteSpace value="collapse"/>
+                      </xsd:restriction>
+                     </xsd:simpleType>
+                    </xsd:attribute>
+                    <xsd:attribute name="Importe" use="required" type="xi13:t_Importe"/>
+                   </xsd:complexType>
+                  </xsd:element>
+                 </xsd:sequence>
+                </xsd:complexType>
+               </xsd:element>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="InformacionAduanera" minOccurs="0" form="qualified" maxOccurs="unbounded">
+             <xsd:complexType>
+              <xsd:attribute name="NumeroPedimento" use="required">
+               <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                 <xsd:length value="21"/>
+                 <xsd:pattern value="[0-9]{2}  [0-9]{2}  [0-9]{4}  [0-9]{7}"/>
+                </xsd:restriction>
+               </xsd:simpleType>
+              </xsd:attribute>
+             </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="CuentaPredial" minOccurs="0" form="qualified">
+             <xsd:complexType>
+              <xsd:attribute name="Numero" use="required">
+               <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                 <xsd:maxLength value="150"/>
+                 <xsd:minLength value="1"/>
+                 <xsd:pattern value="[0-9]{1,150}"/>
+                 <xsd:whiteSpace value="collapse"/>
+                </xsd:restriction>
+               </xsd:simpleType>
+              </xsd:attribute>
+             </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ComplementoConcepto" minOccurs="0" form="qualified">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:any minOccurs="0" maxOccurs="unbounded"/>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="Parte" minOccurs="0" form="qualified" maxOccurs="unbounded">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="InformacionAduanera" minOccurs="0" form="qualified" maxOccurs="unbounded">
+                <xsd:complexType>
+                 <xsd:attribute name="NumeroPedimento" use="required">
+                  <xsd:simpleType>
+                   <xsd:restriction base="xsd:string">
+                    <xsd:length value="21"/>
+                    <xsd:pattern value="[0-9]{2}  [0-9]{2}  [0-9]{4}  [0-9]{7}"/>
+                   </xsd:restriction>
+                  </xsd:simpleType>
+                 </xsd:attribute>
+                </xsd:complexType>
+               </xsd:element>
+              </xsd:sequence>
+              <xsd:attribute name="ClaveProdServ" use="required" type="xi11:c_ClaveProdServ"/>
+              <xsd:attribute name="NoIdentificacion">
+               <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                 <xsd:maxLength value="100"/>
+                 <xsd:minLength value="1"/>
+                 <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,100}"/>
+                 <xsd:whiteSpace value="collapse"/>
+                </xsd:restriction>
+               </xsd:simpleType>
+              </xsd:attribute>
+              <xsd:attribute name="Cantidad" use="required">
+               <xsd:simpleType>
+                <xsd:restriction base="xsd:decimal">
+                 <xsd:fractionDigits value="6"/>
+                 <xsd:minInclusive value="0.000001"/>
+                 <xsd:whiteSpace value="collapse"/>
+                </xsd:restriction>
+               </xsd:simpleType>
+              </xsd:attribute>
+              <xsd:attribute name="Unidad">
+               <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                 <xsd:maxLength value="20"/>
+                 <xsd:minLength value="1"/>
+                 <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,20}"/>
+                 <xsd:whiteSpace value="collapse"/>
+                </xsd:restriction>
+               </xsd:simpleType>
+              </xsd:attribute>
+              <xsd:attribute name="Descripcion" use="required">
+               <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                 <xsd:maxLength value="1000"/>
+                 <xsd:minLength value="1"/>
+                 <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,1000}"/>
+                 <xsd:whiteSpace value="collapse"/>
+                </xsd:restriction>
+               </xsd:simpleType>
+              </xsd:attribute>
+              <xsd:attribute name="ValorUnitario" type="xi13:t_Importe"/>
+              <xsd:attribute name="Importe" type="xi13:t_Importe"/>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+           <xsd:attribute name="ClaveProdServ" use="required" type="xi11:c_ClaveProdServ"/>
+           <xsd:attribute name="NoIdentificacion">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="100"/>
+              <xsd:minLength value="1"/>
+              <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,100}"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="Cantidad" use="required">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:decimal">
+              <xsd:fractionDigits value="6"/>
+              <xsd:minInclusive value="0.000001"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="ClaveUnidad" use="required" type="xi11:c_ClaveUnidad"/>
+           <xsd:attribute name="Unidad">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="20"/>
+              <xsd:minLength value="1"/>
+              <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,20}"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="Descripcion" use="required">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="1000"/>
+              <xsd:minLength value="1"/>
+              <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,1000}"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="ValorUnitario" use="required" type="xi13:t_Importe"/>
+           <xsd:attribute name="Importe" use="required" type="xi13:t_Importe"/>
+           <xsd:attribute name="Descuento" type="xi13:t_Importe"/>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Impuestos" minOccurs="0" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="Retenciones" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="Retencion" form="qualified" maxOccurs="unbounded">
+             <xsd:complexType>
+              <xsd:attribute name="Impuesto" use="required" type="xi11:c_Impuesto"/>
+              <xsd:attribute name="Importe" use="required" type="xi13:t_Importe"/>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="Traslados" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="Traslado" form="qualified" maxOccurs="unbounded">
+             <xsd:complexType>
+              <xsd:attribute name="Impuesto" use="required" type="xi11:c_Impuesto"/>
+              <xsd:attribute name="TipoFactor" use="required" type="xi11:c_TipoFactor"/>
+              <xsd:attribute name="TasaOCuota" use="required" type="xi11:c_TasaOCuota"/>
+              <xsd:attribute name="Importe" use="required" type="xi13:t_Importe"/>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="TotalImpuestosRetenidos" type="xi13:t_Importe"/>
+        <xsd:attribute name="TotalImpuestosTrasladados" type="xi13:t_Importe"/>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Complemento" minOccurs="0" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:choice>
+          <xsd:element ref="xi2:ComercioExterior"/>
+          <xsd:element ref="xi9:detallista"/>
+          <xsd:element ref="xi3:Divisas"/>
+          <xsd:element ref="xi4:Donatarias"/>
+          <xsd:element ref="xi6:Pagos"/>
+          <xsd:element ref="xi5:ImpuestosLocales"/>
+          <xsd:element ref="xi8:TimbreFiscalDigital"/>
+         </xsd:choice>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Addenda" minOccurs="0" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+     </xsd:sequence>
+     <xsd:attribute name="Version" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="Serie">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="25"/>
+        <xsd:minLength value="1"/>
+        <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,25}"/>
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="Folio">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+        <xsd:minLength value="1"/>
+        <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,40}"/>
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="Fecha" use="required" type="xi13:t_FechaH"/>
+     <xsd:attribute name="Sello">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="FormaPago" type="xi11:c_FormaPago"/>
+     <xsd:attribute name="NoCertificado">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="20"/>
+        <xsd:pattern value="[0-9]{20}"/>
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="Certificado">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="CondicionesDePago">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="1000"/>
+        <xsd:minLength value="1"/>
+        <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,1000}"/>
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="SubTotal" use="required" type="xi13:t_Importe"/>
+     <xsd:attribute name="Descuento" type="xi13:t_Importe"/>
+     <xsd:attribute name="Moneda" use="required" type="xi11:c_Moneda"/>
+     <xsd:attribute name="TipoCambio">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:decimal">
+        <xsd:fractionDigits value="6"/>
+        <xsd:minInclusive value="0.000001"/>
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="Total" use="required" type="xi13:t_Importe"/>
+     <xsd:attribute name="TipoDeComprobante" use="required" type="xi11:c_TipoDeComprobante"/>
+     <xsd:attribute name="MetodoPago" type="xi11:c_MetodoPago"/>
+     <xsd:attribute name="LugarExpedicion" use="required" type="xi11:c_CodigoPostal"/>
+     <xsd:attribute name="Confirmacion">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="5"/>
+        <xsd:pattern value="[0-9a-zA-Z]{5}"/>
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="ReceptorType">
+    <xsd:attribute name="emailReceptor">
+     <xsd:simpleType>
+      <xsd:restriction base="xsd:string">
+       <xsd:minLength value="1"/>
+       <xsd:whiteSpace value="collapse"/>
+      </xsd:restriction>
+     </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="codigoReceptor">
+     <xsd:simpleType>
+      <xsd:restriction base="xsd:string">
+       <xsd:minLength value="1"/>
+       <xsd:whiteSpace value="collapse"/>
+      </xsd:restriction>
+     </xsd:simpleType>
+    </xsd:attribute>
+   </xsd:complexType>
+   <xsd:complexType name="SucursalType">
+    <xsd:attribute name="id">
+     <xsd:simpleType>
+      <xsd:restriction base="xsd:string">
+       <xsd:minLength value="1"/>
+       <xsd:whiteSpace value="collapse"/>
+      </xsd:restriction>
+     </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="nombre" use="required">
+     <xsd:simpleType>
+      <xsd:restriction base="xsd:string">
+       <xsd:minLength value="1"/>
+       <xsd:whiteSpace value="collapse"/>
+      </xsd:restriction>
+     </xsd:simpleType>
+    </xsd:attribute>
+   </xsd:complexType>
+   <xsd:complexType name="TipoComprobanteType">
+    <xsd:attribute name="nombre" use="required">
+     <xsd:simpleType>
+      <xsd:restriction base="xsd:string">
+       <xsd:minLength value="1"/>
+       <xsd:whiteSpace value="collapse"/>
+      </xsd:restriction>
+     </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="clave">
+     <xsd:simpleType>
+      <xsd:restriction base="xsd:string">
+       <xsd:minLength value="1"/>
+       <xsd:whiteSpace value="collapse"/>
+      </xsd:restriction>
+     </xsd:simpleType>
+    </xsd:attribute>
+   </xsd:complexType>
+   <xsd:complexType name="TransaccionType">
+    <xsd:attribute name="id" use="required">
+     <xsd:simpleType>
+      <xsd:restriction base="xsd:string">
+       <xsd:minLength value="1"/>
+       <xsd:whiteSpace value="collapse"/>
+      </xsd:restriction>
+     </xsd:simpleType>
+    </xsd:attribute>
+   </xsd:complexType>
+   <xsd:complexType name="t_Comprobante">
+    <xsd:sequence>
+     <xsd:element ref="Comprobante"/>
+     <xsd:element name="Transaccion" minOccurs="0" form="qualified" type="TransaccionType"/>
+     <xsd:element name="TipoComprobante" minOccurs="0" form="qualified" type="TipoComprobanteType"/>
+     <xsd:element name="Sucursal" minOccurs="0" form="qualified" type="SucursalType"/>
+     <xsd:element name="Receptor" minOccurs="0" form="qualified" type="ReceptorType"/>
+    </xsd:sequence>
+    <xsd:attribute name="Version">
+     <xsd:simpleType>
+      <xsd:restriction base="xsd:string">
+       <xsd:maxLength value="4"/>
+       <xsd:minLength value="3"/>
+       <xsd:whiteSpace value="collapse"/>
+      </xsd:restriction>
+     </xsd:simpleType>
+    </xsd:attribute>
+   </xsd:complexType>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://cancelacfd.sat.gob.mx" xmlns="http://cancelacfd.sat.gob.mx" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:import namespace="http://www.w3.org/2000/09/xmldsig#"/>
+   <xsd:element name="Cancelacion">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="Folios" minOccurs="0" form="qualified" maxOccurs="unbounded">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="UUID" minOccurs="0" form="qualified" type="xsd:string"/>
+         <xsd:element name="Total" form="qualified" type="xsd:string"/>
+        </xsd:sequence>
+        <xsd:attribute name="RfcReceptor" type="xsd:string"/>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" ref="xi7:Signature"/>
+     </xsd:sequence>
+     <xsd:attribute name="RfcEmisor" type="xsd:string"/>
+     <xsd:attribute name="Fecha" use="required" type="xsd:dateTime"/>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://www.sat.gob.mx/ComercioExterior11" xmlns="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:import namespace="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt"/>
+   <xsd:import namespace="http://www.sat.gob.mx/sitio_internet/cfd/catalogos"/>
+   <xsd:import namespace="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI"/>
+   <xsd:element name="ComercioExterior">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="Emisor" minOccurs="0" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="Domicilio" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:attribute name="Calle" use="required" type="xi13:t_Descrip100"/>
+           <xsd:attribute name="NumeroExterior" type="xi13:t_NumeroDomicilio"/>
+           <xsd:attribute name="NumeroInterior" type="xi13:t_NumeroDomicilio"/>
+           <xsd:attribute name="Colonia" type="xi11:c_Colonia"/>
+           <xsd:attribute name="Localidad" type="xi11:c_Localidad"/>
+           <xsd:attribute name="Referencia" type="xi13:t_Referencia"/>
+           <xsd:attribute name="Municipio" type="xi11:c_Municipio"/>
+           <xsd:attribute name="Estado" use="required" type="xi11:c_Estado"/>
+           <xsd:attribute name="Pais" use="required" type="xi11:c_Pais"/>
+           <xsd:attribute name="CodigoPostal" use="required" type="xi11:c_CodigoPostal"/>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="Curp" type="xi13:t_CURP"/>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Propietario" minOccurs="0" form="qualified" maxOccurs="unbounded">
+       <xsd:complexType>
+        <xsd:attribute name="NumRegIdTrib" use="required">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="40"/>
+           <xsd:minLength value="6"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="ResidenciaFiscal" use="required" type="xi11:c_Pais"/>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Receptor" minOccurs="0" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="Domicilio" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:attribute name="Calle" use="required" type="xi13:t_Descrip100"/>
+           <xsd:attribute name="NumeroExterior" type="xi13:t_NumeroDomicilio"/>
+           <xsd:attribute name="NumeroInterior" type="xi13:t_NumeroDomicilio"/>
+           <xsd:attribute name="Colonia" type="xi13:t_Descrip120"/>
+           <xsd:attribute name="Localidad" type="xi13:t_Descrip120"/>
+           <xsd:attribute name="Referencia" type="xi13:t_Referencia"/>
+           <xsd:attribute name="Municipio" type="xi13:t_Descrip120"/>
+           <xsd:attribute name="Estado" use="required">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="30"/>
+              <xsd:minLength value="1"/>
+              <xsd:pattern value="[^|]{1,30}"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="Pais" use="required" type="xi11:c_Pais"/>
+           <xsd:attribute name="CodigoPostal" use="required">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="12"/>
+              <xsd:minLength value="1"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="NumRegIdTrib">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="40"/>
+           <xsd:minLength value="6"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Destinatario" minOccurs="0" form="qualified" maxOccurs="unbounded">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="Domicilio" form="qualified" maxOccurs="unbounded">
+          <xsd:complexType>
+           <xsd:attribute name="Calle" use="required" type="xi13:t_Descrip100"/>
+           <xsd:attribute name="NumeroExterior" type="xi13:t_NumeroDomicilio"/>
+           <xsd:attribute name="NumeroInterior" type="xi13:t_NumeroDomicilio"/>
+           <xsd:attribute name="Colonia" type="xi13:t_Descrip120"/>
+           <xsd:attribute name="Localidad" type="xi13:t_Descrip120"/>
+           <xsd:attribute name="Referencia" type="xi13:t_Referencia"/>
+           <xsd:attribute name="Municipio" type="xi13:t_Descrip120"/>
+           <xsd:attribute name="Estado" use="required">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="30"/>
+              <xsd:minLength value="1"/>
+              <xsd:pattern value="[^|]{1,30}"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="Pais" use="required" type="xi11:c_Pais"/>
+           <xsd:attribute name="CodigoPostal" use="required">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="12"/>
+              <xsd:minLength value="1"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="NumRegIdTrib">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="40"/>
+           <xsd:minLength value="6"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="Nombre">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="300"/>
+           <xsd:minLength value="1"/>
+           <xsd:pattern value="[^|]{1,300}"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Mercancias" minOccurs="0" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="Mercancia" form="qualified" maxOccurs="unbounded">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="DescripcionesEspecificas" minOccurs="0" form="qualified" maxOccurs="unbounded">
+             <xsd:complexType>
+              <xsd:attribute name="Marca" use="required">
+               <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                 <xsd:maxLength value="35"/>
+                 <xsd:minLength value="1"/>
+                 <xsd:pattern value="[^|]{1,35}"/>
+                 <xsd:whiteSpace value="collapse"/>
+                </xsd:restriction>
+               </xsd:simpleType>
+              </xsd:attribute>
+              <xsd:attribute name="Modelo">
+               <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                 <xsd:maxLength value="80"/>
+                 <xsd:minLength value="1"/>
+                 <xsd:pattern value="[^|]{1,80}"/>
+                 <xsd:whiteSpace value="collapse"/>
+                </xsd:restriction>
+               </xsd:simpleType>
+              </xsd:attribute>
+              <xsd:attribute name="SubModelo">
+               <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                 <xsd:maxLength value="50"/>
+                 <xsd:minLength value="1"/>
+                 <xsd:pattern value="[^|]{1,50}"/>
+                 <xsd:whiteSpace value="collapse"/>
+                </xsd:restriction>
+               </xsd:simpleType>
+              </xsd:attribute>
+              <xsd:attribute name="NumeroSerie">
+               <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                 <xsd:maxLength value="40"/>
+                 <xsd:minLength value="1"/>
+                 <xsd:pattern value="[^|]{1,40}"/>
+                 <xsd:whiteSpace value="collapse"/>
+                </xsd:restriction>
+               </xsd:simpleType>
+              </xsd:attribute>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+           <xsd:attribute name="NoIdentificacion" use="required">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="100"/>
+              <xsd:minLength value="1"/>
+              <xsd:pattern value="[^|]{1,100}"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="FraccionArancelaria" type="xi10:c_FraccionArancelaria"/>
+           <xsd:attribute name="CantidadAduana">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:decimal">
+              <xsd:pattern value="[0-9]{1,14}(.([0-9]{1,3}))?"/>
+              <xsd:minInclusive value="0.001"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="UnidadAduana" type="xi10:c_UnidadAduana"/>
+           <xsd:attribute name="ValorUnitarioAduana">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:decimal">
+              <xsd:pattern value="[0-9]{1,16}(.([0-9]{1,2}))?"/>
+              <xsd:minInclusive value="0.00"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="ValorDolares" use="required">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:decimal">
+              <xsd:pattern value="[0-9]{1,16}(.([0-9]{1,2}))?"/>
+              <xsd:minInclusive value="0.00"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+     </xsd:sequence>
+     <xsd:attribute name="Version" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="MotivoTraslado" type="xi10:c_MotivoTraslado"/>
+     <xsd:attribute name="TipoOperacion" use="required" type="xi10:c_TipoOperacion"/>
+     <xsd:attribute name="ClaveDePedimento" type="xi10:c_ClavePedimento"/>
+     <xsd:attribute name="CertificadoOrigen" type="xsd:string"/>
+     <xsd:attribute name="NumCertificadoOrigen">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="40"/>
+        <xsd:minLength value="6"/>
+        <xsd:pattern value="[^|]{6,40}"/>
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="NumeroExportadorConfiable">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="50"/>
+        <xsd:minLength value="1"/>
+        <xsd:pattern value="[^|]{1,50}"/>
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="Incoterm" type="xi10:c_INCOTERM"/>
+     <xsd:attribute name="Subdivision" type="xsd:string"/>
+     <xsd:attribute name="Observaciones">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="300"/>
+        <xsd:minLength value="1"/>
+        <xsd:pattern value="[^|]{1,300}"/>
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="TipoCambioUSD" type="xi13:t_TipoCambio"/>
+     <xsd:attribute name="TotalUSD" type="xi13:t_Importe"/>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://www.sat.gob.mx/divisas" xmlns="http://www.sat.gob.mx/divisas" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:element name="Divisas">
+    <xsd:complexType>
+     <xsd:attribute name="version" use="required" type="xsd:string"/>
+     <xsd:attribute name="tipoOperacion" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:enumeration value="compra"/>
+        <xsd:enumeration value="venta"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://www.sat.gob.mx/donat" xmlns="http://www.sat.gob.mx/donat" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:element name="Donatarias">
+    <xsd:complexType>
+     <xsd:attribute name="version" use="required" type="xsd:string"/>
+     <xsd:attribute name="noAutorizacion" use="required" type="xsd:string"/>
+     <xsd:attribute name="fechaAutorizacion" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:date">
+        <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="leyenda" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://www.sat.gob.mx/implocal" xmlns="http://www.sat.gob.mx/implocal" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:element name="ImpuestosLocales">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:sequence maxOccurs="unbounded">
+       <xsd:element name="RetencionesLocales" minOccurs="0" form="qualified">
+        <xsd:complexType>
+         <xsd:attribute name="ImpLocRetenido" use="required" type="xsd:string"/>
+         <xsd:attribute name="TasadeRetencion" use="required">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:decimal">
+            <xsd:fractionDigits value="2"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:attribute>
+         <xsd:attribute name="Importe" use="required">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:decimal">
+            <xsd:fractionDigits value="2"/>
+            <xsd:whiteSpace value="collapse"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:attribute>
+        </xsd:complexType>
+       </xsd:element>
+       <xsd:element name="TrasladosLocales" minOccurs="0" form="qualified">
+        <xsd:complexType>
+         <xsd:attribute name="ImpLocTrasladado" use="required" type="xsd:string"/>
+         <xsd:attribute name="TasadeTraslado" use="required">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:decimal">
+            <xsd:fractionDigits value="2"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:attribute>
+         <xsd:attribute name="Importe" use="required">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:decimal">
+            <xsd:fractionDigits value="2"/>
+            <xsd:whiteSpace value="collapse"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:attribute>
+        </xsd:complexType>
+       </xsd:element>
+      </xsd:sequence>
+     </xsd:sequence>
+     <xsd:attribute name="version" use="required" type="xsd:anySimpleType"/>
+     <xsd:attribute name="TotaldeRetenciones" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:decimal">
+        <xsd:fractionDigits value="2"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="TotaldeTraslados" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:decimal">
+        <xsd:fractionDigits value="2"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://www.sat.gob.mx/Pagos" xmlns="http://www.sat.gob.mx/Pagos" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:import namespace="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos"/>
+   <xsd:import namespace="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI"/>
+   <xsd:import namespace="http://www.sat.gob.mx/sitio_internet/cfd/catalogos"/>
+   <xsd:element name="Pagos">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="Pago" form="qualified" maxOccurs="unbounded">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="DoctoRelacionado" minOccurs="0" form="qualified" maxOccurs="unbounded">
+          <xsd:complexType>
+           <xsd:attribute name="IdDocumento" use="required">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="36"/>
+              <xsd:minLength value="16"/>
+              <xsd:pattern value="([a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{12})|([0-9]{3}-[0-9]{2}-[0-9]{9})"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="Serie">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="25"/>
+              <xsd:minLength value="1"/>
+              <xsd:pattern value="[^|]{1,25}"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="Folio">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="40"/>
+              <xsd:minLength value="1"/>
+              <xsd:pattern value="[^|]{1,40}"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="MonedaDR" use="required" type="xi11:c_Moneda"/>
+           <xsd:attribute name="TipoCambioDR">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:decimal">
+              <xsd:fractionDigits value="6"/>
+              <xsd:minInclusive value="0.000001"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="MetodoDePagoDR" use="required" type="xi11:c_MetodoPago"/>
+           <xsd:attribute name="NumParcialidad">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:integer">
+              <xsd:pattern value="[1-9][0-9]{0,2}"/>
+              <xsd:whiteSpace value="collapse"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="ImpSaldoAnt" type="xi13:t_Importe"/>
+           <xsd:attribute name="ImpPagado" type="xi13:t_Importe"/>
+           <xsd:attribute name="ImpSaldoInsoluto" type="xi13:t_Importe"/>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="Impuestos" minOccurs="0" form="qualified" maxOccurs="unbounded">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="Retenciones" minOccurs="0" form="qualified">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="Retencion" form="qualified" maxOccurs="unbounded">
+                <xsd:complexType>
+                 <xsd:attribute name="Impuesto" use="required" type="xi11:c_Impuesto"/>
+                 <xsd:attribute name="Importe" use="required" type="xi13:t_Importe"/>
+                </xsd:complexType>
+               </xsd:element>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="Traslados" minOccurs="0" form="qualified">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="Traslado" form="qualified" maxOccurs="unbounded">
+                <xsd:complexType>
+                 <xsd:attribute name="Impuesto" use="required" type="xi11:c_Impuesto"/>
+                 <xsd:attribute name="TipoFactor" use="required" type="xi11:c_TipoFactor"/>
+                 <xsd:attribute name="TasaOCuota" use="required">
+                  <xsd:simpleType>
+                   <xsd:restriction base="xsd:decimal">
+                    <xsd:fractionDigits value="6"/>
+                    <xsd:minInclusive value="0.000000"/>
+                    <xsd:whiteSpace value="collapse"/>
+                   </xsd:restriction>
+                  </xsd:simpleType>
+                 </xsd:attribute>
+                 <xsd:attribute name="Importe" use="required" type="xi13:t_Importe"/>
+                </xsd:complexType>
+               </xsd:element>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+           <xsd:attribute name="TotalImpuestosRetenidos" type="xi13:t_Importe"/>
+           <xsd:attribute name="TotalImpuestosTrasladados" type="xi13:t_Importe"/>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="FechaPago" use="required" type="xi13:t_FechaH"/>
+        <xsd:attribute name="FormaDePagoP" use="required" type="xi11:c_FormaPago"/>
+        <xsd:attribute name="MonedaP" use="required" type="xi11:c_Moneda"/>
+        <xsd:attribute name="TipoCambioP">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:decimal">
+           <xsd:fractionDigits value="6"/>
+           <xsd:minInclusive value="0.000001"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="Monto" use="required" type="xi13:t_Importe"/>
+        <xsd:attribute name="NumOperacion">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="100"/>
+           <xsd:minLength value="1"/>
+           <xsd:pattern value="[^|]{1,100}"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="RfcEmisorCtaOrd">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="13"/>
+           <xsd:minLength value="12"/>
+           <xsd:pattern value="XEXX010101000|[A-Z&amp;Ñ]{3}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="NomBancoOrdExt">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="300"/>
+           <xsd:minLength value="1"/>
+           <xsd:pattern value="[^|]{1,300}"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="CtaOrdenante">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="50"/>
+           <xsd:minLength value="10"/>
+           <xsd:pattern value="[A-Z0-9_]{10,50}"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="RfcEmisorCtaBen" type="xi13:t_RFC_PM"/>
+        <xsd:attribute name="CtaBeneficiario">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="50"/>
+           <xsd:minLength value="10"/>
+           <xsd:pattern value="[A-Z0-9_]{10,50}"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="TipoCadPago" type="xi12:c_TIpoCadenaPago"/>
+        <xsd:attribute name="CertPago">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:base64Binary">
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="CadPago">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="8192"/>
+           <xsd:minLength value="1"/>
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="SelloPago">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:base64Binary">
+           <xsd:whiteSpace value="collapse"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+       </xsd:complexType>
+      </xsd:element>
+     </xsd:sequence>
+     <xsd:attribute name="Version" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://www.w3.org/2000/09/xmldsig#" xmlns="http://www.w3.org/2000/09/xmldsig#" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:element name="Signature" type="SignatureType"/>
+   <xsd:complexType name="ArrayOfTransformType">
+    <xsd:sequence>
+     <xsd:element name="Transform" minOccurs="0" form="qualified" maxOccurs="unbounded" type="TransformType"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType mixed="true" name="CanonicalizationMethodType">
+    <xsd:sequence>
+     <xsd:any minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="Algorithm" type="xsd:anyURI"/>
+   </xsd:complexType>
+   <xsd:complexType mixed="true" name="DigestMethodType">
+    <xsd:sequence>
+     <xsd:any minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="Algorithm" type="xsd:anyURI"/>
+   </xsd:complexType>
+   <xsd:complexType mixed="true" name="KeyInfoType">
+    <xsd:sequence>
+     <xsd:element name="X509Data" minOccurs="0" form="qualified" type="X509DataType"/>
+     <xsd:element name="KeyName" minOccurs="0" form="qualified" type="xsd:string"/>
+     <xsd:element name="KeyValue" minOccurs="0" form="qualified" type="KeyValueType"/>
+    </xsd:sequence>
+    <xsd:attribute name="Id" type="xsd:ID"/>
+   </xsd:complexType>
+   <xsd:complexType mixed="true" name="KeyValueType">
+    <xsd:sequence>
+     <xsd:element name="RSAKeyValue" minOccurs="0" form="qualified" type="RSAKeyValueType"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType mixed="true" name="ObjectType">
+    <xsd:sequence>
+     <xsd:any minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="Id" type="xsd:ID"/>
+    <xsd:attribute name="MimeType" type="xsd:string"/>
+    <xsd:attribute name="Encoding" type="xsd:anyURI"/>
+   </xsd:complexType>
+   <xsd:complexType name="RSAKeyValueType">
+    <xsd:sequence>
+     <xsd:element name="Modulus" minOccurs="0" form="qualified" type="xsd:base64Binary"/>
+     <xsd:element name="Exponent" minOccurs="0" form="qualified" type="xsd:base64Binary"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="ReferenceType">
+    <xsd:sequence>
+     <xsd:element name="Transforms" minOccurs="0" form="qualified" type="ArrayOfTransformType"/>
+     <xsd:element name="DigestMethod" minOccurs="0" form="qualified" type="DigestMethodType"/>
+     <xsd:element name="DigestValue" minOccurs="0" form="qualified" type="xsd:base64Binary"/>
+    </xsd:sequence>
+    <xsd:attribute name="Id" type="xsd:ID"/>
+    <xsd:attribute name="URI" type="xsd:anyURI"/>
+    <xsd:attribute name="Type" type="xsd:anyURI"/>
+   </xsd:complexType>
+   <xsd:complexType mixed="true" name="SignatureMethodType">
+    <xsd:sequence>
+     <xsd:element name="HMACOutputLength" minOccurs="0" form="qualified" type="xsd:integer"/>
+    </xsd:sequence>
+    <xsd:attribute name="Algorithm" type="xsd:anyURI"/>
+   </xsd:complexType>
+   <xsd:complexType name="SignatureType">
+    <xsd:sequence>
+     <xsd:element name="SignedInfo" minOccurs="0" form="qualified" type="SignedInfoType"/>
+     <xsd:element name="SignatureValue" minOccurs="0" form="qualified" type="xsd:base64Binary"/>
+     <xsd:element name="KeyInfo" minOccurs="0" form="qualified" type="KeyInfoType"/>
+     <xsd:element name="Object" minOccurs="0" form="qualified" maxOccurs="unbounded" type="ObjectType"/>
+    </xsd:sequence>
+    <xsd:attribute name="Id" type="xsd:ID"/>
+   </xsd:complexType>
+   <xsd:complexType name="SignedInfoType">
+    <xsd:sequence>
+     <xsd:element name="CanonicalizationMethod" minOccurs="0" form="qualified" type="CanonicalizationMethodType"/>
+     <xsd:element name="SignatureMethod" minOccurs="0" form="qualified" type="SignatureMethodType"/>
+     <xsd:element name="Reference" minOccurs="0" form="qualified" type="ReferenceType"/>
+    </xsd:sequence>
+    <xsd:attribute name="Id" type="xsd:ID"/>
+   </xsd:complexType>
+   <xsd:complexType mixed="true" name="TransformType">
+    <xsd:sequence>
+     <xsd:element name="XPath" minOccurs="0" form="qualified" type="xsd:string"/>
+    </xsd:sequence>
+    <xsd:attribute name="Algorithm" type="xsd:anyURI"/>
+   </xsd:complexType>
+   <xsd:complexType name="X509DataType">
+    <xsd:sequence>
+     <xsd:element name="X509IssuerSerial" minOccurs="0" form="qualified" type="X509IssuerSerialType"/>
+     <xsd:element name="X509Certificate" minOccurs="0" form="qualified" type="xsd:base64Binary"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="X509IssuerSerialType">
+    <xsd:sequence>
+     <xsd:element name="X509IssuerName" minOccurs="0" form="qualified" type="xsd:string"/>
+     <xsd:element name="X509SerialNumber" minOccurs="0" form="qualified" type="xsd:integer"/>
+    </xsd:sequence>
+   </xsd:complexType>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:import namespace="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI"/>
+   <xsd:element name="TimbreFiscalDigital">
+    <xsd:complexType>
+     <xsd:attribute name="Version" use="required" type="xsd:anySimpleType"/>
+     <xsd:attribute name="UUID" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="36"/>
+        <xsd:pattern value="[a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{12}"/>
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="FechaTimbrado" use="required" type="xi13:t_FechaH"/>
+     <xsd:attribute name="RfcProvCertif" use="required" type="xi13:t_RFC_PM"/>
+     <xsd:attribute name="Leyenda">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="150"/>
+        <xsd:minLength value="12"/>
+        <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,150}"/>
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="SelloCFD" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="NoCertificadoSAT" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:length value="20"/>
+        <xsd:pattern value="[0-9]{20}"/>
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+     <xsd:attribute name="SelloSAT" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:string">
+        <xsd:whiteSpace value="collapse"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://www.sat.gob.mx/detallista" xmlns="http://www.sat.gob.mx/detallista" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:element name="detallista">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="requestForPaymentIdentification" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="entityType" form="qualified">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="INVOICE"/>
+            <xsd:enumeration value="DEBIT_NOTE"/>
+            <xsd:enumeration value="CREDIT_NOTE"/>
+            <xsd:enumeration value="LEASE_RECEIPT"/>
+            <xsd:enumeration value="HONORARY_RECEIPT"/>
+            <xsd:enumeration value="PARTIAL_INVOICE"/>
+            <xsd:enumeration value="TRANSPORT_DOCUMENT"/>
+            <xsd:enumeration value="AUTO_INVOICE"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:element>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="specialInstruction" minOccurs="0" form="qualified" maxOccurs="4">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="text" form="qualified" type="xsd:string"/>
+        </xsd:sequence>
+        <xsd:attribute name="code" type="xsd:NMTOKEN"/>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="orderIdentification" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="referenceIdentification" form="qualified" maxOccurs="30">
+          <xsd:complexType>
+           <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+             <xsd:attribute name="type" use="required">
+              <xsd:simpleType>
+               <xsd:restriction base="xsd:NMTOKEN">
+                <xsd:enumeration value="ON"/>
+               </xsd:restriction>
+              </xsd:simpleType>
+             </xsd:attribute>
+            </xsd:extension>
+           </xsd:simpleContent>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ReferenceDate" minOccurs="0" form="qualified">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:date">
+            <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:element>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="AdditionalInformation" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="referenceIdentification" form="qualified" maxOccurs="99">
+          <xsd:complexType>
+           <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+             <xsd:attribute name="type" use="required">
+              <xsd:simpleType>
+               <xsd:restriction base="xsd:NMTOKEN">
+                <xsd:enumeration value="AAE"/>
+                <xsd:enumeration value="CK"/>
+                <xsd:enumeration value="ACE"/>
+                <xsd:enumeration value="ATZ"/>
+                <xsd:enumeration value="DQ"/>
+                <xsd:enumeration value="IV"/>
+                <xsd:enumeration value="ON"/>
+                <xsd:enumeration value="AWR"/>
+               </xsd:restriction>
+              </xsd:simpleType>
+             </xsd:attribute>
+            </xsd:extension>
+           </xsd:simpleContent>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="DeliveryNote" minOccurs="0" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="referenceIdentification" form="qualified" maxOccurs="30">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="35"/>
+            <xsd:minLength value="1"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ReferenceDate" minOccurs="0" form="qualified">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:date">
+            <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:element>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="buyer" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="gln" form="qualified">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:string">
+            <xsd:length value="13"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="contactInformation" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="personOrDepartmentName" form="qualified">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="text" form="qualified">
+                <xsd:simpleType>
+                 <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="35"/>
+                  <xsd:minLength value="1"/>
+                 </xsd:restriction>
+                </xsd:simpleType>
+               </xsd:element>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="seller" minOccurs="0" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="gln" form="qualified">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:string">
+            <xsd:length value="13"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="alternatePartyIdentification" form="qualified">
+          <xsd:complexType>
+           <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+             <xsd:attribute name="type" use="required">
+              <xsd:simpleType>
+               <xsd:restriction base="xsd:NMTOKEN">
+                <xsd:enumeration value="SELLER_ASSIGNED_IDENTIFIER_FOR_A_PARTY"/>
+                <xsd:enumeration value="IEPS_REFERENCE"/>
+                <xsd:maxLength value="40"/>
+                <xsd:minLength value="1"/>
+               </xsd:restriction>
+              </xsd:simpleType>
+             </xsd:attribute>
+            </xsd:extension>
+           </xsd:simpleContent>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="shipTo" minOccurs="0" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="gln" minOccurs="0" form="qualified">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:string">
+            <xsd:length value="13"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="nameAndAddress" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence maxOccurs="unbounded">
+            <xsd:element name="name" minOccurs="0" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="35"/>
+               <xsd:minLength value="1"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="streetAddressOne" minOccurs="0" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="35"/>
+               <xsd:minLength value="1"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="city" minOccurs="0" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="35"/>
+               <xsd:minLength value="1"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="postalCode" minOccurs="0" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="9"/>
+               <xsd:minLength value="1"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="InvoiceCreator" minOccurs="0" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="gln" minOccurs="0" form="qualified">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:string">
+            <xsd:length value="13"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="alternatePartyIdentification" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+             <xsd:attribute name="type" use="required">
+              <xsd:simpleType>
+               <xsd:restriction base="xsd:NMTOKEN">
+                <xsd:enumeration value="VA"/>
+                <xsd:enumeration value="IA"/>
+                <xsd:length value="2"/>
+               </xsd:restriction>
+              </xsd:simpleType>
+             </xsd:attribute>
+            </xsd:extension>
+           </xsd:simpleContent>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="nameAndAddress" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="name" minOccurs="0" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="35"/>
+               <xsd:minLength value="1"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="streetAddressOne" minOccurs="0" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="35"/>
+               <xsd:minLength value="1"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="city" minOccurs="0" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="35"/>
+               <xsd:minLength value="1"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="postalCode" minOccurs="0" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="9"/>
+               <xsd:minLength value="1"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Customs" minOccurs="0" form="qualified" maxOccurs="unbounded">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="gln" minOccurs="0" form="qualified">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:string">
+            <xsd:length value="13"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:element>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="currency" minOccurs="0" form="qualified" maxOccurs="3">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="currencyFunction" form="qualified" maxOccurs="3">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="BILLING_CURRENCY"/>
+            <xsd:enumeration value="PRICE_CURRENCY"/>
+            <xsd:enumeration value="PAYMENT_CURRENCY"/>
+            <xsd:maxLength value="16"/>
+            <xsd:minLength value="1"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="rateOfChange" minOccurs="0" form="qualified" type="xsd:decimal"/>
+        </xsd:sequence>
+        <xsd:attribute name="currencyISOCode" use="required">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:NMTOKEN">
+           <xsd:enumeration value="MXN"/>
+           <xsd:enumeration value="XEU"/>
+           <xsd:enumeration value="USD"/>
+           <xsd:length value="3"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="paymentTerms" minOccurs="0" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="netPayment" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:sequence minOccurs="0">
+             <xsd:element name="paymentTimePeriod" minOccurs="0" form="qualified">
+              <xsd:complexType>
+               <xsd:sequence>
+                <xsd:element name="timePeriodDue" form="qualified">
+                 <xsd:complexType>
+                  <xsd:sequence>
+                   <xsd:element name="value" form="qualified">
+                    <xsd:simpleType>
+                     <xsd:restriction base="xsd:string">
+                      <xsd:maxLength value="5"/>
+                      <xsd:minLength value="1"/>
+                     </xsd:restriction>
+                    </xsd:simpleType>
+                   </xsd:element>
+                  </xsd:sequence>
+                  <xsd:attribute name="timePeriod" use="required">
+                   <xsd:simpleType>
+                    <xsd:restriction base="xsd:NMTOKEN">
+                     <xsd:enumeration value="DAYS"/>
+                     <xsd:maxLength value="6"/>
+                     <xsd:minLength value="1"/>
+                    </xsd:restriction>
+                   </xsd:simpleType>
+                  </xsd:attribute>
+                 </xsd:complexType>
+                </xsd:element>
+               </xsd:sequence>
+              </xsd:complexType>
+             </xsd:element>
+            </xsd:sequence>
+           </xsd:sequence>
+           <xsd:attribute name="netPaymentTermsType" use="required">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:NMTOKEN">
+              <xsd:enumeration value="BASIC_NET"/>
+              <xsd:enumeration value="END_OF_MONTH"/>
+              <xsd:enumeration value="BASIC_DISCOUNT_OFFERED"/>
+              <xsd:maxLength value="22"/>
+              <xsd:minLength value="1"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="discountPayment" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="percentage" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="5"/>
+               <xsd:minLength value="1"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+           </xsd:sequence>
+           <xsd:attribute name="discountType" use="required">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:NMTOKEN">
+              <xsd:enumeration value="ALLOWANCE_BY_PAYMENT_ON_TIME"/>
+              <xsd:enumeration value="SANCTION"/>
+              <xsd:maxLength value="28"/>
+              <xsd:minLength value="1"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="paymentTermsEvent">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:NMTOKEN">
+           <xsd:enumeration value="DATE_OF_INVOICE"/>
+           <xsd:enumeration value="EFFECTIVE_DATE"/>
+           <xsd:maxLength value="15"/>
+           <xsd:minLength value="1"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="PaymentTermsRelationTime">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:NMTOKEN">
+           <xsd:enumeration value="REFERENCE_AFTER"/>
+           <xsd:maxLength value="15"/>
+           <xsd:minLength value="1"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="shipmentDetail" minOccurs="0" form="qualified">
+       <xsd:complexType/>
+      </xsd:element>
+      <xsd:element name="allowanceCharge" minOccurs="0" form="qualified" maxOccurs="99">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="specialServicesType" minOccurs="0" form="qualified">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="AA"/>
+            <xsd:enumeration value="AJ"/>
+            <xsd:enumeration value="ADO"/>
+            <xsd:enumeration value="ADT"/>
+            <xsd:enumeration value="ADS"/>
+            <xsd:enumeration value="ABZ"/>
+            <xsd:enumeration value="DA"/>
+            <xsd:enumeration value="EAA"/>
+            <xsd:enumeration value="EAB"/>
+            <xsd:enumeration value="PI"/>
+            <xsd:enumeration value="TAE"/>
+            <xsd:enumeration value="SAB"/>
+            <xsd:enumeration value="RAA"/>
+            <xsd:enumeration value="PAD"/>
+            <xsd:enumeration value="FG"/>
+            <xsd:enumeration value="FA"/>
+            <xsd:enumeration value="TD"/>
+            <xsd:enumeration value="TS"/>
+            <xsd:enumeration value="TX"/>
+            <xsd:enumeration value="TZ"/>
+            <xsd:enumeration value="ZZZ"/>
+            <xsd:enumeration value="VAB"/>
+            <xsd:enumeration value="UM"/>
+            <xsd:enumeration value="DI"/>
+            <xsd:enumeration value="CAC"/>
+            <xsd:enumeration value="COD"/>
+            <xsd:enumeration value="EAB"/>
+            <xsd:enumeration value="FC"/>
+            <xsd:enumeration value="FI"/>
+            <xsd:enumeration value="HD"/>
+            <xsd:enumeration value="QD"/>
+            <xsd:maxLength value="3"/>
+            <xsd:minLength value="1"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="monetaryAmountOrPercentage" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="rate" minOccurs="0" form="qualified">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="percentage" form="qualified" type="xsd:decimal"/>
+              </xsd:sequence>
+              <xsd:attribute name="base" use="required">
+               <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                 <xsd:enumeration value="INVOICE_VALUE"/>
+                 <xsd:length value="13"/>
+                </xsd:restriction>
+               </xsd:simpleType>
+              </xsd:attribute>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="allowanceChargeType" use="required">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:NMTOKEN">
+           <xsd:enumeration value="ALLOWANCE_GLOBAL"/>
+           <xsd:enumeration value="CHARGE_GLOBAL"/>
+           <xsd:maxLength value="16"/>
+           <xsd:minLength value="1"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="settlementType" use="required">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:NMTOKEN">
+           <xsd:enumeration value="BILL_BACK"/>
+           <xsd:enumeration value="OFF_INVOICE"/>
+           <xsd:maxLength value="11"/>
+           <xsd:minLength value="1"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="sequenceNumber">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="15"/>
+           <xsd:minLength value="1"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="lineItem" minOccurs="0" form="qualified" maxOccurs="unbounded">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="tradeItemIdentification" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="gtin" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="14"/>
+               <xsd:minLength value="1"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="alternateTradeItemIdentification" minOccurs="0" form="qualified" maxOccurs="unbounded">
+          <xsd:complexType>
+           <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+             <xsd:attribute name="type" type="xsd:NMTOKEN"/>
+            </xsd:extension>
+           </xsd:simpleContent>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="tradeItemDescriptionInformation" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="longText" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="35"/>
+               <xsd:minLength value="1"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+           </xsd:sequence>
+           <xsd:attribute name="language">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:NMTOKEN">
+              <xsd:enumeration value="ES"/>
+              <xsd:enumeration value="EN"/>
+              <xsd:length value="2"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="invoicedQuantity" form="qualified">
+          <xsd:complexType>
+           <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+             <xsd:attribute name="unitOfMeasure" type="xsd:NMTOKEN"/>
+            </xsd:extension>
+           </xsd:simpleContent>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="aditionalQuantity" minOccurs="0" form="qualified" maxOccurs="unbounded">
+          <xsd:complexType>
+           <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+             <xsd:attribute name="QuantityType" type="xsd:NMTOKEN"/>
+            </xsd:extension>
+           </xsd:simpleContent>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="grossPrice" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="Amount" form="qualified" type="xsd:decimal"/>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="netPrice" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="Amount" form="qualified" type="xsd:decimal"/>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="AdditionalInformation" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="referenceIdentification" minOccurs="0" form="qualified">
+             <xsd:complexType>
+              <xsd:simpleContent>
+               <xsd:extension base="xsd:string">
+                <xsd:attribute name="type" use="required">
+                 <xsd:simpleType>
+                  <xsd:restriction base="xsd:NMTOKEN">
+                   <xsd:enumeration value="ON"/>
+                   <xsd:length value="2"/>
+                  </xsd:restriction>
+                 </xsd:simpleType>
+                </xsd:attribute>
+               </xsd:extension>
+              </xsd:simpleContent>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="Customs" minOccurs="0" form="qualified" maxOccurs="unbounded">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="gln" minOccurs="0" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+               <xsd:length value="13"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="alternatePartyIdentification" form="qualified">
+             <xsd:complexType>
+              <xsd:simpleContent>
+               <xsd:extension base="xsd:string">
+                <xsd:attribute name="type" use="required">
+                 <xsd:simpleType>
+                  <xsd:restriction base="xsd:NMTOKEN">
+                   <xsd:enumeration value="TN"/>
+                   <xsd:length value="2"/>
+                  </xsd:restriction>
+                 </xsd:simpleType>
+                </xsd:attribute>
+               </xsd:extension>
+              </xsd:simpleContent>
+             </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ReferenceDate" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:date">
+               <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="nameAndAddress" form="qualified">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="name" form="qualified">
+                <xsd:simpleType>
+                 <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="35"/>
+                  <xsd:minLength value="1"/>
+                 </xsd:restriction>
+                </xsd:simpleType>
+               </xsd:element>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="LogisticUnits" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="serialShippingContainerCode" form="qualified">
+             <xsd:complexType>
+              <xsd:simpleContent>
+               <xsd:extension base="xsd:string">
+                <xsd:attribute name="type" use="required">
+                 <xsd:simpleType>
+                  <xsd:restriction base="xsd:NMTOKEN">
+                   <xsd:enumeration value="BJ"/>
+                   <xsd:enumeration value="SRV"/>
+                   <xsd:maxLength value="3"/>
+                   <xsd:minLength value="1"/>
+                  </xsd:restriction>
+                 </xsd:simpleType>
+                </xsd:attribute>
+               </xsd:extension>
+              </xsd:simpleContent>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="palletInformation" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="palletQuantity" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="15"/>
+               <xsd:minLength value="1"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="description" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction/>
+             </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="transport" form="qualified">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="methodOfPayment" form="qualified">
+                <xsd:simpleType>
+                 <xsd:restriction base="xsd:NMTOKEN">
+                  <xsd:enumeration value="PREPAID_BY_SELLER"/>
+                  <xsd:enumeration value="PAID_BY_BUYER"/>
+                  <xsd:maxLength value="17"/>
+                  <xsd:minLength value="1"/>
+                 </xsd:restriction>
+                </xsd:simpleType>
+               </xsd:element>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="extendedAttributes" minOccurs="0" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="lotNumber" form="qualified" maxOccurs="10">
+             <xsd:complexType>
+              <xsd:simpleContent>
+               <xsd:extension base="xsd:string">
+                <xsd:attribute name="productionDate">
+                 <xsd:simpleType>
+                  <xsd:restriction base="xsd:date">
+                   <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+                  </xsd:restriction>
+                 </xsd:simpleType>
+                </xsd:attribute>
+               </xsd:extension>
+              </xsd:simpleContent>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="allowanceCharge" minOccurs="0" form="qualified" maxOccurs="99">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="specialServicesType" minOccurs="0" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:NMTOKEN">
+               <xsd:enumeration value="AA"/>
+               <xsd:enumeration value="ADS"/>
+               <xsd:enumeration value="ADO"/>
+               <xsd:enumeration value="ABZ"/>
+               <xsd:enumeration value="DA"/>
+               <xsd:enumeration value="EAA"/>
+               <xsd:enumeration value="PI"/>
+               <xsd:enumeration value="TAE"/>
+               <xsd:enumeration value="SAB"/>
+               <xsd:enumeration value="RAA"/>
+               <xsd:enumeration value="PAD"/>
+               <xsd:enumeration value="FG"/>
+               <xsd:enumeration value="FA"/>
+               <xsd:enumeration value="TD"/>
+               <xsd:enumeration value="TS"/>
+               <xsd:enumeration value="TX"/>
+               <xsd:enumeration value="ZZZ"/>
+               <xsd:enumeration value="VAB"/>
+               <xsd:enumeration value="UM"/>
+               <xsd:enumeration value="DI"/>
+               <xsd:enumeration value="ADT"/>
+               <xsd:enumeration value="AJ"/>
+               <xsd:enumeration value="CAC"/>
+               <xsd:enumeration value="COD"/>
+               <xsd:enumeration value="EAB"/>
+               <xsd:enumeration value="FC"/>
+               <xsd:enumeration value="FI"/>
+               <xsd:enumeration value="HD"/>
+               <xsd:enumeration value="QD"/>
+               <xsd:maxLength value="3"/>
+               <xsd:minLength value="1"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="monetaryAmountOrPercentage" form="qualified">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="percentagePerUnit" form="qualified">
+                <xsd:simpleType>
+                 <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="5"/>
+                  <xsd:minLength value="1"/>
+                 </xsd:restriction>
+                </xsd:simpleType>
+               </xsd:element>
+               <xsd:element name="ratePerUnit" minOccurs="0" form="qualified">
+                <xsd:complexType>
+                 <xsd:sequence>
+                  <xsd:element name="amountPerUnit" form="qualified">
+                   <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="5"/>
+                     <xsd:minLength value="1"/>
+                    </xsd:restriction>
+                   </xsd:simpleType>
+                  </xsd:element>
+                 </xsd:sequence>
+                </xsd:complexType>
+               </xsd:element>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+           <xsd:attribute name="allowanceChargeType" use="required">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:NMTOKEN">
+              <xsd:enumeration value="ALLOWANCE_GLOBAL"/>
+              <xsd:enumeration value="CHARGE_GLOBAL"/>
+              <xsd:maxLength value="16"/>
+              <xsd:minLength value="1"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="settlementType">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:NMTOKEN">
+              <xsd:enumeration value="OFF_INVOICE"/>
+              <xsd:enumeration value="CHARGE_TO_BE_PAID_BY_VENDOR"/>
+              <xsd:enumeration value="CHARGE_TO_BE_PAID_BY_CUSTOMER"/>
+              <xsd:maxLength value="29"/>
+              <xsd:minLength value="1"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+           <xsd:attribute name="sequenceNumber">
+            <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="15"/>
+              <xsd:minLength value="1"/>
+             </xsd:restriction>
+            </xsd:simpleType>
+           </xsd:attribute>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="tradeItemTaxInformation" minOccurs="0" form="qualified" maxOccurs="99">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="taxTypeDescription" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:NMTOKEN">
+               <xsd:enumeration value="GST"/>
+               <xsd:enumeration value="VAT"/>
+               <xsd:enumeration value="LAC"/>
+               <xsd:enumeration value="AAA"/>
+               <xsd:enumeration value="ADD"/>
+               <xsd:enumeration value="FRE"/>
+               <xsd:enumeration value="LOC"/>
+               <xsd:enumeration value="STT"/>
+               <xsd:enumeration value="OTH"/>
+               <xsd:length value="3"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="referenceNumber" minOccurs="0" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="20"/>
+               <xsd:minLength value="1"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="tradeItemTaxAmount" minOccurs="0" form="qualified">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="taxPercentage" form="qualified" type="xsd:decimal"/>
+               <xsd:element name="taxAmount" form="qualified" type="xsd:decimal"/>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="taxCategory" minOccurs="0" form="qualified">
+             <xsd:simpleType>
+              <xsd:restriction base="xsd:NMTOKEN">
+               <xsd:enumeration value="TRANSFERIDO"/>
+               <xsd:enumeration value="RETENIDO"/>
+               <xsd:maxLength value="11"/>
+              </xsd:restriction>
+             </xsd:simpleType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="totalLineAmount" form="qualified">
+          <xsd:complexType>
+           <xsd:sequence>
+            <xsd:element name="grossAmount" minOccurs="0" form="qualified">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="Amount" form="qualified" type="xsd:decimal"/>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="netAmount" form="qualified">
+             <xsd:complexType>
+              <xsd:sequence>
+               <xsd:element name="Amount" form="qualified" type="xsd:decimal"/>
+              </xsd:sequence>
+             </xsd:complexType>
+            </xsd:element>
+           </xsd:sequence>
+          </xsd:complexType>
+         </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="type" default="SimpleInvoiceLineItemType">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="32"/>
+           <xsd:minLength value="1"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="number">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:integer">
+           <xsd:totalDigits value="5"/>
+           <xsd:fractionDigits value="0"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="totalAmount" minOccurs="0" form="qualified">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="Amount" form="qualified" type="xsd:decimal"/>
+        </xsd:sequence>
+       </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="TotalAllowanceCharge" minOccurs="0" form="qualified" maxOccurs="unbounded">
+       <xsd:complexType>
+        <xsd:sequence>
+         <xsd:element name="specialServicesType" minOccurs="0" form="qualified">
+          <xsd:simpleType>
+           <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="AA"/>
+            <xsd:enumeration value="ADS"/>
+            <xsd:enumeration value="ADO"/>
+            <xsd:enumeration value="ABZ"/>
+            <xsd:enumeration value="DA"/>
+            <xsd:enumeration value="EAA"/>
+            <xsd:enumeration value="PI"/>
+            <xsd:enumeration value="TAE"/>
+            <xsd:enumeration value="SAB"/>
+            <xsd:enumeration value="RAA"/>
+            <xsd:enumeration value="PAD"/>
+            <xsd:enumeration value="FG"/>
+            <xsd:enumeration value="FA"/>
+            <xsd:enumeration value="TD"/>
+            <xsd:enumeration value="TS"/>
+            <xsd:enumeration value="TX"/>
+            <xsd:enumeration value="ZZZ"/>
+            <xsd:enumeration value="VAB"/>
+            <xsd:enumeration value="UM"/>
+            <xsd:enumeration value="DI"/>
+            <xsd:enumeration value="ADT"/>
+            <xsd:enumeration value="AJ"/>
+            <xsd:enumeration value="CAC"/>
+            <xsd:enumeration value="COD"/>
+            <xsd:enumeration value="EAB"/>
+            <xsd:enumeration value="FC"/>
+            <xsd:enumeration value="FI"/>
+            <xsd:enumeration value="HD"/>
+            <xsd:enumeration value="QD"/>
+            <xsd:maxLength value="3"/>
+            <xsd:minLength value="1"/>
+           </xsd:restriction>
+          </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="Amount" minOccurs="0" form="qualified" type="xsd:decimal"/>
+        </xsd:sequence>
+        <xsd:attribute name="allowanceOrChargeType" use="required">
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:NMTOKEN">
+           <xsd:enumeration value="ALLOWANCE"/>
+           <xsd:enumeration value="CHARGE"/>
+           <xsd:maxLength value="9"/>
+           <xsd:minLength value="1"/>
+          </xsd:restriction>
+         </xsd:simpleType>
+        </xsd:attribute>
+       </xsd:complexType>
+      </xsd:element>
+     </xsd:sequence>
+     <xsd:attribute name="type" type="xsd:string"/>
+     <xsd:attribute name="contentVersion" type="xsd:string"/>
+     <xsd:attribute name="documentStructureVersion" use="required" type="xsd:string"/>
+     <xsd:attribute name="documentStatus" use="required">
+      <xsd:simpleType>
+       <xsd:restriction base="xsd:NMTOKEN">
+        <xsd:enumeration value="ORIGINAL"/>
+        <xsd:enumeration value="COPY"/>
+        <xsd:enumeration value="REEMPLAZA"/>
+        <xsd:enumeration value="DELETE"/>
+       </xsd:restriction>
+      </xsd:simpleType>
+     </xsd:attribute>
+    </xsd:complexType>
+   </xsd:element>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:simpleType name="c_ClavePedimento">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="A1"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_FraccionArancelaria">
+    <xsd:restriction base="xsd:string">
+     <xsd:minLength value="8"/>
+     <xsd:pattern value="[0-9]{8}"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_INCOTERM">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="CFR"/>
+     <xsd:enumeration value="CIF"/>
+     <xsd:enumeration value="CPT"/>
+     <xsd:enumeration value="CIP"/>
+     <xsd:enumeration value="DAF"/>
+     <xsd:enumeration value="DAP"/>
+     <xsd:enumeration value="DAT"/>
+     <xsd:enumeration value="DES"/>
+     <xsd:enumeration value="DEQ"/>
+     <xsd:enumeration value="DDU"/>
+     <xsd:enumeration value="DDP"/>
+     <xsd:enumeration value="EXW"/>
+     <xsd:enumeration value="FCA"/>
+     <xsd:enumeration value="FAS"/>
+     <xsd:enumeration value="FOB"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_MotivoTraslado">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="01"/>
+     <xsd:enumeration value="02"/>
+     <xsd:enumeration value="03"/>
+     <xsd:enumeration value="04"/>
+     <xsd:enumeration value="05"/>
+     <xsd:enumeration value="99"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_TipoOperacion">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="2"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_UnidadAduana">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="01"/>
+     <xsd:enumeration value="02"/>
+     <xsd:enumeration value="03"/>
+     <xsd:enumeration value="04"/>
+     <xsd:enumeration value="05"/>
+     <xsd:enumeration value="06"/>
+     <xsd:enumeration value="07"/>
+     <xsd:enumeration value="08"/>
+     <xsd:enumeration value="09"/>
+     <xsd:enumeration value="10"/>
+     <xsd:enumeration value="11"/>
+     <xsd:enumeration value="12"/>
+     <xsd:enumeration value="13"/>
+     <xsd:enumeration value="14"/>
+     <xsd:enumeration value="15"/>
+     <xsd:enumeration value="16"/>
+     <xsd:enumeration value="17"/>
+     <xsd:enumeration value="18"/>
+     <xsd:enumeration value="19"/>
+     <xsd:enumeration value="20"/>
+     <xsd:enumeration value="21"/>
+     <xsd:enumeration value="99"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:simpleType name="c_ClaveProdServ">
+    <xsd:restriction base="xsd:string">
+     <xsd:minLength value="8"/>
+     <xsd:pattern value="[0-9]{8}"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_ClaveUnidad">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+     <xsd:minLength value="2"/>
+     <xsd:pattern value="([A-Z]|[0-9]){2,3}"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_CodigoPostal">
+    <xsd:restriction base="xsd:string">
+     <xsd:minLength value="5"/>
+     <xsd:pattern value="[0-9]{5}"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_Colonia">
+    <xsd:restriction base="xsd:string">
+     <xsd:minLength value="4"/>
+     <xsd:pattern value="[0-9]{4}"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_Estado">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="3"/>
+     <xsd:minLength value="2"/>
+     <xsd:pattern value="[A-Z]{2,3}"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_FormaPago">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="01"/>
+     <xsd:enumeration value="02"/>
+     <xsd:enumeration value="03"/>
+     <xsd:enumeration value="04"/>
+     <xsd:enumeration value="05"/>
+     <xsd:enumeration value="06"/>
+     <xsd:enumeration value="08"/>
+     <xsd:enumeration value="12"/>
+     <xsd:enumeration value="13"/>
+     <xsd:enumeration value="14"/>
+     <xsd:enumeration value="15"/>
+     <xsd:enumeration value="17"/>
+     <xsd:enumeration value="23"/>
+     <xsd:enumeration value="24"/>
+     <xsd:enumeration value="25"/>
+     <xsd:enumeration value="26"/>
+     <xsd:enumeration value="27"/>
+     <xsd:enumeration value="28"/>
+     <xsd:enumeration value="29"/>
+     <xsd:enumeration value="99"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_Impuesto">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="001"/>
+     <xsd:enumeration value="002"/>
+     <xsd:enumeration value="003"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_Localidad">
+    <xsd:restriction base="xsd:string">
+     <xsd:minLength value="2"/>
+     <xsd:pattern value="[0-6][0-9]"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_MetodoPago">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="PUE"/>
+     <xsd:enumeration value="PIP"/>
+     <xsd:enumeration value="PPD"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_Moneda">
+    <xsd:restriction base="xsd:string">
+     <xsd:minLength value="3"/>
+     <xsd:pattern value="[A-Z]{3}"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_Municipio">
+    <xsd:restriction base="xsd:string">
+     <xsd:minLength value="3"/>
+     <xsd:pattern value="[0-5][0-9][0-9]"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_Pais">
+    <xsd:restriction base="xsd:string">
+     <xsd:minLength value="3"/>
+     <xsd:pattern value="[A-Z]{3}"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_RegimenFiscal">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="601"/>
+     <xsd:enumeration value="603"/>
+     <xsd:enumeration value="605"/>
+     <xsd:enumeration value="606"/>
+     <xsd:enumeration value="608"/>
+     <xsd:enumeration value="609"/>
+     <xsd:enumeration value="610"/>
+     <xsd:enumeration value="611"/>
+     <xsd:enumeration value="612"/>
+     <xsd:enumeration value="614"/>
+     <xsd:enumeration value="616"/>
+     <xsd:enumeration value="620"/>
+     <xsd:enumeration value="621"/>
+     <xsd:enumeration value="622"/>
+     <xsd:enumeration value="623"/>
+     <xsd:enumeration value="624"/>
+     <xsd:enumeration value="628"/>
+     <xsd:enumeration value="607"/>
+     <xsd:enumeration value="629"/>
+     <xsd:enumeration value="630"/>
+     <xsd:enumeration value="615"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_TasaOCuota">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="0.000000"/>
+     <xsd:enumeration value="0.160000"/>
+     <xsd:enumeration value="0.265000"/>
+     <xsd:enumeration value="0.300000"/>
+     <xsd:enumeration value="0.530000"/>
+     <xsd:enumeration value="0.500000"/>
+     <xsd:enumeration value="1.600000"/>
+     <xsd:enumeration value="0.304000"/>
+     <xsd:enumeration value="0.350000"/>
+     <xsd:enumeration value="0.059100"/>
+     <xsd:enumeration value="3.000000"/>
+     <xsd:enumeration value="0.298800"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_TipoDeComprobante">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="I"/>
+     <xsd:enumeration value="E"/>
+     <xsd:enumeration value="T"/>
+     <xsd:enumeration value="N"/>
+     <xsd:enumeration value="P"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_TipoFactor">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="Tasa"/>
+     <xsd:enumeration value="Cuota"/>
+     <xsd:enumeration value="Exento"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_TipoRelacion">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="01"/>
+     <xsd:enumeration value="02"/>
+     <xsd:enumeration value="03"/>
+     <xsd:enumeration value="04"/>
+     <xsd:enumeration value="05"/>
+     <xsd:enumeration value="06"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="c_UsoCFDI">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="G01"/>
+     <xsd:enumeration value="G02"/>
+     <xsd:enumeration value="G03"/>
+     <xsd:enumeration value="I01"/>
+     <xsd:enumeration value="I02"/>
+     <xsd:enumeration value="I03"/>
+     <xsd:enumeration value="I04"/>
+     <xsd:enumeration value="I05"/>
+     <xsd:enumeration value="I06"/>
+     <xsd:enumeration value="I07"/>
+     <xsd:enumeration value="I08"/>
+     <xsd:enumeration value="D01"/>
+     <xsd:enumeration value="D02"/>
+     <xsd:enumeration value="D03"/>
+     <xsd:enumeration value="D04"/>
+     <xsd:enumeration value="D05"/>
+     <xsd:enumeration value="D06"/>
+     <xsd:enumeration value="D07"/>
+     <xsd:enumeration value="D08"/>
+     <xsd:enumeration value="D09"/>
+     <xsd:enumeration value="D10"/>
+     <xsd:enumeration value="P01"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:simpleType name="c_TIpoCadenaPago">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="01"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI" xmlns="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI" xmlns:xi0="http://www.sat.gob.mx/cfd/3" xmlns:xi1="http://cancelacfd.sat.gob.mx" xmlns:xi2="http://www.sat.gob.mx/ComercioExterior11" xmlns:xi3="http://www.sat.gob.mx/divisas" xmlns:xi4="http://www.sat.gob.mx/donat" xmlns:xi5="http://www.sat.gob.mx/implocal" xmlns:xi6="http://www.sat.gob.mx/Pagos" xmlns:xi7="http://www.w3.org/2000/09/xmldsig#" xmlns:xi8="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xi9="http://www.sat.gob.mx/detallista" xmlns:xi10="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/ComExt" xmlns:xi11="http://www.sat.gob.mx/sitio_internet/cfd/catalogos" xmlns:xi12="http://www.sat.gob.mx/sitio_internet/cfd/catalogos/Pagos" xmlns:xi13="http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI">
+   <xsd:simpleType name="t_CURP">
+    <xsd:restriction base="xsd:string">
+     <xsd:length value="18"/>
+     <xsd:pattern value="[A-Z][AEIOUX][A-Z]{2}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[MH]([ABCMTZ]S|[BCJMOT]C|[CNPST]L|[GNQ]T|[GQS]R|C[MH]|[MY]N|[DH]G|NE|VZ|DF|SP)[BCDFGHJ-NP-TV-Z]{3}[0-9A-Z][0-9]"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="t_Descrip100">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="100"/>
+     <xsd:minLength value="1"/>
+     <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,100}"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="t_Descrip120">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="120"/>
+     <xsd:minLength value="1"/>
+     <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,120}"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="t_FechaH">
+    <xsd:restriction base="xsd:dateTime">
+     <xsd:pattern value="(20[1-9][0-9])-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="t_Importe">
+    <xsd:restriction base="xsd:decimal">
+     <xsd:fractionDigits value="6"/>
+     <xsd:pattern value="[0-9]{1,18}(.[0-9]{1,6})?"/>
+     <xsd:minInclusive value="0.000000"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="t_NumeroDomicilio">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="55"/>
+     <xsd:minLength value="1"/>
+     <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,55}"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="t_RFC">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="13"/>
+     <xsd:minLength value="12"/>
+     <xsd:pattern value="[A-Z&amp;Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="t_RFC_PM">
+    <xsd:restriction base="xsd:string">
+     <xsd:minLength value="12"/>
+     <xsd:pattern value="[A-Z&amp;Ñ]{3}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="t_Referencia">
+    <xsd:restriction base="xsd:string">
+     <xsd:maxLength value="250"/>
+     <xsd:minLength value="1"/>
+     <xsd:pattern value="([A-Z]|[a-z]|[0-9]| |Ñ|ñ|!|&quot;|%|&amp;|&apos;|´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|á|é|í|ó|ú|Á|É|Í|Ó|Ú|ü|Ü){1,250}"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="t_TipoCambio">
+    <xsd:restriction base="xsd:decimal">
+     <xsd:fractionDigits value="6"/>
+     <xsd:pattern value="[0-9]{1,18}(.[0-9]{1,6})?"/>
+     <xsd:minInclusive value="0.00"/>
+     <xsd:whiteSpace value="collapse"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+  </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="CFDSubmitRequest">
+  <wsdl:part name="CFDSubmitRequest" element="tns:CFDSubmitRequest"/>
+ </wsdl:message>
+ <wsdl:message name="PACResponse">
+  <wsdl:part name="PACResponse" element="tns:PACResponse"/>
+ </wsdl:message>
+ <wsdl:message name="CFDCancelRequest">
+  <wsdl:part name="CFDCancelRequest" element="tns:CFDCancelRequest"/>
+ </wsdl:message>
+ <wsdl:message name="CFDGetStatusRequest">
+  <wsdl:part name="CFDGetStatusRequest" element="tns:CFDGetStatusRequest"/>
+ </wsdl:message>
+ <wsdl:message name="GetViewEdoc">
+  <wsdl:part name="GetViewEdoc" element="tns:GetViewEdoc"/>
+ </wsdl:message>
+ <wsdl:message name="GetViewEdocResponse">
+  <wsdl:part name="GetViewEdocResponse" element="tns:GetViewEdocResponse"/>
+ </wsdl:message>
+ <wsdl:portType name="CFDIeDocuments">
+  <wsdl:documentation>
+   <sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+    <sapdoc:docitem applicationComponent="CA-GTF-CSC-EDO-MX"/>
+   </sapdoc:sapdoc>
+  </wsdl:documentation>
+  <wsp:Policy>
+   <wsp:PolicyReference URI="#IF_IF_CFDIeDocuments"/>
+  </wsp:Policy>
+  <wsdl:operation name="SubmitEdoc">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_SubmitEdoc"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:CFDSubmitRequest"/>
+   <wsdl:output message="tns:PACResponse"/>
+  </wsdl:operation>
+  <wsdl:operation name="CancelEdoc">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_CancelEdoc"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:CFDCancelRequest"/>
+   <wsdl:output message="tns:PACResponse"/>
+  </wsdl:operation>
+  <wsdl:operation name="GetStatusEdoc">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_GetStatusEdoc"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:CFDGetStatusRequest"/>
+   <wsdl:output message="tns:PACResponse"/>
+  </wsdl:operation>
+  <wsdl:operation name="GetViewEdoc">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_GetViewEdoc"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:GetViewEdoc"/>
+   <wsdl:output message="tns:GetViewEdocResponse"/>
+  </wsdl:operation>
+ </wsdl:portType>
+</wsdl:definitions>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="QueryResult" type="SRecordsType"/>
+	<xs:complexType name="AccountType">
+		<xs:sequence>
+			<xs:element type="xs:string" name="SAP_BusinessPartner_Ref__c"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ServiceContractType">
+		<xs:sequence>
+			<xs:element type="xs:string" name="Id"/>
+			<xs:element type="xs:date" name="StartDate"/>
+			<xs:element type="xs:date" name="EndDate"/>
+			<xs:element type="xs:byte" name="ContractNumber"/>
+			<xs:element type="xs:string" name="CurrencyIsoCode"/>
+			<xs:element type="AccountType" name="Account"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Product2Type">
+		<xs:sequence>
+			<xs:element type="xs:string" name="Name"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PricebookEntryType">
+		<xs:sequence>
+			<xs:element type="xs:float" name="UnitPrice"/>
+			<xs:element type="xs:string" name="CurrencyIsoCode"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ContractLineItemType">
+		<xs:sequence>
+			<xs:element type="xs:string" name="Id"/>
+			<xs:element type="xs:byte" name="LineItemNumber"/>
+			<xs:element type="xs:float" name="Quantity"/>
+			<xs:element type="ServiceContractType" name="ServiceContract"/>
+			<xs:element type="Product2Type" name="Product2"/>
+			<xs:element type="PricebookEntryType" name="PricebookEntry"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SRecordsType">
+		<xs:sequence>
+			<xs:element type="ContractLineItemType" name="records" maxOccurs="unbounded" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

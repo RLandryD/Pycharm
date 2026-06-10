@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.sap.com/eDocument/Chile/SimpleLedger/v1.0"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	name="eDocSimpleLedger" targetNamespace="http://www.sap.com/eDocument/Chile/SimpleLedger/v1.0">
+	
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://www.sap.com/eDocument/Chile/SimpleLedger/v1.0"  
+			elementFormDefault="qualified" 
+			attributeFormDefault="unqualified">
+			
+			<xsd:element name="Ledger" type="tns:LedgerString"/>
+			<xsd:element name="SignedLedger" type="xsd:string"/>
+			
+			<xsd:complexType name="LedgerString">
+				<xsd:sequence>
+					<xsd:element name="Ledger_data" type="xsd:base64Binary"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			
+		</xsd:schema>
+	</wsdl:types>
+	
+	<wsdl:message name="SignLedgerRequest">
+		<wsdl:part element="tns:Ledger" name="SignLedgerRequestParameters" />
+	</wsdl:message>
+	<wsdl:message name="SignLedgerResponse">
+		<wsdl:part element="tns:SignedLedger" name="SignLedgerResponseParameters" />
+	</wsdl:message>
+	
+	<wsdl:portType name="eDocSimpleLedger">
+		<wsdl:operation name="SignLedger">
+			<wsdl:input message="tns:SignLedgerRequest" name="LedgerIn"/>
+			<wsdl:output message="tns:SignLedgerResponse" name="SignedLedgerOut" />
+		</wsdl:operation>
+	</wsdl:portType>
+	
+	<wsdl:binding name="eDocSimpleLedgerSOAP" type="tns:eDocSimpleLedger">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="SignLedger">
+			<soap:operation soapAction="http://www.sap.com/eDocument/Chile/SimpleLedger/v1.0/NewOperation" />
+			<wsdl:input name="LedgerIn">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="SignedLedgerOut">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	
+	<wsdl:service name="eDocSimpleLedger">
+		<wsdl:port binding="tns:eDocSimpleLedgerSOAP" name="eDocSimpleLedgerSOAP">
+			<soap:address location="http://www.example.org/" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

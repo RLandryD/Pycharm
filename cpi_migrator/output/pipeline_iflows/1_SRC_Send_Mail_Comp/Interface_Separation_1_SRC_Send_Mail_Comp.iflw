@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PIPELINE STEP 3: Interface Separation iFlow
+  Package  : 1_SRC_Send_Mail_CompletedR_Hr
+  Purpose  : Routes to the correct scenario-specific iFlow
+             based on SAP_InterfaceName header set by Receiver Determination.
+  Internal : ProcessDirect address /pd/InterfaceSeparation_1_SRC_Send_Mail_Comp
+-->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd"
+             id="Interface_Separation_1_SRC_Send_Mail_Comp"
+             name="Interface_Separation_1_SRC_Send_Mail_Comp">
+  <process id="IfaceSep_1_SRC_Send_Mail_Comp_process" ifl:type="IntegrationFlow">
+
+    <startEvent id="Start_IS" name="From Receiver Determination">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/pd/InterfaceSeparation_1_SRC_Send_Mail_Comp</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </startEvent>
+
+    <!-- ROUTER: Branch to scenario-specific iFlow -->
+    <exclusiveGateway id="Router_1" name="Route by Interface Name"/>
+
+    <sequenceFlow id="route_0" sourceRef="Router_1"
+      targetRef="Call_RCI093_SuccessFactor_1">
+      <!-- Condition: ${header.SAP_InterfaceName} = 'RCI093_SuccessFactors_to_OpenText_SuccessFactors' -->
+    </sequenceFlow>
+    <serviceTask id="Call_RCI093_SuccessFactor_1"
+      name="→ RCI093_SuccessFactors_to_OpenText_SuccessFactors" ifl:type="RequestReply">
+      <extensionElements>
+        <ifl:property><ifl:key>Transport</ifl:key><ifl:value>ProcessDirect</ifl:value></ifl:property>
+        <ifl:property><ifl:key>Address</ifl:key>
+          <ifl:value>/scenario/RCI093_SuccessFactor</ifl:value>
+        </ifl:property>
+      </extensionElements>
+    </serviceTask>
+
+    <endEvent id="End_IS"/>
+    <sequenceFlow sourceRef="Start_IS" targetRef="Router_1"/>
+  </process>
+</definitions>

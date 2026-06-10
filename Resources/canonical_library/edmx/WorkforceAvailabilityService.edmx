@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+    <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="WorkforceAvailabilityService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="WorkforceAvailability" EntityType="WorkforceAvailabilityService.WorkforceAvailability">
+          <NavigationPropertyBinding Path="shiftCode" Target="ShiftCodes"/>
+          <NavigationPropertyBinding Path="holidayCode" Target="HolidayCodes"/>
+        </EntitySet>
+        <EntitySet Name="ShiftCodes" EntityType="WorkforceAvailabilityService.ShiftCodes">
+          <NavigationPropertyBinding Path="texts" Target="ShiftCodes_texts"/>
+          <NavigationPropertyBinding Path="localized" Target="ShiftCodes_texts"/>
+        </EntitySet>
+        <EntitySet Name="HolidayCodes" EntityType="WorkforceAvailabilityService.HolidayCodes">
+          <NavigationPropertyBinding Path="texts" Target="HolidayCodes_texts"/>
+          <NavigationPropertyBinding Path="localized" Target="HolidayCodes_texts"/>
+        </EntitySet>
+        <EntitySet Name="ShiftCodes_texts" EntityType="WorkforceAvailabilityService.ShiftCodes_texts"/>
+        <EntitySet Name="HolidayCodes_texts" EntityType="WorkforceAvailabilityService.HolidayCodes_texts"/>
+      </EntityContainer>
+      <EntityType Name="WorkforceAvailability">
+        <Key>
+          <PropertyRef Name="workAssignmentID"/>
+          <PropertyRef Name="availabilityDate"/>
+        </Key>
+        <Property Name="id" Type="Edm.Guid"/>
+        <Property Name="workAssignmentID" Type="Edm.String" MaxLength="100" Nullable="false"/>
+        <Property Name="workforcePerson_ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="availabilityDate" Type="Edm.Date" Nullable="false"/>
+        <Property Name="normalWorkingTime" Type="Edm.String" MaxLength="6" Nullable="false"/>
+        <NavigationProperty Name="shiftCode" Type="WorkforceAvailabilityService.ShiftCodes"/>
+        <NavigationProperty Name="holidayCode" Type="WorkforceAvailabilityService.HolidayCodes"/>
+        <Property Name="availabilityIntervals" Type="Collection(WorkforceAvailabilityService.WorkforceAvailability_availabilityIntervals)" Nullable="false"/>
+        <Property Name="availabilitySupplements" Type="Collection(WorkforceAvailabilityService.WorkforceAvailability_availabilitySupplements)" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="ShiftCodes">
+        <Key>
+          <PropertyRef Name="code"/>
+        </Key>
+        <Property Name="name" Type="Edm.String" MaxLength="255"/>
+        <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+        <Property Name="code" Type="Edm.String" MaxLength="128" Nullable="false"/>
+        <NavigationProperty Name="texts" Type="Collection(WorkforceAvailabilityService.ShiftCodes_texts)">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+        <NavigationProperty Name="localized" Type="WorkforceAvailabilityService.ShiftCodes_texts">
+          <ReferentialConstraint Property="code" ReferencedProperty="code"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="HolidayCodes">
+        <Key>
+          <PropertyRef Name="code"/>
+        </Key>
+        <Property Name="name" Type="Edm.String" MaxLength="255"/>
+        <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+        <Property Name="code" Type="Edm.String" MaxLength="128" Nullable="false"/>
+        <NavigationProperty Name="texts" Type="Collection(WorkforceAvailabilityService.HolidayCodes_texts)">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+        <NavigationProperty Name="localized" Type="WorkforceAvailabilityService.HolidayCodes_texts">
+          <ReferentialConstraint Property="code" ReferencedProperty="code"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="ShiftCodes_texts">
+        <Key>
+          <PropertyRef Name="locale"/>
+          <PropertyRef Name="code"/>
+        </Key>
+        <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+        <Property Name="name" Type="Edm.String" MaxLength="255"/>
+        <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+        <Property Name="code" Type="Edm.String" MaxLength="128" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="HolidayCodes_texts">
+        <Key>
+          <PropertyRef Name="locale"/>
+          <PropertyRef Name="code"/>
+        </Key>
+        <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+        <Property Name="name" Type="Edm.String" MaxLength="255"/>
+        <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+        <Property Name="code" Type="Edm.String" MaxLength="128" Nullable="false"/>
+      </EntityType>
+      <ComplexType Name="WorkforceAvailability_availabilityIntervals">
+        <Property Name="intervalStart" Type="Edm.TimeOfDay"/>
+        <Property Name="intervalEnd" Type="Edm.TimeOfDay"/>
+        <Property Name="contribution" Type="Edm.String" MaxLength="6"/>
+      </ComplexType>
+      <ComplexType Name="WorkforceAvailability_availabilitySupplements">
+        <Property Name="intervalStart" Type="Edm.TimeOfDay"/>
+        <Property Name="intervalEnd" Type="Edm.TimeOfDay"/>
+        <Property Name="contribution" Type="Edm.String" MaxLength="6"/>
+      </ComplexType>
+      <Annotations Target="WorkforceAvailabilityService.EntityContainer">
+        <Annotation Term="Core.Description" String="Workforce Availability"/>
+        <Annotation Term="Core.LongDescription" String="This API enables you to upload information about the availability of your workforce in SAP S/4HANA Cloud for projects, resource management. You can read, create, and update the availability of your workforce. For reasons of data protection and privacy, only batch requests are available."/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability">
+        <Annotation Term="Core.LongDescription" String="Workforce Availability"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.EntityContainer/WorkforceAvailability">
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record Type="Capabilities.ReadRestrictionsType">
+            <PropertyValue Property="Description" String="Fetches availability of all workers."/>
+            <PropertyValue Property="ReadByKeyRestrictions">
+              <Record Type="Capabilities.ReadByKeyRestrictionsType">
+                <PropertyValue Property="Description" String="Fetches availability of a single worker with a work assignment and date."/>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Description" String="Updates an availability of a single worker."/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Description" String="Creates an availability of a single worker."/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability/id">
+        <Annotation Term="Core.Description" String="The identifier of the availability entry."/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability/workAssignmentID">
+        <Annotation Term="Core.Description" String="The identifier of the work assignment that the availability record relates to."/>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability/workforcePerson_ID">
+        <Annotation Term="Core.Description" String="The ID of the workforce person."/>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability/availabilityDate">
+        <Annotation Term="Core.Description" String="The date for the availability record."/>
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="1971-01-01"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability/normalWorkingTime">
+        <Annotation Term="Core.Description" String="The number of working hours for a date."/>
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="08:00"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability/availabilityIntervals">
+        <Annotation Term="Core.Description" String="The list of available time intervals for a date."/>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability/availabilitySupplements">
+        <Annotation Term="Core.Description" String="The list of time periods when a workforce person is not available, for a date."/>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.ShiftCodes">
+        <Annotation Term="UI.Identification">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="name"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.ShiftCodes/name">
+        <Annotation Term="Common.Label" String="{i18n>Name}"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.ShiftCodes/descr">
+        <Annotation Term="Common.Label" String="{i18n>Description}"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.HolidayCodes">
+        <Annotation Term="UI.Identification">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="name"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.HolidayCodes/name">
+        <Annotation Term="Common.Label" String="{i18n>Name}"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.HolidayCodes/descr">
+        <Annotation Term="Common.Label" String="{i18n>Description}"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.ShiftCodes_texts/locale">
+        <Annotation Term="Common.Label" String="{i18n>LanguageCode}"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.ShiftCodes_texts/name">
+        <Annotation Term="Common.Label" String="{i18n>Name}"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.ShiftCodes_texts/descr">
+        <Annotation Term="Common.Label" String="{i18n>Description}"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.HolidayCodes_texts/locale">
+        <Annotation Term="Common.Label" String="{i18n>LanguageCode}"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.HolidayCodes_texts/name">
+        <Annotation Term="Common.Label" String="{i18n>Name}"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.HolidayCodes_texts/descr">
+        <Annotation Term="Common.Label" String="{i18n>Description}"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability_availabilityIntervals">
+        <Annotation Term="Core.Description" String="The list of available time intervals for a date."/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability_availabilityIntervals/intervalStart">
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability_availabilityIntervals/intervalEnd">
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability_availabilityIntervals/contribution">
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability_availabilitySupplements">
+        <Annotation Term="Core.Description" String="The list of time periods when a workforce person is not available, for a date."/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability_availabilitySupplements/intervalStart">
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability_availabilitySupplements/intervalEnd">
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="WorkforceAvailabilityService.WorkforceAvailability_availabilitySupplements/contribution">
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

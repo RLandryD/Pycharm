@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="SupplierInvoiceCollaborationNotification">
+		<xs:complexType>
+		  <xs:sequence>
+			<xs:element ref="MessageHeader" />
+			<xs:element ref="SupplierInvoice" />
+		  </xs:sequence>
+		</xs:complexType>
+  </xs:element>
+  <xs:element name="MessageHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ID" type="xs:string" />
+        <xs:element name="UUID" type="xs:string" />
+        <xs:element name="CreationDateTime" type="xs:dateTime" />
+        <xs:element name="SenderBusinessSystemID" type="xs:string" />
+        <xs:element name="RecipientBusinessSystemID" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SupplierInvoice">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="CompanyCode" type="xs:unsignedByte" />
+        <xs:element name="DocumentDate" type="xs:date" />
+        <xs:element name="InvoiceGrossAmount">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:decimal">
+                <xs:attribute name="currencyCode" type="xs:string" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="InvoicingParty" type="xs:string" />
+        <xs:element name="SupplierInvoiceID" type="xs:unsignedLong" />
+        <xs:element name="FiscalYear" type="xs:unsignedShort" />
+        <xs:element name="PostingDate" type="xs:date" />
+        <xs:element name="PaymentTerms">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CashDiscount1Percent" type="xs:decimal" />
+              <xs:element name="CashDiscount1Days" type="xs:unsignedByte" />
+              <xs:element name="CashDiscount2Percent" type="xs:decimal" />
+              <xs:element name="CashDiscount2Days" type="xs:unsignedByte" />
+              <xs:element name="DueCalculationBaseDate" type="xs:date" />
+              <xs:element name="NetPaymentDays" type="xs:unsignedByte" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="SupplierInvoiceIsCreditMemo" />
+        <xs:element name="SupplierInvoiceItemPurOrdRef">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SupplierInvoiceItem" type="xs:unsignedByte" />
+              <xs:element name="QtyInPurchaseOrderPriceUnit">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:decimal">
+                      <xs:attribute name="unitCode" type="xs:string" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="SupplierInvoiceItemAmount">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:decimal">
+                      <xs:attribute name="currencyCode" type="xs:string" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="QuantityInPurchaseOrderUnit">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:decimal">
+                      <xs:attribute name="unitCode" type="xs:string" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="PurchaseOrderReference">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="PurchaseOrderID" type="xs:unsignedLong" />
+                    <xs:element name="PurchaseOrderItem" type="xs:unsignedByte" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ServiceEntrySheetReference">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="ServiceEntrySheetID" type="xs:unsignedShort" />
+                    <xs:element name="ServiceEntrySheetItem" type="xs:unsignedByte" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="SupplierInvoiceItemTaxDetails">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="TaxCode" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="PurchaseOrderFreightCondition">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="SuplrInvcDeliveryCostCndnStep" type="xs:unsignedByte" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="SupplierInvoiceItemPurOrdRefAcctAssgmt">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="AccountAssignmentNumber" type="xs:unsignedByte" />
+                    <xs:element name="SuplrInvcAcctAssignmentAmount">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:decimal">
+                            <xs:attribute name="currencyCode" type="xs:string" use="required" />
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="QuantityInPurchaseOrderUnit">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:decimal">
+                            <xs:attribute name="unitCode" type="xs:string" use="required" />
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="QtyInPurchaseOrderPriceUnit">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:decimal">
+                            <xs:attribute name="unitCode" type="xs:string" use="required" />
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="GLAccount" type="xs:unsignedInt" />
+                    <xs:element name="CostCenter" type="xs:string" />
+                    <xs:element name="SalesOrderItem" type="xs:unsignedByte" />
+                    <xs:element name="ControllingArea" type="xs:unsignedByte" />
+                    <xs:element name="WBSElement" type="xs:unsignedByte" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="TaxData">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="InvoiceTaxDetails">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="TaxAmount">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:decimal">
+                            <xs:attribute name="currencyCode" type="xs:string" use="required" />
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="TaxBaseAmountInTransCrcy">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:decimal">
+                            <xs:attribute name="currencyCode" type="xs:string" use="required" />
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="TaxCode" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="UnplannedDeliveryCostDetails">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="UnplannedDeliveryCost">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:decimal">
+                      <xs:attribute name="currencyCode" type="xs:string" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+	   </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

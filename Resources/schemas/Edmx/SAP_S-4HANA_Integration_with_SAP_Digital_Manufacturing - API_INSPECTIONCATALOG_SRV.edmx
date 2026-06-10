@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+ </edmx:Reference>
+ <edmx:DataServices m:DataServiceVersion="2.0">
+  <Schema Namespace="API_INSPECTIONCATALOG_SRV_01" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+   <EntityType Name="A_InspectionCatalogType" sap:label="InspectionCatalogType" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="SelectedCodeSetPlant"/>
+     <PropertyRef Name="SelectedCodeSet"/>
+     <PropertyRef Name="CatalogType"/>
+    </Key>
+    <Property Name="SelectedCodeSetPlant" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="UpperCase" sap:label="Plant"/>
+    <Property Name="SelectedCodeSet" Type="Edm.String" Nullable="false" MaxLength="8" sap:display-format="UpperCase" sap:label="Selected Set"/>
+    <Property Name="CodeGroup" Type="Edm.String" Nullable="false" MaxLength="8" sap:display-format="UpperCase" sap:label="Code Group"/>
+    <Property Name="Code" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Code"/>
+    <Property Name="CodeValuation" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Valuation Code" sap:quickinfo="Code Valuation"/>
+    <Property Name="CatalogType" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Catalog Type"/>
+    <Property Name="Language" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key"/>
+    <Property Name="InspectionCatalogCodeTxt" Type="Edm.String" MaxLength="40" sap:label="Short Text for Code"/>
+    <Property Name="DefectClass" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Defect Class"/>
+   </EntityType>
+   <EntityContainer Name="API_INSPECTIONCATALOG_SRV_01_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+    <EntitySet Name="A_InspectionCatalog" EntityType="API_INSPECTIONCATALOG_SRV_01.A_InspectionCatalogType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+   </EntityContainer>
+   <Annotations Target="API_INSPECTIONCATALOG_SRV_01.API_INSPECTIONCATALOG_SRV_01_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+    <Annotation Term="Aggregation.ApplySupported">
+     <Record>
+      <PropertyValue Property="Transformations">
+       <Collection>
+        <String>aggregate</String>
+        <String>groupby</String>
+        <String>filter</String>
+       </Collection>
+      </PropertyValue>
+      <PropertyValue Property="Rollup" EnumMember="None"/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_INSPECTIONCATALOG_SRV_01.API_INSPECTIONCATALOG_SRV_01_Entities/A_InspectionCatalog" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Annotation Term="Capabilities.ReadRestrictions">
+        <Record>
+          <PropertyValue Property="Description" String="Reads all selected set codes and code groups of catalog type."/>
+          <PropertyValue Property="LongDescription" String="Reads all codes and their code groups that are contained in plant-specific selected sets. You can retrieve administration data and valuation data."/>
+          <PropertyValue Property="ReadByKeyRestrictions">
+            <Record>
+              <PropertyValue Property="Description" String="Reads a specific selected set code of catalog type."/>
+              <PropertyValue Property="LongDescription" String="Reads a specific code that is contained in a plant-specific selected set. You can retrieve administration data and valuation data."/>
+            </Record>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+  </Annotations>
+   <atom:link rel="self" href="https://host:port/sap/opu/odata/sap/API_INSPECTIONCATALOG_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+   <atom:link rel="latest-version" href="https://host:port/sap/opu/odata/sap/API_INSPECTIONCATALOG_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+  </Schema>
+ </edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,815 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:nyw="urn:com.netyourwork/aod" xmlns:wd="urn:com.workday/bsvc" xmlns:wd-wsdl="urn:com.workday/bsvc/Financial_Management" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="urn:com.workday/bsvc">
+<xsd:element name="Put_Cost_Center_Request" type="wd:Put_Cost_Center_RequestType"/>
+<xsd:simpleType name="External_URLReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="URL"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="OrganizationObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:OrganizationObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="IDType">
+<xsd:annotation>
+<xsd:documentation>External ID that uniquely identifies the integratable object within the context of the integration system identified by the System ID attribute.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="System_ID" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Integration system identifier, part of a two part key (including the text value of the ID element) that uniquely identify integratable object.</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<xsd:documentation>A valid instance of Integration ID must exist for the given System ID.</xsd:documentation>
+<wd:Validation_Message>Integration System ID does not exist.</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Accounting_Worktag_TypeObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Accounting_Worktag_TypeObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Cost_CenterObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:Cost_CenterReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Related_Worktag_Widget_DataType">
+<xsd:annotation>
+<xsd:documentation>Reference to the existing Allowed or Default Related Worktags.</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<wd:Validation_Message>[missing required worktag types]</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>[One of Project OR Project Plan Phase OR Project Plan Task Allowed]</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="Related_Worktags_by_Type_Data" type="wd:Related_Worktags_by_Worktag_Type_DataType">
+<xsd:annotation>
+<xsd:documentation>Allowed and Default Related Worktags Data by Worktag Type.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+<xsd:attribute name="Replace_All" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>All existing related worktags (both allowed and default) are replaced with the ones specified in the request. It will supersede any "remove all" or delete option set to True by worktag type. When True, a default value must be provided for all worktag types that are configured with 'Default Required' in the 'Maintain Related Worktag Usage'.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Accounting_Worktag_TypeObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:Accounting_Worktag_TypeReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Unique_IdentifierObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Unique_IdentifierObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:simpleType name="Cost_CenterReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Cost_Center_Reference_ID"/>
+<wd:enumeration value="Organization_Reference_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="Unique_IdentifierObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:Unique_IdentifierReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Organization_SubtypeObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Organization_SubtypeObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Custom_OrganizationObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Custom_OrganizationObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Cost_CenterObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Cost_CenterObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:simpleType name="Accounting_Worktag_TypeReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Accounting_Worktag_Type_ID"/>
+<wd:enumeration value="Worktag_Type_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="Put_Cost_Center_RequestType">
+<xsd:annotation>
+<xsd:documentation>Element containing Cost Center reference for update and all Cost Center data items</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<wd:Validation_Message>Organization already exists.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>Worktags submitted are not among the allowed values configured on the object. Review and submit the request again.</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element minOccurs="0" name="Cost_Center_Reference" type="wd:Cost_CenterObjectType">
+<xsd:annotation>
+<xsd:documentation>Reference to an existing Cost Center for update only purposes</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element name="Cost_Center_Data" type="wd:Cost_Center_DataType">
+<xsd:annotation>
+<xsd:documentation>Cost Center Data</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+<xsd:attribute name="Add_Only" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Add Only Flag.  Indicates that the service is an add only, not an update.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+<xsd:attribute ref="wd:version"/>
+</xsd:complexType>
+<xsd:simpleType name="OrganizationReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Company_Reference_ID"/>
+<wd:enumeration value="Cost_Center_Reference_ID"/>
+<wd:enumeration value="Custom_Organization_Reference_ID"/>
+<wd:enumeration value="Organization_Reference_ID"/>
+<wd:enumeration value="Region_Reference_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="Organization_SubtypeObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:Organization_SubtypeReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="External_URLObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:External_URLReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name="Related_Worktags_by_Worktag_Type_DataType">
+<xsd:annotation>
+<xsd:documentation>Allowed and Default Related Worktags Data by Worktag Type.</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<wd:Validation_Message>For '[AWT]' on [T-New Instance] '[TT]'[colon] [squote][T][squote] you cannot specify allowed values as they are not enabled in ‘Maintain Related Worktag Usage’.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>For '[AWT]' on [T-New Instance] '[TT]'[colon] [squote][T][squote], Default Worktag field is "Required".</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>Worktag Type: [AWT]  is not allowed for Taggable Type: [TT]</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>For '[AWT]' on [T-New Instance] '[TT]'[colon] [squote][T][squote], Delete Allowed Value cannot be 'Y' when all allowed values are being replaced.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>For '[AWT]' on [T-New Instance] '[TT]'[colon] [squote][T][squote], when default value and allowed values are being replaced, allowed values in file must be empty or include default value specified in file.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>For '[AWT]' on [T-New Instance] '[TT]'[colon] [squote][T][squote], when allowed values are being replaced but existing default value is not being replaced or deleted, allowed values in file must be empty or include existing default value.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>For '[AWT]' on [T-New Instance] '[TT]'[colon] [squote][T][squote], you cannot have a 'Default Value' on more than one row.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>For '[AWT]' on [T-New Instance] '[TT]'[colon] [squote][T][squote], when default value is being replaced, persisted allowed values must be empty or include default value specified in file.</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element minOccurs="0" name="Worktag_Type_Reference" type="wd:Accounting_Worktag_TypeObjectType">
+<xsd:annotation>
+<xsd:documentation>The Worktag Type Reference ID cannot be duplicated within one request. Valid ID types for all worktag types that can be configured for a related worktag taggable type may include: BUSINESS_SITE, BUSINESS_UNIT, COST_CENTER, CUSTOM_ORGANIZATION_01-10, CUSTOM_WORKTAG_1-10, FUND, GIFT, GRANT, INVESTOR, OPPORTUNITY, PROGRAM, PROJECT, PROJECT_PHASE, PROJECT_TASK, REGION, SALES_ITEM.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Required_On_Transaction" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Boolean to indicate if the Worktag Type will be required on a transaction when a value for the worktag type that has related values is entered.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Required_On_Transaction_For_Validation" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Boolean to indicate if 'Required on Transaction' is enabled in either 'Maintain Related Worktag Usage' or on the Worktag instance.  When you generate an EIB template with data, 'y' is returned when either boolean is true. This boolean is informational only in the 'Put' operation.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element minOccurs="0" name="Default_Worktag_Data" type="wd:Default_Worktag_DataType">
+<xsd:annotation>
+<xsd:documentation>Reference to existing Default Realted Worktag or Add new Default Related Worktag</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Replace_All_Allowed_Values" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Boolean to indicate that all existing allowed values are to be deleted.  When set to true ('y' in EIB), if allowed values are also specified, they will become the new set of allowed values.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="Allowed_Worktag_Data" type="wd:Allowed_Worktag_DataType">
+<xsd:annotation>
+<xsd:documentation>Reference to existing Allowed Related Worktags or Add new Allowed Related Worktags</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="Allowed_Worktag_DataType">
+<xsd:annotation>
+<xsd:documentation>Reference to existing Allowed Related Worktags or Add new Allowed Related Worktags</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<wd:Validation_Message>Worktag Type of Allowed Worktag "[AW]" does not match the Worktag Type: "[WT]"</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>For '[AWT]' on [T-New Instance] '[TT]'[colon] [squote][T][squote], an allowed value must be specified when Delete Allowed Value = 'Y'.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>For '[AWT]' on [T-New Instance] '[TT]'[colon] [squote][T][squote], specified default value must match an existing allowed value.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>For '[AWT]' on [T-New Instance] '[TT]'[colon] [squote][T][squote], when existing default value is being replaced, default value in file must match an allowed value in file or an existing allowed value</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>'[worktag value]' is not permitted as an allowed value for worktag type: [worktag type] because it is inactive.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>[concatenated validation message for constraint provider]</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element minOccurs="0" name="Allowed_Worktag_Reference" type="wd:Accounting_Worktag_and_Aggregation_DimensionObjectType">
+<xsd:annotation>
+<xsd:documentation>IMPORTANT: You must check 'Separate Type Column' for this field in your EIB template to see values when you generate a template with data or to configure related worktags for multiple worktag types. The list of valid ID types for this column exceeds the size limit of an Excel validation list so ID types must be entered as text. Valid ID types for this column may include: Business_Unit_Hierarchy_ID, Business_Unit_ID, Cost_Center_Reference_ID, Custom_Organization_Reference_ID, Custom_Worktag_1-5_ID, Custom_Worktag_06-15_ID, Fund_Hierarchy_ID, Fund_ID, Gift_Hierarchy_ID, Gift_Reference_ID, Grant_Hierarchy_ID, Grant_ID, Investor_ID, Location_ID, Opportunity_Reference_ID, Organization_Reference_ID, Program_Hierarchy_ID, Program_ID, Project_Hierarchy_ID, Project_ID, Project_Phase_Name_ID, Project_Task_Name_ID, Region_Reference_ID, Sales_Item_Group_ID, Sales_Item_ID.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+<xsd:attribute name="Delete_Allowed_Value" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Boolean to indicate that specified allowed values are to be deleted.  At least 1 existing allowed value must be specified When set to true (or 'y' in EIB). Cannot be set to true if 'Replace All Allowed Values' is set to true.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Accounting_Worktag_and_Aggregation_DimensionObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:Accounting_Worktag_and_Aggregation_DimensionReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:simpleType name="Accounting_Worktag_and_Aggregation_DimensionReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Academic_Level_ID"/>
+<wd:enumeration value="Academic_Period_ID"/>
+<wd:enumeration value="Academic_Person_ID"/>
+<wd:enumeration value="Academic_Unit_ID"/>
+<wd:enumeration value="Ad_hoc_Payee_ID"/>
+<wd:enumeration value="Alternate_Supplier_Contract_ID"/>
+<wd:enumeration value="Applicant_ID"/>
+<wd:enumeration value="Asset_Adjustment_Reason_Reference_ID"/>
+<wd:enumeration value="Asset_Adjustment_Type_Reference_ID"/>
+<wd:enumeration value="Asset_Impairment_Reason_ID"/>
+<wd:enumeration value="Bank_Account_ID"/>
+<wd:enumeration value="Business_Asset_Cost_Adjustment_Reason_ID"/>
+<wd:enumeration value="Business_Unit_Hierarchy_ID"/>
+<wd:enumeration value="Business_Unit_ID"/>
+<wd:enumeration value="Calculation_Compensation_Basis_ID"/>
+<wd:enumeration value="Cash_Activity_Category_ID"/>
+<wd:enumeration value="Catalog_Item_ID"/>
+<wd:enumeration value="Company_Reference_ID"/>
+<wd:enumeration value="Compensation_Basis_ID"/>
+<wd:enumeration value="Compensation_Grade_ID"/>
+<wd:enumeration value="Contingent_Worker_ID"/>
+<wd:enumeration value="Contingent_Worker_Type_ID"/>
+<wd:enumeration value="Corporate_Credit_Card_Account_ID"/>
+<wd:enumeration value="Cost_Center_Reference_ID"/>
+<wd:enumeration value="Custom_Organization_Reference_ID"/>
+<wd:enumeration value="Custom_Worktag_06_ID"/>
+<wd:enumeration value="Custom_Worktag_07_ID"/>
+<wd:enumeration value="Custom_Worktag_08_ID"/>
+<wd:enumeration value="Custom_Worktag_09_ID"/>
+<wd:enumeration value="Custom_Worktag_1_ID"/>
+<wd:enumeration value="Custom_Worktag_10_ID"/>
+<wd:enumeration value="Custom_Worktag_11_ID"/>
+<wd:enumeration value="Custom_Worktag_12_ID"/>
+<wd:enumeration value="Custom_Worktag_13_ID"/>
+<wd:enumeration value="Custom_Worktag_14_ID"/>
+<wd:enumeration value="Custom_Worktag_15_ID"/>
+<wd:enumeration value="Custom_Worktag_2_ID"/>
+<wd:enumeration value="Custom_Worktag_3_ID"/>
+<wd:enumeration value="Custom_Worktag_4_ID"/>
+<wd:enumeration value="Custom_Worktag_5_ID"/>
+<wd:enumeration value="Customer_Category_ID"/>
+<wd:enumeration value="Customer_Contract_Alternate_Reference_ID"/>
+<wd:enumeration value="Customer_Contract_Reference_ID"/>
+<wd:enumeration value="Customer_Group_ID"/>
+<wd:enumeration value="Customer_ID"/>
+<wd:enumeration value="Customer_Reference_ID"/>
+<wd:enumeration value="Deduction_Code"/>
+<wd:enumeration value="Deduction_Recipient_ID"/>
+<wd:enumeration value="Donor_ID"/>
+<wd:enumeration value="Earning_Code"/>
+<wd:enumeration value="Employee_ID"/>
+<wd:enumeration value="Employee_Type_ID"/>
+<wd:enumeration value="Ethnicity_ID"/>
+<wd:enumeration value="Expense_Item_Group_ID"/>
+<wd:enumeration value="Expense_Item_ID"/>
+<wd:enumeration value="External_Committee_Member_ID"/>
+<wd:enumeration value="Financial_Aid_Award_Year_ID"/>
+<wd:enumeration value="Financial_Institution_ID"/>
+<wd:enumeration value="Financial_Institution_Reference_ID"/>
+<wd:enumeration value="Fund_Hierarchy_ID"/>
+<wd:enumeration value="Fund_ID"/>
+<wd:enumeration value="Funding_Source_Name"/>
+<wd:enumeration value="Gender_Code"/>
+<wd:enumeration value="Gift_Hierarchy_ID"/>
+<wd:enumeration value="Gift_Reference_ID"/>
+<wd:enumeration value="Grant_Hierarchy_ID"/>
+<wd:enumeration value="Grant_ID"/>
+<wd:enumeration value="Internal_Service_Provider_ID"/>
+<wd:enumeration value="Internal_Service_Provider_Reference_ID"/>
+<wd:enumeration value="Investment_Pool_ID"/>
+<wd:enumeration value="Investment_Profile_ID"/>
+<wd:enumeration value="Investor_ID"/>
+<wd:enumeration value="Is_Manager_ID"/>
+<wd:enumeration value="Is_People_Manager"/>
+<wd:enumeration value="ISO_3166-1_Alpha-2_Code"/>
+<wd:enumeration value="ISO_3166-1_Alpha-3_Code"/>
+<wd:enumeration value="ISO_3166-1_Numeric-3_Code"/>
+<wd:enumeration value="Job_Category_ID"/>
+<wd:enumeration value="Job_Family_Group_ID"/>
+<wd:enumeration value="Job_Family_ID"/>
+<wd:enumeration value="Job_Level_ID"/>
+<wd:enumeration value="Job_Profile_ID"/>
+<wd:enumeration value="Job_Requisition_ID"/>
+<wd:enumeration value="Lease_Expense_Recognition_ID"/>
+<wd:enumeration value="Loan_ID"/>
+<wd:enumeration value="Location_ID"/>
+<wd:enumeration value="Management_Level_ID"/>
+<wd:enumeration value="NI_Category_Letter"/>
+<wd:enumeration value="Object_Class_ID"/>
+<wd:enumeration value="Opportunity_Reference_ID"/>
+<wd:enumeration value="Organization_Reference_ID"/>
+<wd:enumeration value="Pay_Rate_Type_ID"/>
+<wd:enumeration value="Payroll_Federal_Authority_Tax_Code"/>
+<wd:enumeration value="Payroll_Income_Code"/>
+<wd:enumeration value="Payroll_Local_City_Authority_Tax_Code"/>
+<wd:enumeration value="Payroll_Local_County_Authority_Tax_Code"/>
+<wd:enumeration value="Payroll_Local_Other_Authority_Tax_Code"/>
+<wd:enumeration value="Payroll_Local_School_District_Authority_Tax_Code"/>
+<wd:enumeration value="Payroll_State_Authority_Tax_Code"/>
+<wd:enumeration value="Petty_Cash_Account_ID"/>
+<wd:enumeration value="Position_ID"/>
+<wd:enumeration value="Position_Time_Type_ID"/>
+<wd:enumeration value="Program_Hierarchy_ID"/>
+<wd:enumeration value="Program_ID"/>
+<wd:enumeration value="Program_of_Study_ID"/>
+<wd:enumeration value="Project_Hierarchy_ID"/>
+<wd:enumeration value="Project_ID"/>
+<wd:enumeration value="Project_Plan_ID"/>
+<wd:enumeration value="Proposal_Grant_ID"/>
+<wd:enumeration value="Prospect_ID"/>
+<wd:enumeration value="Prospect_Reference_ID"/>
+<wd:enumeration value="Purchase_Item_Group_ID"/>
+<wd:enumeration value="Purchase_Item_ID"/>
+<wd:enumeration value="Receivable_Writeoff_Reason_ID"/>
+<wd:enumeration value="Region_Reference_ID"/>
+<wd:enumeration value="Resource_Category_Hierarchy_ID"/>
+<wd:enumeration value="Revenue_Category_Hierarchy_ID"/>
+<wd:enumeration value="Revenue_Category_ID"/>
+<wd:enumeration value="Rubric_Value_ID"/>
+<wd:enumeration value="Run_Category_ID"/>
+<wd:enumeration value="Salary_Over_The_Cap_Type_ID"/>
+<wd:enumeration value="Sales_Item_Group_ID"/>
+<wd:enumeration value="Sales_Item_ID"/>
+<wd:enumeration value="Spend_Category_ID"/>
+<wd:enumeration value="Sponsor_ID"/>
+<wd:enumeration value="Sponsor_Reference_ID"/>
+<wd:enumeration value="Sponsor_Type_ID"/>
+<wd:enumeration value="Student_Application_Residency_Status_ID"/>
+<wd:enumeration value="Student_Award_Item_ID"/>
+<wd:enumeration value="Student_Charge_Item_ID"/>
+<wd:enumeration value="Student_Course_ID"/>
+<wd:enumeration value="Student_Course_Section_ID"/>
+<wd:enumeration value="Student_ID"/>
+<wd:enumeration value="Student_Recruiting_Campaign_ID"/>
+<wd:enumeration value="Student_Recruiting_Event_ID"/>
+<wd:enumeration value="Student_Sponsor_Contract_ID"/>
+<wd:enumeration value="Student_Waiver_Item_ID"/>
+<wd:enumeration value="Supplier_Category_ID"/>
+<wd:enumeration value="Supplier_Contract_ID"/>
+<wd:enumeration value="Supplier_Group_ID"/>
+<wd:enumeration value="Supplier_ID"/>
+<wd:enumeration value="Supplier_Reference_ID"/>
+<wd:enumeration value="Tax_Applicability_ID"/>
+<wd:enumeration value="Tax_Authority_ID"/>
+<wd:enumeration value="Tax_Authority_Reference_ID"/>
+<wd:enumeration value="Tax_Category_ID"/>
+<wd:enumeration value="Tax_Code_ID"/>
+<wd:enumeration value="Tax_Point_Date_Type_ID"/>
+<wd:enumeration value="Tax_Rate_ID"/>
+<wd:enumeration value="Tax_Recoverability_Object_ID"/>
+<wd:enumeration value="Third_Party_ID"/>
+<wd:enumeration value="Withholding_Order_Case_ID"/>
+<wd:enumeration value="Withholding_Tax_Code_ID"/>
+<wd:enumeration value="Withholding_Tax_Rate_ID"/>
+<wd:enumeration value="Work_Function_ID"/>
+<wd:enumeration value="Work_Shift_ID"/>
+<wd:enumeration value="Workday_Deduction_Code"/>
+<wd:enumeration value="Workday_Earning_Code"/>
+<wd:enumeration value="Worker_Type_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="Organization_Common_DataType">
+<xsd:annotation>
+<xsd:documentation>Contains the detailed information about an Organization.</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<xsd:documentation>'Include Organization ID in Name' can only be set to true for supervisory organizations.</xsd:documentation>
+<wd:Validation_Message>'Include Organization ID in Name' can only be set to true for supervisory organizations.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>Choose a different REFERENCE_ID. The current value is already in use by the [org type]:[var]</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>You can't submit this field(Phonetic Name) until you first select both the Enabled and Workday-Supported checkboxes for your preferred language(Japanese, Korean, Chinese) in the Languages Section on the Edit Tenant Setup - Global task. You must also specify your preferred language in the "Enable Languages of Phonetic Name for Company" field.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>You are using an invalid task to submit this field (Phonetic Name).</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element maxOccurs="1" minOccurs="0" name="ID" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Integration Reference ID used for integration purposes; This is also the Organization ID</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Organization_ID_in_Name" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>If this option is turned on, Organization ID will be shown in Organization Name. This option is only activated for Supervisory Organizations for now. A new effective-dated organization name is automatically created if value for this field is different as of specified effective date.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Organization_Name" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>The name of the Organization that appears on pages and reports. A new effective-dated organization name is automatically created if value for this field is different as of specified effective date.</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<xsd:documentation>Enter an Organization Name or select the 'Include Manager/Leader in Name' checkbox or use the Organization Code as the name by entering an Organization Code and selecting the 'Include Organization Code in Name' checkbox.</xsd:documentation>
+<wd:Validation_Message>Enter an Organization Name or select the 'Include Manager/Leader in Name' checkbox or use the Organization Code as the name by entering an Organization Code and selecting the 'Include Organization Code in Name' checkbox.</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Phonetic_Name" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Phonetic Name</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Organization_Code" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Text attribute identifying Organization Code. A new effective-dated organization name is automatically created if value for this field is different as of specified effective date.</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<xsd:documentation>Organization Code is required If 'Include Organization Code in Name' is selected.</xsd:documentation>
+<wd:Validation_Message>Organization Code is required If 'Include Organization Code in Name' is selected.</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Include_Organization_Code_in_Name" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Boolean attribute identifying whether to include the Organization Code within the name (Display ID within Workday). A new effective-dated organization name is automatically created if value for this field is different as of specified effective date.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="Organization_Active" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Field that indicates if the organization is active.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="1" name="Availability_Date" type="xsd:date">
+<xsd:annotation>
+<xsd:documentation>Date the Organization is available for staffing events. If availability date is specified, it must be earlier or equal to the existing availability date, otherwise it will be ignored. If availability date is not specified, the existing availability date will be retained. If availability date is not specified, and there is no existing availability date, the current effective moment will be set as the availability date.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element minOccurs="0" name="Organization_Visibility_Reference" type="wd:Unique_IdentifierObjectType">
+<xsd:annotation>
+<xsd:documentation>Visibility for the organization. A subordinate organization inherits visibility from its top-level organization. If visibility is not specified for a top-level organization, it defaults to Everyone. If visibility is specified for a subordinate organization, it will be ignored.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element minOccurs="0" name="External_URL_Reference" type="wd:External_URLObjectType">
+<xsd:annotation>
+<xsd:documentation>Non-Workday URL link for more Organizational information.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="Integration_ID_Data" type="wd:External_Integration_ID_DataType">
+<xsd:annotation>
+<xsd:documentation>Contains external system name and its corresponding ID that can be used to match data between systems during an integration.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="External_URLObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:External_URLObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:attribute name="version" type="xsd:string" wd:fixed="v32.0"/>
+<xsd:complexType name="Custom_OrganizationObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:Custom_OrganizationReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:simpleType name="Unique_IdentifierReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="IID"/>
+<wd:enumeration value="WID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="Cost_Center_DataType">
+<xsd:annotation>
+<xsd:documentation>Element containing all Cost Center data.</xsd:documentation>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="Restricted_To_Company_or_Company_Hierarchy_Reference" type="wd:OrganizationObjectType">
+<xsd:annotation>
+<xsd:documentation>The set of companies or company hierarchies to which this cost center is restricted. This cost center may not be used by any company or hierarchy that is not in this set.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element name="Organization_Data" type="wd:Organization_Common_DataType">
+<xsd:annotation>
+<xsd:documentation>Contains the detailed information about an Organization.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+<xsd:element name="Organization_Subtype_Reference" type="wd:Organization_SubtypeObjectType">
+<xsd:annotation>
+<xsd:documentation>A unique identifier for the subtype of the organization.</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<xsd:documentation>Organization Subtype needs to be valid for Organization Type.</xsd:documentation>
+<wd:Validation_Message>Organization Subtype is not valid for Organization Type</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="Organization_Container_Reference" type="wd:Custom_OrganizationObjectType">
+<xsd:annotation>
+<xsd:documentation>Container Organization Reference</xsd:documentation>
+<xsd:appinfo>
+<wd:Common_Reference_ID_Type>Organization_Reference_ID</wd:Common_Reference_ID_Type>
+<wd:Validation>
+<wd:Validation_Message>An organization that is inactive now or will be inactive in future cannot include an active organization.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>The organization type does not match the organization type allowed for roll-up by the container organization.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>Two or more of the proposed Container Organizations belong to the same top level hierarchy</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:element minOccurs="0" name="Related_Worktags_Data" type="wd:Related_Worktag_Widget_DataType">
+<xsd:annotation>
+<xsd:documentation>Reference to the existing Allowed or Default Related Worktags.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+<xsd:attribute name="Effective_Date" type="xsd:date">
+<xsd:annotation>
+<xsd:documentation>Effective Date. A new effective-dated organization name is automatically created if any attributes used for organization name are different as of specified effective date which include: Organization Name, Organization Code, and Include 'xx' in Name booleans.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="Accounting_Worktag_and_Aggregation_DimensionObjectType">
+<xsd:annotation wd:Is_Reference_ID="1"/>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="ID" type="wd:Accounting_Worktag_and_Aggregation_DimensionObjectIDType"/>
+</xsd:sequence>
+<xsd:attribute name="Descriptor" type="xsd:string">
+<xsd:annotation>
+<xsd:documentation>Display information used to describe an instance of an object. This 'optional' information is for outbound descriptive purposes only and is not processed on inbound Workday Web Services requests.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:simpleType name="Organization_SubtypeReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Organization_Subtype_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="Custom_OrganizationReferenceEnumeration">
+<xsd:restriction base="xsd:string">
+<xsd:annotation>
+<xsd:appinfo>
+<wd:enumeration value="WID"/>
+<wd:enumeration value="Custom_Organization_Reference_ID"/>
+<wd:enumeration value="Organization_Reference_ID"/>
+</xsd:appinfo>
+</xsd:annotation>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="External_Integration_ID_DataType">
+<xsd:annotation>
+<xsd:documentation>Integration ID Help Text</xsd:documentation>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" name="ID" type="wd:IDType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="Default_Worktag_DataType">
+<xsd:annotation>
+<xsd:documentation>Reference to existing Default Realted Worktag or Add new Default Related Worktag</xsd:documentation>
+<xsd:appinfo>
+<wd:Validation>
+<wd:Validation_Message>Worktag Type of Default Worktag "[AW]" does not match the Worktag Type: "[WT]".</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>Worktag Aggregation Dimension: '[wt]' is not allowed in the default worktag field.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>For '[AWT]' on [T-New Instance] '[TT]'[colon] [squote][T][squote], Delete Default Value cannot be 'Y' when a default is required or the default value is not the existing value or if its blank.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>For [T-New Instance] '[TT]'[colon] [squote][T][squote]: Default value "[AWT]:[AW]" does not allow [Default Text Singular or Plural]: [Target Worktags].</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>'[worktag value]' is not permitted as the default value for worktag type: [worktag type] because it is inactive.</wd:Validation_Message>
+</wd:Validation>
+<wd:Validation>
+<wd:Validation_Message>[concatenated validation message for constraint provider]</wd:Validation_Message>
+</wd:Validation>
+</xsd:appinfo>
+</xsd:annotation>
+<xsd:sequence>
+<xsd:element minOccurs="0" name="Default_Worktag_Reference" type="wd:Accounting_Worktag_and_Aggregation_DimensionObjectType">
+<xsd:annotation>
+<xsd:documentation>IMPORTANT: You must check 'Separate Type Column' for this field in your EIB template to see values when you generate a template with data or to configure related worktags for multiple worktag types. The list of valid ID types for this column exceeds the size limit of an Excel validation list so ID types must be entered as text. Valid ID types for this column may include: Business_Unit_ID, Cost_Center_Reference_ID, Custom_Organization_Reference_ID, Custom_Worktag_1-5_ID, Custom_Worktag_06-15_ID, Fund_ID, Gift_Reference_ID, Grant_ID, Investor_ID, Location_ID, Opportunity_Reference_ID, Organization_Reference_ID, Program_ID, Project_ID, Project_Phase_Name_ID, Project_Task_Name_ID, Region_Reference_ID, Sales_Item_Group_ID, Sales_Item_ID.</xsd:documentation>
+</xsd:annotation>
+</xsd:element>
+</xsd:sequence>
+<xsd:attribute name="Delete_Default_Value" type="xsd:boolean">
+<xsd:annotation>
+<xsd:documentation>Boolean to indicate if existing default value is to be deleted. The existing default value must be correctly specified. Do not set to true (or 'y' in EIB) to replace the existing default value.</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="OrganizationObjectIDType">
+<xsd:annotation>
+<xsd:documentation>Contains a unique identifier for an instance of an object.</xsd:documentation>
+</xsd:annotation>
+<xsd:simpleContent>
+<xsd:extension base="xsd:string">
+<xsd:attribute name="type" type="wd:OrganizationReferenceEnumeration" use="required">
+<xsd:annotation>
+<xsd:documentation>The unique identifier type. Each "ID" for an instance of an object contains a type and a value. A single instance of an object can have multiple "ID" but only a single "ID" per "type".</xsd:documentation>
+</xsd:annotation>
+</xsd:attribute>
+</xsd:extension>
+</xsd:simpleContent>
+</xsd:complexType>
+</xsd:schema>

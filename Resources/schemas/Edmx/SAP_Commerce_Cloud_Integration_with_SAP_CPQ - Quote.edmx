@@ -1,0 +1,145 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="HybrisCommerceOData">
+            <EntityType Name="SAPCpiOutboundQuote">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="name" Nullable="true" Type="Edm.String"/>
+                <Property Name="description" Nullable="true" Type="Edm.String"/>
+                <Property IsUnique="true" Name="version" Nullable="false" Type="Edm.String"/>
+                <Property IsUnique="true" Name="quoteId" Nullable="false" Type="Edm.String"/>
+                <Property Name="creationDate" Nullable="true" Type="Edm.String"/>
+                <Property Name="currencyIsoCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="baseStoreUid" Nullable="true" Type="Edm.String"/>
+				<Property Name="quoteStatus" Nullable="true" Type="Edm.String"/>
+                <Property Name="promotionSummary" Nullable="true" Type="Edm.String"/>
+                <Property Name="externalQuoteId" Nullable="true" Type="Edm.String"/>
+                <Property Name="salesOrganization" Nullable="true" Type="Edm.String"/>
+                <Property Name="distributionChannel" Nullable="true" Type="Edm.String"/>
+                <Property Name="divison" Nullable="true" Type="Edm.String"/>
+                <Property Name="pricingProcedure" Nullable="true" Type="Edm.String"/>
+                <Property Name="responseStatus" Nullable="true" Type="Edm.String"/>
+                <Property Name="responseMessage" Nullable="true" Type="Edm.String"/>
+                <Property Alias="SAPCpiOutboundQuote_quoteId|SAPCpiOutboundQuote_version" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+                <NavigationProperty FromRole="SAPCpiOutboundQuote" IsPartOf="true" Name="sapCpiOutboundQuoteItems" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundQuote_sapCpiOutboundQuoteItems" ToRole="SAPCpiOutboundQuoteItem"/>
+                <NavigationProperty FromRole="SAPCpiOutboundQuote" IsPartOf="true" Name="sapCpiOutboundQuoteCustomers" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundQuote_sapCpiOutboundQuoteCustomers" ToRole="SAPCpiOutboundQuoteCustomer"/>
+                <NavigationProperty FromRole="SAPCpiOutboundQuote" IsPartOf="true" Name="sapCpiOutboundQuoteComments" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundQuote_sapCpiOutboundQuoteComments" ToRole="SAPCpiOutboundQuoteComment"/>
+            </EntityType>
+            <EntityType Name="SAPCpiOutboundQuoteItem">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="productCode" Nullable="true" Type="Edm.String"/>
+				<Property Name="configId" Nullable="true" Type="Edm.String"/>
+                <Property Name="quantity" Nullable="true" Type="Edm.String"/>
+                <Property IsUnique="true" Name="entryNumber" Nullable="false" Type="Edm.String"/>
+                <Property IsUnique="true" Name="quoteId" Nullable="false" Type="Edm.String"/>
+                <Property Name="currencyIsoCode" Nullable="true" Type="Edm.String"/>
+                <Property Name="unit" Nullable="true" Type="Edm.String"/>
+                <Property Name="productName" Nullable="true" Type="Edm.String"/>
+                <Property Name="price" Nullable="true" Type="Edm.String"/>
+                <Property Alias="SAPCpiOutboundQuoteItem_entryNumber|SAPCpiOutboundQuoteItem_quoteId" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+                <NavigationProperty FromRole="SAPCpiOutboundQuoteItem" Name="sapCpiOutboundQuote" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundQuoteItem_sapCpiOutboundQuote" ToRole="SAPCpiOutboundQuote"/>
+                <NavigationProperty FromRole="SAPCpiOutboundQuoteItem" IsPartOf="true" Name="sapCpiOutboundQuoteItemComments" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundQuoteItem_sapCpiOutboundQuoteItemComments" ToRole="SAPCpiOutboundQuoteComment"/>
+            </EntityType>
+            <EntityType Name="SAPCpiOutboundQuoteCustomer">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property Name="customerId" Nullable="true" Type="Edm.String"/>
+                <Property IsUnique="true" Name="quoteId" Nullable="false" Type="Edm.String"/>
+                <Property IsUnique="true" Name="customerRoleCode" Nullable="false" Type="Edm.String"/>
+                <Property Name="firstName" Nullable="true" Type="Edm.String"/>
+                <Property Name="lastName" Nullable="true" Type="Edm.String"/>
+                <Property Name="b2bUnitName" Nullable="true" Type="Edm.String"/>
+                <Property Name="line1" Nullable="true" Type="Edm.String"/>
+                <Property Name="line2" Nullable="true" Type="Edm.String"/>
+                <Property Name="city" Nullable="true" Type="Edm.String"/>
+                <Property Name="phoneNumber" Nullable="true" Type="Edm.String"/>
+                <Property Name="fax" Nullable="true" Type="Edm.String"/>
+                <Property Name="email" Nullable="true" Type="Edm.String"/>
+                <Property Name="country" Nullable="true" Type="Edm.String"/>
+                <Property Name="postalcode" Nullable="true" Type="Edm.String"/>
+                <Property Alias="SAPCpiOutboundQuoteCustomer_customerRoleCode|SAPCpiOutboundQuoteCustomer_quoteId" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+                <NavigationProperty FromRole="SAPCpiOutboundQuoteCustomer" Name="sapCpiOutboundQuote" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundQuoteCustomer_sapCpiOutboundQuote" ToRole="SAPCpiOutboundQuote"/>
+            </EntityType>
+            <EntityType Name="SAPCpiOutboundQuoteComment">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property IsUnique="true" Name="quoteId" Nullable="false" Type="Edm.String"/>
+                <Property IsUnique="true" Name="commentId" Nullable="false" Type="Edm.String"/>
+                <Property Name="text" Nullable="true" Type="Edm.String"/>
+                <Property Name="userName" Nullable="true" Type="Edm.String"/>
+                <Property Name="b2bUnitName" Nullable="true" Type="Edm.String"/>
+                <Property Name="entryNumber" Nullable="true" Type="Edm.String"/>
+                <Property Name="email" Nullable="true" Type="Edm.String"/>
+                <Property Alias="SAPCpiOutboundQuoteComment_commentId|SAPCpiOutboundQuoteComment_quoteId" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+                <NavigationProperty FromRole="SAPCpiOutboundQuoteComment" Name="sapCpiOutboundQuote" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundQuoteComment_sapCpiOutboundQuote" ToRole="SAPCpiOutboundQuote"/>
+            </EntityType>
+            <Association Name="FK_SAPCpiOutboundQuote_sapCpiOutboundQuoteItems">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundQuote" Type="HybrisCommerceOData.SAPCpiOutboundQuote"/>
+                <End Multiplicity="*" Role="SAPCpiOutboundQuoteItem" Type="HybrisCommerceOData.SAPCpiOutboundQuoteItem"/>
+            </Association>
+            <Association Name="FK_SAPCpiOutboundQuote_sapCpiOutboundQuoteCustomers">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundQuote" Type="HybrisCommerceOData.SAPCpiOutboundQuote"/>
+                <End Multiplicity="*" Role="SAPCpiOutboundQuoteCustomer" Type="HybrisCommerceOData.SAPCpiOutboundQuoteCustomer"/>
+            </Association>
+            <Association Name="FK_SAPCpiOutboundQuote_sapCpiOutboundQuoteComments">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundQuote" Type="HybrisCommerceOData.SAPCpiOutboundQuote"/>
+                <End Multiplicity="*" Role="SAPCpiOutboundQuoteComment" Type="HybrisCommerceOData.SAPCpiOutboundQuoteComment"/>
+            </Association>
+            <Association Name="FK_SAPCpiOutboundQuoteItem_sapCpiOutboundQuote">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundQuoteItem" Type="HybrisCommerceOData.SAPCpiOutboundQuoteItem"/>
+                <End Multiplicity="0..1" Role="SAPCpiOutboundQuote" Type="HybrisCommerceOData.SAPCpiOutboundQuote"/>
+            </Association>
+            <Association Name="FK_SAPCpiOutboundQuoteItem_sapCpiOutboundQuoteItemComments">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundQuoteItem" Type="HybrisCommerceOData.SAPCpiOutboundQuoteItem"/>
+                <End Multiplicity="*" Role="SAPCpiOutboundQuoteComment" Type="HybrisCommerceOData.SAPCpiOutboundQuoteComment"/>
+            </Association>
+            <Association Name="FK_SAPCpiOutboundQuoteCustomer_sapCpiOutboundQuote">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundQuoteCustomer" Type="HybrisCommerceOData.SAPCpiOutboundQuoteCustomer"/>
+                <End Multiplicity="0..1" Role="SAPCpiOutboundQuote" Type="HybrisCommerceOData.SAPCpiOutboundQuote"/>
+            </Association>
+            <Association Name="FK_SAPCpiOutboundQuoteComment_sapCpiOutboundQuote">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundQuoteComment" Type="HybrisCommerceOData.SAPCpiOutboundQuoteComment"/>
+                <End Multiplicity="0..1" Role="SAPCpiOutboundQuote" Type="HybrisCommerceOData.SAPCpiOutboundQuote"/>
+            </Association>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundQuote" Name="SAPCpiOutboundQuotes"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundQuoteItem" Name="SAPCpiOutboundQuoteItems"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundQuoteCustomer" Name="SAPCpiOutboundQuoteCustomers"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundQuoteComment" Name="SAPCpiOutboundQuoteComments"/>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundQuote_sapCpiOutboundQuoteItems" Name="SAPCpiOutboundQuote_SAPCpiOutboundQuoteItems">
+                    <End EntitySet="SAPCpiOutboundQuotes" Role="SAPCpiOutboundQuote"/>
+                    <End EntitySet="SAPCpiOutboundQuoteItems" Role="SAPCpiOutboundQuoteItem"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundQuote_sapCpiOutboundQuoteCustomers" Name="SAPCpiOutboundQuote_SAPCpiOutboundQuoteCustomers">
+                    <End EntitySet="SAPCpiOutboundQuotes" Role="SAPCpiOutboundQuote"/>
+                    <End EntitySet="SAPCpiOutboundQuoteCustomers" Role="SAPCpiOutboundQuoteCustomer"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundQuote_sapCpiOutboundQuoteComments" Name="SAPCpiOutboundQuote_SAPCpiOutboundQuoteComments">
+                    <End EntitySet="SAPCpiOutboundQuotes" Role="SAPCpiOutboundQuote"/>
+                    <End EntitySet="SAPCpiOutboundQuoteComments" Role="SAPCpiOutboundQuoteComment"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundQuoteItem_sapCpiOutboundQuote" Name="SAPCpiOutboundQuoteItem_SAPCpiOutboundQuotes">
+                    <End EntitySet="SAPCpiOutboundQuoteItems" Role="SAPCpiOutboundQuoteItem"/>
+                    <End EntitySet="SAPCpiOutboundQuotes" Role="SAPCpiOutboundQuote"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundQuoteItem_sapCpiOutboundQuoteItemComments" Name="SAPCpiOutboundQuoteItem_SAPCpiOutboundQuoteComments">
+                    <End EntitySet="SAPCpiOutboundQuoteItems" Role="SAPCpiOutboundQuoteItem"/>
+                    <End EntitySet="SAPCpiOutboundQuoteComments" Role="SAPCpiOutboundQuoteComment"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundQuoteCustomer_sapCpiOutboundQuote" Name="SAPCpiOutboundQuoteCustomer_SAPCpiOutboundQuotes">
+                    <End EntitySet="SAPCpiOutboundQuoteCustomers" Role="SAPCpiOutboundQuoteCustomer"/>
+                    <End EntitySet="SAPCpiOutboundQuotes" Role="SAPCpiOutboundQuote"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundQuoteComment_sapCpiOutboundQuote" Name="SAPCpiOutboundQuoteComment_SAPCpiOutboundQuotes">
+                    <End EntitySet="SAPCpiOutboundQuoteComments" Role="SAPCpiOutboundQuoteComment"/>
+                    <End EntitySet="SAPCpiOutboundQuotes" Role="SAPCpiOutboundQuote"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ConnectivityCheckConsumer"
+	targetNamespace="http://sap.com/xi/CODERINT" xmlns:p2="http://sap.com/xi/SAPGlobal/Global"
+	xmlns:p1="http://sap.com/xi/CODERINT" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+	<wsdl:documentation />
+	<wsp:UsingPolicy wsdl:required="true" />
+	<wsp:Policy wsu:Id="OP_ConnectivityCheckConsumer" />
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://sap.com/xi/SAPGlobal/Global"
+			xmlns="http://sap.com/xi/SAPGlobal/Global" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			xmlns:p1="http://sap.com/xi/CODERINT">
+			<xsd:import namespace="http://sap.com/xi/CODERINT" />
+			<xsd:element name="StandardMessageFault">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="standard" type="p1:ExchangeFaultData" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+		<xsd:schema targetNamespace="http://sap.com/xi/CODERINT"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://sap.com/xi/CODERINT">
+			<xsd:element name="ConnectivityCheckConsumerQuery_Sync"
+				type="ConnectivityCheckConsumerQuery_Sync" />
+			<xsd:element name="ConnectivityCheckConsumerQueryResponse_Sync"
+				type="ConnectivityCheckConsumerQueryResponse_Sync" />
+			<xsd:complexType name="ConnectivityCheckConsumerQuery_Sync">
+				<xsd:annotation>
+					<xsd:appinfo source="http://sap.com/xi/VersionID">158022da328011e4c056000033b6d7f2
+					</xsd:appinfo>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="CreationDateTime" type="xsd:dateTime"
+						minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ConnectivityCheckConsumerQueryResponse_Sync">
+				<xsd:annotation>
+					<xsd:appinfo source="http://sap.com/xi/VersionID">3d5c51af328011e4b1a1000033b6d7f2
+					</xsd:appinfo>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="Timestamp" type="xsd:dateTime"
+						minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ExchangeLogData">
+				<xsd:annotation>
+					<xsd:appinfo source="http://sap.com/xi/VersionID">d7f36b3a38cf11e49fc3000033b6d7f3
+					</xsd:appinfo>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="severity" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="text" type="xsd:string" />
+					<xsd:element name="url" type="xsd:string" minOccurs="0" />
+					<xsd:element name="id" type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ExchangeFaultData">
+				<xsd:annotation>
+					<xsd:appinfo source="http://sap.com/xi/VersionID">9e2d496138cf11e491be000033b6d7f3
+					</xsd:appinfo>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="faultText" type="xsd:string" />
+					<xsd:element name="faultUrl" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="faultDetail" type="ExchangeLogData"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="ConnectivityCheckConsumerQuery_Sync">
+		<wsdl:documentation />
+		<wsdl:part name="ConnectivityCheckConsumerQuery_Sync"
+			element="p1:ConnectivityCheckConsumerQuery_Sync" />
+	</wsdl:message>
+	<wsdl:message name="ConnectivityCheckConsumerQueryResponse_Sync">
+		<wsdl:documentation />
+		<wsdl:part name="ConnectivityCheckConsumerQueryResponse_Sync"
+			element="p1:ConnectivityCheckConsumerQueryResponse_Sync" />
+	</wsdl:message>
+	<wsdl:message name="StandardMessageFault">
+		<wsdl:documentation />
+		<wsdl:part name="StandardMessageFault" element="p2:StandardMessageFault" />
+	</wsdl:message>
+	<wsdl:portType name="ConnectivityCheckConsumer">
+		<wsdl:documentation />
+		<wsdl:operation name="ConnectivityCheckConsumer">
+			<wsdl:documentation />
+			<wsp:Policy>
+				<wsp:PolicyReference URI="#OP_ConnectivityCheckConsumer" />
+			</wsp:Policy>
+			<wsdl:input message="p1:ConnectivityCheckConsumerQuery_Sync" />
+			<wsdl:output message="p1:ConnectivityCheckConsumerQueryResponse_Sync" />
+			<wsdl:fault name="StandardMessageFault" message="p1:StandardMessageFault" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="ConnectivityCheckConsumerBinding"
+		type="p1:ConnectivityCheckConsumer">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+		<wsdl:operation name="ConnectivityCheckConsumer">
+			<soap:operation soapAction="http://sap.com/xi/WebService/soap1.1"
+				xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+			<wsdl:input>
+				<soap:body use="literal" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+			</wsdl:output>
+			<wsdl:fault name="StandardMessageFault">
+				<soap:fault use="literal" name="StandardMessageFault"
+					xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="ConnectivityCheckConsumer">
+		<wsdl:port name="ConnectivityCheckConsumer" binding="p1:ConnectivityCheckConsumerBinding">
+			<soap:address location="http://www.example.org/"
+				xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

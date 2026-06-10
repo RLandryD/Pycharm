@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="Users" type="Users"/>
+	<xsd:complexType name="phoneNumber">
+		<xsd:sequence>
+			<xsd:element name="value" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="type" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="UserEmail">
+		<xsd:sequence>
+			<xsd:element name="value" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="type" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="primary" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Extension">
+		<xsd:sequence>
+			<xsd:element name="employeeNumber" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+<xsd:complexType name="ExtensionUserUuid">
+	<xsd:sequence>
+		<xsd:element name="userUuid" type="xsd:string" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="photo">
+	<xsd:sequence>
+		<xsd:element name="value" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="type" type="xsd:string" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="im">
+	<xsd:sequence>
+		<xsd:element name="value" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="type" type="xsd:string" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="Address">
+	<xsd:sequence>
+		<xsd:element name="type" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="streetAddress" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="locality" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="region" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="postalCode" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="country" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="formatted" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="primary" type="xsd:string" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="x509Certificate">
+	<xsd:sequence>
+		<xsd:element name="value" type="xsd:string" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="meta">
+	<xsd:sequence>
+		<xsd:element name="resourceType" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="created" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="lastModified" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="version" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="location" type="xsd:string" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="UserName">
+	<xsd:sequence>
+		<xsd:element name="formatted" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="familyName" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="givenName" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="middleName" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="honorificPrefix" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="honorificSuffix" type="xsd:string" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="group">
+	<xsd:sequence>
+		<xsd:element name="value" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="ref" type="xsd:string" minOccurs="0">
+			<xsd:annotation>
+				<xsd:documentation>$ref</xsd:documentation>
+			</xsd:annotation>
+		</xsd:element>
+		<xsd:element name="display" type="xsd:string" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="Users">
+	<xsd:annotation>
+		<xsd:documentation xml:lang="EN">Data type for SCIM User</xsd:documentation>
+	</xsd:annotation>
+	<xsd:sequence>
+		<xsd:element name="schemas" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element name="totalResults" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="itemsPerPage" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="startIndex" type="xsd:string" minOccurs="0"/>
+		<xsd:element name="Resources" minOccurs="0" maxOccurs="unbounded">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="schemas" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="id" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="externalId" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="userName" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="name" type="UserName" minOccurs="0"/>
+					<xsd:element name="displayName" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="nickName" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="profileUrl" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="emails" type="UserEmail" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="addresses" type="Address" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="phoneNumbers" type="phoneNumber" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="ims" type="im" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="photos" type="photo" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="userType" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="title" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="preferredLanguage" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="locale" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="timezone" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="active" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="password" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="groups" type="group" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="x509Certificates" type="x509Certificate" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="extension" type="Extension" minOccurs="0"/>
+					<xsd:element name="extensionUserUuid" type="ExtensionUserUuid" minOccurs="0"/>
+					<xsd:element name="meta" type="meta" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:sequence>
+</xsd:complexType>
+</xsd:schema>

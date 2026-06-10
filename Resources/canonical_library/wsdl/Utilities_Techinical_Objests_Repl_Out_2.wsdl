@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="http://sap.com/xi/C4CS4/IS-UT" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://sap.com/xi/C4CS4/IS-UT" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+ <wsdl:documentation>
+  <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl"/>
+ </wsdl:documentation>
+ <wsp:UsingPolicy wsdl:required="true"/>
+ <wsp:Policy wsu:Id="IF_IF_Utilities_Techinical_Objests_Repl_Out">
+  <sapsession:Session xmlns:sapsession="http://www.sap.com/webas/630/soap/features/session/">
+   <sapsession:enableSession>false</sapsession:enableSession>
+  </sapsession:Session>
+ </wsp:Policy>
+ <wsp:Policy wsu:Id="OP_IF_OP_Utilities_Techinical_Objests_Repl_Out">
+  <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">true</sapcomhnd:enableCommit>
+  <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">false</sapblock:enableBlocking>
+  <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">yes</saptrhnw05:required>
+  <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">true</saprmnw05:enableWSRM>
+ </wsp:Policy>
+ <wsdl:types>
+  <xsd:schema targetNamespace="http://sap.com/xi/C4CS4/IS-UT" xmlns="http://sap.com/xi/C4CS4/IS-UT" xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">
+   <xsd:element name="S4_C4C_Utilities_Tech_Objects_Repl_MT_OB" type="Utilities_Techincal_Objects_Repl_DT_OB"/>
+   <xsd:simpleType name="ActionCode">
+    <xsd:annotation>
+     <xsd:documentation xml:lang="EN">
+      <ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+     </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+     <xsd:enumeration value="01"/>
+     <xsd:enumeration value="02"/>
+     <xsd:enumeration value="03"/>
+     <xsd:enumeration value="04"/>
+     <xsd:enumeration value="05"/>
+     <xsd:enumeration value="06"/>
+     <xsd:length value="2"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="GLOBAL_DateTime">
+    <xsd:annotation>
+     <xsd:documentation xml:lang="EN">
+      <ccts:RepresentationTerm>DateTime</ccts:RepresentationTerm>
+     </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:dateTime">
+     <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(.[0-9]{1,7})?Z"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="Utilities_Extension_DT">
+    <xsd:sequence>
+     <xsd:element name="Field_Name" minOccurs="0" type="xsd:string"/>
+     <xsd:element name="Field_Value" minOccurs="0" type="xsd:string"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="Utilities_Techincal_Objects_Repl_DT_OB">
+    <xsd:sequence>
+     <xsd:element name="MessageHeader" minOccurs="0">
+      <xsd:complexType>
+       <xsd:sequence>
+        <xsd:element name="ID" minOccurs="0">
+         <xsd:complexType>
+          <xsd:simpleContent>
+           <xsd:extension base="xsd:string">
+            <xsd:attribute name="schemeID" type="xsd:token"/>
+            <xsd:attribute name="schemeAgencyID" type="xsd:token"/>
+            <xsd:attribute name="schemeAgencySchemeAgencyID" type="xsd:token"/>
+           </xsd:extension>
+          </xsd:simpleContent>
+         </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="UUID" minOccurs="0">
+         <xsd:complexType>
+          <xsd:simpleContent>
+           <xsd:extension base="xsd:string">
+            <xsd:attribute name="schemeID" type="xsd:token"/>
+            <xsd:attribute name="schemeAgencyID" type="xsd:token"/>
+           </xsd:extension>
+          </xsd:simpleContent>
+         </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="ReferenceID" minOccurs="0">
+         <xsd:complexType>
+          <xsd:simpleContent>
+           <xsd:extension base="xsd:string">
+            <xsd:attribute name="schemeID" type="xsd:token"/>
+            <xsd:attribute name="schemeAgencyID" type="xsd:token"/>
+            <xsd:attribute name="schemeAgencySchemeAgencyID" type="xsd:token"/>
+           </xsd:extension>
+          </xsd:simpleContent>
+         </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="ReferenceUUID" minOccurs="0">
+         <xsd:complexType>
+          <xsd:simpleContent>
+           <xsd:extension base="xsd:string">
+            <xsd:attribute name="schemeID" type="xsd:token"/>
+            <xsd:attribute name="schemeAgencyID" type="xsd:token"/>
+           </xsd:extension>
+          </xsd:simpleContent>
+         </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="CreationDateTime" minOccurs="0" type="GLOBAL_DateTime"/>
+        <xsd:element name="TestDataIndicator" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="ReconciliationIndicator" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="SenderBusinessSystemID" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="RecipientBusinessSystemID" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="SenderParty" minOccurs="0">
+         <xsd:complexType>
+          <xsd:sequence>
+           <xsd:element name="InternalID" minOccurs="0">
+            <xsd:complexType>
+             <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+               <xsd:attribute name="schemeID" type="xsd:token"/>
+               <xsd:attribute name="schemeAgencyID" type="xsd:token"/>
+              </xsd:extension>
+             </xsd:simpleContent>
+            </xsd:complexType>
+           </xsd:element>
+           <xsd:element name="StandardID" minOccurs="0">
+            <xsd:complexType>
+             <xsd:attribute name="schemeAgencyID" type="xsd:token"/>
+            </xsd:complexType>
+           </xsd:element>
+           <xsd:element name="ContactPerson" minOccurs="0">
+            <xsd:complexType>
+             <xsd:sequence>
+              <xsd:element name="InternalID" minOccurs="0">
+               <xsd:complexType>
+                <xsd:simpleContent>
+                 <xsd:extension base="xsd:string">
+                  <xsd:attribute name="schemeID" type="xsd:token"/>
+                  <xsd:attribute name="schemeAgencyID" type="xsd:token"/>
+                 </xsd:extension>
+                </xsd:simpleContent>
+               </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="OrganisationFormattedName" minOccurs="0" type="xsd:string"/>
+              <xsd:element name="PersonFormattedName" minOccurs="0" type="xsd:string"/>
+              <xsd:element name="PhoneNumber" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                <xsd:sequence>
+                 <xsd:element name="AreaID" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="SubscriberID" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="ExtensionID" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="CountryCode" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="CountryDiallingCode" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="CountryName" minOccurs="0">
+                  <xsd:complexType>
+                   <xsd:sequence>
+                    <xsd:element name="languageCode" minOccurs="0" type="xsd:string"/>
+                   </xsd:sequence>
+                  </xsd:complexType>
+                 </xsd:element>
+                </xsd:sequence>
+               </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="FaxNumber" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                <xsd:sequence>
+                 <xsd:element name="AreaID" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="SubscriberID" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="ExtensionID" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="CountryCode" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="CountryDiallingCode" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="CountryName" minOccurs="0">
+                  <xsd:complexType>
+                   <xsd:sequence>
+                    <xsd:element name="languageCode" minOccurs="0" type="xsd:string"/>
+                   </xsd:sequence>
+                  </xsd:complexType>
+                 </xsd:element>
+                </xsd:sequence>
+               </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="EmailURI" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                <xsd:sequence>
+                 <xsd:element name="schemeID" minOccurs="0" type="xsd:token"/>
+                </xsd:sequence>
+               </xsd:complexType>
+              </xsd:element>
+             </xsd:sequence>
+            </xsd:complexType>
+           </xsd:element>
+          </xsd:sequence>
+         </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="RecipientParty" minOccurs="0" maxOccurs="unbounded">
+         <xsd:complexType>
+          <xsd:sequence>
+           <xsd:element name="InternalID" minOccurs="0">
+            <xsd:complexType>
+             <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+               <xsd:attribute name="schemeID" type="xsd:token"/>
+               <xsd:attribute name="schemeAgencyID" type="xsd:token"/>
+              </xsd:extension>
+             </xsd:simpleContent>
+            </xsd:complexType>
+           </xsd:element>
+           <xsd:element name="StandardID" minOccurs="0">
+            <xsd:complexType>
+             <xsd:attribute name="schemeAgencyID" type="xsd:token"/>
+            </xsd:complexType>
+           </xsd:element>
+           <xsd:element name="ContactPerson" minOccurs="0">
+            <xsd:complexType>
+             <xsd:sequence>
+              <xsd:element name="InternalID" minOccurs="0">
+               <xsd:complexType>
+                <xsd:simpleContent>
+                 <xsd:extension base="xsd:string">
+                  <xsd:attribute name="schemeID" type="xsd:token"/>
+                  <xsd:attribute name="schemeAgencyID" type="xsd:token"/>
+                 </xsd:extension>
+                </xsd:simpleContent>
+               </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="OrganisationFormattedName" minOccurs="0" type="xsd:string"/>
+              <xsd:element name="PersonFormattedName" minOccurs="0" type="xsd:string"/>
+              <xsd:element name="PhoneNumber" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                <xsd:sequence>
+                 <xsd:element name="AreaID" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="SubscriberID" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="ExtensionID" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="CountryCode" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="CountryDiallingCode" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="CountryName" minOccurs="0">
+                  <xsd:complexType>
+                   <xsd:sequence>
+                    <xsd:element name="languageCode" minOccurs="0" type="xsd:string"/>
+                   </xsd:sequence>
+                  </xsd:complexType>
+                 </xsd:element>
+                </xsd:sequence>
+               </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="FaxNumber" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                <xsd:sequence>
+                 <xsd:element name="AreaID" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="SubscriberID" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="ExtensionID" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="CountryCode" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="CountryDiallingCode" minOccurs="0" type="xsd:string"/>
+                 <xsd:element name="CountryName" minOccurs="0">
+                  <xsd:complexType>
+                   <xsd:sequence>
+                    <xsd:element name="languageCode" minOccurs="0" type="xsd:string"/>
+                   </xsd:sequence>
+                  </xsd:complexType>
+                 </xsd:element>
+                </xsd:sequence>
+               </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="EmailURI" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                <xsd:sequence>
+                 <xsd:element name="schemeID" minOccurs="0" type="xsd:token"/>
+                </xsd:sequence>
+               </xsd:complexType>
+              </xsd:element>
+             </xsd:sequence>
+            </xsd:complexType>
+           </xsd:element>
+          </xsd:sequence>
+         </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="BusinessScope" minOccurs="0" maxOccurs="unbounded">
+         <xsd:complexType>
+          <xsd:sequence>
+           <xsd:element name="TypeCode" minOccurs="0">
+            <xsd:complexType>
+             <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+               <xsd:attribute name="listID" type="xsd:token"/>
+               <xsd:attribute name="listVersionID" type="xsd:token"/>
+               <xsd:attribute name="listAgencySchemeID" type="xsd:token"/>
+               <xsd:attribute name="listAgencySchemeAgencyID" type="xsd:token"/>
+              </xsd:extension>
+             </xsd:simpleContent>
+            </xsd:complexType>
+           </xsd:element>
+           <xsd:element name="InstanceID" minOccurs="0">
+            <xsd:complexType>
+             <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+               <xsd:attribute name="schemeID" type="xsd:token"/>
+               <xsd:attribute name="schemeAgencyID" type="xsd:token"/>
+              </xsd:extension>
+             </xsd:simpleContent>
+            </xsd:complexType>
+           </xsd:element>
+           <xsd:element name="ID" minOccurs="0">
+            <xsd:complexType>
+             <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+               <xsd:attribute name="schemeID" type="xsd:token"/>
+               <xsd:attribute name="schemeAgencyID" type="xsd:token"/>
+              </xsd:extension>
+             </xsd:simpleContent>
+            </xsd:complexType>
+           </xsd:element>
+          </xsd:sequence>
+         </xsd:complexType>
+        </xsd:element>
+       </xsd:sequence>
+      </xsd:complexType>
+     </xsd:element>
+     <xsd:element name="ConnectionObject" minOccurs="0" maxOccurs="unbounded">
+      <xsd:complexType>
+       <xsd:sequence>
+        <xsd:element name="SenderSequenceNumberValue" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="ReceiverSequenceNumberValue" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="HAUS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="SPRAS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="PLTXT" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="FLTYP" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="TPLMA" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="IWERK" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="POSNR" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="ISTYP" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="PREMS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="SWERK" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="BUKRS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="ADDRNUMBER" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="COUNC" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="POST_CODE1" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="CITY1" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="CITY2" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="PO_BOX" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="PO_BOX_NUM" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="STREET" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="HOUSE_NUM1" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="STR_SUPPL1" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="BUILDING" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="BUILDING_CODE" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="COUNTRY" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="REGION" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="TIME_ZONE" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="TAXJURCODE" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="OBJNR" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="STR_ERG2VBS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="STR_ERG4VBS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="TXTLANGU_VBS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="LAGEVBSZUS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="HAUS_NUM2VBS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="ADDRESS_LINE" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="STRNO" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="STR_SUPPL2" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="STR_SUPPL3" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="LOCATION" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="FORMATTED_ADDR" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="Connection_Obj_Extension" minOccurs="0" maxOccurs="unbounded" type="Utilities_Extension_DT"/>
+       </xsd:sequence>
+       <xsd:attribute name="ActionCode" type="ActionCode"/>
+      </xsd:complexType>
+     </xsd:element>
+     <xsd:element name="Premise" minOccurs="0" maxOccurs="unbounded">
+      <xsd:complexType>
+       <xsd:sequence>
+        <xsd:element name="SenderSequenceNumberValue" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="ReceiverSequenceNumberValue" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="PREMISE_ID" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="PREMISE_TYPE" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="ADDRNUMBER" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="CONN_OBJ_ID" type="xsd:string"/>
+        <xsd:element name="POST_CODE1" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="CITY1" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="CITY2" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="PO_BOX" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="PO_BOX_NUM" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="STREET" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="HOUSE_NUM1" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="STR_SUPPL1" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="BUILDING" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="COUNTRY" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="REGION" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="TIME_ZONE" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="STR_ERG2VBS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="STR_ERG4VBS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="TXTLANGU_VBS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="LAGEVBSZUS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="HAUS_NUM2VBS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="FLOOR_VBS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="ROOMNUMBER_VBS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="ADDRESS_LINE" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="OWNER" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="FORMATTED_ADDR" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="Premise_Extension" minOccurs="0" maxOccurs="unbounded" type="Utilities_Extension_DT"/>
+       </xsd:sequence>
+       <xsd:attribute name="ActionCode" type="ActionCode"/>
+      </xsd:complexType>
+     </xsd:element>
+     <xsd:element name="Point_Of_Delivery" minOccurs="0" maxOccurs="unbounded">
+      <xsd:complexType>
+       <xsd:sequence>
+        <xsd:element name="SenderSequenceNumberValue" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="ReceiverSequenceNumberValue" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="POD_ID" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="SPRAS" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="DESCRIPTION" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="INTERNAL_KEY" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="DIVISION" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="POD_TYPE" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="SOURCE" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="TECH_POD_INDICATOR" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="DEREG_POD_INDICATOR" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="DELETION_INDICATOR" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="PREMISE_ID" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="OUTLINE_CONTRACT" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="GRID_ID" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="INSTALLATION_ID" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="DISTRIBUTOR_ID" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="SALES_POD_ID" minOccurs="0" type="xsd:string"/>
+        <xsd:element name="ESERVICE" minOccurs="0" maxOccurs="unbounded">
+         <xsd:complexType>
+          <xsd:sequence>
+           <xsd:element name="SERVICE_TYPE" minOccurs="0" type="xsd:string"/>
+           <xsd:element name="SERVICE_PROVIDER" minOccurs="0" type="xsd:string"/>
+           <xsd:element name="SERVICE_START" minOccurs="0" type="xsd:string"/>
+           <xsd:element name="SERVICE_END" minOccurs="0" type="xsd:string"/>
+           <xsd:element name="DIVISION" minOccurs="0" type="xsd:string"/>
+          </xsd:sequence>
+         </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="POD_Extension" minOccurs="0" maxOccurs="unbounded" type="Utilities_Extension_DT"/>
+       </xsd:sequence>
+       <xsd:attribute name="ActionCode" type="ActionCode"/>
+      </xsd:complexType>
+     </xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+  </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="S4_C4C_Utilities_Tech_Objects_Repl_MT_OB">
+  <wsdl:part name="S4_C4C_Utilities_Tech_Objects_Repl_MT_OB" element="tns:S4_C4C_Utilities_Tech_Objects_Repl_MT_OB"/>
+ </wsdl:message>
+ <wsdl:portType name="Utilities_Techinical_Objests_Repl_Out">
+  <wsdl:documentation>
+   <sapdoc:sapdoc xmlns:sapdoc="urn:sap:esi:documentation">
+    <sapdoc:docitem applicationComponent="IS-U-CS-C4C"/>
+   </sapdoc:sapdoc>
+  </wsdl:documentation>
+  <wsp:Policy>
+   <wsp:PolicyReference URI="#IF_IF_Utilities_Techinical_Objests_Repl_Out"/>
+  </wsp:Policy>
+  <wsdl:operation name="Utilities_Techinical_Objests_Repl_Out">
+   <wsp:Policy>
+    <wsp:PolicyReference URI="#OP_IF_OP_Utilities_Techinical_Objests_Repl_Out"/>
+   </wsp:Policy>
+   <wsdl:input message="tns:S4_C4C_Utilities_Tech_Objects_Repl_MT_OB"/>
+  </wsdl:operation>
+ </wsdl:portType>
+</wsdl:definitions>

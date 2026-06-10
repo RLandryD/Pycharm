@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:p1="http://xiTest.com/xi/FS-CM" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" name="InsuranceClaimChangeNotification_Out" targetNamespace="http://xiTest.com/xi/FS-CM">
+   <wsp:UsingPolicy wsdl:required="true" />
+    
+   <wsp:Policy wsu:Id="OP_NotifyClaimChange"/>
+   <wsdl:types>
+      <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://xiTest.com/xi/FS-CM" targetNamespace="http://xiTest.com/xi/FS-CM">
+         <xsd:element name="InsuranceClaimChangeNotificationMessage" type="InsuranceClaimChangeNotification" />
+         <xsd:simpleType name="InsuranceClaimID.Content">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="EN">
+               Identifier for an Insurance Claim
+               </xsd:documentation>
+            </xsd:annotation>
+            <xsd:restriction base="xsd:token">
+               <xsd:minLength value="1" />
+               <xsd:maxLength value="17" />
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="InsuranceClaimLifeCycleStatusCode.Content">
+            <xsd:restriction base="xsd:token">
+               <xsd:minLength value="1" />
+               <xsd:maxLength value="2" />
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="PartyInternalID.Content">
+            <xsd:restriction base="xsd:token">
+               <xsd:minLength value="1" />
+               <xsd:maxLength value="32" />
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="InsurClmPolicyProduct">
+            <xsd:restriction base="xsd:token">
+               <xsd:minLength value="1" />
+               <xsd:maxLength value="12" />
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="InsuranceContractID.Content">
+            <xsd:restriction base="xsd:token">
+               <xsd:maxLength value="17" />
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="Status">
+            <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="20" />
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="PartyRoleCategoryCode">
+            <xsd:restriction base="xsd:token">
+               <xsd:minLength value="1" />
+               <xsd:maxLength value="3" />
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:complexType name="InsuranceContractID">
+            <xsd:simpleContent>
+               <xsd:extension base="InsuranceContractID.Content">
+                  <xsd:attribute name="schemeID">
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:token">
+                           <xsd:minLength value="1" />
+                           <xsd:maxLength value="60" />
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                  </xsd:attribute>
+                  <xsd:attribute name="schemeAgencyID">
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:token">
+                           <xsd:minLength value="1" />
+                           <xsd:maxLength value="60" />
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                  </xsd:attribute>
+               </xsd:extension>
+            </xsd:simpleContent>
+         </xsd:complexType>
+         <xsd:complexType name="PartyInternalID">
+            <xsd:simpleContent>
+               <xsd:extension base="PartyInternalID.Content">
+                  <xsd:attribute name="schemeID">
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:token">
+                           <xsd:minLength value="1" />
+                           <xsd:maxLength value="60" />
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                  </xsd:attribute>
+                  <xsd:attribute name="schemeAgencyID">
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:token">
+                           <xsd:minLength value="1" />
+                           <xsd:maxLength value="60" />
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                  </xsd:attribute>
+               </xsd:extension>
+            </xsd:simpleContent>
+         </xsd:complexType>
+         <xsd:complexType name="InsuranceClaimID">
+            <xsd:simpleContent>
+               <xsd:extension base="InsuranceClaimID.Content">
+                  <xsd:attribute name="schemeID">
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:token">
+                           <xsd:minLength value="1" />
+                           <xsd:maxLength value="60" />
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                  </xsd:attribute>
+                  <xsd:attribute name="schemeAgencyID">
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:token">
+                           <xsd:minLength value="1" />
+                           <xsd:maxLength value="60" />
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                  </xsd:attribute>
+               </xsd:extension>
+            </xsd:simpleContent>
+         </xsd:complexType>
+         <xsd:complexType name="InsuranceClaimChangeNotification">
+            <xsd:sequence>
+               <xsd:element name="InsuranceClaimHybrisRelevant" type="Status" />
+               <xsd:element name="InsuranceClaimPolicy" type="InsuranceContractID" />
+               <xsd:element name="InsuranceContractID" type="InsuranceContractID" />
+               <xsd:element name="InsuranceClaimID" type="InsuranceClaimID" />
+               <xsd:element name="InsuranceClaimStatusCode" type="InsuranceClaimLifeCycleStatusCode" />
+               <xsd:element name="InsuranceClaimBusinessPartner" type="InsuranceClaimParty" />
+               <xsd:element name="InsuranceClaimPolicyProduct" type="InsurClmPolicyProduct" />
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="InsuranceClaimLifeCycleStatusCode">
+            <xsd:simpleContent>
+               <xsd:extension base="InsuranceClaimLifeCycleStatusCode.Content">
+                  <xsd:attribute name="listID">
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:token">
+                           <xsd:minLength value="1" />
+                           <xsd:maxLength value="60" />
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                  </xsd:attribute>
+                  <xsd:attribute name="listVersionID">
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:token">
+                           <xsd:minLength value="1" />
+                           <xsd:maxLength value="15" />
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                  </xsd:attribute>
+                  <xsd:attribute name="listAgencyID">
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:token">
+                           <xsd:minLength value="1" />
+                           <xsd:maxLength value="60" />
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                  </xsd:attribute>
+               </xsd:extension>
+            </xsd:simpleContent>
+         </xsd:complexType>
+         <xsd:complexType name="InsuranceClaimParty">
+            <xsd:sequence>
+               <xsd:element name="PartyInternalID" type="PartyInternalID" />
+               <xsd:element name="PartyRoleCategoryCode" type="PartyRoleCategoryCode" />
+            </xsd:sequence>
+         </xsd:complexType>
+      </xsd:schema>
+   </wsdl:types>
+   <wsdl:message name="InsuranceClaimChangeNotificationMessage">
+      
+      <wsdl:part name="InsuranceClaimChangeNotificationMessage" element="p1:InsuranceClaimChangeNotificationMessage" />
+   </wsdl:message>
+   <wsdl:portType name="InsuranceClaimChangeNotification_Out">
+     
+      <wsdl:operation name="NotifyClaimChange">
+        
+         <wsp:Policy>
+            <wsp:PolicyReference URI="#OP_NotifyClaimChange" />
+         </wsp:Policy>
+         <wsdl:input message="p1:InsuranceClaimChangeNotificationMessage" />
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="InsuranceClaimChangeNotification_OutBinding" type="p1:InsuranceClaimChangeNotification_Out">
+      <soap:binding xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+      <wsdl:operation name="NotifyClaimChange">
+         <soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="http://sap.com/xi/WebService/soap1.1" />
+         <wsdl:input>
+            <soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" use="literal" />
+         </wsdl:input>
+      </wsdl:operation>
+   </wsdl:binding>
+</wsdl:definitions>

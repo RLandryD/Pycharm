@@ -1,0 +1,851 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.0">
+    <xs:element name="approvals">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="approval">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="approvable-id" type="xs:integer">
+                                <xs:annotation>
+                                    <xs:documentation>The document ID that was approved</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="approvable-type">
+                                <xs:annotation>
+                                    <xs:documentation>The document type that was approved (requisition, purchase order, etc)</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:maxLength value="255"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="approval-chain-id" type="xs:integer">
+                                <xs:annotation>
+                                    <xs:documentation>ID of the approval chain this approval is located in</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="approval-date" type="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation>The date the approval occurred</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="approved-by" type="UserSimple"/>
+                            <xs:element minOccurs="0" name="approver" type="xs:anyType">
+                                <xs:annotation>
+                                    <xs:documentation>Approver. Can be one of multiple objects: User, ApprovalGroup</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="approver-id" type="xs:integer">
+                                <xs:annotation>
+                                    <xs:documentation>The user ID that made the approval</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="approver-type">
+                                <xs:annotation>
+                                    <xs:documentation>The role of the approver</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:maxLength value="255"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="created-at" type="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation>Automatically created by Coupa in the format YYYY-MM-DDTHH:MM:SS+HH:MMZ</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="created-by" type="UserSimple"/>
+                            <xs:element minOccurs="0" name="delegate" type="xs:anyType">
+                                <xs:annotation>
+                                    <xs:documentation>Delegate. Can be one of multiple objects: User, ApprovalGroup</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="delegate-id" type="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation>The delegate ID that made the approval (if applicable)</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="delegates">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" minOccurs="0" name="delegate" type="Approval"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="holdable" type="xs:boolean">
+                                <xs:annotation>
+                                    <xs:documentation>Hold the approval or not</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="id" type="xs:integer">
+                                <xs:annotation>
+                                    <xs:documentation>Coupa unique identifier</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="note" type="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation>Reason for approval or reject</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="parallel-group-name">
+                                <xs:annotation>
+                                    <xs:documentation>Parallel Approval group identifier</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:maxLength value="255"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="position" type="xs:integer">
+                                <xs:annotation>
+                                    <xs:documentation>The position in the approval chain this approval occurred</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="reasons">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" minOccurs="0" name="reason" type="xs:anyType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="status">
+                                <xs:annotation>
+                                    <xs:documentation>The status of the approval (approved, escalated, rejected, etc)</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:maxLength value="50"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="type">
+                                <xs:annotation>
+                                    <xs:documentation>How the approval occured (override approval, approval chain approval, etc)</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:maxLength value="255"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="updated-at" type="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation>Automatically created by Coupa in the format YYYY-MM-DDTHH:MM:SS+HH:MMZ</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="updated-by" type="UserSimple"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="UserSimple">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="avatar-thumb-url" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Avatar url</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="created-at" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Automatically created by Coupa in the format YYYY-MM-DDTHH:MM:SS+HH:MMZ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="email">
+                <xs:annotation>
+                    <xs:documentation>email</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="employee-number">
+                <xs:annotation>
+                    <xs:documentation>employee number</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="firstname">
+                <xs:annotation>
+                    <xs:documentation>first name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="40"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="fullname">
+                <xs:annotation>
+                    <xs:documentation>full name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>Coupa unique identifier</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="lastname">
+                <xs:annotation>
+                    <xs:documentation>last name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="40"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="login">
+                <xs:annotation>
+                    <xs:documentation>login</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="salesforce-id">
+                <xs:annotation>
+                    <xs:documentation>salesforce_id</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="updated-at" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Automatically created by Coupa in the format YYYY-MM-DDTHH:MM:SS+HH:MMZ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="custom-fields">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="assignee" type="xs:string"/>
+                        <xs:element minOccurs="0" name="userscustomfield" type="xs:string"/>
+                        <xs:element minOccurs="0" name="tri_test_field" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Approval">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="approvable-id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>The document ID that was approved</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approvable-type">
+                <xs:annotation>
+                    <xs:documentation>The document type that was approved (requisition, purchase order, etc)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="approval-chain-id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>ID of the approval chain this approval is located in</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approval-date" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>The date the approval occurred</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approved-by" type="UserSimple1"/>
+            <xs:element minOccurs="0" name="approver" type="xs:anyType">
+                <xs:annotation>
+                    <xs:documentation>Approver. Can be one of multiple objects: User, ApprovalGroup</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approver-id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>The user ID that made the approval</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approver-type">
+                <xs:annotation>
+                    <xs:documentation>The role of the approver</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="created-at" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Automatically created by Coupa in the format YYYY-MM-DDTHH:MM:SS+HH:MMZ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="created-by" type="UserSimple1"/>
+            <xs:element minOccurs="0" name="delegate" type="xs:anyType">
+                <xs:annotation>
+                    <xs:documentation>Delegate. Can be one of multiple objects: User, ApprovalGroup</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="delegate-id" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>The delegate ID that made the approval (if applicable)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="delegates">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="delegate" type="Approval1"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="holdable" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>Hold the approval or not</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>Coupa unique identifier</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="note" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Reason for approval or reject</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="parallel-group-name">
+                <xs:annotation>
+                    <xs:documentation>Parallel Approval group identifier</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="position" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>The position in the approval chain this approval occurred</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="reasons">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="reason" type="xs:anyType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="status">
+                <xs:annotation>
+                    <xs:documentation>The status of the approval (approved, escalated, rejected, etc)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="type">
+                <xs:annotation>
+                    <xs:documentation>How the approval occured (override approval, approval chain approval, etc)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="updated-at" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Automatically created by Coupa in the format YYYY-MM-DDTHH:MM:SS+HH:MMZ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="updated-by" type="UserSimple1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="UserSimple1">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="avatar-thumb-url" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Avatar url</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="created-at" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Automatically created by Coupa in the format YYYY-MM-DDTHH:MM:SS+HH:MMZ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="email">
+                <xs:annotation>
+                    <xs:documentation>email</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="employee-number">
+                <xs:annotation>
+                    <xs:documentation>employee number</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="firstname">
+                <xs:annotation>
+                    <xs:documentation>first name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="40"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="fullname">
+                <xs:annotation>
+                    <xs:documentation>full name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>Coupa unique identifier</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="lastname">
+                <xs:annotation>
+                    <xs:documentation>last name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="40"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="login">
+                <xs:annotation>
+                    <xs:documentation>login</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="salesforce-id">
+                <xs:annotation>
+                    <xs:documentation>salesforce_id</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="updated-at" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Automatically created by Coupa in the format YYYY-MM-DDTHH:MM:SS+HH:MMZ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="custom-fields">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="assignee" type="xs:string"/>
+                        <xs:element minOccurs="0" name="userscustomfield" type="xs:string"/>
+                        <xs:element minOccurs="0" name="tri_test_field" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Approval1">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="approvable-id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>The document ID that was approved</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approvable-type">
+                <xs:annotation>
+                    <xs:documentation>The document type that was approved (requisition, purchase order, etc)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="approval-chain-id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>ID of the approval chain this approval is located in</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approval-date" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>The date the approval occurred</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approved-by" type="UserSimple2"/>
+            <xs:element minOccurs="0" name="approver" type="xs:anyType">
+                <xs:annotation>
+                    <xs:documentation>Approver. Can be one of multiple objects: User, ApprovalGroup</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approver-id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>The user ID that made the approval</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approver-type">
+                <xs:annotation>
+                    <xs:documentation>The role of the approver</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="created-at" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Automatically created by Coupa in the format YYYY-MM-DDTHH:MM:SS+HH:MMZ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="created-by" type="UserSimple2"/>
+            <xs:element minOccurs="0" name="delegate" type="xs:anyType">
+                <xs:annotation>
+                    <xs:documentation>Delegate. Can be one of multiple objects: User, ApprovalGroup</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="delegate-id" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>The delegate ID that made the approval (if applicable)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="delegates">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="delegate" type="Approval2"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="holdable" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>Hold the approval or not</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>Coupa unique identifier</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="note" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Reason for approval or reject</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="parallel-group-name">
+                <xs:annotation>
+                    <xs:documentation>Parallel Approval group identifier</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="position" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>The position in the approval chain this approval occurred</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="reasons">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="reason" type="xs:anyType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="status">
+                <xs:annotation>
+                    <xs:documentation>The status of the approval (approved, escalated, rejected, etc)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="type">
+                <xs:annotation>
+                    <xs:documentation>How the approval occured (override approval, approval chain approval, etc)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="updated-at" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Automatically created by Coupa in the format YYYY-MM-DDTHH:MM:SS+HH:MMZ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="updated-by" type="UserSimple2"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="UserSimple2">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="avatar-thumb-url" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Avatar url</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="created-at" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Automatically created by Coupa in the format YYYY-MM-DDTHH:MM:SS+HH:MMZ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="email">
+                <xs:annotation>
+                    <xs:documentation>email</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="employee-number">
+                <xs:annotation>
+                    <xs:documentation>employee number</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="firstname">
+                <xs:annotation>
+                    <xs:documentation>first name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="40"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="fullname">
+                <xs:annotation>
+                    <xs:documentation>full name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>Coupa unique identifier</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="lastname">
+                <xs:annotation>
+                    <xs:documentation>last name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="40"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="login">
+                <xs:annotation>
+                    <xs:documentation>login</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="salesforce-id">
+                <xs:annotation>
+                    <xs:documentation>salesforce_id</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="updated-at" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Automatically created by Coupa in the format YYYY-MM-DDTHH:MM:SS+HH:MMZ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="custom-fields">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="assignee" type="xs:string"/>
+                        <xs:element minOccurs="0" name="userscustomfield" type="xs:string"/>
+                        <xs:element minOccurs="0" name="tri_test_field" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Approval2">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="approvable-id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>The document ID that was approved</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approvable-type">
+                <xs:annotation>
+                    <xs:documentation>The document type that was approved (requisition, purchase order, etc)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="approval-chain-id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>ID of the approval chain this approval is located in</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approval-date" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>The date the approval occurred</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approved-by" type="xs:anyType"/>
+            <xs:element minOccurs="0" name="approver" type="xs:anyType">
+                <xs:annotation>
+                    <xs:documentation>Approver. Can be one of multiple objects: User, ApprovalGroup</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approver-id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>The user ID that made the approval</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="approver-type">
+                <xs:annotation>
+                    <xs:documentation>The role of the approver</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="created-at" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Automatically created by Coupa in the format YYYY-MM-DDTHH:MM:SS+HH:MMZ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="created-by" type="xs:anyType"/>
+            <xs:element minOccurs="0" name="delegate" type="xs:anyType">
+                <xs:annotation>
+                    <xs:documentation>Delegate. Can be one of multiple objects: User, ApprovalGroup</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="delegate-id" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>The delegate ID that made the approval (if applicable)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="delegates" type="xs:anyType"/>
+            <xs:element minOccurs="0" name="holdable" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>Hold the approval or not</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="id" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>Coupa unique identifier</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="note" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Reason for approval or reject</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="parallel-group-name">
+                <xs:annotation>
+                    <xs:documentation>Parallel Approval group identifier</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="position" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>The position in the approval chain this approval occurred</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="reasons" type="xs:anyType"/>
+            <xs:element minOccurs="0" name="status">
+                <xs:annotation>
+                    <xs:documentation>The status of the approval (approved, escalated, rejected, etc)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="type">
+                <xs:annotation>
+                    <xs:documentation>How the approval occured (override approval, approval chain approval, etc)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="updated-at" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Automatically created by Coupa in the format YYYY-MM-DDTHH:MM:SS+HH:MMZ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="updated-by" type="xs:anyType"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

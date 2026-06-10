@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+	targetNamespace="http://cpi.sap.com/guidelines/examples"
+	xmlns:tns="http://cpi.sap.com/guidelines/examples"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://cpi.sap.com/guidelines/examples">
+      <xsd:include schemaLocation="Types.xsd"/>
+    </xsd:schema>
+  </wsdl:types>
+  
+  <wsdl:message name="InvokeOneWay">
+    <wsdl:part name="InvokeOneWayRequest" element="tns:Person">
+    </wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:portType name="OneWay">
+    <wsdl:operation name="InvokeOneWay">
+      <wsdl:input name="InvokeOneWay" message="tns:InvokeOneWay">
+    </wsdl:input>
+    </wsdl:operation>
+  </wsdl:portType>
+  
+  <wsdl:binding name="OneWayServiceSoapBinding" type="tns:OneWay">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="InvokeOneWay">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="InvokeOneWay">
+        <soap:body use="literal"/>
+      </wsdl:input>
+    </wsdl:operation>
+  </wsdl:binding>
+  
+  <wsdl:service name="service">
+    <wsdl:port name="port" binding="tns:OneWayServiceSoapBinding">
+      <soap:address location="https://localhost:443/cxf/ApplySecurity/UploadWSDLsAsResource"/>
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>

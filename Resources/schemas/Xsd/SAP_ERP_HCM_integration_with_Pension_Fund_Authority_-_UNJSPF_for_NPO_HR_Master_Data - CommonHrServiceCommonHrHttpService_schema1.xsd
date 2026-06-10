@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema elementFormDefault="qualified" targetNamespace="http://datacollection.unjspf.org/hr-1.0" version="1.0" xmlns:tns="http://datacollection.unjspf.org/hr-1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:complexType name="TransmitStaffMemberDataOperation">
+    <xs:sequence>
+      <xs:element name="operationHeader" type="tns:OperationHeader"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="insertNewStaffMember" nillable="true" type="tns:InsertStaffMemberContainer"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="updateExistingStaffMember" nillable="true" type="tns:UpdateStaffMemberContainer"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="deleteExistingStaffMember" nillable="true" type="tns:DeleteStaffMemberContainer"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="SynchronizeStaffMemberDataOperation">
+    <xs:sequence>
+      <xs:element name="operationHeader" type="tns:SynchronizeOperationHeader"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="synchronizeStaffMember" nillable="true" type="tns:SynchronizeStaffMemberContainer"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="OperationHeader">
+    <xs:sequence>
+      <xs:element name="orgReportingCode" type="tns:UnReportingOrg"/>
+      <xs:element name="dataMarshalled" type="xs:dateTime"/>
+      <xs:element name="timezoneDstOffset" type="xs:int"/>
+      <xs:element name="totalHrDataCount" type="xs:int"/>
+      <xs:element name="reportingOrgHeaderReferenceNum" type="tns:StringNotBlank"/>
+      <xs:element name="extractWindowStart" type="xs:dateTime"/>
+      <xs:element name="extractWindowEnd" type="xs:dateTime"/>
+      <xs:element name="memberOrgDetermineEligibility" type="xs:boolean" default="false"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="SynchronizeOperationHeader">
+    <xs:sequence>
+      <xs:element name="orgReportingCode" type="tns:UnReportingOrg"/>
+      <xs:element name="dataMarshalled" type="xs:dateTime"/>
+      <xs:element name="timezoneDstOffset" type="xs:int"/>
+      <xs:element name="totalHrDataCount" type="xs:int"/>
+      <xs:element name="reportingOrgHeaderReferenceNum" type="tns:StringNotBlank"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="InsertStaffMemberContainer">
+    <xs:sequence>
+      <xs:element name="staffMemberHeader" type="tns:StaffMemberHeader"/>
+      <xs:element name="staffMember" type="tns:StaffMember"/>
+      <xs:element maxOccurs="2" minOccurs="0" name="languageAllowance" nillable="true" type="tns:LanguageAllowance"/>
+      <xs:element name="parttime" type="tns:Parttime"/>
+      <xs:element name="dutyStation" type="tns:DutyStation"/>
+      <xs:element name="salary" type="tns:Salary"/>
+      <xs:element maxOccurs="unbounded" name="contract" type="tns:Contract"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="optionalAttributes" nillable="true" type="tns:StaffMemberOptionalAttributeSelector"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="SynchronizeStaffMemberContainer">
+    <xs:sequence>
+      <xs:element name="staffMemberHeader" type="tns:StaffMemberHeader"/>
+      <xs:element name="staffMember" type="tns:StaffMember"/>
+      <xs:element maxOccurs="2" minOccurs="0" name="languageAllowance" nillable="true" type="tns:LanguageAllowance"/>
+      <xs:element name="parttime" type="tns:Parttime"/>
+      <xs:element name="dutyStation" type="tns:DutyStation"/>
+      <xs:element name="salary" type="tns:Salary"/>
+      <xs:element maxOccurs="unbounded" name="contract" type="tns:Contract"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="optionalAttributes" nillable="true" type="tns:StaffMemberSyncOperationOptionalAttributeSelector"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="StaffMemberHeader">
+    <xs:sequence>
+      <xs:element name="orgStaffId" type="tns:StringNotBlank"/>
+      <xs:element minOccurs="0" name="pensionNumber" type="tns:UnjspfPensionNumber"/>
+      <xs:element minOccurs="0" name="unjspfUniqueID" type="tns:UnjspfUniqueId"/>
+      <xs:element minOccurs="0" name="entryToFundDate" type="xs:date"/>
+      <xs:element minOccurs="0" name="firstName" type="tns:StringNotBlank"/>
+      <xs:element name="lastName" type="tns:StringNotBlank"/>
+      <xs:element name="birthDate" type="xs:date"/>
+      <xs:element name="reportingOrgReferenceNum" type="tns:StringNotBlank"/>
+      <xs:element minOccurs="0" name="orgFieldOne" type="xs:token" />
+      <xs:element minOccurs="0" name="orgFieldTwo" type="xs:token" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="StaffMember">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="firstName" type="tns:StringNotBlank"/>
+      <xs:element minOccurs="0" name="middleName" type="xs:token"/>
+      <xs:element name="lastName" type="tns:StringNotBlank"/>
+      <xs:element name="birthDate" type="xs:date"/>
+      <xs:element name="nationality" type="tns:Iso3166-1Alpha3CountryCode"/>
+      <xs:element minOccurs="0" name="countryOfBirth" type="tns:Iso3166-1Alpha3CountryCode"/>
+      <xs:element name="gender" type="tns:Gender"/>
+      <xs:element name="maritalStatus" type="tns:MaritalStatus"/>
+      <xs:element minOccurs="0" name="staffMemberOrg" type="tns:UnReportingOrg"/>
+      <xs:element minOccurs="0" name="unIndexNumber" type="xs:token"/>
+      <xs:element minOccurs="0" name="language" type="tns:Language"/>
+      <xs:element minOccurs="0" name="formerPensionNumber" type="tns:UnjspfPensionNumber"/>
+      <xs:element name="orgGloballyUniqueId" type="tns:StringNotBlank"/>
+      <xs:element name="lastUpdated" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LanguageAllowance">
+    <xs:sequence>
+      <xs:element name="number" type="xs:short"/>
+      <xs:element name="effectiveDate" type="xs:date"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Parttime">
+    <xs:sequence>
+      <xs:element name="parttimePercentage" type="xs:decimal"/>
+      <xs:element name="effectiveDate" type="xs:date"/>
+      <xs:element name="orgGloballyUniqueId" type="tns:StringNotBlank"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DutyStation">
+    <xs:sequence>
+      <xs:element name="dutyStationCode" type="tns:DutyStationCode"/>
+      <xs:element name="effectiveDate" type="xs:date"/>
+      <xs:element name="orgGloballyUniqueId" type="tns:StringNotBlank"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Salary">
+    <xs:sequence>
+      <xs:element name="effectiveDate" type="xs:date"/>
+      <xs:element name="category" type="tns:SalaryCategory"/>
+      <xs:element name="grade" type="xs:short"/>
+      <xs:element name="step" type="xs:short"/>
+      <xs:element name="orgGloballyUniqueId" type="tns:StringNotBlank"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Contract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:token"/>
+      <xs:element name="startDate" type="xs:date"/>
+      <xs:element name="endDate" type="xs:date"/>
+      <xs:element minOccurs="0" name="jpoIndicator" type="tns:YesNo"/>
+      <xs:element minOccurs="0" name="jpoCountry" type="tns:Iso3166-1Alpha3CountryCode"/>
+      <xs:element minOccurs="0" name="remarks" type="xs:token"/>
+      <xs:element name="reappointIndicator" type="tns:YesNoUnknown"/>
+      <xs:element minOccurs="0" name="transferFromOrg" type="tns:UnReportingOrg"/>
+      <xs:element minOccurs="0" name="formerOrgStaffId" type="xs:token"/>
+      <xs:element name="lastUpdated" type="xs:dateTime"/>
+      <xs:element name="orgGloballyUniqueId" type="tns:StringNotBlank"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="StaffMemberOptionalAttributeSelector">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="secondment" nillable="true" type="tns:Secondment"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="dependant" nillable="true" type="tns:Dependant"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="child" nillable="true" type="tns:Child"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="leaveWithoutPay" nillable="true" type="tns:LeaveWithoutPay"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="address" nillable="true" type="tns:Address"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="phone" nillable="true" type="tns:Phone"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="email" nillable="true" type="tns:Email"/>
+    </xs:sequence>
+  </xs:complexType>
+
+	<xs:complexType name="StaffMemberSyncOperationOptionalAttributeSelector">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="1" name="separation" nillable="true" type="tns:Separation" />
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="secondment" nillable="true" type="tns:Secondment" />
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="dependant" nillable="true" type="tns:Dependant" />
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="child" nillable="true" type="tns:Child" />
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="leaveWithoutPay" nillable="true" type="tns:LeaveWithoutPay" />
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="address" nillable="true" type="tns:Address" />
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="phone" nillable="true" type="tns:Phone" />
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="email" nillable="true" type="tns:Email" />
+		</xs:sequence>
+	</xs:complexType>
+
+  <xs:complexType name="Secondment">
+    <xs:sequence>
+      <xs:element name="startDate" type="xs:date"/>
+      <xs:element minOccurs="0" name="endDate" type="xs:date"/>
+      <xs:element name="inOutIndicator" type="tns:InOutIndicator"/>
+      <xs:element minOccurs="0" name="contributionOrg" type="xs:token"/>
+      <xs:element name="lastUpdated" type="xs:dateTime"/>
+      <xs:element name="orgGloballyUniqueId" type="tns:StringNotBlank"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Dependant">
+    <xs:sequence>
+      <xs:element name="orgDependantId" type="tns:StringNotBlank"/>
+      <xs:element name="lastName" type="tns:StringNotBlank"/>
+      <xs:element name="firstName" type="tns:StringNotBlank"/>
+      <xs:element name="birthDate" type="xs:date"/>
+      <xs:element name="gender" type="tns:Gender"/>
+      <xs:element name="relationship" type="tns:Relationship"/>
+      <xs:element minOccurs="0" name="nationality" type="tns:Iso3166-1Alpha3CountryCode"/>
+      <xs:element minOccurs="0" name="marriageDate" type="xs:date"/>
+      <xs:element minOccurs="0" name="divorceDate" type="xs:date"/>
+      <xs:element minOccurs="0" name="deathDate" type="xs:date"/>
+      <xs:element name="lastUpdated" type="xs:dateTime"/>
+      <xs:element name="orgGloballyUniqueId" type="tns:StringNotBlank"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Child">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="orgChildId" type="tns:StringNotBlank"/>
+      <xs:element name="lastName" type="tns:StringNotBlank"/>
+      <xs:element name="firstName" type="tns:StringNotBlank"/>
+      <xs:element name="birthDate" type="xs:date"/>
+      <xs:element name="gender" type="tns:Gender"/>
+      <xs:element minOccurs="0" name="nationality" type="tns:Iso3166-1Alpha3CountryCode"/>
+      <xs:element minOccurs="0" name="marriageDate" type="xs:date"/>
+      <xs:element minOccurs="0" name="disabilityDate" type="xs:date"/>
+      <xs:element minOccurs="0" name="deathDate" type="xs:date"/>
+      <xs:element minOccurs="0" name="orgChildDependantId" type="xs:token"/>
+      <xs:element name="lastUpdated" type="xs:dateTime"/>
+      <xs:element name="orgGloballyUniqueId" type="tns:StringNotBlank"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LeaveWithoutPay">
+    <xs:sequence>
+      <xs:element name="startDate" type="xs:date"/>
+      <xs:element minOccurs="0" name="endDate" type="xs:date"/>
+      <xs:element name="lastUpdated" type="xs:dateTime"/>
+      <xs:element name="orgGloballyUniqueId" type="tns:StringNotBlank"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Address">
+    <xs:sequence>
+      <xs:element name="type" type="tns:AddressType"/>
+      <xs:element minOccurs="0" name="effectiveDate" type="xs:date"/>
+      <xs:element minOccurs="0" name="line1" type="tns:StringNotBlank"/>
+      <xs:element minOccurs="0" name="line2" type="xs:token"/>
+      <xs:element minOccurs="0" name="line3" type="xs:token"/>
+      <xs:element minOccurs="0" name="line4" type="xs:token"/>
+      <xs:element minOccurs="0" name="city" type="tns:StringNotBlank"/>
+      <xs:element minOccurs="0" name="state" type="tns:StringNotBlank"/>
+      <xs:element minOccurs="0" name="postalCode" type="tns:StringNotBlank"/>
+      <xs:element minOccurs="0" name="country" type="tns:StringNotBlank"/>
+      <xs:element minOccurs="0" name="countryCodeIso" type="tns:Iso3166-1Alpha3CountryCode"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Phone">
+    <xs:sequence>
+      <xs:element name="type" type="tns:PhoneType"/>
+      <xs:element minOccurs="0" name="phoneNumber" type="tns:StringNotBlank"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Email">
+    <xs:sequence>
+      <xs:element name="type" type="tns:EmailType"/>
+      <xs:element minOccurs="0" name="emailAddress" type="tns:StringNotBlank"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="UpdateStaffMemberContainer">
+    <xs:sequence>
+      <xs:element name="staffMemberHeader" type="tns:StaffMemberHeader"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="insertEntity" nillable="true" type="tns:StaffMemberExtendedOptionalAttributeSelector"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="updateEntity" nillable="true" type="tns:StaffMemberUpdateableAttributeSelector"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="deleteEntity" nillable="true" type="tns:StaffMemberExtendedOptionalAttributeSelector"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="StaffMemberExtendedOptionalAttributeSelector">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="languageAllowance" nillable="true" type="tns:LanguageAllowance"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="parttime" nillable="true" type="tns:Parttime"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="dutyStation" nillable="true" type="tns:DutyStation"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="salary" nillable="true" type="tns:Salary"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="contract" nillable="true" type="tns:Contract"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="secondment" nillable="true" type="tns:Secondment"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="separation" nillable="true" type="tns:Separation"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="dependant" nillable="true" type="tns:Dependant"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="child" nillable="true" type="tns:Child"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="leaveWithoutPay" nillable="true" type="tns:LeaveWithoutPay"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="address" nillable="true" type="tns:Address"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="phone" nillable="true" type="tns:Phone"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="email" nillable="true" type="tns:Email"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Separation">
+    <xs:sequence>
+      <xs:element name="effectiveDate" type="xs:date"/>
+      <xs:element name="reason" type="tns:SeparationReason"/>
+      <xs:element minOccurs="0" name="deathDate" type="xs:date"/>
+      <xs:element minOccurs="0" name="transferToOrg" type="tns:UnReportingOrg"/>
+      <xs:element name="lastUpdated" type="xs:dateTime"/>
+      <xs:element name="orgGloballyUniqueId" type="tns:StringNotBlank"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="StaffMemberUpdateableAttributeSelector">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="staffMember" type="tns:StaffMember"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="languageAllowance" nillable="true" type="tns:LanguageAllowance"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="parttime" nillable="true" type="tns:Parttime"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="dutyStation" nillable="true" type="tns:DutyStation"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="salary" nillable="true" type="tns:Salary"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="contract" nillable="true" type="tns:Contract"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="secondment" nillable="true" type="tns:Secondment"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="separation" nillable="true" type="tns:Separation"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="dependant" nillable="true" type="tns:Dependant"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="child" nillable="true" type="tns:Child"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="leaveWithoutPay" nillable="true" type="tns:LeaveWithoutPay"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="address" nillable="true" type="tns:Address"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="phone" nillable="true" type="tns:Phone"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="email" nillable="true" type="tns:Email"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DeleteStaffMemberContainer">
+    <xs:sequence>
+      <xs:element name="staffMemberHeader" type="tns:StaffMemberHeader"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CommonResponse">
+    <xs:sequence>
+      <xs:element name="reportingOrgHeaderReferenceNum" type="xs:string"/>
+      <xs:element name="unjspfRequestMessageUuid" type="xs:string"/>
+      <xs:element name="unjspfResponseMessageUuid" type="xs:string"/>
+      <xs:element name="originalReportingOrg" type="tns:UnReportingOrg"/>
+      <xs:element name="interfaceOperation" type="tns:InterfaceOperation"/>
+      <xs:element name="dataMarshalled" type="xs:dateTime"/>
+      <xs:element name="extractWindowStart" type="xs:dateTime"/>
+      <xs:element name="extractWindowEnd" type="xs:dateTime"/>
+      <xs:element name="status" type="tns:UnjspfReturnStatusType"/>
+      <xs:element minOccurs="0" name="statusDescription" type="xs:string"/>
+      <xs:element name="numSubmitted" type="xs:int"/>
+      <xs:element minOccurs="0" name="numSubmittedOk" type="xs:int"/>
+      <xs:element minOccurs="0" name="numRejected" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="messages" nillable="true" type="tns:ResponseMessage"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ResponseMessage">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="reportingOrgStaffMemHeaderReferenceNum" type="xs:string"/>
+      <xs:element minOccurs="0" name="reportingOrgStaffId" type="xs:string"/>
+      <xs:element minOccurs="0" name="staffMemPensionNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="staffMemUnjspfUniqueId" type="xs:string"/>
+      <xs:element minOccurs="0" name="staffMemFirstName" type="xs:string"/>
+      <xs:element minOccurs="0" name="staffMemLastName" type="xs:string"/>
+      <xs:element minOccurs="0" name="staffMemBirthDate" type="xs:date"/>
+      <xs:element name="msgUniqueId" type="xs:string"/>
+      <xs:element name="msgStatus" type="tns:UnjspfReturnStatusType"/>
+      <xs:element minOccurs="0" name="msgProperty" type="xs:string"/>
+      <xs:element minOccurs="0" name="msgPropertyValue" type="xs:string"/>
+      <xs:element name="msgCode" type="xs:string"/>
+      <xs:element name="msgDescription" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="msgReturnValue" nillable="true" type="tns:ReturnValue"/>
+      <xs:element minOccurs="0" name="msgSource" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ReturnValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="pensionNumber" type="xs:string"/>
+	  <xs:element minOccurs="0" name="unjspfUniqueID" type="xs:string"/>
+	  
+	  <!-- dateOfEntry is the former entryToFundDate -->
+	  <xs:element minOccurs="0" name="dateOfEntry" type="xs:date"/>
+	  
+	  <!-- entryToFundDate is deprecated -->
+	  <xs:element minOccurs="0" name="entryToFundDate" type="xs:date"/>
+	  
+	  <xs:element minOccurs="0" name="bcsDate" type="xs:date"/>
+      <xs:element minOccurs="0" name="reentryToFundDate" type="xs:date"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="GetReportsOperation">
+    <xs:sequence>
+      <xs:element name="orgReportingCode" type="tns:UnReportingOrg"/>
+      <xs:element name="reportingOrgReferenceNum" type="xs:token"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="GetReportsResponse">
+    <xs:sequence>
+      <xs:element name="reportingOrgHeaderReferenceNum" type="xs:string"/>
+      <xs:element name="unjspfRequestMessageUuid" type="xs:string"/>
+      <xs:element name="unjspfResponseMessageUuid" type="xs:string"/>
+      <xs:element name="originalReportingOrg" type="tns:UnReportingOrg"/>
+      <xs:element name="status" type="tns:UnjspfReturnStatusType"/>
+      <xs:element minOccurs="0" name="statusDescription" type="xs:string"/>
+      <xs:element name="numReportsReturned" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="reports" nillable="true" type="tns:CommonResponse"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="UnjspfFaultInfo">
+    <xs:sequence>
+      <xs:element name="message" type="xs:string"/>
+      <xs:element name="requestMessageUuid" type="xs:string"/>
+      <xs:element name="responseMessageUuid" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+	<xs:simpleType name="Iso3166-1Alpha3CountryCode">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="3"></xs:maxLength>
+			<xs:minLength value="3"></xs:minLength>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="DutyStationCode">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="5"></xs:maxLength>
+			<xs:minLength value="4"></xs:minLength>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="StringNotBlank">
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="512"></xs:maxLength>
+			<xs:minLength value="1"></xs:minLength>
+		</xs:restriction>
+	</xs:simpleType>
+	
+    <xs:simpleType name="UnjspfPensionNumber">
+    	<xs:restriction base="xs:token">
+    		<xs:minLength value="6"></xs:minLength>
+    	</xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="UnjspfUniqueId">
+    	<xs:restriction base="xs:token">
+    		<xs:minLength value="9"></xs:minLength>
+    		<xs:maxLength value="9"></xs:maxLength>
+    	</xs:restriction>
+    </xs:simpleType>
+
+  <xs:simpleType name="UnReportingOrg">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="UN"/>
+      <xs:enumeration value="UNIDO"/>
+      <xs:enumeration value="UNICEF"/>
+      <xs:enumeration value="FAO"/>
+      <xs:enumeration value="UNESCO"/>
+      <xs:enumeration value="WMO"/>
+      <xs:enumeration value="ITU"/>
+      <xs:enumeration value="IAEA"/>
+      <xs:enumeration value="UNDP"/>
+      <xs:enumeration value="IOM"/>
+      <xs:enumeration value="UNHCR"/>
+      <xs:enumeration value="WFP"/>
+      <xs:enumeration value="WFPLOCAL"/>
+      <xs:enumeration value="WIPO"/>
+      <xs:enumeration value="IFAD"/>
+      <xs:enumeration value="EPPO"/>
+      <xs:enumeration value="ICGEB"/>
+      <xs:enumeration value="ICCROM"/>
+      <xs:enumeration value="ICAO"/>
+      <xs:enumeration value="ICC"/>
+      <xs:enumeration value="IPU"/>
+      <xs:enumeration value="ISA"/>
+      <xs:enumeration value="ITLOS"/>
+      <xs:enumeration value="STL"/>
+      <xs:enumeration value="WHO"/>
+      <xs:enumeration value="WTO"/>
+      <xs:enumeration value="UNFPA"/>
+      <xs:enumeration value="UNU"/>
+      <xs:enumeration value="UNOPS"/>
+      <xs:enumeration value="IMO"/>
+      <xs:enumeration value="PAHO"/>
+      <xs:enumeration value="IARC"/>
+      <xs:enumeration value="CTBTO"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Gender">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Male"/>
+      <xs:enumeration value="Female"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="MaritalStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Single"/>
+      <xs:enumeration value="Married"/>
+      <xs:enumeration value="Divorced"/>
+      
+      <!-- DEPRECATED -->
+      <xs:enumeration value="Untraditional Marriage"/>
+      
+      <xs:enumeration value="Non-Traditional Union"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Language">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="English"/>
+      <xs:enumeration value="French"/>
+      <xs:enumeration value="Spanish"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+	<xs:simpleType name="SalaryCategory">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="ASG"/>
+			<xs:enumeration value="D"/>
+			<!-- F is deprecated -->
+			<xs:enumeration value="F"/>
+			<xs:enumeration value="FS"/>
+			<xs:enumeration value="G"/>
+			<xs:enumeration value="L"/>
+			<xs:enumeration value="LT"/>
+			<xs:enumeration value="NO"/>
+			<xs:enumeration value="P"/>
+			<xs:enumeration value="PIA"/>
+			<xs:enumeration value="S"/>
+			<xs:enumeration value="SG"/>
+			<xs:enumeration value="TC"/>
+			<xs:enumeration value="USG"/>
+		</xs:restriction>
+	</xs:simpleType>  
+
+  <xs:simpleType name="YesNo">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="YES"/>
+      <xs:enumeration value="NO"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="YesNoUnknown">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="YES"/>
+      <xs:enumeration value="NO"/>
+      <xs:enumeration value="UNKNOWN"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="InOutIndicator">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="IN"/>
+      <xs:enumeration value="OUT"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Relationship">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Spouse"/>
+      <xs:enumeration value="Parent"/>
+      <xs:enumeration value="Sibling"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="AddressType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Home"/>
+      <xs:enumeration value="Permanent"/>
+      <xs:enumeration value="Work"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PhoneType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Home"/>
+      <xs:enumeration value="Office"/>
+      <xs:enumeration value="Mobile"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="EmailType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Work"/>
+      <xs:enumeration value="Private"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SeparationReason">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="End of contract"/>
+      <xs:enumeration value="Transfer to another organization"/>
+      <xs:enumeration value="Retirement"/>
+      <xs:enumeration value="Resignation"/>
+      <xs:enumeration value="Disability"/>
+      <xs:enumeration value="Death"/>
+      <xs:enumeration value="Other"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="InterfaceOperation">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="TransmitStaffMemberDataOperation"/>
+      <xs:enumeration value="GetReports"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="UnjspfReturnStatusType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="INFO"/>
+      <xs:enumeration value="WARN"/>
+      <xs:enumeration value="ERROR"/>
+      <xs:enumeration value="FAIL"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,1424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SupplierInvoiceS4Request_In" targetNamespace="http://sap.com/xi/Procurement" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:p1="http://sap.com/xi/Procurement" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+	<wsdl:documentation>Supplier Invoice Request Inbound</wsdl:documentation>
+	<wsp:UsingPolicy wsdl:required="true"/>
+	<wsp:Policy wsu:Id="OP_SupplierInvoiceS4Request_In"/>
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://sap.com/xi/Procurement" xmlns="http://sap.com/xi/Procurement" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:element name="SupplierInvoiceRequest" type="SupplierInvoiceRequestMessage"/>
+			<xsd:simpleType name="BPBankAccountInternalID_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Internal ID to identify a business partners bank account</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="4"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PhoneNumberExtensionID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Phone number extension</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PaymentMethodSupplement_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Payment Method Supplement</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="2"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="BusinessPlace_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Business Place</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="4"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CostCtrActivityType_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">CostCtrActivityType</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="6"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PaymentBlockingReason_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Payment Block Key</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="UUID.Content">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Universally Unique Identifier</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="36"/>
+					<xsd:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CashDiscountPercent">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Cash discount percent</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="5"/>
+					<xsd:fractionDigits value="3"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FunctionalArea_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Functional Area</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="16"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PaytSlipWthRefCheckDigit_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">POR Check Digit</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="2"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="AssignmentReference_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Assignment Reference</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="18"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="SupplierInvoiceTaxType_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">
+						<![CDATA[Code of an externally assigned tax type, for example, "VAT" for taxes on sales/purchases. An SAP tax code can be uniquely determined via the tax type and the tax rate.]]>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="3"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="BusinessSectionCode_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Business Section Code</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="4"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="GLOBAL_DateTime">
+				<xsd:restriction base="xsd:dateTime">
+					<xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(.[0-9]{1,7})?Z"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="TaxCode_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Tax Code</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="2"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CountryCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Country code</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="2"/>
+					<xsd:maxLength value="3"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ProjectNetwork_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Network Number for Account Assignment</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:maxLength value="12"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="IndirectQuotedExchangeRate_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Indirect Quoted Exchange Rate</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="9"/>
+					<xsd:fractionDigits value="5"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LANGUAGEINDEPENDENT_LONG_Name">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">LANGUAGEINDEPENDENT_LONG_Name</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="80"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PaymentTerms_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Payment Terms</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="4"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PersonnelNumber_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Personnel Number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="8"/>
+					<xsd:pattern value="\d+"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ProfitCenter_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Profit Center</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ReferenceDocument_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Document No. of a Reference Document</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FixedAsset_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Fixed Asset</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="4"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="SalesOrderItem_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Sales Document Item</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="6"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PersonExternalID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">External Id of a person</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="12"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="InternalOrder_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Order Number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="12"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PhoneNumberSubscriberID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Prhne number subscriber</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="30"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="AgencyIdentificationCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">An AgencyIdentificationCode is a code representation of the agency responsible for a code list or identifier scheme, respectively</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="3"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="InvoicingParty">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Invoicing Party</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="SupplierInvoiceIsCreditMemo_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Indicator: post invoice</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:boolean"/>
+			</xsd:simpleType>
+			<xsd:simpleType name="DebitCreditCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Debit/Credit Code</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="IsNotCashDiscountLiable_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Line Item is not Liable to Cash Discount</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:boolean"/>
+			</xsd:simpleType>
+			<xsd:simpleType name="PaytSlipWthRefSubscriber_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">POR Subscriber Number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="11"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="BusinessDocumentMessageID.Content">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Unique identifier of a business document in a (technical) message that is issued by the sender business application</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="35"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="DocumentHeaderText_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Document Header Text</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="25"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CurrencyCode">
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="3"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ControllingArea_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Controlling Area</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="4"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="InvoiceReference_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Invoice Reference</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="SuplrInvcDeliveryCostCndnStep_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Step Number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="3"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PartyInternalID.Content">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Proprietary identifier for a party</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="32"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CostObject_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Cost Object</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="12"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PurchaseOrder_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Purchase Order identifier</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ReferenceDocumentFiscalYear_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Fiscal year of reference document</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="4"/>
+					<xsd:pattern value="\d+"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="GLAccount_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">G/L Account Number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="WBSElement_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Work Breakdown Structure Element (WBS Element)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="24"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="BusinessArea_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Business Area</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="4"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="SupplierInvoiceItem_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Supplier Invoice Item</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="6"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CountryDiallingCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Country calling code</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="InvoicedQuantityInOrderQtyUnit_GFN.Content">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Quantity Invoiced (in Sales Order Quantity Unit)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="13"/>
+					<xsd:fractionDigits value="3"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CashDiscountDaysValue">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Cash discount days value</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:integer">
+					<xsd:minInclusive value="0"/>
+					<xsd:maxInclusive value="999"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ContactPersonInternalID.Content">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Internal ID of a contact person</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="32"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="SuplrInvcDeliveryCostCndnCount_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Condition Counter</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:int">
+					<xsd:maxInclusive value="999"/>
+					<xsd:minInclusive value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="Indicator">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Indicator is the representation of a situation that has exactly two mutually exclusive Boolean values.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:boolean"/>
+			</xsd:simpleType>
+			<xsd:simpleType name="FiscalYearID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Fiscal Year</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="4"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CostCenter_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Cost Center</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="Percent">
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="16"/>
+					<xsd:fractionDigits value="6"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="MasterFixedAsset_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Master Fixed Asset</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="12"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="BusinessScopeInstanceID.Content">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Identifier for the instance of a BusinessScope</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="36"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PhoneNumberAreaID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Phone number area</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="BusinessScopeTypeCode.Content">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Coded representation of the type of a BusinessScope</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="4"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ServiceEntrySheet_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Service Entry Sheet</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LANGUAGEINDEPENDENT_MEDIUM_Name">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Medium name</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="40"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="BusinessSystemID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Business system ID</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="60"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ReferenceDocumentItem_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Item of a Reference Document</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="4"/>
+					<xsd:pattern value="\d+"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="WorkItem_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Work Item ID</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="MeasureUnitCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Unit of measure</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="3"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="BusinessScopeID.Content">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Identifier of a BusinessScope</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="36"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="WithholdingTaxCode_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Withholding Tax Code</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="2"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="AccountAssignmentNumber_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Sequential Number of Account Assignment</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="2"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="SalesOrder_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Sales and Distribution Document Number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="WithholdingTaxType_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Indicator for withholding tax type</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="2"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PartyStandardID">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Standardized identifier for a party</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="13"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="LanguageCode">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Language code</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:language">
+					<xsd:minLength value="2"/>
+					<xsd:maxLength value="9"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="HouseBank_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">The main bank used for day-to-day transactions</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="5"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PurchaseOrderItem_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Referenced Purchase Order Item</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="5"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="IsSubsequentDebitCredit_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Indicator: Subsequent Debit/Credit</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:boolean"/>
+			</xsd:simpleType>
+			<xsd:simpleType name="StateCentralBankPaymentReason_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Payment Reason Code for State Central Bank Reporting</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="3"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ServiceEntrySheetItem_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Item Number of Service Entry Sheet</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="5"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="TaxJurisdiction_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Tax Jurisdiction Code</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="15"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="NetworkActivity_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Operation/Activity Number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="4"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="SupplierInvoiceItemText_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Supplier Invoice Item Text</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="50"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="SupplierInvoiceIDByInvcgParty_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Supplier Invoice ID by Invocing Party</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="16"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="Date">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Date</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:date">
+					<xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="SuplrInvcDeliveryCostCndnType_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Condition Type</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="4"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="Amount.Content">
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="28"/>
+					<xsd:fractionDigits value="6"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="AccountingDocumentType_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">The document type classifies the accounting documents</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="2"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="County_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">County</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="3"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="Payee_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">An identifier for a payee.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="DirectQuotedExchangeRate_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Direct Quoted Exchange Rate</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:decimal">
+					<xsd:totalDigits value="9"/>
+					<xsd:fractionDigits value="5"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PaytSlipWthRefReference_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">POR Reference Number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="27"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PaymentReference_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Payment Reference</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="30"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="MEDIUM_Name.Content">
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="40"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="FixedCashDiscount_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Fixed Payment Terms</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:length value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="CompanyCode_GFN">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Company code</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:token">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="4"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="BusinessDocumentMessageHeader">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Business information from the perspective of the sender application for identifying a business document (instance) within a (technical) message</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="ID" type="BusinessDocumentMessageID" minOccurs="0"/>
+					<xsd:element name="UUID" type="UUID" minOccurs="0"/>
+					<xsd:element name="ReferenceID" type="BusinessDocumentMessageID" minOccurs="0"/>
+					<xsd:element name="ReferenceUUID" type="UUID" minOccurs="0"/>
+					<xsd:element name="CreationDateTime" type="GLOBAL_DateTime"/>
+					<xsd:element name="TestDataIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="ReconciliationIndicator" type="Indicator" minOccurs="0"/>
+					<xsd:element name="SenderBusinessSystemID" type="BusinessSystemID" minOccurs="0"/>
+					<xsd:element name="RecipientBusinessSystemID" type="BusinessSystemID" minOccurs="0"/>
+					<xsd:element name="SenderParty" type="BusinessDocumentMessageHeaderParty" minOccurs="0"/>
+					<xsd:element name="RecipientParty" type="BusinessDocumentMessageHeaderParty" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="BusinessScope" type="BusinessScope" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="PartyInternalID">
+				<xsd:simpleContent>
+					<xsd:extension base="PartyInternalID.Content">
+						<xsd:attribute name="schemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="schemeAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:complexType name="UnplannedDeliveryCostDetails">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Unplanned Delivery Cost Details</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="UnplannedDeliveryCost" type="Amount" minOccurs="0"/>
+					<xsd:element name="UnplannedDeliveryCostTaxCode" type="TaxCode_GFN" minOccurs="0"/>
+					<xsd:element name="UnplndDelivCostTaxJurisdiction" type="TaxJurisdiction_GFN" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="BusinessScope">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Environment from which a message is sent</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="TypeCode" type="BusinessScopeTypeCode"/>
+					<xsd:element name="InstanceID" type="BusinessScopeInstanceID" minOccurs="0"/>
+					<xsd:element name="ID" type="BusinessScopeID" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="EmailURI">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Email URI</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleContent>
+					<xsd:extension base="xsd:anyURI">
+						<xsd:attribute name="schemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:complexType name="PhoneNumber">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Phone number</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="AreaID" type="PhoneNumberAreaID" minOccurs="0"/>
+					<xsd:element name="SubscriberID" type="PhoneNumberSubscriberID" minOccurs="0"/>
+					<xsd:element name="ExtensionID" type="PhoneNumberExtensionID" minOccurs="0"/>
+					<xsd:element name="CountryCode" type="CountryCode" minOccurs="0"/>
+					<xsd:element name="CountryDiallingCode" type="CountryDiallingCode" minOccurs="0"/>
+					<xsd:element name="CountryName" type="MEDIUM_Name" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="BusinessDocumentMessageHeaderPartyContactPerson">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Contact person of a party that is responsible for sending or receiving a BusinessDocument</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="InternalID" type="ContactPersonInternalID" minOccurs="0"/>
+					<xsd:element name="OrganisationFormattedName" type="LANGUAGEINDEPENDENT_MEDIUM_Name" minOccurs="0" maxOccurs="4"/>
+					<xsd:element name="PersonFormattedName" type="LANGUAGEINDEPENDENT_LONG_Name" minOccurs="0" maxOccurs="4"/>
+					<xsd:element name="PhoneNumber" type="PhoneNumber" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="FaxNumber" type="PhoneNumber" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="EmailURI" type="EmailURI" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="Attachment">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Attachment</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleContent>
+					<xsd:extension base="xsd:base64Binary">
+						<xsd:attribute name="FileName">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="255"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="MimeType">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="128"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="FileSize">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="12"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:complexType name="PurchaseOrderFreightCondition">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Purchase Order Freight Condition</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="SuplrInvcDeliveryCostCndnCount" type="SuplrInvcDeliveryCostCndnCount_GFN" minOccurs="0"/>
+					<xsd:element name="SuplrInvcDeliveryCostCndnStep" type="SuplrInvcDeliveryCostCndnStep_GFN" minOccurs="0"/>
+					<xsd:element name="SuplrInvcDeliveryCostCndnType" type="SuplrInvcDeliveryCostCndnType_GFN" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="PurchaseOrderReference">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Purchase Order Reference</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="PurchaseOrderID" type="PurchaseOrder_GFN"/>
+					<xsd:element name="PurchaseOrderItem" type="PurchaseOrderItem_GFN"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="WithholdingTaxDetails">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Withholding Tax Details</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="WithholdingTaxCode" type="WithholdingTaxCode_GFN"/>
+					<xsd:element name="WithholdingTaxType" type="WithholdingTaxType_GFN"/>
+					<xsd:element name="ManuallyEnteredWhldgTaxAmount" type="Amount" minOccurs="0"/>
+					<xsd:element name="WithholdingTaxBaseAmount" type="Amount" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="Amount">
+				<xsd:simpleContent>
+					<xsd:extension base="Amount.Content">
+						<xsd:attribute name="currencyCode" type="CurrencyCode" use="required"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:complexType name="BusinessScopeTypeCode">
+				<xsd:simpleContent>
+					<xsd:extension base="BusinessScopeTypeCode.Content">
+						<xsd:attribute name="listID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listVersionID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="15"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencySchemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="listAgencySchemeAgencyID" type="AgencyIdentificationCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:complexType name="SupplierInvoiceTaxDetails">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Invoice Tax Details</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="TaxAmount" type="Amount"/>
+					<xsd:element name="TaxBaseAmountInTransCrcy" type="Amount"/>
+					<xsd:element name="TaxCode" type="TaxCode_GFN" minOccurs="0"/>
+					<xsd:element name="TaxJurisdiction" type="TaxJurisdiction_GFN" minOccurs="0"/>
+					<xsd:element name="TaxPercentage" type="Percent" minOccurs="0"/>
+					<xsd:element name="TaxCategory" type="SupplierInvoiceTaxType_GFN" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ContactPersonInternalID">
+				<xsd:simpleContent>
+					<xsd:extension base="ContactPersonInternalID.Content">
+						<xsd:attribute name="schemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="schemeAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:complexType name="MEDIUM_Name">
+				<xsd:simpleContent>
+					<xsd:extension base="MEDIUM_Name.Content">
+						<xsd:attribute name="languageCode" type="LanguageCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:complexType name="BusinessDocumentMessageHeaderParty">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">General information about a party that is responsible for sending or receiving a BusinessDocument at business application level</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="InternalID" type="PartyInternalID" minOccurs="0"/>
+					<xsd:element name="StandardID" type="PartyStandardID" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="ContactPerson" type="BusinessDocumentMessageHeaderPartyContactPerson" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="SupplierInvoicePaymentTerms">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Invoice Payment Terms</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="CashDiscount1Percent" type="CashDiscountPercent" minOccurs="0"/>
+					<xsd:element name="CashDiscount1Days" type="CashDiscountDaysValue" minOccurs="0"/>
+					<xsd:element name="CashDiscount2Percent" type="CashDiscountPercent" minOccurs="0"/>
+					<xsd:element name="CashDiscount2Days" type="CashDiscountDaysValue" minOccurs="0"/>
+					<xsd:element name="DueCalculationBaseDate" type="Date" minOccurs="0"/>
+					<xsd:element name="NetPaymentDays" type="CashDiscountDaysValue" minOccurs="0"/>
+					<xsd:element name="PaymentTerms" type="PaymentTerms_GFN" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="SupplierInvoiceRequestMessage">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Invoice Request Message</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="MessageHeader" type="BusinessDocumentMessageHeader"/>
+					<xsd:element name="SupplierInvoice" type="SupplierInvoice"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="SupplierInvoiceItemGLAcct">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Invoice Item Purchase Order Reference Account Assignment</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="SupplierInvoiceItem" type="SupplierInvoiceItem_GFN"/>
+					<xsd:element name="SupplierInvoiceItemAmount" type="Amount"/>
+					<xsd:element name="SupplierInvoiceItemGLPostingAcctAssgmt" type="SupplierInvoiceItemGLAcctAssgmt"/>
+					<xsd:element name="Quantity" type="InvoicedQuantityInOrderQtyUnit_GFN" minOccurs="0"/>
+					<xsd:element name="SupplierInvoiceItemTaxDetails" type="SupplierInvoiceItemTaxDetails" minOccurs="0"/>
+					<xsd:element name="SupplierInvoiceItemText" type="SupplierInvoiceItemText_GFN" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="SupplierInvoiceItemTaxDetails">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Invoice Item Tax Details</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="TaxCode" type="TaxCode_GFN" minOccurs="0"/>
+					<xsd:element name="TaxJurisdiction" type="TaxJurisdiction_GFN" minOccurs="0"/>
+					<xsd:element name="TaxPercentage" type="Percent" minOccurs="0"/>
+					<xsd:element name="TaxCategory" type="SupplierInvoiceTaxType_GFN" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="TaxData">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Tax Data</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="TaxReportingDate" type="Date" minOccurs="0"/>
+					<xsd:element name="InvoiceTaxDetails" type="SupplierInvoiceTaxDetails" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="TaxDeterminationDate" minOccurs="0" type="Date" />		
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ServiceEntrySheetReference">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Service Entry Sheet Reference IDs</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="ServiceEntrySheetID" type="ServiceEntrySheet_GFN"/>
+					<xsd:element name="ServiceEntrySheetItem" type="ServiceEntrySheetItem_GFN"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="SupplierInvoiceItemGLAcctAssgmt">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Invoice Item Purchase Order Reference Account Assignment</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="GLAccount" type="GLAccount_GFN"/>
+					<xsd:element name="DebitCreditCode" type="DebitCreditCode"/>
+					<xsd:element name="AssignmentReference" type="AssignmentReference_GFN" minOccurs="0"/>
+					<xsd:element name="BusinessArea" type="BusinessArea_GFN" minOccurs="0"/>
+					<xsd:element name="ControllingArea" type="ControllingArea_GFN" minOccurs="0"/>
+					<xsd:element name="CostCenter" type="CostCenter_GFN" minOccurs="0"/>
+					<xsd:element name="CostCtrActivityType" type="CostCtrActivityType_GFN" minOccurs="0"/>
+					<xsd:element name="CostObject" type="CostObject_GFN" minOccurs="0"/>
+					<xsd:element name="FunctionalArea" type="FunctionalArea_GFN" minOccurs="0"/>
+					<xsd:element name="InternalOrder" type="InternalOrder_GFN" minOccurs="0"/>
+					<xsd:element name="IsNotCashDiscountLiable" type="IsNotCashDiscountLiable_GFN" minOccurs="0"/>
+					<xsd:element name="NetworkActivity" type="NetworkActivity_GFN" minOccurs="0"/>
+					<xsd:element name="PartnerBusinessArea" type="BusinessArea_GFN" minOccurs="0"/>
+					<xsd:element name="PersonnelNumber" type="PersonnelNumber_GFN" minOccurs="0"/>
+					<xsd:element name="ProfitCenter" type="ProfitCenter_GFN" minOccurs="0"/>
+					<xsd:element name="ProjectNetwork" type="ProjectNetwork_GFN" minOccurs="0"/>
+					<xsd:element name="SalesOrder" type="SalesOrder_GFN" minOccurs="0"/>
+					<xsd:element name="SalesOrderItem" type="SalesOrderItem_GFN" minOccurs="0"/>
+					<xsd:element name="WBSElement" type="WBSElement_GFN" minOccurs="0"/>
+					<xsd:element name="Workitem" type="WorkItem_GFN" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="BusinessDocumentMessageID">
+				<xsd:simpleContent>
+					<xsd:extension base="BusinessDocumentMessageID.Content">
+						<xsd:attribute name="schemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="schemeAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="schemeAgencySchemeAgencyID" type="AgencyIdentificationCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:complexType name="SupplierInvoiceItemPurOrdRefAcctAssgmt">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Invoice Item Purchase Order Reference Account Assignment</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="SuplrInvcAcctAssignmentAmount" type="Amount"/>
+					<xsd:element name="GLAccount" type="GLAccount_GFN"/>
+					<xsd:element name="AccountAssignmentIsUnplanned" type="Indicator" minOccurs="0"/>
+					<xsd:element name="AccountAssignmentNumber" type="AccountAssignmentNumber_GFN" minOccurs="0"/>
+					<xsd:element name="AssetNumber" type="MasterFixedAsset_GFN" minOccurs="0"/>
+					<xsd:element name="AssetSubNumber" type="FixedAsset_GFN" minOccurs="0"/>
+					<xsd:element name="BusinessArea" type="BusinessArea_GFN" minOccurs="0"/>
+					<xsd:element name="ControllingArea" type="ControllingArea_GFN" minOccurs="0"/>
+					<xsd:element name="CostCenter" type="CostCenter_GFN" minOccurs="0"/>
+					<xsd:element name="CostObject" type="CostObject_GFN" minOccurs="0"/>
+					<xsd:element name="DeliveryCreationDate" type="GLOBAL_DateTime" minOccurs="0"/>
+					<xsd:element name="FunctionalArea" type="FunctionalArea_GFN" minOccurs="0"/>
+					<xsd:element name="InternalOrder" type="InternalOrder_GFN" minOccurs="0"/>
+					<xsd:element name="NetworkActivity" type="NetworkActivity_GFN" minOccurs="0"/>
+					<xsd:element name="ProfitCenter" type="ProfitCenter_GFN" minOccurs="0"/>
+					<xsd:element name="ProjectNetwork" type="ProjectNetwork_GFN" minOccurs="0"/>
+					<xsd:element name="QtyInPurchaseOrderPriceUnit" type="InvoicedQuantityInOrderQtyUnit_GFN" minOccurs="0"/>
+					<xsd:element name="QuantityInPurchaseOrderUnit" type="InvoicedQuantityInOrderQtyUnit_GFN" minOccurs="0"/>
+					<xsd:element name="SalesOrder" type="SalesOrder_GFN" minOccurs="0"/>
+					<xsd:element name="SalesOrderItem" type="SalesOrderItem_GFN" minOccurs="0"/>
+					<xsd:element name="SupplierInvoiceItemText" type="SupplierInvoiceItemText_GFN" minOccurs="0"/>
+					<xsd:element name="WBSElement" type="WBSElement_GFN" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="BusinessScopeInstanceID">
+				<xsd:simpleContent>
+					<xsd:extension base="BusinessScopeInstanceID.Content">
+						<xsd:attribute name="schemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="schemeAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:complexType name="SupplierInvoice">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Supplier Invoice</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="CompanyCode" type="CompanyCode_GFN"/>
+					<xsd:element name="DocumentDate" type="Date"/>
+					<xsd:element name="InvoiceGrossAmount" type="Amount"/>
+					<xsd:element name="InvoicingParty" type="InvoicingParty"/>
+					<xsd:element name="PostingDate" type="Date"/>
+					<xsd:element name="AccountingDocumentType" type="AccountingDocumentType_GFN" minOccurs="0"/>
+					<xsd:element name="AssignmentReference" type="AssignmentReference_GFN" minOccurs="0"/>
+					<xsd:element name="Attachment" type="Attachment" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="BPBankAccountInternalID" type="BPBankAccountInternalID_GFN" minOccurs="0"/>
+					<xsd:element name="BusinessArea" type="BusinessArea_GFN" minOccurs="0"/>
+					<xsd:element name="BusinessPlace" type="BusinessPlace_GFN" minOccurs="0"/>
+					<xsd:element name="BusinessSectionCode" type="BusinessSectionCode_GFN" minOccurs="0"/>
+					<xsd:element name="DeliveryOfGoodsReportingCntry" type="County_GFN" minOccurs="0"/>
+					<xsd:element name="DirectQuotedExchangeRate" type="DirectQuotedExchangeRate_GFN" minOccurs="0"/>
+					<xsd:element name="DocumentHeaderText" type="DocumentHeaderText_GFN" minOccurs="0"/>
+					<xsd:element name="FixedCashDiscount" type="FixedCashDiscount_GFN" minOccurs="0"/>
+					<xsd:element name="HouseBank" type="HouseBank_GFN" minOccurs="0"/>
+					<xsd:element name="IndirectQuotedExchangeRate" type="IndirectQuotedExchangeRate_GFN" minOccurs="0"/>
+					<xsd:element name="InvoiceReceiptDate" type="Date" minOccurs="0"/>
+					<xsd:element name="InvoiceReference" type="InvoiceReference_GFN" minOccurs="0"/>
+					<xsd:element name="InvoiceReferenceFiscalYear" type="FiscalYearID" minOccurs="0"/>
+					<xsd:element name="ManualCashDiscount" type="Amount" minOccurs="0"/>
+					<xsd:element name="Payee" type="Payee_GFN" minOccurs="0"/>
+					<xsd:element name="PaymentBlockingReason" type="PaymentBlockingReason_GFN" minOccurs="0"/>
+					<xsd:element name="PaymentMethod" type="PaymentBlockingReason_GFN" minOccurs="0"/>
+					<xsd:element name="PaymentMethodSupplement" type="PaymentMethodSupplement_GFN" minOccurs="0"/>
+					<xsd:element name="PaymentReference" type="PaymentReference_GFN" minOccurs="0"/>
+					<xsd:element name="PaymentTerms" type="SupplierInvoicePaymentTerms" minOccurs="0"/>
+					<xsd:element name="PaytSlipWthRefCheckDigit" type="PaytSlipWthRefCheckDigit_GFN" minOccurs="0"/>
+					<xsd:element name="PaytSlipWthRefReference" type="PaytSlipWthRefReference_GFN" minOccurs="0"/>
+					<xsd:element name="PaytSlipWthRefSubscriber" type="PaytSlipWthRefSubscriber_GFN" minOccurs="0"/>
+					<xsd:element name="PersonExternal" type="PersonExternalID" minOccurs="0"/>
+					<xsd:element name="StateCentralBankPaymentReason" type="StateCentralBankPaymentReason_GFN" minOccurs="0"/>
+					<xsd:element name="SupplierInvoiceIDByInvcgParty" type="SupplierInvoiceIDByInvcgParty_GFN" minOccurs="0"/>
+					<xsd:element name="SupplierInvoiceIsCreditMemo" type="SupplierInvoiceIsCreditMemo_GFN" minOccurs="0"/>
+					<xsd:element name="SupplierInvoiceItemGLAcct" type="SupplierInvoiceItemGLAcct" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="SupplierInvoiceItemPurOrdRef" type="SupplierInvoiceItemPurOrdRef" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="SupplierPostingLineItemText" type="SupplierInvoiceItemText_GFN" minOccurs="0"/>
+					<xsd:element name="SupplyingCountry" type="CountryCode" minOccurs="0"/>
+					<xsd:element name="TaxData" type="TaxData" minOccurs="0"/>
+					<xsd:element name="UnplannedDeliveryCostDetails" type="UnplannedDeliveryCostDetails" minOccurs="0"/>
+					<xsd:element name="WithholdingTaxDetails" type="WithholdingTaxDetails" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="InvoicedQuantityInOrderQtyUnit_GFN">
+				<xsd:simpleContent>
+					<xsd:extension base="InvoicedQuantityInOrderQtyUnit_GFN.Content">
+						<xsd:attribute name="unitCode" type="MeasureUnitCode"/>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:complexType name="UUID">
+				<xsd:simpleContent>
+					<xsd:extension base="UUID.Content">
+						<xsd:attribute name="schemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="schemeAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:complexType name="GoodsReceiptReference">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Goods Receipt Reference IDs</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="ReferenceDocument" type="ReferenceDocument_GFN"/>
+					<xsd:element name="ReferenceDocumentFiscalYear" type="ReferenceDocumentFiscalYear_GFN"/>
+					<xsd:element name="ReferenceDocumentItem" type="ReferenceDocumentItem_GFN"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="SupplierInvoiceItemPurOrdRef">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="EN">Invoice Item WIth Purchase Order Reference</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="PurchaseOrderReference" type="PurchaseOrderReference"/>
+					<xsd:element name="SupplierInvoiceItem" type="SupplierInvoiceItem_GFN"/>
+					<xsd:element name="SupplierInvoiceItemAmount" type="Amount"/>
+					<xsd:element name="SupplierInvoiceItemTaxDetails" type="SupplierInvoiceItemTaxDetails"/>
+					<xsd:element name="GoodsReceiptReference" type="GoodsReceiptReference" minOccurs="0"/>
+					<xsd:element name="IsNotCashDiscountLiable" type="IsNotCashDiscountLiable_GFN" minOccurs="0"/>
+					<xsd:element name="IsSubsequentDebitCredit" type="IsSubsequentDebitCredit_GFN" minOccurs="0"/>
+					<xsd:element name="PurchaseOrderFreightCondition" type="PurchaseOrderFreightCondition" minOccurs="0"/>
+					<xsd:element name="QtyInPurchaseOrderPriceUnit" type="InvoicedQuantityInOrderQtyUnit_GFN" minOccurs="0"/>
+					<xsd:element name="QuantityInPurchaseOrderUnit" type="InvoicedQuantityInOrderQtyUnit_GFN" minOccurs="0"/>
+					<xsd:element name="ServiceEntrySheetReference" type="ServiceEntrySheetReference" minOccurs="0"/>
+					<xsd:element name="SupplierInvoiceItemPurOrdRefAcctAssgmt" type="SupplierInvoiceItemPurOrdRefAcctAssgmt" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="SupplierInvoiceItemText" type="SupplierInvoiceItemText_GFN" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="BusinessScopeID">
+				<xsd:simpleContent>
+					<xsd:extension base="BusinessScopeID.Content">
+						<xsd:attribute name="schemeID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="schemeAgencyID">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:token">
+									<xsd:minLength value="1"/>
+									<xsd:maxLength value="60"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="SupplierInvoiceRequest">
+		<wsdl:documentation>Message Type for Invoice Request Service</wsdl:documentation>
+		<wsdl:part name="SupplierInvoiceRequest" element="p1:SupplierInvoiceRequest"/>
+	</wsdl:message>
+	<wsdl:portType name="SupplierInvoiceS4Request_In">
+		<wsdl:documentation>Supplier Invoice Request Inbound</wsdl:documentation>
+		<wsdl:operation name="SupplierInvoiceS4Request_In">
+			<wsdl:documentation>Supplier Invoice Request Inbound</wsdl:documentation>
+			<wsp:Policy>
+				<wsp:PolicyReference URI="#OP_SupplierInvoiceS4Request_In"/>
+			</wsp:Policy>
+			<wsdl:input message="p1:SupplierInvoiceRequest"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SupplierInvoiceS4Request_InBinding" type="p1:SupplierInvoiceS4Request_In">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+		<wsdl:operation name="SupplierInvoiceS4Request_In">
+			<soap:operation soapAction="http://sap.com/xi/WebService/soap1.1" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+			<wsdl:input>
+				<soap:body use="literal" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="invoiceService">
+		<wsdl:port name="invoicePort" binding="p1:SupplierInvoiceS4Request_InBinding">
+			<soap:address
+				location="https://invoiceflow-hana.ondemand.com/invoiceInterface" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

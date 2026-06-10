@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+   <xs:element name="provisioningRequest">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="customReferences" minOccurs="0">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="customReference" minOccurs="0" maxOccurs="unbounded">
+                        <xs:complexType>
+                           <xs:sequence>
+                              <xs:element type="xs:string" name="id" />
+                              <xs:element type="xs:string" name="typeCode" />
+                           </xs:sequence>
+                        </xs:complexType>
+                     </xs:element>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="customer">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element type="xs:long" name="customerNumber" />
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="market">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element type="xs:string" name="marketId" />
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="items" minOccurs="0" maxOccurs="unbounded">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="subscriptionItem"  minOccurs="0" maxOccurs="unbounded">
+                        <xs:complexType>
+                           <xs:sequence>
+                              <xs:element type="xs:string" name="ratePlanId"  minOccurs="0" maxOccurs="unbounded"/>
+                              <xs:element type="xs:dateTime" name="validFrom" />
+                              <xs:element type="xs:dateTime" name="fixedTerm" minOccurs="0" />
+                              <xs:element name="pricing" minOccurs="0" maxOccurs="1">
+                                 <xs:complexType>
+                                    <xs:sequence>
+                                       <xs:element type="xs:dateTime" name="pricingDate" minOccurs="0" maxOccurs="1"/>
+                                       <xs:element name="pricingParameters" minOccurs="0" maxOccurs="unbounded">
+                                          <xs:complexType>
+                                             <xs:sequence>
+                                                <xs:element type="xs:string" name="code" minOccurs="1" maxOccurs="1" />
+                                                <xs:element type="xs:string" name="value" minOccurs="1" maxOccurs="1"/>
+                                             </xs:sequence>
+                                          </xs:complexType>
+                                       </xs:element>
+                                    </xs:sequence>
+                                 </xs:complexType>
+                              </xs:element>
+                              <xs:element name="contractTerm" minOccurs="0">
+                                 <xs:complexType>
+                                    <xs:sequence>
+                                       <xs:element type="xs:byte" name="period" minOccurs="0" />
+                                    </xs:sequence>
+                                 </xs:complexType>
+                              </xs:element>
+                              <xs:element type="xs:boolean" name="overwriteContractTerm" minOccurs="0" />
+                              <xs:element name="renewalTerm" minOccurs="0">
+                                 <xs:complexType>
+                                    <xs:sequence>
+                                       <xs:element type="xs:byte" name="period" minOccurs="0" />
+                                    </xs:sequence>
+                                 </xs:complexType>
+                              </xs:element>
+                              <xs:element type="xs:byte" name="numberOfWaiverPeriods" minOccurs="0" />
+                              <xs:element name="subscriptionParameters" minOccurs="0">
+                                 <xs:complexType>
+                                    <xs:sequence>
+                                       <xs:element name="subscriptionParameter">
+                                          <xs:complexType>
+                                             <xs:sequence>
+                                                <xs:element type="xs:string" name="code" />
+                                                <xs:element type="xs:byte" name="value" />
+                                             </xs:sequence>
+                                          </xs:complexType>
+                                       </xs:element>
+                                    </xs:sequence>
+                                 </xs:complexType>
+                              </xs:element>
+                              <xs:element name="externalRatePlanReference" minOccurs="0">
+                                 <xs:complexType>
+                                    <xs:sequence>
+                                       <xs:element type="xs:string" name="externalId" minOccurs="0" />
+                                       <xs:element type="xs:string" name="externalSystemId" minOccurs="0" />
+                                    </xs:sequence>
+                                 </xs:complexType>
+                              </xs:element>
+                           </xs:sequence>
+                        </xs:complexType>
+                     </xs:element>
+                     <xs:element type="xs:string" name="itemType" />
+                     <xs:element type="xs:byte" name="lineNumber" />
+                     <xs:element name="product">
+                        <xs:complexType>
+                           <xs:sequence>
+                              <xs:element type="xs:string" name="id"  minOccurs="0" maxOccurs="1"/>
+                              <xs:element type="xs:string" name="code"  minOccurs="0" maxOccurs="1"/>
+                           </xs:sequence>
+                        </xs:complexType>
+                     </xs:element>
+                     <xs:element name="quantity">
+                        <xs:complexType>
+                           <xs:sequence>
+                              <xs:element type="xs:string" name="unit" />
+                              <xs:element type="xs:byte" name="value" />
+                           </xs:sequence>
+                        </xs:complexType>
+                     </xs:element>
+                     <xs:element name="externalObjectReferences" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                         <xs:element type="xs:string" name="externalSystemId" minOccurs="0" />
+                         <xs:element type="xs:string" name="externalId" minOccurs="0" />
+                         <xs:element type="xs:string" name="externalIdTypeCode" minOccurs="0" />
+                        </xs:sequence>
+                     </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="paymentData">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element type="xs:string" name="paymentCardToken" minOccurs="0" />
+                     <xs:element type="xs:string" name="paymentMethod" />
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="externalObjectReferences" minOccurs="0" maxOccurs="unbounded">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element type="xs:string" name="externalSystemId" minOccurs="0" />
+                     <xs:element type="xs:string" name="externalId" minOccurs="0" />
+                     <xs:element type="xs:string" name="externalIdTypeCode" minOccurs="0" />
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

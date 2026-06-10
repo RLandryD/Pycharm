@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="http://sap.com/xi/ARBFND1"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+	xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://sap.com/xi/ARBFND1"
+	xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+	xmlns:n1="http://sap.com/xi/Ariba/Interfaces">
+	<wsdl:documentation>
+		<sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl" />
+	</wsdl:documentation>
+	<wsp:UsingPolicy wsdl:required="true" />
+	<wsp:Policy wsu:Id="BN_SYNCH_ADAPTER_Out">
+		<wsp:ExactlyOne xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+			xmlns:sapsp="http://www.sap.com/webas/630/soap/features/security/policy"
+			xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702"
+			xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:wsu="http://schemas.xmlsoap.org/ws/2002/07/utility">
+			<wsp:All>
+				<sp:TransportBinding>
+					<wsp:Policy>
+						<sp:TransportToken>
+							<wsp:Policy>
+								<sp:HttpsToken>
+									<wsp:Policy>
+										<!-- <sp:HttpBasicAuthentication /> -->
+										<!--<sp:RequireClientCertificate />-->
+									</wsp:Policy>
+								</sp:HttpsToken>
+							</wsp:Policy>
+						</sp:TransportToken>
+						<sp:AlgorithmSuite>
+							<wsp:Policy>
+								<sp:TripleDesRsa15 />
+							</wsp:Policy>
+						</sp:AlgorithmSuite>
+						<sp:Layout>
+							<wsp:Policy>
+								<sp:Strict />
+							</wsp:Policy>
+						</sp:Layout>
+					</wsp:Policy>
+				</sp:TransportBinding>
+			</wsp:All>
+		</wsp:ExactlyOne>
+	</wsp:Policy>
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://sap.com/xi/Ariba/Interfaces"
+			xmlns:xi0="http://sap.com/xi/Ariba/Interfaces" xmlns="http://sap.com/xi/Ariba/Interfaces">
+			<xsd:simpleType name="AttachmentContentType">
+				<xsd:restriction base="xsd:base64Binary" />
+			</xsd:simpleType>
+			<xsd:complexType name="AttachmentFolderType">
+				<xsd:sequence>
+					<xsd:element name="Content" type="AttachmentContentType" />
+				</xsd:sequence>
+				<xsd:attribute name="contentID" use="required" type="xsd:string" />
+				<xsd:attribute name="contentType" use="required" type="xsd:string" />
+				<xsd:attribute name="fileName" use="required" type="xsd:string" />
+				<xsd:attribute name="charset" type="xsd:string" />
+				<xsd:attribute name="contentLength" use="required"
+					type="xsd:integer" />
+			</xsd:complexType>
+			<xsd:complexType name="ExchangeFaultData">
+				<xsd:sequence>
+					<xsd:element name="faultText" type="xsd:string" />
+					<xsd:element name="faultUrl" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="faultDetail" type="ExchangeLogData"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ExchangeLogData">
+				<xsd:sequence>
+					<xsd:element name="severity" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="text" type="xsd:string" />
+					<xsd:element name="url" type="xsd:string" minOccurs="0" />
+					<xsd:element name="id" type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="cXMLMessageContentType">
+				<xsd:sequence>
+					<xsd:element name="cXML" type="xsd:anyType" minOccurs="0" />
+					<xsd:element name="AttachmentFolder" type="AttachmentFolderType"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+				<xsd:attribute name="messageType" type="xsd:string" />
+			</xsd:complexType>
+			<xsd:element name="StandardMessageFault">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="standard" type="ExchangeFaultData" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="cXMLMessage">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="cXMLMessageContent" type="cXMLMessageContentType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="StatusType">
+				<xsd:simpleContent>
+					<xsd:extension base="xsd:string">
+						<xsd:attribute name="code" type="xsd:string" use="required" />
+						<xsd:attribute name="text" type="xsd:string" use="required" />
+						<xsd:attribute ref="xml:lang" />
+					</xsd:extension>
+				</xsd:simpleContent>
+			</xsd:complexType>
+			<xsd:element name="cXMLMessageResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Status" type="StatusType"
+							minOccurs="0" />
+					</xsd:sequence>
+					<xsd:attribute name="version" type="xsd:string" />
+					<xsd:attribute name="payloadID" type="xsd:string"
+						use="required" />
+					<xsd:attribute name="timestamp" type="xsd:string"
+						use="required" />
+					<xsd:attribute name="signatureVersion">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="1.0" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+					<xsd:attribute ref="xml:lang" />
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="cXMLMessage">
+		<wsdl:part name="cXMLMessage" element="n1:cXMLMessage" />
+	</wsdl:message>
+	<wsdl:message name="cXMLMessageResponse">
+		<wsdl:part name="cXMLMessageResponse" element="n1:cXMLMessageResponse" />
+	</wsdl:message>
+	<wsdl:message name="StandardMessageFault">
+		<wsdl:part name="StandardMessageFault" element="n1:StandardMessageFault" />
+	</wsdl:message>
+
+	<wsdl:portType name="cXMLSynchronousOutboundAdapterMessage_Out">
+		<wsdl:operation name="cXMLSynchronousOutboundAdapterMessage_Out">
+			<wsdl:input message="tns:cXMLMessage" />
+			<wsdl:output message="tns:cXMLMessageResponse" />
+			<wsdl:fault name="StandardMessageFault" message="tns:StandardMessageFault" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SYNCH_ADAPTER_Out"
+		type="tns:cXMLSynchronousOutboundAdapterMessage_Out">
+		<wsp:Policy>
+			<wsp:PolicyReference URI="#BN_SYNCH_ADAPTER_Out" />
+		</wsp:Policy>
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"
+			style="document" />
+		<wsdl:operation name="cXMLSynchronousOutboundAdapterMessage_Out">
+			<soap:operation
+				soapAction="http://sap.com/xi/ARBFND1/cXMLSynchronousOutboundAdapterMessage_Out/cXMLSynchronousOutboundAdapterMessage_OutRequest" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="StandardMessageFault">
+				<soap:fault use="literal" name="StandardMessageFault" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SYNCH_ADAPTER_Out">
+		<wsdl:port name="SYNCH_ADAPTER_Out" binding="tns:SYNCH_ADAPTER_Out">
+			<soap:address
+				location="https://iflmapvb010avlb030avtvlb-avlb030.intaas.hana.ondemand.com/cxf/po" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

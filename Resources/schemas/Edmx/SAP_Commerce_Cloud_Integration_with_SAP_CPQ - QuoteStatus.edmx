@@ -1,0 +1,53 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="HybrisCommerceOData">
+            <EntityType Name="SAPCpiOutboundQuoteStatus">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property IsUnique="true" Name="quoteId" Nullable="false" Type="Edm.String"/>
+                <Property Name="orderId" Nullable="true" Type="Edm.String"/>
+                <Property IsUnique="true" Name="status" Nullable="false" Type="Edm.String"/>
+                <Property Name="externalQuoteId" Nullable="true" Type="Edm.String"/>
+                <Property Name="responseStatus" Nullable="true" Type="Edm.String"/>
+                <Property Name="responseMessage" Nullable="true" Type="Edm.String"/>
+                <Property Alias="SAPCpiOutboundQuoteStatus_quoteId|SAPCpiOutboundQuoteStatus_status" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+                <NavigationProperty FromRole="SAPCpiOutboundQuoteStatus" Name="headerComments" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundQuoteStatus_headerComments" ToRole="SAPCpiOutboundQuoteComment"/>
+                <NavigationProperty FromRole="SAPCpiOutboundQuoteStatus" Name="itemComments" Nullable="true" Relationship="HybrisCommerceOData.FK_SAPCpiOutboundQuoteStatus_itemComments" ToRole="SAPCpiOutboundQuoteComment"/>
+            </EntityType>
+            <EntityType Name="SAPCpiOutboundQuoteComment">
+                <Key>
+                    <PropertyRef Name="integrationKey"/>
+                </Key>
+                <Property IsUnique="true" Name="quoteId" Nullable="false" Type="Edm.String"/>
+                <Property IsUnique="true" Name="commentId" Nullable="false" Type="Edm.String"/>
+                <Property Name="text" Nullable="true" Type="Edm.String"/>
+                <Property Name="userName" Nullable="true" Type="Edm.String"/>
+                <Property Name="b2bUnitName" Nullable="true" Type="Edm.String"/>
+                <Property Name="email" Nullable="true" Type="Edm.String"/>
+                <Property Name="entryNumber" Nullable="true" Type="Edm.String"/>
+                <Property Alias="SAPCpiOutboundQuoteComment_commentId|SAPCpiOutboundQuoteComment_quoteId" Name="integrationKey" Nullable="false" Type="Edm.String"/>
+            </EntityType>
+            <Association Name="FK_SAPCpiOutboundQuoteStatus_headerComments">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundQuoteStatus" Type="HybrisCommerceOData.SAPCpiOutboundQuoteStatus"/>
+                <End Multiplicity="*" Role="SAPCpiOutboundQuoteComment" Type="HybrisCommerceOData.SAPCpiOutboundQuoteComment"/>
+            </Association>
+            <Association Name="FK_SAPCpiOutboundQuoteStatus_itemComments">
+                <End Multiplicity="0..1" Role="SAPCpiOutboundQuoteStatus" Type="HybrisCommerceOData.SAPCpiOutboundQuoteStatus"/>
+                <End Multiplicity="*" Role="SAPCpiOutboundQuoteComment" Type="HybrisCommerceOData.SAPCpiOutboundQuoteComment"/>
+            </Association>
+            <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundQuoteStatus" Name="SAPCpiOutboundQuoteStatuses"/>
+                <EntitySet EntityType="HybrisCommerceOData.SAPCpiOutboundQuoteComment" Name="SAPCpiOutboundQuoteComments"/>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundQuoteStatus_headerComments" Name="SAPCpiOutboundQuoteStatus_SAPCpiOutboundQuoteComments">
+                    <End EntitySet="SAPCpiOutboundQuoteStatuses" Role="SAPCpiOutboundQuoteStatus"/>
+                    <End EntitySet="SAPCpiOutboundQuoteComments" Role="SAPCpiOutboundQuoteComment"/>
+                </AssociationSet>
+                <AssociationSet Association="HybrisCommerceOData.FK_SAPCpiOutboundQuoteStatus_itemComments" Name="SAPCpiOutboundQuoteStatus_SAPCpiOutboundQuoteComments">
+                    <End EntitySet="SAPCpiOutboundQuoteStatuses" Role="SAPCpiOutboundQuoteStatus"/>
+                    <End EntitySet="SAPCpiOutboundQuoteComments" Role="SAPCpiOutboundQuoteComment"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

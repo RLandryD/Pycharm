@@ -1,0 +1,1004 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.sap.com/eDocument/Chile/LiberoBOLETA/v1.0"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	name="eDocChileLiberoBOLETA_v1"
+	targetNamespace="http://www.sap.com/eDocument/Chile/LiberoBOLETA/v1.0">
+
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://www.sap.com/eDocument/Chile/LiberoBOLETA/v1.0">
+			<xsd:element name="SignMonthlyBoletaSummary">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="LibroBoleta">
+							<xsd:annotation>
+								<xsd:documentation>Informacion Electronica de Libros de Boletas
+								</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="EnvioLibro">
+										<xsd:annotation>
+											<xsd:documentation>Identificacion, Resumen y Detalles del
+												Libro
+												Electronico
+											</xsd:documentation>
+										</xsd:annotation>
+										<xsd:complexType>
+											<xsd:sequence>
+												<xsd:element name="Caratula">
+													<xsd:annotation>
+														<xsd:documentation>Identificacion del Envio del Libro
+															Electronico
+														</xsd:documentation>
+													</xsd:annotation>
+													<xsd:complexType>
+														<xsd:sequence>
+															<xsd:element name="RutEmisorLibro" type="tns:RUTType">
+																<xsd:annotation>
+																	<xsd:documentation>RUT del Emisor del Libro Electronico
+																	</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="RutEnvia" type="tns:RUTType">
+																<xsd:annotation>
+																	<xsd:documentation>RUT que Realiza el Envio del Libro
+																		Electronico
+																	</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="PeriodoTributario" type="xsd:gYearMonth">
+																<xsd:annotation>
+																	<xsd:documentation>Periodo Tributario del Libro
+																		Electronico (AAAA-MM)
+																	</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="FchResol" type="xsd:date">
+																<xsd:annotation>
+																	<xsd:documentation>Fecha de Resolucion que Autoriza el
+																		Envio de Libros (AAAA-MM-DD)
+																	</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="NroResol">
+																<xsd:annotation>
+																	<xsd:documentation>Numero de Resolucion que Autoriza el
+																		Envio de Libros
+																	</xsd:documentation>
+																</xsd:annotation>
+																<xsd:simpleType>
+																	<xsd:restriction base="xsd:nonNegativeInteger">
+																		<xsd:totalDigits value="6" />
+																	</xsd:restriction>
+																</xsd:simpleType>
+															</xsd:element>
+															<xsd:element name="TipoLibro">
+																<xsd:annotation>
+																	<xsd:documentation>Tipo de Libro al que Corresponde el
+																		Envio
+																	</xsd:documentation>
+																</xsd:annotation>
+																<xsd:simpleType>
+																	<xsd:restriction base="xsd:string">
+																		<xsd:maxLength value="10" />
+																		<xsd:enumeration value="ESPECIAL" />
+																	</xsd:restriction>
+																</xsd:simpleType>
+															</xsd:element>
+															<xsd:element name="TipoEnvio" minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Tipo de Envio del Libro Electronico
+																	</xsd:documentation>
+																</xsd:annotation>
+																<xsd:simpleType>
+																	<xsd:restriction base="xsd:string">
+																		<xsd:enumeration value="PARCIAL">
+																			<xsd:annotation>
+																				<xsd:documentation>Indica que es un Envio Parcial del
+																					Libro y que Faltan Otros para Completar el Libro
+																				</xsd:documentation>
+																			</xsd:annotation>
+																		</xsd:enumeration>
+																		<xsd:enumeration value="FINAL">
+																			<xsd:annotation>
+																				<xsd:documentation>Indica que es el Ultimo Envio
+																					Parcial. Con Esto se Completa el Libro.
+																				</xsd:documentation>
+																			</xsd:annotation>
+																		</xsd:enumeration>
+																		<xsd:enumeration value="TOTAL">
+																			<xsd:annotation>
+																				<xsd:documentation>Indica que es el Unico Envio que
+																					Compone el Libro
+																				</xsd:documentation>
+																			</xsd:annotation>
+																		</xsd:enumeration>
+																		<xsd:enumeration value="AJUSTE">
+																			<xsd:annotation>
+																				<xsd:documentation>Indica que es un Envio con
+																					Informacion para Corregir un Libro Previamente
+																					Enviado
+																				</xsd:documentation>
+																			</xsd:annotation>
+																		</xsd:enumeration>
+																	</xsd:restriction>
+																</xsd:simpleType>
+															</xsd:element>
+															<xsd:element name="NroSegmento" minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Correlativo del Segmento de Libro
+																	</xsd:documentation>
+																</xsd:annotation>
+																<xsd:simpleType>
+																	<xsd:restriction base="xsd:positiveInteger">
+																		<xsd:totalDigits value="6" />
+																	</xsd:restriction>
+																</xsd:simpleType>
+															</xsd:element>
+															<xsd:element name="FolioNotificacion">
+																<xsd:annotation>
+																	<xsd:documentation>Folio de la Notificacion con que se
+																		Solicita el Libro Especial
+																	</xsd:documentation>
+																</xsd:annotation>
+																<xsd:simpleType>
+																	<xsd:restriction base="xsd:positiveInteger">
+																		<xsd:totalDigits value="18" />
+																	</xsd:restriction>
+																</xsd:simpleType>
+															</xsd:element>
+														</xsd:sequence>
+													</xsd:complexType>
+												</xsd:element>
+												<xsd:element name="ResumenSegmento" minOccurs="0">
+													<xsd:annotation>
+														<xsd:documentation>Resumen del Segmento de Informacion
+															Enviado
+														</xsd:documentation>
+													</xsd:annotation>
+													<xsd:complexType>
+														<xsd:sequence>
+															<xsd:element name="TotalesSegmento" maxOccurs="2">
+																<xsd:annotation>
+																	<xsd:documentation>Totales de Control, por Tipo de
+																		Documento, Tipo de Servicio y Periodo de Devengo, Para
+																		el Segmento
+																	</xsd:documentation>
+																</xsd:annotation>
+																<xsd:complexType>
+																	<xsd:sequence>
+																		<xsd:element name="TpoDoc" type="tns:DoctoType">
+																			<xsd:annotation>
+																				<xsd:documentation>Tipo de Documento Resumido
+																				</xsd:documentation>
+																			</xsd:annotation>
+																		</xsd:element>
+																		<xsd:element name="TotAnulado" minOccurs="0">
+																			<xsd:annotation>
+																				<xsd:documentation>Total de Folios Anulados
+																				</xsd:documentation>
+																			</xsd:annotation>
+																			<xsd:simpleType>
+																				<xsd:restriction base="xsd:integer">
+																					<xsd:totalDigits value="10" />
+																				</xsd:restriction>
+																			</xsd:simpleType>
+																		</xsd:element>
+																		<xsd:element name="TotalesServicio"
+																			minOccurs="0" maxOccurs="9">
+																			<xsd:annotation>
+																				<xsd:documentation>Totales de Control por Tipo de
+																					Servicio y Periodo de Devengo
+																				</xsd:documentation>
+																			</xsd:annotation>
+																			<xsd:complexType>
+																				<xsd:sequence>
+																					<xsd:element name="TpoServ">
+																						<xsd:annotation>
+																							<xsd:documentation>Tipo de Servicio Resumido
+																							</xsd:documentation>
+																						</xsd:annotation>
+																						<xsd:simpleType>
+																							<xsd:restriction base="xsd:positiveInteger">
+																								<xsd:totalDigits value="1" />
+																								<xsd:enumeration value="1">
+																									<xsd:annotation>
+																										<xsd:documentation>Servicio Periodico
+																										</xsd:documentation>
+																									</xsd:annotation>
+																								</xsd:enumeration>
+																								<xsd:enumeration value="2">
+																									<xsd:annotation>
+																										<xsd:documentation>Servicio Periodico
+																											Domiciliario
+																										</xsd:documentation>
+																									</xsd:annotation>
+																								</xsd:enumeration>
+																								<xsd:enumeration value="3">
+																									<xsd:annotation>
+																										<xsd:documentation>Venta y Servicio
+																										</xsd:documentation>
+																									</xsd:annotation>
+																								</xsd:enumeration>
+																								<xsd:enumeration value="4">
+																									<xsd:annotation>
+																										<xsd:documentation>Boleta de Espectáculo
+																											emitida
+																											por cuenta de Terceros
+																										</xsd:documentation>
+																									</xsd:annotation>
+																								</xsd:enumeration>
+																							</xsd:restriction>
+																						</xsd:simpleType>
+																					</xsd:element>
+																					<xsd:element name="PeriodoDevengo" type="xsd:gYearMonth"
+																						minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Periodo (AAAA-MM) en que Vencen
+																								los Documentos
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotDoc">
+																						<xsd:annotation>
+																							<xsd:documentation>Numero de Documentos del Tipo
+																								Incluidos en el Libro Electronico
+																							</xsd:documentation>
+																						</xsd:annotation>
+																						<xsd:simpleType>
+																							<xsd:restriction base="xsd:integer">
+																								<xsd:totalDigits value="10" />
+																							</xsd:restriction>
+																						</xsd:simpleType>
+																					</xsd:element>
+																					<xsd:element name="TotMntExe" type="tns:MontoType"
+																						minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Total de los Montos Exentos
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotMntTotal" type="tns:MontoType">
+																						<xsd:annotation>
+																							<xsd:documentation>Total de los Montos Totales
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotMntNoFact" type="tns:ValorType"
+																						minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Total Monto No Facturable
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotMntPeriodo" type="tns:ValorType"
+																						minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Total Monto Periodo
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotSaldoAnt" type="tns:ValorType"
+																						minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Total Saldo Anterior
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotVlrPagar" type="tns:ValorType"
+																						minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Total Valor a Pagar
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotTicket" minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Total de Ticket informados en
+																								el
+																								Segmento
+																							</xsd:documentation>
+																						</xsd:annotation>
+																						<xsd:simpleType>
+																							<xsd:restriction base="tns:MontoType">
+																								<xsd:totalDigits value="7" />
+																							</xsd:restriction>
+																						</xsd:simpleType>
+																					</xsd:element>
+																				</xsd:sequence>
+																			</xsd:complexType>
+																		</xsd:element>
+																	</xsd:sequence>
+																</xsd:complexType>
+															</xsd:element>
+														</xsd:sequence>
+													</xsd:complexType>
+												</xsd:element>
+												<xsd:element name="ResumenPeriodo" minOccurs="0">
+													<xsd:annotation>
+														<xsd:documentation>Resumen Para el Periodo Tributario
+														</xsd:documentation>
+													</xsd:annotation>
+													<xsd:complexType>
+														<xsd:sequence>
+															<xsd:element name="TotalesPeriodo" maxOccurs="2">
+																<xsd:annotation>
+																	<xsd:documentation>Totales de Control, por Tipo de
+																		Documento, Tipo de Servicio y Periodo de Devengo, Para
+																		el Periodo Tributario
+																	</xsd:documentation>
+																</xsd:annotation>
+																<xsd:complexType>
+																	<xsd:sequence>
+																		<xsd:element name="TpoDoc" type="tns:DoctoType">
+																			<xsd:annotation>
+																				<xsd:documentation>Tipo de Documento Resumido
+																				</xsd:documentation>
+																			</xsd:annotation>
+																		</xsd:element>
+																		<xsd:element name="TotAnulado" minOccurs="0">
+																			<xsd:annotation>
+																				<xsd:documentation>Total de Folios Anulados
+																				</xsd:documentation>
+																			</xsd:annotation>
+																			<xsd:simpleType>
+																				<xsd:restriction base="xsd:positiveInteger">
+																					<xsd:totalDigits value="10" />
+																				</xsd:restriction>
+																			</xsd:simpleType>
+																		</xsd:element>
+																		<xsd:element name="TotalesServicio"
+																			maxOccurs="9">
+																			<xsd:annotation>
+																				<xsd:documentation>Totales de Control por Tipo de
+																					Servicio y Periodo de Devengo
+																				</xsd:documentation>
+																			</xsd:annotation>
+																			<xsd:complexType>
+																				<xsd:sequence>
+																					<xsd:element name="TpoServ">
+																						<xsd:annotation>
+																							<xsd:documentation>Tipo de Servicio Resumido
+																							</xsd:documentation>
+																						</xsd:annotation>
+																						<xsd:simpleType>
+																							<xsd:restriction base="xsd:positiveInteger">
+																								<xsd:totalDigits value="1" />
+																								<xsd:enumeration value="1">
+																									<xsd:annotation>
+																										<xsd:documentation>Servicio Periodico
+																										</xsd:documentation>
+																									</xsd:annotation>
+																								</xsd:enumeration>
+																								<xsd:enumeration value="2">
+																									<xsd:annotation>
+																										<xsd:documentation>Servicio Periodico
+																											Domiciliario
+																										</xsd:documentation>
+																									</xsd:annotation>
+																								</xsd:enumeration>
+																								<xsd:enumeration value="3">
+																									<xsd:annotation>
+																										<xsd:documentation>Venta y Servicio
+																										</xsd:documentation>
+																									</xsd:annotation>
+																								</xsd:enumeration>
+																								<xsd:enumeration value="4">
+																									<xsd:annotation>
+																										<xsd:documentation>Boleta de Espectáculo
+																											emitida
+																											por cuenta de Terceros
+																										</xsd:documentation>
+																									</xsd:annotation>
+																								</xsd:enumeration>
+																							</xsd:restriction>
+																						</xsd:simpleType>
+																					</xsd:element>
+																					<xsd:element name="PeriodoDevengado"
+																						type="xsd:gYearMonth" minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Periodo (AAAA-MM) en que Vencen
+																								lod Documentos
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotDoc" type="xsd:positiveInteger">
+																						<xsd:annotation>
+																							<xsd:documentation>Numero de Documentos del Tipo
+																								Incluidos en el Libro Electronico
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotMntExe" type="tns:MontoType"
+																						minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Total de los Montos Exentos
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotMntNeto" type="tns:MontoType">
+																						<xsd:annotation>
+																							<xsd:documentation>Total de los Montos Netos
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TasaIVA" type="tns:PctType"
+																						minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Tasa de IVA Aplicada a los
+																								Documentos
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotMntIVA" type="tns:MontoType">
+																						<xsd:annotation>
+																							<xsd:documentation>Total de los Montos de IVA
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotMntTotal" type="tns:MontoType">
+																						<xsd:annotation>
+																							<xsd:documentation>Total de los Montos Totales
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotMntNoFact" type="tns:ValorType"
+																						minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Total Monto No Facturable
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotMntPeriodo" type="tns:ValorType"
+																						minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Total Monto Periodo
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotSaldoAnt" type="tns:MontoType"
+																						minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Total Saldo Anterior
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotVlrPagar" type="tns:MontoType"
+																						minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Total Valor a Pagar
+																							</xsd:documentation>
+																						</xsd:annotation>
+																					</xsd:element>
+																					<xsd:element name="TotTicket" minOccurs="0">
+																						<xsd:annotation>
+																							<xsd:documentation>Total de Ticket informados en
+																								el
+																								Periodo
+																							</xsd:documentation>
+																						</xsd:annotation>
+																						<xsd:simpleType>
+																							<xsd:restriction base="tns:MontoType">
+																								<xsd:totalDigits value="7" />
+																							</xsd:restriction>
+																						</xsd:simpleType>
+																					</xsd:element>
+																				</xsd:sequence>
+																			</xsd:complexType>
+																		</xsd:element>
+																	</xsd:sequence>
+																</xsd:complexType>
+															</xsd:element>
+														</xsd:sequence>
+													</xsd:complexType>
+												</xsd:element>
+												<xsd:element name="Detalle" minOccurs="0"
+													maxOccurs="unbounded">
+													<xsd:annotation>
+														<xsd:documentation>Detalle de Documentos que Componen el
+															Libro Electronico
+														</xsd:documentation>
+													</xsd:annotation>
+													<xsd:complexType>
+														<xsd:sequence>
+															<xsd:element name="TpoDoc" type="tns:DoctoType">
+																<xsd:annotation>
+																	<xsd:documentation>Tipo de Boleta</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="FolioDoc">
+																<xsd:annotation>
+																	<xsd:documentation>Folio de la Boleta</xsd:documentation>
+																</xsd:annotation>
+																<xsd:simpleType>
+																	<xsd:restriction base="xsd:positiveInteger">
+																		<xsd:totalDigits value="10" />
+																	</xsd:restriction>
+																</xsd:simpleType>
+															</xsd:element>
+															<xsd:element name="Anulado" minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Indica que el Estado de la Boleta es
+																		Anulado
+																	</xsd:documentation>
+																</xsd:annotation>
+																<xsd:simpleType>
+																	<xsd:restriction base="xsd:string">
+																		<xsd:enumeration value="A">
+																			<xsd:annotation>
+																				<xsd:documentation>Documento Anulado
+																				</xsd:documentation>
+																			</xsd:annotation>
+																		</xsd:enumeration>
+																	</xsd:restriction>
+																</xsd:simpleType>
+															</xsd:element>
+															<xsd:element name="TpoServ" minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Tipo de Servicio de la Boleta
+																	</xsd:documentation>
+																</xsd:annotation>
+																<xsd:simpleType>
+																	<xsd:restriction base="xsd:positiveInteger">
+																		<xsd:totalDigits value="1" />
+																		<xsd:enumeration value="1">
+																			<xsd:annotation>
+																				<xsd:documentation>Servicio Periodico
+																				</xsd:documentation>
+																			</xsd:annotation>
+																		</xsd:enumeration>
+																		<xsd:enumeration value="2">
+																			<xsd:annotation>
+																				<xsd:documentation>Servicio Periodico Domiciliario
+																				</xsd:documentation>
+																			</xsd:annotation>
+																		</xsd:enumeration>
+																		<xsd:enumeration value="3">
+																			<xsd:annotation>
+																				<xsd:documentation>Venta y Servicio
+																				</xsd:documentation>
+																			</xsd:annotation>
+																		</xsd:enumeration>
+																		<xsd:enumeration value="4">
+																			<xsd:annotation>
+																				<xsd:documentation>Boleta de Espectáculo emitida por
+																					cuenta de Terceros
+																				</xsd:documentation>
+																			</xsd:annotation>
+																		</xsd:enumeration>
+																	</xsd:restriction>
+																</xsd:simpleType>
+															</xsd:element>
+															<xsd:element name="FchEmiDoc" type="xsd:date"
+																minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Fecha de Emision del Documento
+																		(AAAA-MM-DD)
+																	</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="FchVencDoc" type="xsd:date"
+																minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Fecha de Vencimiento del Documento
+																		(AAAA-MM-DD)
+																	</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="PeriodoDesde" type="xsd:date"
+																minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Inicio de Periodo de Cobro
+																	</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="PeriodoHasta" type="xsd:date"
+																minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Termino de Periodo de Cobro
+																	</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="CdgSIISucur" minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Codigo de Sucursal Entregado por el
+																		SII
+																	</xsd:documentation>
+																</xsd:annotation>
+																<xsd:simpleType>
+																	<xsd:restriction base="xsd:positiveInteger">
+																		<xsd:totalDigits value="8" />
+																	</xsd:restriction>
+																</xsd:simpleType>
+															</xsd:element>
+															<xsd:element name="RUTCliente" type="tns:RUTType"
+																minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>RUT del Contraparte en la Operación
+																		Comercial
+																	</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="CodIntCli" minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Codigo Interno de la Contraparte en
+																		la
+																		Operacion Comercial
+																	</xsd:documentation>
+																</xsd:annotation>
+																<xsd:simpleType>
+																	<xsd:restriction base="xsd:string">
+																		<xsd:maxLength value="80" />
+																	</xsd:restriction>
+																</xsd:simpleType>
+															</xsd:element>
+															<xsd:element name="MntExe" type="tns:MontoType"
+																minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Monto Exento del Documento
+																	</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="MntTotal" type="tns:MontoType"
+																minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Monto Total del Documento
+																	</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="MntNoFact" type="tns:ValorType"
+																minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation> Monto No Facturable
+																	</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="MntPeriodo" type="tns:ValorType"
+																minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Total Monto Periodo
+																	</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="SaldoAnt" type="tns:ValorType"
+																minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Saldo Anterior</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="VlrPagar" type="tns:ValorType"
+																minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Valor Total a Pagar
+																	</xsd:documentation>
+																</xsd:annotation>
+															</xsd:element>
+															<xsd:element name="TotTicketBoleta" minOccurs="0">
+																<xsd:annotation>
+																	<xsd:documentation>Total de Ticket informados en la
+																		Boleta
+																	</xsd:documentation>
+																</xsd:annotation>
+																<xsd:simpleType>
+																	<xsd:restriction base="tns:MontoType">
+																		<xsd:totalDigits value="3" />
+																	</xsd:restriction>
+																</xsd:simpleType>
+															</xsd:element>
+														</xsd:sequence>
+													</xsd:complexType>
+												</xsd:element>
+												<xsd:element name="TmstFirma">
+													<xsd:annotation>
+														<xsd:documentation>Fecha y Hora en formato
+															AAAA-MM-DDTHH24:MI:SS de la Firma Electronica
+														</xsd:documentation>
+													</xsd:annotation>
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:dateTime" />
+													</xsd:simpleType>
+												</xsd:element>
+											</xsd:sequence>
+											<xsd:attribute name="ID" type="xsd:ID" use="required" />
+										</xsd:complexType>
+									</xsd:element>
+									<!-- <xsd:element name="Signature" type="tns:SignatureType"> -->
+									<!-- <xsd:annotation> -->
+									<!-- <xsd:documentation>Firma Digital del Envio del Libro -->
+									<!-- Electronico -->
+									<!-- </xsd:documentation> -->
+									<!-- </xsd:annotation> -->
+									<!-- </xsd:element> -->
+								</xsd:sequence>
+								<xsd:attribute name="version" type="xsd:decimal" use="required"
+									fixed="1.0" />
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="SignBoletaSummaryResponseParameters">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="SignedMonthlyBoletaSummary" type="xsd:base64Binary" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<!-- <xsd:complexType name="SignatureType"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Firma Digital con Restricciones -->
+			<!-- </xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- <xsd:sequence> -->
+			<!-- <xsd:element name="SignedInfo"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Descripcion de la Informacion Firmada y del -->
+			<!-- Metodo de Firma</xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- <xsd:complexType> -->
+			<!-- <xsd:sequence> -->
+			<!-- <xsd:element name="CanonicalizationMethod"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Algoritmo de Canonicalizacion -->
+			<!-- </xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- <xsd:complexType> -->
+			<!-- <xsd:attribute name="Algorithm" type="xsd:anyURI" -->
+			<!-- use="required" fixed="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" 
+				/> -->
+			<!-- </xsd:complexType> -->
+			<!-- </xsd:element> -->
+			<!-- <xsd:element name="SignatureMethod"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Algoritmo de Firma</xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- <xsd:complexType> -->
+			<!-- <xsd:attribute name="Algorithm" use="required"> -->
+			<!-- <xsd:simpleType> -->
+			<!-- <xsd:restriction base="xsd:anyURI"> -->
+			<!-- <xsd:enumeration -->
+			<!-- value="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /> -->
+			<!-- <xsd:enumeration -->
+			<!-- value="http://www.w3.org/2000/09/xmldsig#dsa-sha1" /> -->
+			<!-- </xsd:restriction> -->
+			<!-- </xsd:simpleType> -->
+			<!-- </xsd:attribute> -->
+			<!-- </xsd:complexType> -->
+			<!-- </xsd:element> -->
+			<!-- <xsd:element name="Reference"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Referencia a Elemento Firmado -->
+			<!-- </xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- <xsd:complexType> -->
+			<!-- <xsd:sequence> -->
+			<!-- <xsd:element name="Transforms" minOccurs="0"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Algoritmo de Transformacion -->
+			<!-- </xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- <xsd:complexType> -->
+			<!-- <xsd:sequence> -->
+			<!-- <xsd:element name="Transform"> -->
+			<!-- <xsd:complexType> -->
+			<!-- <xsd:attribute name="Algorithm" type="xsd:anyURI" -->
+			<!-- use="required" /> -->
+			<!-- </xsd:complexType> -->
+			<!-- </xsd:element> -->
+			<!-- </xsd:sequence> -->
+			<!-- </xsd:complexType> -->
+			<!-- </xsd:element> -->
+			<!-- <xsd:element name="DigestMethod"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Algoritmo de Digest</xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- <xsd:complexType> -->
+			<!-- <xsd:attribute name="Algorithm" type="xsd:anyURI" -->
+			<!-- use="required" fixed="http://www.w3.org/2000/09/xmldsig#sha1" /> -->
+			<!-- </xsd:complexType> -->
+			<!-- </xsd:element> -->
+			<!-- <xsd:element name="DigestValue" type="xsd:base64Binary"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Valor de Digest</xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- </xsd:element> -->
+			<!-- </xsd:sequence> -->
+			<!-- <xsd:attribute name="URI" type="xsd:anyURI" use="required" /> -->
+			<!-- </xsd:complexType> -->
+			<!-- </xsd:element> -->
+			<!-- </xsd:sequence> -->
+			<!-- </xsd:complexType> -->
+			<!-- </xsd:element> -->
+			<!-- <xsd:element name="SignatureValue" type="xsd:base64Binary"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Valor de la Firma Digital</xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- </xsd:element> -->
+			<!-- <xsd:element name="KeyInfo"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Informacion de Claves Publicas y Certificado -->
+			<!-- </xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- <xsd:complexType> -->
+			<!-- <xsd:sequence> -->
+			<!-- <xsd:element name="KeyValue"> -->
+			<!-- <xsd:complexType> -->
+			<!-- <xsd:choice> -->
+			<!-- <xsd:element name="RSAKeyValue"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Informacion de Claves Publicas RSA -->
+			<!-- </xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- <xsd:complexType> -->
+			<!-- <xsd:sequence> -->
+			<!-- <xsd:element name="Modulus" type="xsd:base64Binary"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Modulo Clave RSA</xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- </xsd:element> -->
+			<!-- <xsd:element name="Exponent" type="xsd:base64Binary"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Exponente Clave RSA</xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- </xsd:element> -->
+			<!-- </xsd:sequence> -->
+			<!-- </xsd:complexType> -->
+			<!-- </xsd:element> -->
+			<!-- <xsd:element name="DSAKeyValue"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Informacion de Claves Publicas DSA -->
+			<!-- </xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- <xsd:complexType> -->
+			<!-- <xsd:sequence> -->
+			<!-- <xsd:element name="P" type="xsd:base64Binary"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Modulo Primo</xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- </xsd:element> -->
+			<!-- <xsd:element name="Q" type="xsd:base64Binary"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Entero Divisor de P - 1 -->
+			<!-- </xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- </xsd:element> -->
+			<!-- <xsd:element name="G" type="xsd:base64Binary"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Entero f(P, Q)</xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- </xsd:element> -->
+			<!-- <xsd:element name="Y" type="xsd:base64Binary"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>G**X mod P</xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- </xsd:element> -->
+			<!-- </xsd:sequence> -->
+			<!-- </xsd:complexType> -->
+			<!-- </xsd:element> -->
+			<!-- </xsd:choice> -->
+			<!-- </xsd:complexType> -->
+			<!-- </xsd:element> -->
+			<!-- <xsd:element name="X509Data"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Informacion del Certificado Publico -->
+			<!-- </xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- <xsd:complexType> -->
+			<!-- <xsd:sequence> -->
+			<!-- <xsd:element name="X509Certificate" type="xsd:base64Binary"> -->
+			<!-- <xsd:annotation> -->
+			<!-- <xsd:documentation>Certificado Publico</xsd:documentation> -->
+			<!-- </xsd:annotation> -->
+			<!-- </xsd:element> -->
+			<!-- </xsd:sequence> -->
+			<!-- </xsd:complexType> -->
+			<!-- </xsd:element> -->
+			<!-- </xsd:sequence> -->
+			<!-- </xsd:complexType> -->
+			<!-- </xsd:element> -->
+			<!-- </xsd:sequence> -->
+			<!-- </xsd:complexType> -->
+			<xsd:simpleType name="RUTType">
+
+				<xsd:annotation>
+					<xsd:documentation>RUT 99999999-X</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:string">
+
+					<xsd:maxLength value="10" />
+					<xsd:minLength value="3" />
+					<xsd:pattern value="[0-9]+-([0-9]|K)" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="MontoType">
+
+				<xsd:annotation>
+					<xsd:documentation>Monto 18 digitos (mayor o igual a cero)
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:nonNegativeInteger">
+
+					<xsd:totalDigits value="18" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ValorType">
+
+				<xsd:annotation>
+					<xsd:documentation>Monto 18 digitos (positivo o negativo)
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:integer">
+
+					<xsd:totalDigits value="18" />
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="DoctoType">
+
+				<xsd:annotation>
+					<xsd:documentation>Tipos de Documentos</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:positiveInteger">
+
+					<xsd:enumeration value="39">
+						<xsd:annotation>
+							<xsd:documentation>Boleta Electronica</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="41">
+						<xsd:annotation>
+							<xsd:documentation>Boleta Exenta Electronica</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="PctType">
+
+				<xsd:annotation>
+					<xsd:documentation>Porcentaje (3 enteros y 2 decimales)
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:restriction base="xsd:decimal">
+
+					<xsd:totalDigits value="5" />
+					<xsd:fractionDigits value="2" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:schema>
+	</wsdl:types>
+
+
+	<wsdl:message name="SignMonthlyBoletaSummaryRequest">
+		<wsdl:part element="tns:SignMonthlyBoletaSummary" name="SignBoletaSummaryRequestParameters" />
+	</wsdl:message>
+	<wsdl:message name="SignMonthlyBoletaSummaryResponse">
+		<wsdl:part element="tns:SignBoletaSummaryResponseParameters"
+			name="SignBoletaSummaryResponseParameters" />
+	</wsdl:message>
+	<wsdl:portType name="eDocChileLiberoBOLETA_v1">
+		<wsdl:operation name="SignMonthlyBoletaSummary">
+			<wsdl:input message="tns:SignMonthlyBoletaSummaryRequest" />
+			<wsdl:output message="tns:SignMonthlyBoletaSummaryResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="eDocChileLiberoBOLETA_v1SOAP" type="tns:eDocChileLiberoBOLETA_v1">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="SignMonthlyBoletaSummary">
+			<soap:operation
+				soapAction="http://www.sap.com/eDocument/Chile/LiberoBOLETA/v1.0/NewOperation" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="eDocChileLiberoBOLETA_v1">
+		<wsdl:port binding="tns:eDocChileLiberoBOLETA_v1SOAP" name="eDocChileLiberoBOLETA_v1SOAP">
+			<soap:address location="http://www.example.org/" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

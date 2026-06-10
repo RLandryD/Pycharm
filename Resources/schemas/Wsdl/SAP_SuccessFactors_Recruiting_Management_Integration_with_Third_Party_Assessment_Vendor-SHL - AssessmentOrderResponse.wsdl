@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions name="WebServiceProvider"
+	targetNamespace="http://www.sap.com/connector/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.sap.com/connector/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<!-- Schema 3 -->
+		<xs:schema xmlns:tns="com.successfactors.alert"
+			elementFormDefault="qualified" targetNamespace="com.successfactors.alert"
+			version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+			<xs:element name="rcmAssessmentRequest" type="tns:rcmAssessmentRequest" />
+			<xs:complexType name="rcmAssessmentRequest">
+				<xs:sequence>
+					<xs:element maxOccurs="1" minOccurs="1" name="entityName"
+						type="xs:string" />
+					<xs:element maxOccurs="1" minOccurs="1" name="entityId"
+						type="xs:string" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="rcmAssessmentResponse" type="tns:rcmAssessmentResponse" />
+			<xs:complexType name="rcmAssessmentResponse">
+				<xs:sequence>
+					<xs:element maxOccurs="1" minOccurs="0" name="entityId"
+						type="xs:string" />
+					<xs:element maxOccurs="1" minOccurs="0" name="status"
+						type="xs:string" />
+					<xs:element maxOccurs="1" minOccurs="0" name="statusDate"
+						type="xs:dateTime" />
+					<xs:element maxOccurs="1" minOccurs="0" name="statusDetails"
+						type="xs:string" />
+					<xs:element maxOccurs="1" minOccurs="0" name="assessmentUrl"
+						type="xs:string" />
+					<xs:element maxOccurs="1" minOccurs="0" name="receiptId"
+						type="xs:string" />
+					<xs:element maxOccurs="1" minOccurs="0" name="errorCode"
+						type="xs:string" />
+					<xs:element maxOccurs="1" minOccurs="0" name="errorMessage"
+						type="xs:string" />
+				</xs:sequence>
+			</xs:complexType>
+		</xs:schema>
+		<!-- Remaining WSDL -->
+	</wsdl:types>
+
+	<wsdl:part element="tns:createAssessmentResultResponse" name="parameters" />
+
+	<wsdl:message name="createRcmAssessmentRequest">
+		<wsdl:part element="tns:createRcmAssessmentRequest" name="parameters" />
+	</wsdl:message>
+	<wsdl:message name="createRcmAssessmentRequestResponse">
+		<wsdl:part element="tns:createRcmAssessmentRequestResponse"
+			name="parameters" />
+	</wsdl:message>
+	<wsdl:portType name="WebServiceProviderPortType">
+		<wsdl:operation name="createRcmAssessmentRequest">
+			<wsdl:input message="tns:createRcmAssessmentRequest" />
+			<wsdl:output message="tns:createRcmAssessmentRequestResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="WebServiceProviderPortBinding" type="tns:WebServiceProviderPortType">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="createRcmAssessmentRequest">
+			<soap:operation soapAction="createRcmAssessmentRequest" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="WebServiceProvider">
+		<wsdl:port binding="tns:WebServiceProviderPortBinding" name="WebServiceProviderPort">
+			<soap:address location="https://boomiqa.successfactors.com/ws/soap" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

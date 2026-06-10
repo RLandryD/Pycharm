@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+ </edmx:Reference>
+ <edmx:DataServices m:DataServiceVersion="2.0">
+  <Schema Namespace="API_DEFECTCODE_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+   <EntityType Name="A_DefectCodeType" sap:label="Defect Codes" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="DefectCodeGroup"/>
+     <PropertyRef Name="DefectCode"/>
+    </Key>
+    <Property Name="DefectCodeGroup" Type="Edm.String" Nullable="false" MaxLength="8" sap:display-format="UpperCase" sap:label="Defect Code Group" sap:value-list="standard"/>
+    <Property Name="DefectCode" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Defect Code"/>
+    <Property Name="CodeIsInactive" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Record inactive" sap:quickinfo="Status of Code Group or Code Record"/>
+    <Property Name="CodeGroupIsUsable" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Code Group Is Usable"/>
+    <NavigationProperty Name="to_DefectCodeGroup" Relationship="API_DEFECTCODE_SRV.assoc_250AD263F4A9213CD761FB954C782DCB" FromRole="FromRole_assoc_250AD263F4A9213CD761FB954C782DCB" ToRole="ToRole_assoc_250AD263F4A9213CD761FB954C782DCB"/>
+    <NavigationProperty Name="to_Text" Relationship="API_DEFECTCODE_SRV.assoc_02499E6694730103B306DD90C7760153" FromRole="FromRole_assoc_02499E6694730103B306DD90C7760153" ToRole="ToRole_assoc_02499E6694730103B306DD90C7760153"/>
+   </EntityType>
+   <EntityType Name="A_DefectCodeGroupType" sap:label="Defect Code Groups" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="DefectCodeGroup"/>
+    </Key>
+    <Property Name="DefectCodeGroup" Type="Edm.String" Nullable="false" MaxLength="8" sap:display-format="UpperCase" sap:label="Defect Code Group"/>
+    <Property Name="CodeGroupIsInactive" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Record inactive" sap:quickinfo="Status of Code Group or Code Record"/>
+    <Property Name="CodeGroupIsUsable" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Code Group Is Usable"/>
+    <NavigationProperty Name="to_Text" Relationship="API_DEFECTCODE_SRV.assoc_750AFB0657664100CD9D244B3286B73B" FromRole="FromRole_assoc_750AFB0657664100CD9D244B3286B73B" ToRole="ToRole_assoc_750AFB0657664100CD9D244B3286B73B"/>
+   </EntityType>
+   <EntityType Name="A_DefectCodeGroupTextType" sap:label="Defect Code Group Texts" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="DefectCodeGroup"/>
+     <PropertyRef Name="Language"/>
+    </Key>
+    <Property Name="DefectCodeGroup" Type="Edm.String" Nullable="false" MaxLength="8" sap:display-format="UpperCase" sap:label="Defect Code Group"/>
+    <Property Name="Language" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key">
+     <Documentation>
+      <Summary>The language key indicates</Summary>
+      <LongDescription>- the language in which texts are displayed,- the language in which you enter texts,- the language in which the system prints texts.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="DefectCodeGroupText" Type="Edm.String" MaxLength="40" sap:label="Defect Code Group Text" sap:quickinfo="Text for Defect Code Group"/>
+   </EntityType>
+   <EntityType Name="A_DefectCodeTextType" sap:label="Defect Code Texts" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="DefectCodeGroup"/>
+     <PropertyRef Name="DefectCode"/>
+     <PropertyRef Name="Language"/>
+    </Key>
+    <Property Name="DefectCodeGroup" Type="Edm.String" Nullable="false" MaxLength="8" sap:display-format="UpperCase" sap:label="Defect Code Group"/>
+    <Property Name="DefectCode" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Defect Code"/>
+    <Property Name="Language" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key">
+     <Documentation>
+      <Summary>The language key indicates</Summary>
+      <LongDescription>- the language in which texts are displayed,- the language in which you enter texts,- the language in which the system prints texts.</LongDescription>
+     </Documentation>
+    </Property>
+    <Property Name="DefectCodeText" Type="Edm.String" MaxLength="40" sap:label="Short Text for Code">
+     <Documentation>
+      <Summary>Text of up to 40 characters that describes the object in more detail. This description is also known as short text.</Summary>
+      <LongDescription/>
+     </Documentation>
+    </Property>
+   </EntityType>
+   <Association Name="assoc_02499E6694730103B306DD90C7760153" sap:content-version="1">
+    <End Type="API_DEFECTCODE_SRV.A_DefectCodeType" Multiplicity="1" Role="FromRole_assoc_02499E6694730103B306DD90C7760153"/>
+    <End Type="API_DEFECTCODE_SRV.A_DefectCodeTextType" Multiplicity="*" Role="ToRole_assoc_02499E6694730103B306DD90C7760153"/>
+   </Association>
+   <Association Name="assoc_250AD263F4A9213CD761FB954C782DCB" sap:content-version="1">
+    <End Type="API_DEFECTCODE_SRV.A_DefectCodeType" Multiplicity="1" Role="FromRole_assoc_250AD263F4A9213CD761FB954C782DCB"/>
+    <End Type="API_DEFECTCODE_SRV.A_DefectCodeGroupType" Multiplicity="1" Role="ToRole_assoc_250AD263F4A9213CD761FB954C782DCB"/>
+    <ReferentialConstraint>
+     <Principal Role="ToRole_assoc_250AD263F4A9213CD761FB954C782DCB">
+      <PropertyRef Name="DefectCodeGroup"/>
+     </Principal>
+     <Dependent Role="FromRole_assoc_250AD263F4A9213CD761FB954C782DCB">
+      <PropertyRef Name="DefectCodeGroup"/>
+     </Dependent>
+    </ReferentialConstraint>
+   </Association>
+   <Association Name="assoc_750AFB0657664100CD9D244B3286B73B" sap:content-version="1">
+    <End Type="API_DEFECTCODE_SRV.A_DefectCodeGroupType" Multiplicity="1" Role="FromRole_assoc_750AFB0657664100CD9D244B3286B73B"/>
+    <End Type="API_DEFECTCODE_SRV.A_DefectCodeGroupTextType" Multiplicity="*" Role="ToRole_assoc_750AFB0657664100CD9D244B3286B73B"/>
+   </Association>
+   <EntityContainer Name="API_DEFECTCODE_SRV_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+    <EntitySet Name="A_DefectCode" EntityType="API_DEFECTCODE_SRV.A_DefectCodeType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+    <EntitySet Name="A_DefectCodeGroup" EntityType="API_DEFECTCODE_SRV.A_DefectCodeGroupType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+    <EntitySet Name="A_DefectCodeGroupText" EntityType="API_DEFECTCODE_SRV.A_DefectCodeGroupTextType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+    <EntitySet Name="A_DefectCodeText" EntityType="API_DEFECTCODE_SRV.A_DefectCodeTextType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+    <AssociationSet Name="assoc_250AD263F4A9213CD761FB954C782DCB" Association="API_DEFECTCODE_SRV.assoc_250AD263F4A9213CD761FB954C782DCB" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_DefectCode" Role="FromRole_assoc_250AD263F4A9213CD761FB954C782DCB"/>
+     <End EntitySet="A_DefectCodeGroup" Role="ToRole_assoc_250AD263F4A9213CD761FB954C782DCB"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_750AFB0657664100CD9D244B3286B73B" Association="API_DEFECTCODE_SRV.assoc_750AFB0657664100CD9D244B3286B73B" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_DefectCodeGroup" Role="FromRole_assoc_750AFB0657664100CD9D244B3286B73B"/>
+     <End EntitySet="A_DefectCodeGroupText" Role="ToRole_assoc_750AFB0657664100CD9D244B3286B73B"/>
+    </AssociationSet>
+    <AssociationSet Name="assoc_02499E6694730103B306DD90C7760153" Association="API_DEFECTCODE_SRV.assoc_02499E6694730103B306DD90C7760153" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="A_DefectCode" Role="FromRole_assoc_02499E6694730103B306DD90C7760153"/>
+     <End EntitySet="A_DefectCodeText" Role="ToRole_assoc_02499E6694730103B306DD90C7760153"/>
+    </AssociationSet>
+   </EntityContainer>
+   <Annotations Target="API_DEFECTCODE_SRV.A_DefectCodeType/DefectCodeGroup" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Common.ValueList">
+     <Record>
+      <PropertyValue Property="Label" String="Defect Code Groups"/>
+      <PropertyValue Property="CollectionPath" String="A_DefectCodeGroup"/>
+      <PropertyValue Property="SearchSupported" Bool="false"/>
+      <PropertyValue Property="Parameters">
+       <Collection>
+        <Record Type="Common.ValueListParameterInOut">
+         <PropertyValue Property="LocalDataProperty" PropertyPath="DefectCodeGroup"/>
+         <PropertyValue Property="ValueListProperty" String="DefectCodeGroup"/>
+        </Record>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_DEFECTCODE_SRV.API_DEFECTCODE_SRV_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+    <Annotation Term="Aggregation.ApplySupported">
+     <Record>
+      <PropertyValue Property="Transformations">
+       <Collection>
+        <String>aggregate</String>
+        <String>groupby</String>
+        <String>filter</String>
+       </Collection>
+      </PropertyValue>
+      <PropertyValue Property="Rollup" EnumMember="None"/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_DEFECTCODE_SRV.API_DEFECTCODE_SRV_Entities/A_DefectCode" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.ReadRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Reads all defect codes."/>
+      <PropertyValue Property="LongDescription" String="Reads all defect codes with their code groups and the information whether a code is inactive and the code group is usable."/>
+      <PropertyValue Property="ReadByKeyRestrictions">
+       <Record>
+        <PropertyValue Property="Description" String="Reads a specific code in a specific code group."/>
+        <PropertyValue Property="LongDescription" String="Reads a specific code in a specific code group with the information whether the code is inactive and the code group is usable."/>
+       </Record>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_DEFECTCODE_SRV.API_DEFECTCODE_SRV_Entities/A_DefectCodeText" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.ReadRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Reads all defect code texts."/>
+      <PropertyValue Property="LongDescription" String="Reads all existing defect code texts. You can filter by defect code group or language."/>
+      <PropertyValue Property="ReadByKeyRestrictions">
+       <Record>
+        <PropertyValue Property="Description" String="Reads a specific defect code text in a specific language."/>
+        <PropertyValue Property="LongDescription" String="Reads the text of a specific defect code in a specific code group and a specific language."/>
+       </Record>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_DEFECTCODE_SRV.API_DEFECTCODE_SRV_Entities/A_DefectCodeGroup" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.ReadRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Reads all defect code groups."/>
+      <PropertyValue Property="LongDescription" String="Reads all defect code groups with the information whether the code groups are inactive and whether they are usable."/>
+      <PropertyValue Property="ReadByKeyRestrictions">
+       <Record>
+        <PropertyValue Property="Description" String="Reads a specific defect code group."/>
+        <PropertyValue Property="LongDescription" String="Reads a specific defect code group with the information whether the code group is inactive and whether it is usable."/>
+       </Record>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_DEFECTCODE_SRV.API_DEFECTCODE_SRV_Entities/A_DefectCodeGroupText" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.ReadRestrictions">
+     <Record>
+      <PropertyValue Property="Description" String="Reads all defect code group texts."/>
+      <PropertyValue Property="LongDescription" String="Reads all existing defect code group texts. You can filter by language."/>
+      <PropertyValue Property="ReadByKeyRestrictions">
+       <Record>
+        <PropertyValue Property="Description" String="Reads a specific defect code group text in a specific language."/>
+        <PropertyValue Property="LongDescription" String="Reads the text of a specific defect code group in a specific language."/>
+       </Record>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_DEFECTCODE_SRV.API_DEFECTCODE_SRV_Entities/A_DefectCode" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.NavigationRestrictions">
+     <Record>
+      <PropertyValue Property="RestrictedProperties">
+       <Collection>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Text"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads defect codes with text associations."/>
+           <PropertyValue Property="LongDescription" String="Reads one or more defect codes with associations to the related defect code texts."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_DefectCodeGroup"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads defect codes with associations to defect code groups."/>
+           <PropertyValue Property="LongDescription" String="Reads one or more defect codes with associations to the related defect code groups."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_DEFECTCODE_SRV.API_DEFECTCODE_SRV_Entities/A_DefectCodeGroup" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.NavigationRestrictions">
+     <Record>
+      <PropertyValue Property="RestrictedProperties">
+       <Collection>
+        <Record>
+         <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Text"/>
+         <PropertyValue Property="ReadRestrictions">
+          <Record>
+           <PropertyValue Property="Description" String="Reads defect code groups with text associations."/>
+           <PropertyValue Property="LongDescription" String="Reads one or more defect code groups with associations to the related defect code group texts."/>
+          </Record>
+         </PropertyValue>
+        </Record>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <Annotations Target="API_DEFECTCODE_SRV.API_DEFECTCODE_SRV_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Org.OData.Capabilities.V1.BatchSupport">
+     <Record Type="Org.OData.Capabilities.V1.BatchSupportType">
+      <PropertyValue Property="ReferencesAcrossChangeSetsSupported" Bool="true"/>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <atom:link rel="self" href="https://host:port/sap/opu/odata/sap/API_DEFECTCODE_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+   <atom:link rel="latest-version" href="https://host:port/sap/opu/odata/sap/API_DEFECTCODE_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+  </Schema>
+ </edmx:DataServices>
+</edmx:Edmx>

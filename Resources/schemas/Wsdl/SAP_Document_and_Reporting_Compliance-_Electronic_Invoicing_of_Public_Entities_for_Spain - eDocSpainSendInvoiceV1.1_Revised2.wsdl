@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:tns="http://www.sap.com/eDocSpainSendInvoiceTest/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="eDocSpainSendInvoiceTest" targetNamespace="http://www.sap.com/eDocSpainSendInvoiceTest/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <wsdl:types>
+    	<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    		targetNamespace="http://www.sap.com/eDocSpainSendInvoiceTest/"
+    		xmlns:pref="http://www.facturae.es/Facturae/2014/v3.2.1/Facturae"
+    		xmlns:Q1="http://www.w3.org/2000/09/xmldsig#"
+    		xmlns:pref1="http://www.sap.com/eDocument/Spain/Attachments/v1.0"
+    		xmlns:pref2="http://www.example.org/Response_V1" xmlns:pref3="http://www.facturae.es/Facturae/2009/v3.2/Facturae">
+    		<xsd:import schemaLocation="Attachments.xsd"
+    			namespace="http://www.sap.com/eDocument/Spain/Attachments/v1.0">
+    		</xsd:import>
+    		<xsd:import schemaLocation="SendResponseV1.1.xsd"
+    			namespace="http://www.example.org/Response_V1">
+    		</xsd:import>
+    		<xsd:import schemaLocation="Facturaev3_2.xsd" namespace="http://www.facturae.es/Facturae/2009/v3.2/Facturae"></xsd:import>
+    		<xsd:element name="SendInvoice"
+    			type="tns:SendInvoiceRequestType">
+    		</xsd:element>
+    		<xsd:element name="SendInvoiceResponse">
+    			<xsd:complexType>
+    				<xsd:sequence>
+    					<xsd:element ref="pref2:SendInvoiceResponse"></xsd:element>
+    				</xsd:sequence>
+    			</xsd:complexType>
+    		</xsd:element>
+
+    		<xsd:complexType name="SendInvoiceRequestType">
+    			<xsd:sequence>
+                    <xsd:element ref="pref3:Facturae"></xsd:element>
+                    <xsd:element ref="pref1:ficheros_anexos"></xsd:element>
+                    <xsd:element name="eDocProcess" type="xsd:string"></xsd:element>
+    			</xsd:sequence>
+    		</xsd:complexType>
+    	</xsd:schema></wsdl:types>
+    <wsdl:message name="SendInvoiceRequest">
+    	<wsdl:part name="parameters" element="tns:SendInvoice"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="SendInvoiceResponse">
+    	<wsdl:part name="parameters" element="tns:SendInvoiceResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="eDocSpainSendInvoiceV1.1_Revised">
+    	<wsdl:operation name="SendInvoice">
+    		<wsdl:input message="tns:SendInvoiceRequest"></wsdl:input>
+    		<wsdl:output message="tns:SendInvoiceResponse"></wsdl:output>
+    	</wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="eDocSpain"
+    	type="tns:eDocSpainSendInvoiceV1.1_Revised">
+    	<soap:binding style="document"
+    		transport="http://schemas.xmlsoap.org/soap/http" />
+    	<wsdl:operation name="SendInvoice">
+    		<soap:operation
+    			soapAction="http://www.sap.com/eDocSpainSendInvoiceTest/SendInvoice" />
+    		<wsdl:input>
+    			<soap:body use="literal" />
+    		</wsdl:input>
+    		<wsdl:output>
+    			<soap:body use="literal" />
+    		</wsdl:output>
+    	</wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="eDocSpainSendInvoice">
+		<wsdl:port name="eDocSendInvoiceSOAP" binding="tns:eDocSpain">
+			<soap:address location="http://www.example.org/" />
+		</wsdl:port>
+	</wsdl:service></wsdl:definitions>

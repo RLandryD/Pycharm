@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0">
+	<xsd:element name="root">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element type="xsd:token" name="workflowRunId"/>
+				<xsd:element type="xsd:token" name="processedAt"/>
+				<xsd:element type="aggregationConfirmation" name="posTransactionConfirmation" maxOccurs="1" minOccurs="1"/>
+                <xsd:element type="log" name="log" maxOccurs="1" minOccurs="1"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:complexType name="log">
+		<xsd:sequence>
+			<xsd:element type="xsd:token" name="processingStatusCode" maxOccurs="1" minOccurs="0"/>
+			<xsd:element type="xsd:token" name="messageId" maxOccurs="1" minOccurs="1"/>
+			<xsd:element type="logItems" name="logItems" maxOccurs="unbounded" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="logItems">
+		<xsd:sequence>
+			<xsd:element type="xsd:token" name="typeId" maxOccurs="1" minOccurs="0"/>
+			<xsd:element type="xsd:token" name="categoryCode" maxOccurs="1" minOccurs="0"/>
+			<xsd:element type="xsd:token" name="severityCode" maxOccurs="1" minOccurs="0"/>
+			<xsd:element type="xsd:token" name="note" maxOccurs="1" minOccurs="0"/>
+			<xsd:element type="xsd:token" name="webURI" maxOccurs="1" minOccurs="0"/>
+			<xsd:element type="xsd:token" name="sequenceNumberWithError" maxOccurs="1" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="aggregationConfirmation">
+		<xsd:sequence>
+			<xsd:element type="xsd:token" name="serviceCallReferenceId" maxOccurs="1" minOccurs="1" />
+ 			<xsd:element type="aggregatedSalesByProduct" name="aggregatedSalesByProduct" maxOccurs="1" minOccurs="0"/>
+			<xsd:element type="aggregatedPaymentList" name="aggregatedPaymentList" maxOccurs="1" minOccurs="0"/>
+			<xsd:element type="salesPerReceipt" name="salesPerReceipt" maxOccurs="1" minOccurs="0"/>
+			<xsd:element type="customerOrderPaymentList" name="customerOrderPaymentList" maxOccurs="1" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="customerOrderPaymentList">
+		<xsd:sequence>
+			<xsd:element type="xsd:token" name="externalReferenceDocumentID" />
+			<xsd:element type="customerOrderPaymentBillingDoc" name="billingDoc" minOccurs="0"/>
+			<xsd:element type="accountingDoc" name="accountingDoc" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="aggregatedSalesByProduct">
+		<xsd:sequence>
+		    <xsd:element type="xsd:token" name="sequenceNumberFrom" maxOccurs="1" minOccurs="0"/>
+		    <xsd:element type="xsd:token" name="sequenceNumberTo" maxOccurs="1" minOccurs="0"/>
+		    <xsd:element type="billingDocs" name="billingDocs" maxOccurs="unbounded" minOccurs="0"/>
+		    <xsd:element type="materialDocs" name="materialDocs" maxOccurs="unbounded" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+    <xsd:complexType name="aggregatedPaymentList">
+		<xsd:sequence>
+		   <xsd:element type="billingDocs" name="billingDoc" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="salesPerReceipt">
+		<xsd:sequence>
+			<xsd:element type="xsd:token" name="externalReferenceDocumentID" />
+			<xsd:element type="billingDocs" name="billingDoc" minOccurs="0"/>
+			<xsd:element type="materialDocs" name="materialDoc" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<!-- billingDocs List for aggregatedSalesByProduct -->
+	<xsd:complexType name="billingDocs">
+		<xsd:sequence>
+			<xsd:element type="xsd:token" name="billingDocumentId" maxOccurs="unbounded" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- billingDoc List for customerOrderPaymentList -->
+	<xsd:complexType name="customerOrderPaymentBillingDoc">
+		<xsd:sequence>
+			<xsd:element type="xsd:token" name="billingDocumentId" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="accountingDoc">
+		<xsd:sequence>
+			<xsd:element type="xsd:token" name="accountingDocumentCompanyCode" maxOccurs="1" minOccurs="0"/>
+			<xsd:element type="xsd:token" name="accountingDocumentId" maxOccurs="1" minOccurs="0"/>
+			<xsd:element type="xsd:token" name="accountingDocumentYear " maxOccurs="1" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="materialDocs">
+		<xsd:sequence>
+		     <xsd:element type="xsd:token" name="materialDocumentId" maxOccurs="1" minOccurs="0"/>
+		    <xsd:element type="xsd:token" name="materialDocumentYear" maxOccurs="1" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	
+</xsd:schema>

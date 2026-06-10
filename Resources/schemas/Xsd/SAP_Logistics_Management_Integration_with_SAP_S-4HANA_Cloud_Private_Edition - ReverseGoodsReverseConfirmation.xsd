@@ -1,0 +1,69 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:3.0">
+    <xs:element name="confirmGRReversal">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="deliveryDocument" type="xs:string"/>
+                <xs:element name="senderBusinessSystem" type="xs:string"/>
+                <xs:element name="maximumLogItemSeverityCode" type="LogItemSeverityCode" minOccurs="0"/>
+                <xs:element name="logItems" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="typeId" minOccurs="0" type="LogItemTypeID"/>
+                            <xs:element name="severityCode" minOccurs="0" type="LogItemSeverityCode"/>
+                            <xs:element name="note" type="LogItemNote"/>
+                            <xs:element name="webURI" minOccurs="0" type="WebURI"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:simpleType name="LogItemTypeID">
+        <xs:annotation>
+            <xs:documentation xml:lang="EN">
+                <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:maxLength value="40"/>
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="LogItemSeverityCode">
+        <xs:annotation>
+            <xs:documentation xml:lang="EN">
+                <ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="1"/>
+            <xs:enumeration value="2"/>
+            <xs:enumeration value="3"/>
+            <xs:enumeration value="4"/>
+            <xs:length value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="LogItemNote">
+        <xs:annotation>
+            <xs:documentation xml:lang="EN">
+                <ccts:RepresentationTerm>Note</ccts:RepresentationTerm>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="200"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="WebURI">
+        <xs:annotation>
+            <xs:documentation xml:lang="EN">
+                <ccts:RepresentationTerm>URI</ccts:RepresentationTerm>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:anyURI"/>
+    </xs:simpleType>
+</xs:schema>

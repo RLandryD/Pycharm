@@ -137,6 +137,22 @@ def read_artifact_id_name(zip_bytes: bytes) -> tuple:
     return sym, (name or sym)
 
 
+def _iflw_text_from_bundle(zip_bytes: bytes) -> str:
+    """Return the .iflw XML text from an iFlow inner-bundle zip (empty if none).
+    Lets the upload path carry the real source structure to the regenerator."""
+    try:
+        zb = zipfile.ZipFile(io.BytesIO(zip_bytes))
+    except Exception:
+        return ""
+    for n in zb.namelist():
+        if n.endswith(".iflw"):
+            try:
+                return zb.read(n).decode("utf-8", "replace")
+            except Exception:
+                return ""
+    return ""
+
+
 def extract_iflows_recursive(archive_bytes: bytes, _depth: int = 0) -> list:
     """Recursively find every iFlow inside an arbitrary archive.
 
@@ -182,6 +198,7 @@ def extract_iflows_recursive(archive_bytes: bytes, _depth: int = 0) -> list:
             found.append({
                 "id": d.get("id"), "name": d.get("name"),
                 "zip_bytes": zb, "resource_type": d.get("resource_type", ""),
+                "iflw_xml": _iflw_text_from_bundle(zb),
             })
 
     # Case 3: container of inner .zip files (package dumps). Recurse into any

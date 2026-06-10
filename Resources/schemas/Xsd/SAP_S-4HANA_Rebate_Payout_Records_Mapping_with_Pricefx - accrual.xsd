@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid Technologies Online Tools 1.0 (https://www.liquid-technologies.com) -->
+<xs:schema xmlns:tns="http://sap.com/xi/SAPSCORE/SFIN"
+    targetNamespace="http://sap.com/xi/SAPSCORE/SFIN"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:complexType name="MessageHeaderType">
+        <xs:sequence>
+            <xs:element name="CreationDateTime" type="xs:dateTime" />
+            <xs:element name="ID" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="JournalEntryBulkCreateRequest" type="tns:JournalEntryBulkCreateRequestType" />
+    <xs:complexType name="JournalEntryBulkCreateRequestType">
+        <xs:sequence>
+            <xs:element name="MessageHeader">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="CreationDateTime" type="xs:dateTime" />
+                        <xs:element name="ID" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="JournalEntryCreateRequest" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="MessageHeader">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="CreationDateTime" type="xs:string" />
+                                    <xs:element name="ID" type="xs:string" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="JournalEntry">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="OriginalReferenceDocumentType"
+                                        type="xs:string" />
+                                    <xs:element name="BusinessTransactionType" type="xs:string" />
+                                    <xs:element name="AccountingDocumentType" type="xs:string" />
+                                    <xs:element name="CreatedByUser" type="xs:string" />
+                                    <xs:element name="CompanyCode" type="xs:string" minOccurs="0"/>
+                                    <xs:element name="DocumentDate" type="xs:string" />
+                                    <xs:element name="DocumentReferenceID" type="xs:string" minOccurs="0"/>
+                                    <xs:element name="DocumentHeaderText" type="xs:string" minOccurs="0"/>
+                                    <xs:element name="PostingDate" type="xs:string" />
+                                    <xs:element maxOccurs="unbounded" name="Item">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="GLAccount"
+                                                type="xs:string" />
+                                                <xs:element name="AmountInTransactionCurrency" minOccurs="0">
+                                                    <xs:complexType>
+                                                        <xs:simpleContent>
+                                                            <xs:extension base="xs:string">
+                                                                <xs:attribute
+                                                                    name="currencyCode"
+                                                                    type="xs:string"
+                                                                     />
+                                                            </xs:extension>
+                                                        </xs:simpleContent>
+                                                    </xs:complexType>
+                                                </xs:element>
+                                                <xs:element name="DebitCreditCode"
+                                                    type="xs:string" />
+                                                <xs:element name="ProfitabilitySupplement">
+                                                    <xs:complexType>
+                                                        <xs:sequence>
+                                                            <xs:element name="SalesOrganization"
+                                                                type="xs:string" minOccurs="0"/>
+                                                            <xs:element
+                                                                name="DistributionChannel"
+                                                                type="xs:string" minOccurs="0"/>
+                                                            <xs:element name="Division"
+                                                                type="xs:string" minOccurs="0"/>
+                                                            <xs:element name="Customer"
+                                                                type="xs:string" minOccurs="0"/>
+                                                            <xs:element name="SoldMaterial"
+                                                                type="xs:string" minOccurs="0" />
+                                                        </xs:sequence>
+                                                    </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0" xmlns:sap="http://www.sap.com/Protocols/SAPData" xmlns:ux="http://www.sap.com/Protocols/OData4SAP/UX" xmlns:gp="http://www.sap.com/Protocols/SAPData/GenericPlayer">
+    <edmx:DataServices m:DataServiceVersion="2.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+        <Schema Namespace="API_MATERIAL_DOCUMENT_SRV_EWM" xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+            <EntityType Name="A_EwmGoodsMovementDocumentType" sap:label="Ewm Goods Movement Document">
+                <Key>
+                    <PropertyRef Name="LogicalSystemId"/>
+                </Key>
+				<Property Name="MaterialDocument" Type="Edm.String" sap:label="Material Document" sap:quickinfo="Number of Material Document"/>
+                <Property Name="LogicalSystemId" Type="Edm.String" Nullable="false" sap:label="Logical System Id of Ewm"/>
+                <Property Name="Plant" Type="Edm.String" Nullable="false" sap:display-format="UpperCase" sap:label="Plant"/>
+                <Property Name="WarehouseNumber" Type="Edm.String" Nullable="false" sap:display-format="NonNegative" sap:label="WarehouseNumber"/>
+                <Property Name="OrderNumber" Type="Edm.String" Nullable="true" sap:display-format="NonNegative" sap:label="OrderNumber"/>
+                <NavigationProperty Name="EwmGoodsMovementDocumentItems" Relationship="API_MATERIAL_DOCUMENT_SRV_EWM.RS_DOC_ITEM" FromRole="R_Document" ToRole="R_DocItem"/>
+                <NavigationProperty Name="SerialNumbers" Relationship="API_MATERIAL_DOCUMENT_SRV_EWM.RS_DOC_SERI" FromRole="R_Document" ToRole="R_SerialNumber"/>
+            </EntityType>
+            <EntityType Name="A_EwmGoodsMovementDocumentItemType" sap:label="Document Items">
+               <Key>
+                   <PropertyRef Name="LogicalSystemId"/>
+               </Key>
+               <Property Name="LogicalSystemId" Type="Edm.String" Nullable="false" sap:label="Logical System Id of Ewm"/>
+               <Property Name="Material" Type="Edm.String" Nullable="false" sap:display-format="NonNegative" sap:label="Material Number"/>
+               <Property Name="ReservationNumber" Type="Edm.String" Nullable="false" sap:display-format="NonNegative" sap:label="Reservation Number"/>
+               <Property Name="ReservationItem" Type="Edm.String" Nullable="false" sap:display-format="NonNegative" sap:label="Reservation Item"/>
+               <Property Name="ProductionSupplyArea" Type="Edm.String" Nullable="false" sap:display-format="NonNegative" sap:label="Production Supply Area"/>
+               <Property Name="ProductionSupplyAreaBin" Type="Edm.String" Nullable="false" sap:display-format="NonNegative" sap:label="Production Supply Area Bin"/>
+               <Property Name="Batch" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Batch" sap:quickinfo="Batch Number"/>
+               <Property Name="HandlingUnit" Type="Edm.String" Nullable="false" sap:display-format="NonNegative" sap:label="Handling Unit"/>
+               <Property Name="Quantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="Uom" sap:label="Quantity"/>
+               <Property Name="Uom" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:semantics="Uom"/>
+               <Property Name="IsDynamic" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Is dynamic staging or not" sap:quickinfo="IsDynamic"/>
+            </EntityType>
+            <EntityType Name="A_SerialNumberMaterialDocumentType" sap:label="Serial Numbers">
+                <Key>
+                    <PropertyRef Name="LogicalSystemId"/>
+                </Key>
+                <Property Name="LogicalSystemId" Type="Edm.String" Nullable="false" sap:label="Logical System Id of Ewm"/>
+                <Property Name="SerialNumber" Type="Edm.String" Nullable="false" MaxLength="18" sap:display-format="UpperCase" sap:label="Serial Number"/>
+                <Property Name="Material" Type="Edm.String" Nullable="false" sap:display-format="NonNegative" sap:label="Material Number"/>
+                <Property Name="MaterialDocumentItem" Type="Edm.String" Nullable="false" sap:display-format="NonNegative" sap:label="Material document number"/>
+            </EntityType>
+            <Association Name="RS_DOC_SERI">
+                <End Type="API_MATERIAL_DOCUMENT_SRV_EWM.A_EwmGoodsMovementDocumentType" Multiplicity="1" Role="R_Document"/>
+                <End Type="API_MATERIAL_DOCUMENT_SRV_EWM.A_SerialNumberMaterialDocumentType" Multiplicity="*" Role="R_SerialNumber"/>
+            </Association>
+            <Association Name="RS_DOC_ITEM">
+               <End Type="API_MATERIAL_DOCUMENT_SRV_EWM.A_EwmGoodsMovementDocumentType" Multiplicity="1" Role="R_Document"/>
+               <End Type="API_MATERIAL_DOCUMENT_SRV_EWM.A_EwmGoodsMovementDocumentItemType" Multiplicity="*" Role="R_DocItem"/>
+            </Association>
+            <EntityContainer Name="API_MATERIAL_DOCUMENT_SRV_EWM_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="A_EwmGoodsMovementDocument" EntityType="API_MATERIAL_DOCUMENT_SRV_EWM.A_EwmGoodsMovementDocumentType" sap:updatable="false" sap:deletable="false"/>
+                <EntitySet Name="A_EwmGoodsMovementDocumentItem" EntityType="API_MATERIAL_DOCUMENT_SRV_EWM.A_EwmGoodsMovementDocumentItemType" sap:creatable="false" sap:updatable="false" sap:deletable="false"/>
+                <EntitySet Name="A_SerialNumberMaterialDocument" EntityType="API_MATERIAL_DOCUMENT_SRV_EWM.A_SerialNumberMaterialDocumentType" sap:creatable="false" sap:updatable="false" sap:deletable="false"/>
+                <AssociationSet Name="Document_DocmentItem" Association="API_MATERIAL_DOCUMENT_SRV_EWM.RS_DOC_ITEM">
+                   <End EntitySet="A_EwmGoodsMovementDocument" Role="R_Document"/>
+                   <End EntitySet="A_EwmGoodsMovementDocumentItem" Role="R_DocItem"/>
+                </AssociationSet>
+                <AssociationSet Name="Document_SerialNumber" Association="API_MATERIAL_DOCUMENT_SRV_EWM.RS_DOC_SERI">
+                    <End EntitySet="A_EwmGoodsMovementDocument" Role="R_Document"/>
+                    <End EntitySet="A_SerialNumberMaterialDocument" Role="R_SerialNumber"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

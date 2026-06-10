@@ -1,0 +1,42 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:p0="urn:sfobject.sfapi.successfactors.com" targetNamespace="urn:sfobject.sfapi.successfactors.com"
+	elementFormDefault="qualified">
+	<xsd:import namespace="urn:fault.sfapi.successfactors.com" />
+	<xsd:element name="deleteResponse">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="result" type="p0:ModifyResult" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:simpleType name="dataType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="string" />
+			<xsd:enumeration value="date" />
+			<xsd:enumeration value="datetime" />
+			<xsd:enumeration value="int" />
+			<xsd:enumeration value="long" />
+			<xsd:enumeration value="float" />
+			<xsd:enumeration value="double" />
+			<xsd:enumeration value="boolean" />
+			<xsd:enumeration value="binary" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="ObjectEditResult">
+		<xsd:sequence>
+			<xsd:element name="id" type="xsd:string" minOccurs="0" />
+			<xsd:element name="errorStatus" type="xsd:string" />
+			<xsd:element name="editStatus" type="xsd:string" />
+			<xsd:element name="index" type="xsd:int" nillable="true" />
+			<xsd:element name="message" type="xsd:string" nillable="true" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ModifyResult">
+		<xsd:sequence>
+			<xsd:element name="jobStatus" type="xsd:string" />
+			<xsd:element name="message" type="xsd:string" nillable="true" />
+			<xsd:element name="objectEditResult" type="p0:ObjectEditResult"
+				minOccurs="0" maxOccurs="unbounded" nillable="true" />
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

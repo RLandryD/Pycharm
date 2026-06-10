@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="metadata" type="metadata"/>
+
+  <xs:element name="mixins" type="mixins"/>
+
+  <xs:element name="options" type="options"/>
+
+  <xs:element name="product" type="product"/>
+
+  <xs:element name="languageText" type="languageText"/>
+  
+  <xs:element name="variants" type="variants"/>
+
+  <xs:complexType name="product">
+    <xs:sequence>
+      <xs:element name="code" type="xs:string" minOccurs="0"/>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element ref="metadata" minOccurs="0"/>
+      <xs:element ref="mixins" minOccurs="0"/>
+      <xs:element name="published" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="yrn" type="xs:string" minOccurs="0"/>
+      <xs:element name="name" type="languageText" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="languageText">
+    <xs:sequence>
+      <xs:element name="languageCode" type="xs:string" minOccurs="0"/>
+      <xs:element name="content" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="metadata">
+    <xs:sequence>
+      <xs:element name="createdAt" type="xs:string" minOccurs="0"/>
+      <xs:element ref="mixins" minOccurs="0"/>
+      <xs:element name="modifiedAt" type="xs:string" minOccurs="0"/>
+      <xs:element ref="variants" minOccurs="0"/>
+      <xs:element name="version" type="xs:double" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mixins">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="variants">
+    <xs:sequence>
+      <xs:element ref="mixins" minOccurs="0"/>
+      <xs:element ref="options" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="options">
+    <xs:sequence/>
+  </xs:complexType>
+</xs:schema>
+

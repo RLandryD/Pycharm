@@ -153,7 +153,8 @@ def _iflw_text_from_bundle(zip_bytes: bytes) -> str:
     return ""
 
 
-def extract_iflows_recursive(archive_bytes: bytes, _depth: int = 0) -> list:
+def extract_iflows_recursive(archive_bytes: bytes, _depth: int = 0,
+                             container_name: str = "") -> list:
     """Recursively find every iFlow inside an arbitrary archive.
 
     Handles three nesting levels uniformly so Tab 1's interface count reflects
@@ -164,9 +165,17 @@ def extract_iflows_recursive(archive_bytes: bytes, _depth: int = 0) -> list:
       3. A container zip of many package zips (e.g. a 55-package landscape
          dump) → recurse into each inner .zip
 
-    Returns a list of {"id","name","zip_bytes","resource_type"} for iFlows
-    ONLY (message mappings, value mappings, script collections etc. inside a
-    package are intentionally NOT counted as interfaces). Deduplicated by id.
+    Returns a list of {"id","name","zip_bytes","resource_type","package"} for
+    iFlows ONLY (message mappings, value mappings, script collections etc.
+    inside a package are intentionally NOT counted as interfaces).
+    Deduplicated by id.
+
+    `container_name` (the enclosing package zip's filename stem) is recorded
+    as each flow's "package" — the SOURCE package identity. Downstream this
+    drives (a) the targeted resource-corpus top-up (matching the package zip
+    on disk by name), (b) resolver package scoping, and (c) tenant package
+    naming, so generated packages mirror the originals instead of synthesized
+    Sender/Receiver names — and flows can't land in the wrong package.
 
     Depth-guarded to avoid pathological recursion on malformed archives.
     """
@@ -199,6 +208,7 @@ def extract_iflows_recursive(archive_bytes: bytes, _depth: int = 0) -> list:
                 "id": d.get("id"), "name": d.get("name"),
                 "zip_bytes": zb, "resource_type": d.get("resource_type", ""),
                 "iflw_xml": _iflw_text_from_bundle(zb),
+                "package": container_name,
             })
 
     # Case 3: container of inner .zip files (package dumps). Recurse into any
@@ -210,7 +220,9 @@ def extract_iflows_recursive(archive_bytes: bytes, _depth: int = 0) -> list:
                 inner_bytes = z.read(n)
             except Exception:
                 continue
-            found.extend(extract_iflows_recursive(inner_bytes, _depth + 1))
+            found.extend(extract_iflows_recursive(
+                inner_bytes, _depth + 1,
+                container_name=n.rsplit("/", 1)[-1][:-4] or container_name))
     else:
         # Even when this level had bundles, there may also be nested package
         # zips alongside them — recurse into those too (mixed archives).
@@ -221,7 +233,9 @@ def extract_iflows_recursive(archive_bytes: bytes, _depth: int = 0) -> list:
                 inner_bytes = z.read(n)
             except Exception:
                 continue
-            found.extend(extract_iflows_recursive(inner_bytes, _depth + 1))
+            found.extend(extract_iflows_recursive(
+                inner_bytes, _depth + 1,
+                container_name=n.rsplit("/", 1)[-1][:-4] or container_name))
 
     # Deduplicate by id (same iFlow can appear once); keep first occurrence.
     seen, deduped = set(), []

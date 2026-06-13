@@ -1,0 +1,60 @@
+{
+  "_comment": "SAP Cloud Integration script API surface — curated from SAP javadoc knowledge + verified against corpus usage (103 unique scripts). Layer (a) of the three-layer reference: this is what CPI scripts actually touch; the GDK is the substrate.",
+  "classes": {
+    "com.sap.gateway.ip.core.customdev.util.Message": {
+      "methods": ["getBody", "setBody", "getHeaders", "setHeaders",
+                  "getHeader", "setHeader", "getProperties", "setProperties",
+                  "getProperty", "setProperty", "getAttachments",
+                  "setAttachments", "addAttachmentHeader",
+                  "getAttachmentHeader", "getAttachmentWrapperObjects"],
+      "note": "the per-step contract object; processData(Message) entry point"
+    },
+    "MessageLog": {
+      "methods": ["setStringProperty", "addAttachmentAsString",
+                  "addCustomHeaderProperty", "addAttachmentObject"],
+      "note": "from messageLogFactory.getMessageLog(message); null when MPL off"
+    },
+    "messageLogFactory": {
+      "methods": ["getMessageLog"],
+      "note": "implicit binding injected into every CPI script"
+    },
+    "com.sap.it.api.ITApiFactory": {
+      "methods": ["getApi", "getService"],
+      "note": "service locator for the platform APIs below"
+    },
+    "com.sap.it.api.mapping.ValueMappingApi": {
+      "methods": ["getMappedValue", "getMappedValues"],
+      "note": "value mapping runtime lookup"
+    },
+    "com.sap.it.api.securestore.SecureStoreService": {
+      "methods": ["getUserCredential", "getOAuth2TokenFromCode"],
+      "note": "credential access by alias; never log returned values"
+    },
+    "com.sap.it.api.keystore.KeystoreService": {
+      "methods": ["getKey", "getCertificate", "getKeyPair"],
+      "note": "tenant keystore access"
+    },
+    "com.sap.it.api.msglog.MessageLogFactory": {
+      "methods": ["getMessageLog"]
+    },
+    "com.sap.it.api.pd.PartnerDirectoryService": {
+      "methods": ["getParameter", "getParameters"],
+      "note": "B2B partner directory"
+    },
+    "XSDateTime": {
+      "methods": ["getDate", "getTime"],
+      "note": "mapping UDF date helper (PI heritage)"
+    }
+  },
+  "implicit_bindings": ["message", "messageLogFactory"],
+  "entry_points": ["processData", "customFunc"],
+  "common_imports": [
+    "com.sap.gateway.ip.core.customdev.util.Message",
+    "com.sap.it.api.ITApiFactory",
+    "com.sap.it.api.mapping.ValueMappingApi",
+    "com.sap.it.api.securestore.SecureStoreService",
+    "com.sap.it.api.securestore.UserCredential",
+    "com.sap.it.api.keystore.KeystoreService",
+    "java.util.HashMap"
+  ]
+}

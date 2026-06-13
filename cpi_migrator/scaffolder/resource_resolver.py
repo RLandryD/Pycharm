@@ -102,6 +102,15 @@ def resolve(reference: str, files: dict, index: dict | None = None,
     if not base or "." not in base:
         return ResolveResult(candidates=[])
     cands = list(index.get(base.lower(), []))
+    if not cands and " " in base:
+        # Decoded live (Chile round): migrated flows reference resources with a
+        # prefixed display name ('SiiDte EnvioDTE_v10.xsd') while the package
+        # ships the bare file ('EnvioDTE_v10.xsd'). Fall back to the LAST
+        # whitespace token; the file still ships at the path the flow names,
+        # so the iflw's lookup keeps working.
+        tail = base.rsplit(" ", 1)[-1]
+        if "." in tail:
+            cands = list(index.get(tail.lower(), []))
     if not cands:
         return ResolveResult(candidates=[])
 

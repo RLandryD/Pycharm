@@ -110,4 +110,45 @@ def attach_resources(model, resource_files: dict,
                         rep.unresolved.append((s.id, schema, "schema"))
         else:
             rep.unresolved.append((s.id, ref, kind))
+
+    # Adapter-referenced schemas: OData/SuccessFactors adapters carry an
+    # edmxFilePath (e.g. 'edmx/api4_successfactors_com_odata_v2.edmx') in their
+    # MESSAGE FLOW config — and occasionally a wsdlURL/schema path on steps.
+    # These never pass through step_resource_ref, which is why the original
+    # Clear_CustomFields EDMX was not shipped. Resolve and ship them to the
+    # exact relative path the config names (relative to src/main/resources/).
+    _SCHEMA_KEYS = ("edmxFilePath", "wsdlURL", "schemaResourceUri",
+                    "resourceFile")
+    carriers = list(getattr(model, "message_flows", []) or [])
+    carriers += list(model.steps.values())
+    for c in carriers:
+        cfg = getattr(c, "config", None) or {}
+        cid = getattr(c, "id", "?")
+        for key in _SCHEMA_KEYS:
+            val = (cfg.get(key) or "").strip()
+            if not val or "://" in val.split("?")[0] and not \
+                    val.lower().startswith("dir:"):
+                # http(s) wsdlURL etc. is a live URL, not a bundle file
+                continue
+            base = val.rsplit("/", 1)[-1]
+            if "." not in base:
+                continue
+            ext = base.rsplit(".", 1)[-1].lower()
+            if ext not in ("edmx", "xsd", "wsdl"):
+                continue
+            rel = val.split("::", 1)[-1].lstrip("/")
+            if rel.startswith("src/main/resources/"):
+                bundle_path = rel
+            else:
+                bundle_path = f"src/main/resources/{rel}" if "/" in rel \
+                    else f"src/main/resources/{ext}/{base}"
+            if bundle_path in rep.shipped:
+                continue
+            sr = resolve(base, resource_files, index, package=package,
+                         kind="schema")
+            if sr.ok:
+                rep.shipped[bundle_path] = sr.content
+                rep.resolved.append((cid, val, sr.path))
+            else:
+                rep.unresolved.append((cid, val, "schema"))
     return rep

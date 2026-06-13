@@ -249,6 +249,10 @@ class ComplexityAnalyzer:
         return pts, note
 
     def assess_all(self, records: list[InterfaceRecord]) -> list[MigrationAssessment]:
+        logger.warning(
+            "DEPRECATED: ComplexityAnalyzer.assess_all (LOW/MEDIUM/HIGH) "
+            "— no live path should call this; use "
+            "analyzer.ma_assessments.assess_records (MA model)")
         assessments = [self.assess(r) for r in records]
         low    = sum(1 for a in assessments if a.complexity == "LOW")
         medium = sum(1 for a in assessments if a.complexity == "MEDIUM")

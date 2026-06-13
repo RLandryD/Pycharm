@@ -333,9 +333,15 @@ class CPIUploader:
             result.message = "Artifact already exists (overwrite=False)"
             return result
 
-        # Package ONLY the generated .iflw (+ its validated manifest/.project).
+        # Package the generated .iflw + its validated manifest/.project + every
+        # resource the generator staged in <id>__meta/src/main/resources (real
+        # scripts/mappings/schemas + the ORIGINAL parameter pair). Passing
+        # extra_artifacts=None here used to silently drop the resolved
+        # resources — the tenant then reported every script as 'not found'
+        # even though the scaffolder had resolved them.
         zip_bytes = self._package_iflow(iflw_path, artifact_id, artifact_name,
-                                        parameters_prop, extra_artifacts=None)
+                                        parameters_prop,
+                                        extra_artifacts=extra_artifacts)
         if not zip_bytes:
             result.message = f"Failed to package iFlow from {iflw_path}"
             return result
@@ -425,7 +431,62 @@ class CPIUploader:
                                    artifact_name, result, artifact_type, endpoint)
             return
 
+        # Manually-named target package that nobody created yet (live run:
+        # 'Package ID P1Test does not exist' × every artifact, three runs in
+        # a row) — create it and retry the artifact ONCE.
+        if resp.status_code == 404 and "does not exist" in resp.text.lower():
+            wire_log.log_note(
+                f"Target package '{package_id}' does not exist — creating it "
+                "and retrying the artifact once")
+            try:
+                self.ensure_package(package_id, package_id,
+                                    "Created by migration tool (auto)")
+            except Exception as exc:
+                logger.warning("auto-create package %s failed: %s",
+                               package_id, exc)
+                self._report_failure(resp, artifact_id, coll_url, result)
+                return
+            wire_log.log_request(
+                f"retry create artifact [{artifact_type}]", "POST", coll_url,
+                hdrs, body_str)
+            resp2 = self.session.post(coll_url, data=body_str, headers=hdrs,
+                                      timeout=60)
+            wire_log.log_response(f"retry create artifact [{artifact_type}]",
+                                  resp2.status_code, dict(resp2.headers),
+                                  resp2.text)
+            if resp2.status_code in (200, 201):
+                result.status  = "uploaded"
+                result.message = (f"Created {artifact_type} (target package "
+                                  f"'{package_id}' auto-created)")
+                logger.info("Created %s %s in auto-created package %s",
+                            artifact_type, artifact_id, package_id)
+                return
+            self._report_failure(resp2, artifact_id, coll_url, result)
+            return
+
         self._report_failure(resp, artifact_id, coll_url, result)
+
+    def _existing_artifact_package(self, artifact_id: str,
+                                   endpoint: str) -> str:
+        """Which package does the EXISTING artifact with this id live in?
+        Artifact ids are TENANT-GLOBAL — in a same-tenant pull→regenerate→
+        upload round trip the regenerated copy collides with the SOURCE
+        artifact in its original package. Returns '' when unknown."""
+        try:
+            r = self.session.get(
+                f"{self.base_url}/api/v1/{endpoint}"
+                f"(Id='{artifact_id}',Version='active')?$format=json",
+                timeout=30)
+            if r.status_code == 200:
+                d = r.json().get("d", {})
+                return d.get("PackageId", "") or ""
+        except Exception:
+            pass
+        return ""
+
+    @staticmethod
+    def _suffixed_id(artifact_id: str, suffix: str = "WB") -> str:
+        return (artifact_id[: 100 - len(suffix) - 1] + "_" + suffix)
 
     def _replace_artifact(self, zip_bytes: bytes, package_id: str,
                           artifact_id: str, artifact_name: str,
@@ -437,8 +498,31 @@ class CPIUploader:
         ('change in Bundle-symbolicName'). Skip that doomed PUT and go straight
         to delete + recreate (the proven 201 path). The caller's deploy step
         then redeploys, restoring the runtime instance.
-        """
+
+        SAFETY (learned from a live same-tenant showcase): the colliding
+        artifact may live in a DIFFERENT package — it is then the SOURCE
+        flow, not our previous upload, and deleting it would DESTROY the
+        user's original. In that case we never delete: the new artifact is
+        created under a suffixed id instead."""
         from fetcher import wire_log
+        owner_pkg = self._existing_artifact_package(artifact_id, endpoint)
+        if owner_pkg and owner_pkg != package_id:
+            new_id = self._suffixed_id(artifact_id)
+            wire_log.log_note(
+                f"{artifact_id} already exists in package '{owner_pkg}' "
+                f"(NOT the upload target '{package_id}') — that is the "
+                f"source artifact; NOT deleting it. Creating as '{new_id}' "
+                f"instead.")
+            logger.warning(
+                "Artifact id collision with source package %s — creating "
+                "%s instead of deleting the original", owner_pkg, new_id)
+            self._recreate_after_delete(zip_bytes, package_id, new_id,
+                                        artifact_name, result, artifact_type)
+            if result.status in ("created", "recreated"):
+                result.message = (f"Created as {new_id} — id collided with "
+                                  f"the source artifact in '{owner_pkg}' "
+                                  "(original untouched)")
+            return
         wire_log.log_note(
             f"{artifact_id} already exists — re-skinned bundle changes the "
             f"symbolic name, so deleting + recreating (skipping doomed PUT)")
@@ -1141,7 +1225,6 @@ class CPIUploader:
                         "SAP-BundleType: IntegrationFlow\r\n"
                         "SAP-NodeType: IFLMAP\r\n"
                         "SAP-RuntimeProfile: iflmap\r\n"
-                        "SAP-ContentMode: ConfigureOnly\r\n"
                         "\r\n"
                     )
                 # JAR/OSGi manifests MUST use CRLF line endings and end with a
@@ -1169,10 +1252,29 @@ class CPIUploader:
                 )
 
                 # parameters.prop — real externalized values when provided.
+                # Precedence: explicit caller arg > the ORIGINAL pair the
+                # generator staged in __meta (source-bundle values, e.g. the
+                # configured NZ URLs/roles) > a synthesized header-only stub.
+                # The staged pair used to be force-skipped here, which is why
+                # tenant flows showed every externalized parameter empty even
+                # when the source package carried the values.
+                _meta_prop = _meta_propdef = None
+                if meta_dir.is_dir():
+                    try:
+                        _pp = meta_dir / "src" / "main" / "resources" / \
+                            "parameters.prop"
+                        _pd = meta_dir / "src" / "main" / "resources" / \
+                            "parameters.propdef"
+                        if _pp.is_file():
+                            _meta_prop = _pp.read_bytes().decode("utf-8")
+                        if _pd.is_file():
+                            _meta_propdef = _pd.read_bytes().decode("utf-8")
+                    except Exception:
+                        pass
                 # Real importable bundles never ship a 0-byte prop; they carry
                 # at least a timestamp comment header. Match that.
                 import time as _t
-                _prop = parameters_prop or (
+                _prop = parameters_prop or _meta_prop or (
                     "#" + _t.strftime("%a %b %d %H:%M:%S UTC %Y", _t.gmtime()) + "\n")
                 _dos_write(zf, "src/main/resources/parameters.prop", _prop)
 
@@ -1187,27 +1289,15 @@ class CPIUploader:
                 # importer tolerated it; the API does not).
                 _dos_write(
                     zf, "src/main/resources/parameters.propdef",
-                    parameters_propdef
+                    parameters_propdef or _meta_propdef
                     or '<?xml version="1.0" encoding="UTF-8" '
                        'standalone="no"?><parameters></parameters>',
                 )
 
-                # ── Bundled scripts/mappings the iFlow references ──
-                # Makes the package self-contained instead of pointing at
-                # files that don't exist.
-                for art in (extra_artifacts or []):
-                    try:
-                        rel_path, content = art
-                        _dos_write(zf, rel_path, content)
-                    except Exception as exc:
-                        logger.warning("Skipping malformed extra artifact: %s", exc)
-
-                # Also auto-include any resource files persisted next to the
-                # iFlow (meta_dir/src/main/resources/**) — scripts, XSLT/message
-                # mappings, schemas written by the scaffolder. This guarantees
-                # the referenced files ship even when the caller didn't pass
-                # extra_artifacts (the on-demand generate-then-upload path),
-                # which was the cause of "Mapping file not found" on the tenant.
+                # ── Resource files: __meta (REAL, scaffolder-staged) first,
+                # then extra_artifacts (synthesized starting points) — meta
+                # wins on collision, so a real script/mapping can never be
+                # shadowed by a stub.
                 if meta_dir.is_dir():
                     _res_root = meta_dir / "src" / "main" / "resources"
                     if _res_root.is_dir():
@@ -1227,6 +1317,17 @@ class CPIUploader:
                             _dos_write(zf, _rel, _p.read_bytes())
                             _already.add(_rel)
 
+                _names_now = set(zf.namelist())
+                for art in (extra_artifacts or []):
+                    try:
+                        rel_path, content = art
+                        if rel_path in _names_now:
+                            continue
+                        _dos_write(zf, rel_path, content)
+                        _names_now.add(rel_path)
+                    except Exception as exc:
+                        logger.warning("Skipping malformed extra artifact: %s", exc)
+
             buf.seek(0)
             data = buf.read()
             if not data:
@@ -1240,3 +1341,39 @@ class CPIUploader:
         except Exception as exc:
             logger.error("Failed to package iFlow %s: %s", artifact_id, exc)
             return None
+
+    def fetch_mpls(self, artifact_id: str, top: int = 5) -> list:
+        """Latest MessageProcessingLogs for one deployed artifact — the
+        tenant-side 'did my test run work' check. Returns a list of dicts
+        (Status, LogStart/LogEnd, CustomStatus, error text when failed),
+        newest first. Empty list when the API call fails (logged)."""
+        import json as _json
+        out = []
+        try:
+            url = (f"{self.base_url}/api/v1/MessageProcessingLogs?"
+                   f"$filter=IntegrationArtifact/Id eq '{artifact_id}'"
+                   f"&$orderby=LogEnd desc&$top={int(top)}&$format=json")
+            r = self.session.get(url, timeout=60)
+            if r.status_code != 200:
+                logger.warning("fetch_mpls %s -> HTTP %s", artifact_id,
+                            r.status_code)
+                return out
+            for row in r.json().get("d", {}).get("results", []):
+                rec = {k: row.get(k) for k in
+                       ("MessageGuid", "Status", "LogStart", "LogEnd",
+                        "CustomStatus", "ApplicationMessageType")}
+                if row.get("Status") == "FAILED":
+                    try:
+                        eurl = (f"{self.base_url}/api/v1/"
+                                f"MessageProcessingLogs('"
+                                f"{row['MessageGuid']}')/ErrorInformation/"
+                                f"$value")
+                        er = self.session.get(eurl, timeout=30)
+                        if er.status_code == 200:
+                            rec["Error"] = er.text[:1500]
+                    except Exception:
+                        pass
+                out.append(rec)
+        except Exception as exc:
+            logger.warning("fetch_mpls %s failed: %s", artifact_id, exc)
+        return out

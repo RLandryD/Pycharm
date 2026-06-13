@@ -26,6 +26,7 @@ import io
 import logging
 import os
 import pickle
+import re
 import zipfile
 from dataclasses import dataclass, field as _field
 from pathlib import Path
@@ -75,7 +76,8 @@ class _Budget:
 # ───────────────────────────── corpus walking ─────────────────────────────
 def _read_zip(zf: zipfile.ZipFile, out: dict, depth: int = 0, max_depth: int = 8,
               budget: "_Budget | None" = None, prefix: str = "",
-              exts: "set | None" = None):
+              exts: "set | None" = None,
+              max_file_bytes: int = _MAX_FILE_BYTES):
     """Recursively read files from a zip, descending into nested zips and
     *_content bundles (the SAP package structure). Keys are CONTAINER-QUALIFIED
     (outer.zip/inner.zip/hash_content::src/...): without the prefix, every
@@ -98,11 +100,11 @@ def _read_zip(zf: zipfile.ZipFile, out: dict, depth: int = 0, max_depth: int = 8
                 sep = "::" if n.endswith("_content") else "/"
                 _read_zip(zipfile.ZipFile(io.BytesIO(raw)), out, depth + 1,
                           max_depth, budget, prefix=f"{prefix}{n}{sep}",
-                          exts=exts)
+                          exts=exts, max_file_bytes=max_file_bytes)
                 continue
             except Exception:
                 pass
-        if len(raw) > _MAX_FILE_BYTES:        # skip oversized leaf blobs
+        if len(raw) > max_file_bytes:         # skip oversized leaf blobs
             continue
         if exts is not None and \
                 ("." + n.rsplit(".", 1)[-1].lower() if "." in n else "") \
@@ -145,6 +147,120 @@ def walk_corpus_bytes(packages) -> dict:
 #: packages, so nothing resolved and parameters shipped empty.
 WIRING_EXTS = {".groovy", ".gsh", ".js", ".xsl", ".xslt", ".mmap", ".opmap",
                ".xsd", ".wsdl", ".edmx", ".prop", ".propdef", ".iflw"}
+
+#: per-package targeted ingestion may legitimately carry big schemas (the SF
+#: adapter EDMX files are ~6.8 MB each) — the bulk-walk 5 MB leaf cap exists to
+#: protect a 20k-file sweep, not a single known package.
+_TARGETED_MAX_FILE_BYTES = 16 * 1024 * 1024
+
+
+def _norm_name(s: str) -> str:
+    """Alphanumeric-only lowercase form used for package-name matching."""
+    return re.sub(r"[^a-z0-9]", "", (s or "").lower())
+
+
+def _name_variants(s: str) -> set:
+    """Normalized variants of a package/iflow name. 'Version 2' vs '_V2' is a
+    real corpus discrepancy, so a version-collapsed variant is included."""
+    n = _norm_name(s)
+    out = {n} if n else set()
+    if "version" in n:
+        out.add(n.replace("version", "v"))
+    return out
+
+
+def _names_match(a_variants: set, b: str) -> bool:
+    """True when any normalized variant of A is a substring of B's normalized
+    form or vice versa. A minimum-length guard keeps short tokens (e.g. 'v2')
+    from matching everything."""
+    nb_variants = _name_variants(b)
+    for na in a_variants:
+        for nb in nb_variants:
+            if len(na) >= 6 and na in nb:
+                return True
+            if len(nb) >= 6 and nb in na:
+                return True
+    return False
+
+
+def walk_corpus_for_names(path: str, names, exts: "set | None" = None) -> dict:
+    """TARGETED corpus ingestion: scan zip *names* under `path` (cheap — only
+    central directories are read for non-matches) and fully ingest just the
+    containers whose name matches one of `names` (package or iFlow names,
+    alphanumeric-normalized, 'Version N'~'VN' tolerated). Matches are also
+    looked for one level INSIDE top-level zips (batch zips like part2.zip hold
+    the real package zips). Returns container-qualified keys IDENTICAL to
+    walk_corpus, so resolver package-scoping behaves the same.
+
+    This is the antidote to the bulk-walk safety cap: when a too-broad
+    Packages tree caps out before reaching the flow's own package (seen live:
+    'corpus walk hit the safety cap' then 0 resolved, stub parameters), the
+    scaffolder tops the cached corpus up with exactly the packages it is
+    migrating. A single package is small, so the per-file leaf cap is raised
+    enough to carry adapter EDMX schemas."""
+    out: dict = {}
+    variants = set()
+    for nm in (names or []):
+        variants |= _name_variants(nm)
+    if not variants or not path or not os.path.isdir(path):
+        return out
+    budget = _Budget(max_files=8000, max_bytes=120 * 1024 * 1024)
+    for root, _dirs, files in os.walk(path):
+        if not budget.ok():
+            break
+        for f in sorted(files):
+            if not f.endswith(".zip") or not budget.ok():
+                continue
+            fp = os.path.join(root, f)
+            rel = os.path.relpath(fp, path)
+            try:
+                if _names_match(variants, f[:-4]):
+                    with zipfile.ZipFile(fp) as zf:
+                        _read_zip(zf, out, budget=budget, prefix=rel + "/",
+                                  exts=exts,
+                                  max_file_bytes=_TARGETED_MAX_FILE_BYTES)
+                    continue
+                # batch zip: scan entry names for an inner matching container
+                with zipfile.ZipFile(fp) as zf:
+                    for n in zf.namelist():
+                        if n.endswith("/") or not budget.ok():
+                            continue
+                        stem = n.rsplit("/", 1)[-1]
+                        is_zip = stem.endswith(".zip")
+                        if not (is_zip and
+                                _names_match(variants, stem[:-4])):
+                            continue
+                        raw = zf.read(n)
+                        if raw[:2] != b"PK":
+                            continue
+                        _read_zip(zipfile.ZipFile(io.BytesIO(raw)), out,
+                                  depth=1, budget=budget,
+                                  prefix=f"{rel}/{n}/", exts=exts,
+                                  max_file_bytes=_TARGETED_MAX_FILE_BYTES)
+            except Exception:
+                continue
+    return out
+
+
+def walk_zip_bytes(raw: bytes, container: str,
+                   exts: "set | None" = None) -> dict:
+    """Read an UPLOADED zip's files into {container-qualified name: text} —
+    the same key scheme as walk_corpus. Makes any uploaded source package or
+    iFlow bundle self-sufficient for resource wiring, instead of depending on
+    a same-named export sitting in the pinned Packages folder (seen live: a
+    bundle uploaded for migration shipped with ZERO of its own scripts because
+    resolution only consulted the on-disk corpus). Graceful: returns {} on any
+    error."""
+    out: dict = {}
+    try:
+        import io as _io
+        budget = _Budget()
+        with zipfile.ZipFile(_io.BytesIO(raw)) as zf:
+            _read_zip(zf, out, budget=budget,
+                      prefix=(container or "upload") + "/", exts=exts)
+    except Exception:
+        return {}
+    return out
 
 
 def walk_corpus(path: str, exts: "set | None" = None) -> dict:

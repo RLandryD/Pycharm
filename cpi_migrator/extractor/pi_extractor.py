@@ -44,6 +44,12 @@ class InterfaceRecord:
     # package. Present → the scaffolder regenerates from the true structure +
     # config (clean-room) instead of sizing a placeholder from metadata.
     source_iflow_xml: str = ""
+    # SOURCE package identity (the package zip's filename stem) for records
+    # built from uploaded CPI packages. Drives the targeted resource-corpus
+    # top-up, resolver package scoping, and tenant package naming (generated
+    # packages mirror the original instead of synthesized names — and a flow
+    # can't land in a sibling's package). Empty for PI/PO-export records.
+    package: str = ""
     # Real SAP Migration Assessment figures, when imported from an MA export.
     # When ma_weight is set, the workbench uses the engine's Mode 1
     # (assess_true_ma) — calibrated SAP weight/size/category/effort — instead of

@@ -325,4 +325,33 @@ def generate_from_model(model, iflow_id: str = "", name: str = "",
             r = resolve(fname, resources, package=package)
             if r.ok and not r.ambiguous:
                 result.files[bpath] = r.content
+        # References-tab parity: when the source iflw's OWN bundle is known,
+        # ship its ENTIRE src/main/resources sibling set (scripts, mappings,
+        # schemas) — not only the step-referenced files. Real bundles carry
+        # helper files no step config names (utility groovy, superseded XSLT,
+        # mmap-referenced XSDs), and the editor's References tab lists the
+        # folder contents; reference-driven attach alone leaves those gaps
+        # (seen on RCI093: 18 shipped vs 23 in the original). Step-resolved
+        # content keeps precedence; the iflw itself and the parameter pair are
+        # handled above.
+        if bundle:
+            _skip_tail = ("/parameters.prop", "/parameters.propdef")
+            _res_prefix = f"{bundle}::src/main/resources/"
+            added = 0
+            for ckey, content in resources.items():
+                if not ckey.startswith(_res_prefix):
+                    continue
+                rel = ckey.split("::", 1)[1]
+                if rel.endswith(_skip_tail) or rel.endswith(".iflw") \
+                        or "/scenarioflows/" in rel:
+                    continue
+                # the bundle's OWN copy overrides a basename match resolved
+                # from a sibling bundle (same package, two bundles, same EDMX
+                # basename, different content — decoded on RCI093)
+                if rel not in result.files:
+                    added += 1
+                result.files[rel] = content
+            if added and result.resource_report is not None:
+                result.resource_report.resolved.append(
+                    ("(bundle)", f"+{added} sibling resource file(s)", bundle))
     return result

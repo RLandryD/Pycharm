@@ -32,7 +32,12 @@ class RegenResult:
 
 def regenerate_iflow_xml(xml: str, name: str = "iflow",
                          resources: dict | None = None,
-                         package: str | None = None) -> RegenResult:
+                         package: str | None = None,
+                         gold_error_handling: str | None = None,
+                         gold_eh_replace: bool = False,
+                         gold_eh_notify: bool = False,
+                         gold_eh_sftp: bool = False,
+                         gold_eh_company: str = "") -> RegenResult:
     """Parse → generate_from_model → reparse → verify. Honest on failure.
 
     `resources`/`package` are forwarded to the generator so a deploy bundle
@@ -55,6 +60,37 @@ def regenerate_iflow_xml(xml: str, name: str = "iflow",
                     and _c.strip() == stripped:
                 m1.source_bundle = _p.split("::", 1)[0]
                 break
+    _eh_files = {}
+    if gold_error_handling:
+        # opt-in upgrade: gold-standard exception subprocess (SAP Design
+        # Guidelines pattern) for flows that have NONE — fidelity untouched
+        # for flows that already carry one
+        try:
+            from scaffolder.error_handling import inject_gold_error_handling
+            _existing_pp = None
+            if resources:
+                _b = getattr(m1, "source_bundle", None)
+                for _k in ((f"{_b}::src/main/resources/parameters.prop",
+                            f"{_b}::parameters.prop") if _b else ()):
+                    _v = resources.get(_k)
+                    if _v is not None:
+                        _existing_pp = _v if isinstance(_v, str) \
+                            else _v.decode("utf-8", "replace")
+                        break
+            _eh_files = inject_gold_error_handling(
+                m1, gold_error_handling, replace_existing=gold_eh_replace,
+                notify_mail=gold_eh_notify, notify_sftp=gold_eh_sftp,
+                company=gold_eh_company or "company",
+                existing_params=_existing_pp)
+            # Gold-EH scripts are BUILT-INS supplied by error_handling, not
+            # corpus files. Seed them into the resolver's corpus so the
+            # script steps resolve cleanly instead of logging a false
+            # "Resource NOT FOUND" on every gold-EH generation.
+            if _eh_files and resources is not None:
+                for _rel, _content in _eh_files.items():
+                    resources.setdefault(f"__builtin__::{_rel}", _content)
+        except Exception:
+            _eh_files = {}
     try:
         res = generate_from_model(m1, name=name, resources=resources,
                                   package=package)
@@ -64,12 +100,31 @@ def regenerate_iflow_xml(xml: str, name: str = "iflow",
     except Exception as exc:
         return RegenResult(name, False, n_steps=n_steps,
                            note=f"generate error: {exc}")
+    if _eh_files and hasattr(res, "files"):
+        res.files.update(_eh_files)
+        if getattr(m1, "_eh_notify_mail", False) or \
+                getattr(m1, "_eh_notify_sftp", False):
+            from scaffolder.error_handling import append_alert_params
+            append_alert_params(
+                res.files,
+                mail=getattr(m1, "_eh_notify_mail", False),
+                sftp=getattr(m1, "_eh_notify_sftp", False),
+                reused_roles=getattr(m1, "_eh_reused_mail_roles", ()))
     try:
         m2 = parse_iflow(res.iflw_xml, name)
     except Exception as exc:
         return RegenResult(name, False, n_steps=n_steps,
                            note=f"reparse error: {exc}")
     ok = mids(m1) == mids(m2)
+    if not ok and _eh_files:
+        # the injected exception subprocess is sequence-position-agnostic
+        # (the emitter places disconnected subprocess elements by document
+        # order, not by our append position) — compare everything else
+        # order-strict and require the subprocess to be present
+        _strip = lambda ks: [k for k in ks
+                             if k != "ErrorEventSubProcessTemplate"]
+        ok = (_strip(mids(m1)) == _strip(mids(m2))
+              and "ErrorEventSubProcessTemplate" in mids(m2))
     # A 0-middle-step flow whose real content is its sender/receiver endpoints
     # regenerates as a bare timer with those endpoints dropped — that is an
     # EMPTY flow, not a faithful reproduction. Report it honestly instead of

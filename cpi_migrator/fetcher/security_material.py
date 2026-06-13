@@ -117,6 +117,79 @@ class SecurityMaterialClient:
             return False, str(exc)
 
 
+    def create_oauth2_client_credentials(self, name: str, token_url: str,
+                                         client_id: str, client_secret: str,
+                                         description: str = "") \
+            -> tuple[bool, str]:
+        """Create an OAuth2 Client Credentials entry (fully supported by the
+        CPI Security Content API, unlike PGP keyrings which are UI-only)."""
+        token = self._ensure_csrf()
+        headers = {"Content-Type": "application/json"}
+        if token:
+            headers["X-CSRF-Token"] = token
+        payload = {
+            "Name": name, "TokenServiceUrl": token_url,
+            "ClientId": client_id, "ClientSecret": client_secret,
+            "ClientAuthentication": "Body Parameter",
+            "Description": description or "Created by migration tool",
+        }
+        try:
+            r = self.session.post(
+                f"{self.base_url}/api/v1/OAuth2ClientCredentials",
+                json=payload, headers=headers, timeout=30)
+            if r.status_code in (200, 201):
+                logger.info("Created OAuth2 client credentials %s", name)
+                return True, f"OAuth2 credentials '{name}' created"
+            return False, f"HTTP {r.status_code}: {r.text[:200]}"
+        except Exception as exc:
+            return False, str(exc)
+
+
+    def delete_user_credential(self, name: str) -> tuple[bool, str]:
+        token = self._ensure_csrf()
+        headers = {}
+        if token:
+            headers["X-CSRF-Token"] = token
+        try:
+            r = self.session.delete(
+                f"{self.base_url}/api/v1/UserCredentials('{name}')",
+                headers=headers, timeout=30)
+            return r.status_code in (200, 202, 204), \
+                f"HTTP {r.status_code}"
+        except Exception as exc:
+            return False, str(exc)
+
+    def probe_write_access(self) -> str:
+        """One-click diagnosis for failed replications: create + delete a
+        probe credential and report the exact outcome (status + body) —
+        distinguishes missing write role (403), CSRF problems, and payload
+        rejections (400) without guessing."""
+        probe = "CPI_MIGRATOR_WRITE_PROBE"
+        ok, msg = self.create_user_credential(
+            probe, "probe", "Probe-2026!",
+            description="write-access probe — safe to delete")
+        if not ok:
+            logger.warning("write probe FAILED: %s", msg)
+            hint = ""
+            if "403" in msg:
+                hint = (" → the OAuth client lacks the security-material "
+                        "WRITE role (e.g. CredentialsEdit / "
+                        "AuthGroup.Administrator). Reads can work while "
+                        "writes 403 — add the role to the service "
+                        "instance/key and re-create the token.")
+            elif "400" in msg:
+                hint = " → payload rejected; the body above says which field."
+            elif "CSRF" in msg or "csrf" in msg:
+                hint = " → CSRF token problem."
+            return f"WRITE FAILED: {msg}{hint}"
+        dok, dmsg = self.delete_user_credential(probe)
+        logger.info("write probe ok (create 201, delete %s)", dmsg)
+        return ("WRITE OK — credentials can be created. "
+                + ("Probe cleaned up." if dok else
+                   f"Probe created but delete returned {dmsg} — remove "
+                   f"'{probe}' manually in Security Material."))
+
+
 def audit_interface_credentials(interfaces: list,
                                 report: SecurityMaterialReport) -> list[dict]:
     """Cross-check interfaces against existing credentials. Flags interfaces

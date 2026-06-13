@@ -85,6 +85,28 @@ def run(cfg: dict, file_path: str, iflow: str = "", interval: int = 60,
     session = auth.get_session()
     fetcher = MPLFetcher(cfg["base_url"], session)
 
+    # Optional ANS alerting (2026-06-12, expansion #3): cfg["ans"] carries
+    # {"key_path" or "key", "target", "target_type", "enabled"}. The key
+    # rides as a PATH (same trust model as --service-key); the config file
+    # itself contains no secrets.
+    notifier = None
+    ans_cfg = cfg.get("ans") or {}
+    if ans_cfg.get("enabled"):
+        try:
+            from fetcher.ans_notifier import ANSClient
+            key = ans_cfg.get("key")
+            if not key and ans_cfg.get("key_path"):
+                with open(os.path.expanduser(ans_cfg["key_path"])) as fh:
+                    key = json.load(fh)
+            if key:
+                notifier = ANSClient(key)
+                logger.info("ANS alerting enabled → %s (%s)",
+                            ans_cfg.get("target", "?"),
+                            ans_cfg.get("target_type", "email"))
+        except Exception as exc:                     # noqa
+            logger.warning("ANS alerting setup failed (continuing without): %s",
+                           exc)
+
     if pid_file:
         Path(pid_file).parent.mkdir(parents=True, exist_ok=True)
         Path(pid_file).write_text(str(os.getpid()), encoding="utf-8")
@@ -112,6 +134,21 @@ def run(cfg: dict, file_path: str, iflow: str = "", interval: int = 60,
             try:
                 added, total, cursor = poll_once(fetcher, file_path, iflow, cursor)
                 logger.info("cycle: +%d new (%d total)", added, total)
+                if added and notifier is not None:
+                    try:
+                        from fetcher.run_collector import load_runs
+                        from fetcher.ans_notifier import notify_failures
+                        sent = notify_failures(
+                            list(load_runs(Path(file_path)))[:500],
+                            state_path=str(Path(file_path).parent
+                                           / "ans_notified.json"),
+                            client=notifier,
+                            tenant=cfg.get("base_url", ""))
+                        if sent:
+                            logger.info("ANS: %d failure alert(s) sent",
+                                        sent)
+                    except Exception as exc:         # noqa — alerting never kills polling
+                        logger.warning("ANS notify error: %s", exc)
             except Exception as exc:                 # noqa — never let one cycle kill the loop
                 logger.warning("poll cycle error: %s", exc)
             cycles += 1
@@ -143,6 +180,8 @@ def main(argv=None) -> int:
     ap.add_argument("--interval", type=int, default=60)
     ap.add_argument("--pid-file", default="")
     ap.add_argument("--stop-file", default="")
+    ap.add_argument("--alert-config", default="",
+                    help="JSON: {key_path, target, target_type, enabled}")
     args = ap.parse_args(argv)
 
     if args.service_key:
@@ -154,6 +193,13 @@ def main(argv=None) -> int:
     if not cfg["base_url"] or not cfg["token_url"]:
         print("error: need --service-key or --base-url and --token-url", file=sys.stderr)
         return 2
+    if args.alert_config:
+        try:
+            with open(args.alert_config) as fh:
+                cfg["ans"] = json.load(fh)
+        except Exception as exc:
+            print(f"warning: alert config unreadable ({exc}) — alerting off",
+                  file=sys.stderr)
     run(cfg, args.file, iflow=args.iflow, interval=args.interval,
         pid_file=args.pid_file, stop_file=args.stop_file)
     return 0

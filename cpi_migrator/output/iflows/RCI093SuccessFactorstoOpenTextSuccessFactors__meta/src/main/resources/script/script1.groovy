@@ -1,22 +1,37 @@
-import com.sap.gateway.ip.core.customdev.util.Message
-import groovy.json.JsonBuilder
-import groovy.json.JsonSlurper
+import com.sap.gateway.ip.core.customdev.util.Message;
 
-def Message processData(Message message) {
-    def payload = message.getHeaders().get('payload')
-    Reader json = message.getBody(java.io.Reader)
-    def input = new JsonSlurper().parse(json)
-    if (input.Messages.Message1) {
-        if (input.Messages.Message1.ReceiveEvents) {
-            payload['n0:MaterialTraceabilityEventNotificationMessage'].EventPackage.ReceiveEvents = input.Messages.Message1.ReceiveEvents
-        }else if (input.Messages.Message1.ReceiveSerialNumberEvents) {
-            payload['n0:MaterialTraceabilityEventNotificationMessage'].EventPackage.ReceiveSerialNumberEvents = input.Messages.Message1.ReceiveSerialNumberEvents
-        }
+def Message processData(Message message) 
+{
+    def body = message.getBody(java.lang.String);
+    def messageLog = messageLogFactory.getMessageLog(message);
+    def pMap = message.getProperties();
+    StringBuffer str = new StringBuffer();
+    
+    // Fetch properties
+    def jobReqsManualRun = pMap.get("jobReqsManualRun");
+    def ExcludeReqs = pMap.get("ExcludeReqs");
+    def Manual_Run = pMap.get("Manual_Run");
+    str.append("&\$filter = (status/id in '37901','37904') and (deleted eq '0')")
+    
+    if (Manual_Run && jobReqsManualRun) {
+        def formattedJobReqs = jobReqsManualRun.trim().replace(",", "','");
+        
+        str.append(" and (jobReqId in '" + formattedJobReqs.toString() + "')");
+    } else if (ExcludeReqs) {
+        def excludedr = ExcludeReqs.trim().split(",");
+        def exclusionFilter = excludedr.collect { "jobReqId ne '${it}'" }.join(" and ");
+        
+        str.append(" and " + exclusionFilter);
+    }
+    
+    //tr.append("&\$orderby=jobReqId&\$top=2500&\$skip=2400");
+    
+    message.setProperty("JobReqs", str.toString());
+    
+    if (messageLog) {
+        messageLog.addAttachmentAsString("JobReqs Property", message.getProperty("JobReqs"), "text/plain");
     }
 
-    // Store updated Payload
-    message.setHeader('payload', payload)
-    def aasJson = new JsonBuilder(payload)
-    message.setBody(aasJson.toPrettyString())
-    return message
+    // Return the message object
+    return message;
 }

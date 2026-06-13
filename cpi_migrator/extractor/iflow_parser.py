@@ -92,6 +92,11 @@ class Step:
     incoming: list = field(default_factory=list)
     outgoing: list = field(default_factory=list)
     parent_subprocess: str = ""
+    #: Looping Process Call characteristics, decoded verbatim from the source
+    #: (202/202 corpus instances carry exactly: element id + loopMaximum, and a
+    #: loopCondition child with id + xsi:type + XPath text). None when absent.
+    #: Dropping this emitted an empty Condition Expression in the editor.
+    loop: dict | None = None
 
 
 @dataclass
@@ -161,7 +166,13 @@ def _collect_steps(parent, process_id: str, steps: dict, sub: str = ""):
         evdef = None
         for defname, start_kind, end_kind in (
                 ("bpmn2:errorEventDefinition", "StartErrorEvent", "EndErrorEvent"),
-                ("bpmn2:timerEventDefinition", "StartTimerEvent", None)):
+                ("bpmn2:escalationEventDefinition", None,
+                 "EscalationEndEvent"),
+                ("bpmn2:timerEventDefinition", "StartTimerEvent", None),
+                # C4C-era hybrid (decoded 2026-06-11 BigBatch): activityType
+                # stays EndEvent while the BPMN child is a terminate def —
+                # capture it so the def re-emits; do NOT remap the kind.
+                ("bpmn2:terminateEventDefinition", None, None)):
             d = el.find(defname, NS)
             if d is None:
                 continue
@@ -188,9 +199,29 @@ def _collect_steps(parent, process_id: str, steps: dict, sub: str = ""):
         # it demand an incoming message flow / reject the end-event variant).
         # Record exactly what the source had so emission mirrors it.
         st = steps[sid]
+        # Looping Process Call: the loop condition lives in a BPMN
+        # standardLoopCharacteristics CHILD (referenced by the loopId prop),
+        # not in the ifl properties — decode it so the emitter can re-emit it
+        # with its ORIGINAL ids (empty Condition Expression otherwise).
+        slc = el.find("bpmn2:standardLoopCharacteristics", NS)
+        if slc is not None:
+            cond = slc.find("bpmn2:loopCondition", NS)
+            st.loop = {
+                "id": slc.get("id", "") or "",
+                "loop_maximum": slc.get("loopMaximum", "") or "",
+                "cond_id": (cond.get("id", "") or "") if cond is not None else "",
+                "cond_type": (cond.get(
+                    "{http://www.w3.org/2001/XMLSchema-instance}type", "")
+                    or "bpmn2:tFormalExpression") if cond is not None
+                    else "bpmn2:tFormalExpression",
+                "condition": (cond.text or "") if cond is not None else "",
+            }
         if ln in ("startEvent", "endEvent"):
             if evdef is not None:
-                st.event_def = ("timer" if "timer" in _ln(evdef.tag).lower()
+                _evt = _ln(evdef.tag).lower()
+                st.event_def = ("timer" if "timer" in _evt
+                                else "escalation" if "escalation" in _evt
+                                else "terminate" if "terminate" in _evt
                                 else "error")
                 st.event_def_id = evdef.get("id", "") or ""
                 st.def_props = _props(evdef)

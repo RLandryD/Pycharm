@@ -151,8 +151,8 @@ def cli(env, config, output, targets, reports_only, refresh_cache,
 
     # ── Step 2: Analyze complexity ───────────────────────────────────
     console.print("[bold]Step 2/5[/bold] Analyzing complexity …")
-    analyzer    = ComplexityAnalyzer(cfg)
-    assessments = analyzer.assess_all(records)
+    from analyzer.ma_assessments import assess_records
+    assessments = assess_records(records)
     _print_complexity_table(assessments)
 
     # ── Step 3: Resolve destinations ────────────────────────────────

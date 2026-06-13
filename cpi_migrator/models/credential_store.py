@@ -100,6 +100,41 @@ class CPIProfile:
     ctms_client_id: str = ""
     ctms_client_secret: str = ""
 
+    # Generic per-client service-key wallet (2026-06-12): any BTP service
+    # key the engagement needs lives here under a named slot — ans, ctms,
+    # content_agent, cicd, or custom. New services need NO schema change.
+    # {slot: full key JSON dict}. Encrypted with the rest of the profile.
+    service_keys: dict = field(default_factory=dict)
+
+    def set_service_key(self, slot: str, key: dict):
+        self.service_keys[slot] = key
+
+    def get_service_key(self, slot: str) -> Optional[dict]:
+        v = self.service_keys.get(slot)
+        return v if isinstance(v, dict) else None
+
+    @staticmethod
+    def mask_key(key: dict) -> str:
+        """Display string with NO secret material: hosts + id tails only."""
+        bits = []
+        flat = {}
+        def w(o, p=""):
+            if isinstance(o, dict):
+                for k, v in o.items():
+                    w(v, k)
+            else:
+                flat.setdefault(p, o)
+        w(key)
+        cid = str(flat.get("client_id", "") or flat.get("clientid", ""))
+        if cid:
+            bits.append(f"client_id …{cid[-4:]}")
+        for uk in ("url", "oauth_url", "uri", "sb_url"):
+            u = str(flat.get(uk, ""))
+            if u.startswith("http"):
+                bits.append(u.split("//", 1)[-1].split("/", 1)[0])
+                break
+        return " · ".join(bits) or f"{len(key)} fields"
+
     def to_dict(self) -> dict:
         d = asdict(self)
         return d

@@ -92,11 +92,14 @@ def _wrap_manifest_line(key: str, value: str) -> str:
 
 def build_manifest(iflow_id: str, name: str) -> str:
     # Header set matched field-for-field against REAL importable iFlow exports
-    # (the proven clone + the corpus minimal iFlow). Both carry
-    # SAP-ContentMode: ConfigureOnly and neither carries an empty
-    # SAP-ArtifactTrait — so we add the former and drop the latter. (singleton
-    # and Bundle-ClassPath appear only in some exports and are NOT required —
-    # the corpus minimal importable iFlow omits both.)
+    # (the proven clone + the corpus minimal iFlow); no empty SAP-ArtifactTrait
+    # (singleton and Bundle-ClassPath appear only in some exports and are NOT
+    # required — the corpus minimal importable iFlow omits both).
+    # SAP-ContentMode: ConfigureOnly was REMOVED (round 5): it is the
+    # standard-content read-only marker — customer-built exports (RCI093
+    # original) do NOT carry it, and shipping it made direct bundle imports
+    # behave as locked content ("malbundled"). The clone source had it only
+    # because the clone WAS standard content.
     import time as _time
     sym = _sanitize_id(iflow_id)
     modified = str(int(_time.time() * 1000))
@@ -114,7 +117,6 @@ def build_manifest(iflow_id: str, name: str) -> str:
         _wrap_manifest_line("SAP-NodeType", "IFLMAP"),
         _wrap_manifest_line("Origin-ModifiedDate", modified),
         _wrap_manifest_line("SAP-BundleType", "IntegrationFlow"),
-        _wrap_manifest_line("SAP-ContentMode", "ConfigureOnly"),
         _wrap_manifest_line(
             "Import-Service",
             "com.sap.esb.webservice.audit.log.AuditLogger,"
@@ -1693,19 +1695,28 @@ def _lip_graph_block(proc, model, pid, pool_x, pool_y):
             f'            <bpmndi:BPMNShape bpmnElement="{html.escape(s.id)}" '
             f'id="BPMNShape_{html.escape(s.id)}"><dc:Bounds height="{h}.0" '
             f'width="{w}.0" x="{x}.0" y="{y}.0"/></bpmndi:BPMNShape>\n')
+    indeg_di = {}
+    for s in di_steps:
+        for fid in s.outgoing:
+            t = flow_target.get(fid)
+            if t is not None:
+                indeg_di[t] = indeg_di.get(t, 0) + 1
     for s in di_steps:
         for fid in s.outgoing:
             tgt = flow_target.get(fid)
             if tgt is None or s.id not in boxes or tgt not in boxes:
                 continue
-            (ax, ay), (bx, by) = _gw_anchor(boxes[s.id], boxes[tgt])
+            pts = _gw_route(boxes[s.id], boxes[tgt],
+                            src_fan=len(s.outgoing) > 1,
+                            tgt_fan=indeg_di.get(tgt, 0) > 1,
+                            obstacles=[b for nid, b in boxes.items()
+                                       if nid not in (s.id, tgt)])
             edges.append(
                 f'            <bpmndi:BPMNEdge bpmnElement="{html.escape(fid)}" '
                 f'id="BPMNEdge_{html.escape(fid)}" '
                 f'sourceElement="BPMNShape_{html.escape(s.id)}" '
                 f'targetElement="BPMNShape_{html.escape(tgt)}">'
-                f'<di:waypoint x="{ax}.0" xsi:type="dc:Point" y="{ay}.0"/>'
-                f'<di:waypoint x="{bx}.0" xsi:type="dc:Point" y="{by}.0"/>'
+                f'{_wp_xml(pts)}'
                 f'</bpmndi:BPMNEdge>\n')
     return (process_xml, "".join(shapes), "".join(edges),
             (int(ext_w), int(ext_h)), boxes)
@@ -1748,6 +1759,46 @@ def inject_local_processes(iflw_xml: str, model) -> str:
         pname = html.escape(getattr(p, "name", "") or pid, quote=True)
         block, lip_shapes, lip_edges, (w, h), lip_boxes = _lip_graph_block(
             p, model, pid, pool_x, int(pool_y))
+        # endpoints partnered to steps in THIS LIP — RCI093's arrangement:
+        # the receiver sits x-ALIGNED with its partner Send, ABOVE the pool
+        # when the partner is in the pool's top half, BELOW otherwise →
+        # straight vertical message-flow edges (decoded from the original:
+        # SFTP receiver y=-83 over Send_SFTP y=201; mail y=522 under
+        # Send_Mail y=329, both at the Send's exact x)
+        _ep_ids = {ep.id for ep in getattr(model, "endpoints", []) or []}
+        _partners, _seen_ep = [], set()
+        for mf in getattr(model, "message_flows", []) or []:
+            for ep, stp in ((mf.source, mf.target), (mf.target, mf.source)):
+                if stp in lip_boxes and ep and ep not in _seen_ep and (
+                        ep.startswith("Participant") or ep in _ep_ids):
+                    _seen_ep.add(ep)
+                    _pcx = lip_boxes[stp][0] + lip_boxes[stp][2] / 2
+                    _pcy = lip_boxes[stp][1] + lip_boxes[stp][3] / 2
+                    _side = "above" if _pcy < int(pool_y) + h / 2 \
+                        else "below"
+                    _partners.append((ep, _pcx, _side))
+        if any(s == "above" for _, _, s in _partners):
+            # make room over the pool for the above-receivers, then rebuild
+            # the block at the shifted origin
+            pool_y += 300
+            block, lip_shapes, lip_edges, (w, h), lip_boxes = \
+                _lip_graph_block(p, model, pid, pool_x, int(pool_y))
+            _partners = [(ep, cx + 300 * 0, s) for ep, cx, s in _partners]
+            # x-centers shift only if pool_x changed (it didn't); recompute
+            # from the fresh boxes for exactness
+            _partners = []
+            _seen_ep = set()
+            for mf in getattr(model, "message_flows", []) or []:
+                for ep, stp in ((mf.source, mf.target),
+                                (mf.target, mf.source)):
+                    if stp in lip_boxes and ep and ep not in _seen_ep and (
+                            ep.startswith("Participant") or ep in _ep_ids):
+                        _seen_ep.add(ep)
+                        _pcx = lip_boxes[stp][0] + lip_boxes[stp][2] / 2
+                        _pcy = lip_boxes[stp][1] + lip_boxes[stp][3] / 2
+                        _side = "above" if _pcy < int(pool_y) + h / 2 \
+                            else "below"
+                        _partners.append((ep, _pcx, _side))
         blocks.append(block)
         parts.append(
             f'        <bpmn2:participant id="Participant_{pid}" '
@@ -1762,28 +1813,27 @@ def inject_local_processes(iflw_xml: str, model) -> str:
             f'</bpmndi:BPMNShape>\n')
         shapes.append(lip_shapes)
         edges.append(lip_edges)
-        # endpoints whose partner step lives in THIS LIP: hang them right below
-        # the pool (the main pass stacked them far right, drawing diagonal
-        # message-flow edges across the whole canvas)
-        moved, used_x = 0, []
-        for mf in getattr(model, "message_flows", []) or []:
-            for ep, st in ((mf.source, mf.target), (mf.target, mf.source)):
-                if st in lip_boxes and ep and ep.startswith("Participant"):
-                    pat = (r'(<bpmndi:BPMNShape bpmnElement="'
-                           + re.escape(ep) + r'" id="BPMNShape_'
-                           + re.escape(ep) + r'"><dc:Bounds height="140\.0" '
-                           r'width="100\.0" )x="[\d.+-]+" y="[\d.+-]+"')
-                    nx = max(40, int(lip_boxes[st][0]) - 10)
-                    while any(abs(nx - ox) < 120 for ox in used_x):
-                        nx += 130
-                    new_b, nsub = re.subn(
-                        pat, r'\g<1>x="%d.0" y="%d.0"'
-                        % (nx, int(pool_y) + pool_h + 30), iflw_xml)
-                    if nsub:
-                        iflw_xml = new_b
-                        used_x.append(nx)
-                        moved += 1
-        pool_y += pool_h + (240 if moved else 60)
+        # place the receivers: exact x of the partner Send (stagger only on
+        # same-side collision), one pitch above/below the pool border
+        used_x = {"above": [], "below": []}
+        below_any = False
+        for ep, pcx, side in _partners:
+            pat = (r'(<bpmndi:BPMNShape bpmnElement="'
+                   + re.escape(ep) + r'" id="BPMNShape_'
+                   + re.escape(ep) + r'"><dc:Bounds height="140\.0" '
+                   r'width="100\.0" )x="[\d.+-]+" y="[\d.+-]+"')
+            nx = max(40, int(pcx - 50))
+            while any(abs(nx - ox) < 120 for ox in used_x[side]):
+                nx += 150
+            ny = int(pool_y) - 220 if side == "above" \
+                else int(pool_y) + pool_h + 80
+            new_b, nsub = re.subn(
+                pat, r'\g<1>x="%d.0" y="%d.0"' % (nx, ny), iflw_xml)
+            if nsub:
+                iflw_xml = new_b
+                used_x[side].append(nx)
+                below_any = below_any or side == "below"
+        pool_y += pool_h + (300 if below_any else 60)
 
     iflw_xml = iflw_xml.replace("    </bpmn2:collaboration>",
                                 "".join(parts) + "    </bpmn2:collaboration>", 1)
@@ -1812,13 +1862,12 @@ def repair_flow_di(iflw_xml: str) -> str:
         fid, s, t = m.groups()
         if fid in has_edge or s not in bounds or t not in bounds:
             continue
-        (ax, ay), (bx, by) = _gw_anchor(bounds[s], bounds[t])
+        pts = _gw_route(bounds[s], bounds[t])
         add.append(
             f'            <bpmndi:BPMNEdge bpmnElement="{fid}" '
             f'id="BPMNEdge_{fid}" sourceElement="BPMNShape_{s}" '
             f'targetElement="BPMNShape_{t}">'
-            f'<di:waypoint x="{int(ax)}.0" xsi:type="dc:Point" y="{int(ay)}.0"/>'
-            f'<di:waypoint x="{int(bx)}.0" xsi:type="dc:Point" y="{int(by)}.0"/>'
+            f'{_wp_xml(pts)}'
             f'</bpmndi:BPMNEdge>\n')
     if add:
         iflw_xml = iflw_xml.replace("        </bpmndi:BPMNPlane>",
@@ -1834,7 +1883,11 @@ def repair_flow_di(iflw_xml: str) -> str:
 # traverses it identically → same mid-step kind sequence → faithful reproduce.
 _GW_START = {"StartEvent", "StartTimerEvent", "MessageStartEvent"}
 _GW_END = {"EndEvent", "MessageEndEvent"}
-_GW_PARALLEL = {"Multicast", "SequentialMulticast", "ParallelGateway"}
+#: parallelGateway-family activityTypes — decoded from the 263-package corpus:
+#: Multicast 106 / SequentialMulticast 87 / Join 69, ALL on
+#: <bpmn2:parallelGateway>, never on callActivity (Join-as-callActivity is the
+#: same breaker family as Multicast-as-callActivity).
+_GW_PARALLEL = {"Multicast", "SequentialMulticast", "ParallelGateway", "Join"}
 
 # CPI-supported component variants decoded from the corpus (166 real CPI flows):
 # Multicast v1.1.1 ×9, SequentialMulticast v1.1.0 ×7, ExclusiveGateway v1.1.2 ×181.
@@ -1929,6 +1982,8 @@ def _gw_event_def(kind: str, config: dict | None = None) -> str:
                 "</ifl:property>\n"
                 "                </bpmn2:extensionElements>\n"
                 "            </bpmn2:errorEventDefinition>\n")
+    if "Escalation" in kind:
+        return "            <bpmn2:escalationEventDefinition/>\n"
     if "Error" in kind:
         return "            <bpmn2:errorEventDefinition/>\n"
     return "            <bpmn2:messageEventDefinition/>\n"
@@ -1948,7 +2003,10 @@ def _gw_event_def_for(s) -> str:
         return ""
     if ev == "message":
         return "            <bpmn2:messageEventDefinition/>\n"
-    tag = "timerEventDefinition" if ev == "timer" else "errorEventDefinition"
+    tag = ("timerEventDefinition" if ev == "timer"
+           else "escalationEventDefinition" if ev == "escalation"
+           else "terminateEventDefinition" if ev == "terminate"
+           else "errorEventDefinition")
     did = getattr(s, "event_def_id", "") or ""
     ida = f' id="{html.escape(did, quote=True)}"' if did else ""
     dp = getattr(s, "def_props", None) or {}
@@ -2043,8 +2101,26 @@ def _gw_emit_node(s, route_by_fid) -> str:
         da = f' default="{default_fid}"' if default_fid else ""
         return (f'        <bpmn2:exclusiveGateway id="{s.id}" name="{nm}"{da}>\n'
                 f'{ext}{io}        </bpmn2:exclusiveGateway>\n')
+    loop_xml = ""
+    lp = getattr(s, "loop", None)
+    if lp:
+        cond = html.escape(lp.get("condition", ""), quote=False)
+        lm = html.escape(lp.get("loop_maximum", ""), quote=True)
+        lid = html.escape(lp.get("id", ""), quote=True)
+        cid = html.escape(lp.get("cond_id", ""), quote=True)
+        ctype = html.escape(lp.get("cond_type", "bpmn2:tFormalExpression"),
+                            quote=True)
+        # decoded order across 202 corpus instances: extensionElements →
+        # incoming/outgoing → standardLoopCharacteristics (always LAST);
+        # ORIGINAL ids preserved like every other re-emitted id.
+        loop_xml = (
+            f'            <bpmn2:standardLoopCharacteristics id="{lid}" '
+            f'loopMaximum="{lm}">\n'
+            f'                <bpmn2:loopCondition id="{cid}" '
+            f'xsi:type="{ctype}">{cond}</bpmn2:loopCondition>\n'
+            f'            </bpmn2:standardLoopCharacteristics>\n')
     return (f'        <bpmn2:callActivity id="{s.id}" name="{nm}">\n'
-            f'{ext}{io}        </bpmn2:callActivity>\n')
+            f'{ext}{io}{loop_xml}        </bpmn2:callActivity>\n')
 
 
 def _chain_order(kids, flow_target):
@@ -2151,7 +2227,44 @@ def _gw_layout(steps, flow_target):
         row[nid] = r
         taken.add((col[nid], r))
 
-    X0, Y0, DX, DY = 320, 130, 180, 150
+    # A same-row edge spanning ≥2 columns draws straight THROUGH any node
+    # parked in an intermediate cell (seen live: Splitter→Router→Gather with
+    # the LIP call sitting between Router and Gather — the route crossed the
+    # LIP box and read as a missing connector). Bump such bystanders to the
+    # next free row below; their own edges become orthogonal elbows, which is
+    # exactly how the original draws it (router drops to the branch step, the
+    # branch re-enters the join from below).
+    for _ in range(10):                              # fixpoint, bounded
+        cell = {(col[i], row[i]): i for i in ids}
+        moved = False
+        for a in ids:
+            for t in out.get(a, []):
+                if row.get(a) != row.get(t) or col[t] - col[a] < 2:
+                    continue
+                for c in range(col[a] + 1, col[t]):
+                    n = cell.get((c, row[a]))
+                    if n is None or n in (a, t):
+                        continue
+                    taken.discard((c, row[n]))
+                    r = row[n] + 1
+                    while (c, r) in taken:
+                        r += 1
+                    row[n] = r
+                    taken.add((c, r))
+                    cell = {(col[i], row[i]): i for i in ids}
+                    moved = True
+        if not moved:
+            break
+
+    # Standard pitch decoded from 1,221 SAP standard-content iFlows (263
+    # packages): same-row center-to-center distance mode = 150 px (median 146),
+    # activities 100×60, gateways 40×40, events 32×32. One pitch for BOTH axes
+    # (user rule: the step distance must be identical whether the next step is
+    # on the X or the Y axis), nodes centered within their slot.
+    # Y0 leaves headroom for an ABOVE-the-pool endpoint band (participant
+    # 140 high + one pitch off the pool border): with the old Y0=130 the
+    # above-band test could never pass, so every receiver stacked below.
+    X0, Y0, DX, DY = 320, 330, _GW_STD, _GW_STD
     pos = {}
     for nid in ids:
         w, h = _gw_size(by_id[nid].kind)
@@ -2159,6 +2272,11 @@ def _gw_layout(steps, flow_target):
         y = Y0 + row[nid] * DY + (30 - h // 2)
         pos[nid] = (x, y, w, h)
     return pos
+
+
+#: standard layout pitch (px, center-to-center) — the mode across 18,570
+#: same-row sequence-flow links in 1,221 SAP standard-content iFlows.
+_GW_STD = 150
 
 
 def _gw_anchor(src_box, tgt_box):
@@ -2175,6 +2293,79 @@ def _gw_anchor(src_box, tgt_box):
     return (sx + sw // 2, sy), (tx + tw // 2, ty + th)
 
 
+def _gw_route(src_box, tgt_box, src_fan: bool = False, tgt_fan: bool = False,
+              obstacles=None):
+    """Waypoint list for an edge — straight when the two shapes share a row or
+    a column (centers within 6 px), otherwise an orthogonal L (no diagonals;
+    user rule 2: branch edges must run parallel to the axes).
+
+    Fan-out (src has multiple outgoing, e.g. Router/Multicast): leave the
+    gateway vertically from its bottom/top border, turn at the target's row
+    centerline, enter the target's side — each branch gets its own horizontal
+    run on its own row, so branches don't overlap each other.
+    Fan-in (tgt has multiple incoming, e.g. Join/Gather): run horizontally
+    along the source's row, turn at the join's column centerline, enter the
+    join vertically — mirrors how the standard content draws merges.
+
+    `obstacles` (iterable of (x, y, w, h) boxes, src/tgt excluded by the
+    caller): when given, BOTH L orientations are scored by how many boxes
+    their segments cross, and the cleaner one wins (seen live: a route's
+    horizontal run crossed the LIP call box and read as a missing connector).
+    The fan heuristic breaks ties."""
+    sx, sy, sw, sh = src_box
+    tx, ty, tw, th = tgt_box
+    scx, scy = sx + sw / 2, sy + sh / 2
+    tcx, tcy = tx + tw / 2, ty + th / 2
+    if abs(scy - tcy) < 6 or abs(scx - tcx) < 6:
+        (ax, ay), (bx, by) = _gw_anchor(src_box, tgt_box)
+        return [(ax, ay), (bx, by)]
+    # candidate V: vertical-first out of the source border
+    v_ay = sy + sh if tcy > scy else sy
+    v_bx = tx if tcx > scx else tx + tw
+    cand_v = [(scx, v_ay), (scx, tcy), (v_bx, tcy)]
+    # candidate H: horizontal-first along the source row
+    h_ax = sx + sw if tcx > scx else sx
+    h_by = ty + th if tcy < scy else ty
+    cand_h = [(h_ax, scy), (tcx, scy), (tcx, h_by)]
+    if obstacles:
+        def _crossings(pts):
+            n = 0
+            for (x1, y1), (x2, y2) in zip(pts, pts[1:]):
+                lo_x, hi_x = min(x1, x2), max(x1, x2)
+                lo_y, hi_y = min(y1, y2), max(y1, y2)
+                for (ox, oy, ow, oh) in obstacles:
+                    if abs(y1 - y2) < 1:        # horizontal segment
+                        if oy < y1 < oy + oh and lo_x < ox + ow and ox < hi_x:
+                            n += 1
+                    else:                       # vertical segment
+                        if ox < x1 < ox + ow and lo_y < oy + oh and oy < hi_y:
+                            n += 1
+            return n
+        # Z routes through the midpoint dodge cases where BOTH L orientations
+        # are blocked (e.g. a long edge with nodes on both the source and the
+        # target rows).
+        mid_x, mid_y2 = (scx + tcx) / 2, (scy + tcy) / 2
+        z_h = [(h_ax, scy), (mid_x, scy), (mid_x, tcy),
+               (tx if tcx > scx else tx + tw, tcy)]            # H-V-H
+        z_v = [(scx, v_ay), (scx, mid_y2), (tcx, mid_y2),
+               (tcx, ty + th if tcy < scy else ty)]            # V-H-V
+        order = ([cand_v, cand_h] if (src_fan and not tgt_fan)
+                 else [cand_h, cand_v]) + [z_h, z_v]
+        scored = [( _crossings(c), i, c) for i, c in enumerate(order)]
+        scored.sort(key=lambda t: (t[0], t[1]))   # fewest crossings, then pref
+        return scored[0][2]
+    if src_fan and not tgt_fan:
+        return cand_v
+    return cand_h
+
+
+def _wp_xml(points):
+    """Serialize a waypoint list to BPMN DI <di:waypoint/> elements."""
+    return "".join(
+        f'<di:waypoint x="{int(px)}.0" xsi:type="dc:Point" y="{int(py)}.0"/>'
+        for px, py in points)
+
+
 def _gw_endpoints(model, boxes):
     """Emit sender/receiver participants + their message flows (with REAL adapter
     config) + DI. `boxes` maps flow-node id -> (x, y, w, h); senders sit left of
@@ -2182,9 +2373,16 @@ def _gw_endpoints(model, boxes):
     anchored to shape borders (no floating arrows)."""
     parts, mflows, shapes, edges = [], [], [], []
     max_x = max((b[0] + b[2] for b in boxes.values()), default=900)
+    min_x = min((b[0] for b in boxes.values()), default=320)
     min_y = min((b[1] for b in boxes.values()), default=110)
     max_y = max((b[1] + b[3] for b in boxes.values()), default=400)
     mid_y = (min_y + max_y) / 2
+    # the main pool the caller will draw (same formula): endpoints are placed
+    # relative to the POOL border, not the content extent — user rule 3: the
+    # participant's CENTER sits one standard pitch from the pool edge on the
+    # nearest side (never touching, never inside).
+    pool_left, pool_top = min_x - 70, min_y - 70
+    pool_right, pool_bottom = max_x + 70, max_y + 70
     # partner step of each endpoint (via its message flows) — real exports hang
     # a receiver directly above/below the step it talks to; stacking them all
     # at the far right draws long diagonal edges across the whole canvas
@@ -2193,7 +2391,7 @@ def _gw_endpoints(model, boxes):
         for a, b in ((mf.source, mf.target), (mf.target, mf.source)):
             if a and b and b in boxes and a not in partner:
                 partner[a] = b
-    placed = {"above": [], "below": []}
+    placed = {"above": [], "below": [], "left": []}
     epbox = {}
     senders = receivers = 0
     for e in model.endpoints:
@@ -2207,18 +2405,34 @@ def _gw_endpoints(model, boxes):
             f'        </bpmn2:participant>\n')
         pstep = partner.get(e.id)
         if e.direction == "sender":
-            x, y = 80, 110 + 170 * senders
+            # left of the pool, participant center one pitch from the border,
+            # vertically centered on its partner step (or the pool middle)
+            x = int(pool_left - _GW_STD - 50)
+            pcy = (boxes[pstep][1] + boxes[pstep][3] / 2) if pstep else mid_y
+            y = int(pcy - 70)
+            while any(abs(y - oy) < 150 for oy in placed["left"]):
+                y += 170
+            placed["left"].append(y)
+            x = max(10, x)
             senders += 1
         elif pstep:
-            px, py = boxes[pstep][0], boxes[pstep][1]
-            side = "above" if (py < mid_y and min_y - 200 >= 10) else "below"
-            x = max(40, int(px) - 10)
+            px, py, pw, ph = boxes[pstep]
+            pcy = py + ph / 2
+            # nearest side by the PARTNER's center: top-half partners hang
+            # their endpoint ABOVE the pool (closer = shorter message-flow
+            # edge), bottom-half (and single-row middles) below.
+            side = "above" if (pcy < mid_y - 1 and pool_top - 220 >= 10) \
+                else "below"
+            # center-aligned with the partner step (rule 4), staggered one
+            # pitch on collision
+            x = max(40, int(px + pw / 2 - 50))
             while any(abs(x - ox) < 120 for ox in placed[side]):
-                x += 130
+                x += _GW_STD
             placed[side].append(x)
-            y = int(min_y - 200) if side == "above" else int(max_y + 60)
+            y = int(pool_top - _GW_STD - 70) if side == "above" \
+                else int(pool_bottom + _GW_STD - 70)
         else:
-            x, y = max_x + 160, 110 + 170 * receivers
+            x, y = int(pool_right + _GW_STD - 50), 110 + 170 * receivers
             receivers += 1
         epbox[e.id] = (x, y, 100, 140)
         shapes.append(
@@ -2251,14 +2465,15 @@ def _gw_endpoints(model, boxes):
         sb = epbox.get(mf.source) or boxes.get(mf.source)
         tb = epbox.get(mf.target) or boxes.get(mf.target)
         if sb and tb:
-            (ax, ay), (bx, by) = _gw_anchor(sb, tb)
+            pts = _gw_route(sb, tb,
+                            obstacles=[b for nid, b in boxes.items()
+                                       if nid not in (mf.source, mf.target)])
             edges.append(
                 f'            <bpmndi:BPMNEdge bpmnElement="{html.escape(mf.id)}" '
                 f'id="BPMNEdge_{html.escape(mf.id)}" '
                 f'sourceElement="BPMNShape_{html.escape(mf.source)}" '
                 f'targetElement="BPMNShape_{html.escape(mf.target)}">'
-                f'<di:waypoint x="{ax}.0" xsi:type="dc:Point" y="{ay}.0"/>'
-                f'<di:waypoint x="{bx}.0" xsi:type="dc:Point" y="{by}.0"/>'
+                f'{_wp_xml(pts)}'
                 f'</bpmndi:BPMNEdge>\n')
     return "".join(parts), "".join(mflows), "".join(shapes), "".join(edges)
 
@@ -2343,19 +2558,28 @@ def build_gateway_flow(iflow_id: str, name: str, model):
             f'            <bpmndi:BPMNShape bpmnElement="{html.escape(s.id)}" '
             f'id="BPMNShape_{html.escape(s.id)}"><dc:Bounds height="{h}.0" '
             f'width="{w}.0" x="{x}.0" y="{y}.0"/></bpmndi:BPMNShape>\n')
+    indeg_di = {}
+    for s in di_steps:
+        for fid in s.outgoing:
+            t = model._flow_target.get(fid)
+            if t is not None:
+                indeg_di[t] = indeg_di.get(t, 0) + 1
     for s in di_steps:
         for fid in s.outgoing:
             tgt = model._flow_target.get(fid)
             if tgt is None or s.id not in boxes or tgt not in boxes:
                 continue
-            (ax, ay), (bx, by) = _gw_anchor(boxes[s.id], boxes[tgt])
+            pts = _gw_route(boxes[s.id], boxes[tgt],
+                            src_fan=len(s.outgoing) > 1,
+                            tgt_fan=indeg_di.get(tgt, 0) > 1,
+                            obstacles=[b for nid, b in boxes.items()
+                                       if nid not in (s.id, tgt)])
             di_edges.append(
                 f'            <bpmndi:BPMNEdge bpmnElement="{html.escape(fid)}" '
                 f'id="BPMNEdge_{html.escape(fid)}" '
                 f'sourceElement="BPMNShape_{html.escape(s.id)}" '
                 f'targetElement="BPMNShape_{html.escape(tgt)}">'
-                f'<di:waypoint x="{ax}.0" xsi:type="dc:Point" y="{ay}.0"/>'
-                f'<di:waypoint x="{bx}.0" xsi:type="dc:Point" y="{by}.0"/>'
+                f'{_wp_xml(pts)}'
                 f'</bpmndi:BPMNEdge>\n')
 
     # collaboration config: re-emit the REAL iFlow-level properties verbatim

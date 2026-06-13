@@ -423,6 +423,10 @@ def parse_scenario_evaluation(ws, rules: list[SAPMARule]) -> list[InterfaceRecor
             has_multi_mapping=has_multi,
             channel_count=channel_count,
             ma_weight=weight if weight else None,
+            ma_size=__import__("analyzer.sap_complexity_engine",
+                               fromlist=["ma_size_from_group_status"]
+                               ).ma_size_from_group_status(
+                str(complexity_group_raw or ""), status),
             ma_status=status,
             raw={
                 "sap_ma_status":     status,
@@ -430,6 +434,8 @@ def parse_scenario_evaluation(ws, rules: list[SAPMARule]) -> list[InterfaceRecor
                 "sap_ma_effort_hrs": effort_hrs,
                 "sap_ma_complexity": sap_complexity,
                 "sap_ma_rules":      [r.rule_id for r in ico_rules],
+                "sap_ma_rule_assets": [[r.rule_id, r.asset_string]
+                                       for r in ico_rules],
             },
         ))
 
@@ -581,6 +587,8 @@ def _parse_realschema_scenarios(ws, rules: list[SAPMARule]) -> tuple[list[Interf
                 "sap_ma_weight":     weight,
                 "sap_ma_effort_hrs": eff,
                 "sap_ma_rules":      [rr.rule_id for rr in ico_rules],
+                "sap_ma_rule_assets": [[rr.rule_id, rr.asset_string]
+                                       for rr in ico_rules],
             },
         ))
 

@@ -111,6 +111,7 @@ class ComplexityResult:
     mode: str = "signal"   # "true_ma" | "signal"
     caveats: list = field(default_factory=list)
     signals: dict = field(default_factory=dict)
+    orchestration: dict = field(default_factory=dict)  # OrchestrationFlag
 
     # ---- compatibility helpers (bridge to the legacy LOW/MEDIUM/HIGH world) --
     @property
@@ -457,9 +458,13 @@ def fire_rules(signals: dict) -> list[FiredRule]:
     """Fire SAP rules against extracted signals, returning the bands that
     matched (with their real weights and categories).
 
-    Faithful to SAP's model: count-based rules are evaluated against BOTH the
-    RECEIVER_IF and EXT_RCV_DET characteristics (SAP fires both — they are
-    separate fact sets), so a rule can legitimately contribute twice.
+    One firing per rule per ICO — verified against a real SAP export
+    (169 interfaces, 99 Rules-Log rows): every (ICO, rule) pair appears
+    EXACTLY ONCE. The rule catalog stores bands under several
+    characteristics (RECEIVER_IF / EXT_RCV_DET); we evaluate all of them
+    but keep only the strongest matching band, mirroring the single row
+    SAP emits. (The previous both-characteristics design double-counted
+    every rule, inflating weights ~2x.)
     """
     fired: list[FiredRule] = []
 
@@ -468,33 +473,43 @@ def fire_rules(signals: dict) -> list[FiredRule]:
         if kind == "count":
             if not val or val <= 0:
                 continue
-            # SAP evaluates count rules per characteristic; fire each that has
-            # a matching band. Rules with no characteristic fall back to "".
-            chars = ["RECEIVER_IF", "EXT_RCV_DET"]
             full = rule_name if rule_name in _RULE_CATALOG else f"MAIN_{rule_name}"
-            has_char = any(b.get("characteristic") for b in _RULE_CATALOG.get(full, []))
-            if not has_char:
-                chars = [""]
+            has_char = any(b.get("characteristic")
+                           for b in _RULE_CATALOG.get(full, []))
+            chars = ["RECEIVER_IF", "EXT_RCV_DET"] if has_char else [""]
+            best = None
             for ch in chars:
                 band = _band_for_count(rule_name, int(val), characteristic=ch)
-                if band:
-                    fired.append(FiredRule(
-                        rule=rule_name, characteristic=band.get("characteristic", ""),
-                        matched_value=band.get("match_value", ""),
-                        category=_short_cat(band.get("category", "")),
-                        weight=int(band.get("weight", 0)),
-                        signal_note=f"{key}={val}"))
+                if band and (best is None
+                             or int(band.get("weight", 0))
+                             > int(best.get("weight", 0))):
+                    best = band
+            if best:
+                fired.append(FiredRule(
+                    rule=rule_name,
+                    characteristic=best.get("characteristic", ""),
+                    matched_value=best.get("match_value", ""),
+                    category=_short_cat(best.get("category", "")),
+                    weight=int(best.get("weight", 0)),
+                    signal_note=f"{key}={val}"))
 
-    # MappingType — ValueMatch, one band per detected mapping kind, both chars.
+    # MappingType — ValueMatch, ONE row per detected mapping kind (strongest
+    # band across characteristics), per the real-export evidence.
     for mt in signals.get("mapping_types", []):
+        best = None
         for ch in ("RECEIVER_IF", "EXT_RCV_DET"):
             band = _band_for_value("MappingType", mt, characteristic=ch)
-            if band:
-                fired.append(FiredRule(
-                    rule="MappingType", characteristic=band.get("characteristic", ""),
-                    matched_value=mt, category=_short_cat(band.get("category", "")),
-                    weight=int(band.get("weight", 0)),
-                    signal_note=f"mapping_type={mt}"))
+            if band and (best is None or int(band.get("weight", 0))
+                         > int(best.get("weight", 0))):
+                best = band
+        if best:
+            fired.append(FiredRule(
+                rule="MappingType",
+                characteristic=best.get("characteristic", ""),
+                matched_value=mt,
+                category=_short_cat(best.get("category", "")),
+                weight=int(best.get("weight", 0)),
+                signal_note=f"mapping_type={mt}"))
 
     # Adapter-type rules — ValueMatch (no characteristic). The match_value is a
     # comma-separated adapter list; _band_for_value handles membership.
@@ -563,6 +578,23 @@ def _normalize_adapter(raw: str) -> str:
 # ---------------------------------------------------------------------------
 # Weight -> size -> effort
 # ---------------------------------------------------------------------------
+
+def ma_size_from_group_status(group: str, status: str) -> str:
+    """LOYALTY RULE for MA Excel exports: the file's own Complexity Group +
+    Migration Status determine the size — weight bands are PIMAS-internal
+    scale and DO NOT apply to export weights (10–210 scale). Observed combos:
+    Low/Ready→S · Medium/Adjustment→M · Low/Evaluation→L (the 'trapped'
+    simple flows) · High/Evaluation→XL."""
+    g = (group or "").lower()
+    s = (status or "").lower()
+    if "high" in g:
+        return "XL"
+    if "medium" in g:
+        return "M"
+    if "low" in g:
+        return "L" if "evaluation" in s else "S"
+    return ""
+
 
 def weight_to_size(total_weight: int) -> str:
     for row in _WEIGHT_TO_SIZE:
@@ -667,7 +699,23 @@ class SAPComplexityEngine:
     def assess_bundle(self, interface_name: str,
                       bundle_zip: bytes) -> ComplexityResult:
         signals = extract_signals(bundle_zip)
-        return self.assess_signals(interface_name, signals)
+        result = self.assess_signals(interface_name, signals)
+        # ccBPM/orchestration-shape flag (2026-06-12): scope signal for the
+        # architect — these profiles usually need a CPI + SBPA split or a
+        # stateless redesign, not a 1:1 port.
+        try:
+            from analyzer.orchestration_flag import (assess_orchestration,
+                                                     kinds_from_bundle)
+            of = assess_orchestration(signals,
+                                      kinds_from_bundle(bundle_zip),
+                                      name=interface_name)
+            result.orchestration = {"flagged": of.flagged,
+                                    "score": of.score,
+                                    "reasons": of.reasons,
+                                    "recommendation": of.recommendation}
+        except Exception:
+            pass
+        return result
 
     def assess_interface(self, record) -> ComplexityResult:
         """MODE 2b — approximation from an InterfaceRecord (no bundle, no real

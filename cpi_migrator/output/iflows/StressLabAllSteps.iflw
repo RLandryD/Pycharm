@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1">
+    <bpmn2:collaboration id="Collaboration_1" name="Default Collaboration">
+        <bpmn2:extensionElements>
+            <ifl:property><key>namespaceMapping</key><value></value></ifl:property>
+            <ifl:property><key>httpSessionHandling</key><value>None</value></ifl:property>
+            <ifl:property><key>accessControlMaxAge</key><value></value></ifl:property>
+            <ifl:property><key>returnExceptionToSender</key><value>false</value></ifl:property>
+            <ifl:property><key>log</key><value>All events</value></ifl:property>
+            <ifl:property><key>corsEnabled</key><value></value></ifl:property>
+            <ifl:property><key>exposedHeaders</key><value></value></ifl:property>
+            <ifl:property><key>componentVersion</key><value>1.2</value></ifl:property>
+            <ifl:property><key>allowedHeaderList</key><value></value></ifl:property>
+            <ifl:property><key>ServerTrace</key><value></value></ifl:property>
+            <ifl:property><key>allowedOrigins</key><value></value></ifl:property>
+            <ifl:property><key>accessControlAllowCredentials</key><value></value></ifl:property>
+            <ifl:property><key>allowedHeaders</key><value></value></ifl:property>
+            <ifl:property><key>allowedMethods</key><value></value></ifl:property>
+            <ifl:property><key>cmdVariantUri</key><value>ctype::IFlowVariant/cname::IFlowConfiguration/version::1.2.3</value></ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:participant id="Participant_Process_1" ifl:type="IntegrationProcess" name="Integration Process" processRef="Process_1">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:participant id="Participant_Process_Lab_Loop" ifl:type="IntegrationProcess" name="LIP_Loop" processRef="Process_Lab_Loop">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:participant id="Participant_Process_Lab_Transform" ifl:type="IntegrationProcess" name="LIP_Transform" processRef="Process_Lab_Transform">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+    </bpmn2:collaboration>
+    <bpmn2:process id="Process_1" name="Integration Process">
+        <bpmn2:extensionElements>
+            <ifl:property><key>transactionTimeout</key><value>30</value></ifl:property>
+            <ifl:property><key>componentVersion</key><value>1.2</value></ifl:property>
+            <ifl:property><key>cmdVariantUri</key><value>ctype::FlowElementVariant/cname::IntegrationProcess/version::1.2.1</value></ifl:property>
+            <ifl:property><key>transactionalHandling</key><value>Not Required</value></ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:subProcess id="SubProcess_Err" name="Exception Subprocess">
+            <bpmn2:extensionElements>
+                <ifl:property><key>componentVersion</key><value>1.1</value></ifl:property>
+                <ifl:property><key>activityType</key><value>ErrorEventSubProcessTemplate</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::ErrorEventSubProcessTemplate/version::1.1.0</value></ifl:property>
+            </bpmn2:extensionElements>
+        <bpmn2:callActivity id="CA_Alert" name="GS_Exception_Alert">
+            <bpmn2:extensionElements>
+                <ifl:property><key>scriptFunction</key><value></value></ifl:property>
+                <ifl:property><key>scriptBundleId</key><value></value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.1</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Script</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::GroovyScript/version::1.1.2</value></ifl:property>
+                <ifl:property><key>subActivityType</key><value>GroovyScript</value></ifl:property>
+                <ifl:property><key>script</key><value>stress_alert.groovy</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_E1</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_E2</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:endEvent id="EndEvent_Err" name="End Error">
+            <bpmn2:incoming>SequenceFlow_E2</bpmn2:incoming>
+            <bpmn2:messageEventDefinition/>
+        </bpmn2:endEvent>
+        <bpmn2:startEvent id="StartEvent_Err" name="Error Start">
+            <bpmn2:outgoing>SequenceFlow_E1</bpmn2:outgoing>
+            <bpmn2:errorEventDefinition>
+                <bpmn2:extensionElements>
+                    <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::ErrorStartEvent</value></ifl:property>
+                    <ifl:property><key>activityType</key><value>StartErrorEvent</value></ifl:property>
+                </bpmn2:extensionElements>
+            </bpmn2:errorEventDefinition>
+        </bpmn2:startEvent>
+        <bpmn2:sequenceFlow id="SequenceFlow_E2" sourceRef="CA_Alert" targetRef="EndEvent_Err"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_E1" sourceRef="StartEvent_Err" targetRef="CA_Alert"/>
+        </bpmn2:subProcess>
+        <bpmn2:callActivity id="CA_Validate" name="Validate_Lab_XSD">
+            <bpmn2:extensionElements>
+                <ifl:property><key>xmlSchemaSource</key><value>iflowOption</value></ifl:property>
+                <ifl:property><key>preventException</key><value>true</value></ifl:property>
+                <ifl:property><key>xsd</key><value>/xsd/StressLab.xsd</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>2.2</value></ifl:property>
+                <ifl:property><key>activityType</key><value>XmlValidator</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::XmlValidator/version::2.2.3</value></ifl:property>
+                <ifl:property><key>headerSource</key><value></value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M4</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_M5</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CA_Filter" name="Filter_Keep_Lab">
+            <bpmn2:extensionElements>
+                <ifl:property><key>xpathType</key><value>Node</value></ifl:property>
+                <ifl:property><key>wrapContent</key><value>/Lab</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.1</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Filter</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::Filter/version::1.1.0</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M3</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_M4</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CA_LPC" name="Loop_LIP_Counter">
+            <bpmn2:extensionElements>
+                <ifl:property><key>postProcessing</key><value>end</value></ifl:property>
+                <ifl:property><key>loopId</key><value>StandardLoopCharacteristics_1781130526617</value></ifl:property>
+                <ifl:property><key>processId</key><value>Process_Lab_Loop</value></ifl:property>
+                <ifl:property><key>expressionType</key><value>XML</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.3</value></ifl:property>
+                <ifl:property><key>activityType</key><value>ProcessCallElement</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::LoopingProcess/version::1.3.0</value></ifl:property>
+                <ifl:property><key>subActivityType</key><value>LoopingProcess</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M13</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_M14</bpmn2:outgoing>
+            <bpmn2:standardLoopCharacteristics id="StandardLoopCharacteristics_1781130526617" loopMaximum="3">
+                <bpmn2:loopCondition id="FormalExpression_1781130526617" xsi:type="bpmn2:tFormalExpression">/Lab/Batch/Order[1]</bpmn2:loopCondition>
+            </bpmn2:standardLoopCharacteristics>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CA_Log" name="GS_Log_And_Count">
+            <bpmn2:extensionElements>
+                <ifl:property><key>scriptFunction</key><value></value></ifl:property>
+                <ifl:property><key>scriptBundleId</key><value></value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.1</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Script</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::GroovyScript/version::1.1.2</value></ifl:property>
+                <ifl:property><key>subActivityType</key><value>GroovyScript</value></ifl:property>
+                <ifl:property><key>script</key><value>stress_log.groovy</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M1</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_M2</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:parallelGateway id="GW_Join" name="Join 1">
+            <bpmn2:extensionElements>
+                <ifl:property><key>componentVersion</key><value>1.0</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Join</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::Join/version::1.0.0</value></ifl:property>
+                <ifl:property><key>subActivityType</key><value>parallel</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_A2</bpmn2:incoming>
+            <bpmn2:incoming>SequenceFlow_B1</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_J1</bpmn2:outgoing>
+        </bpmn2:parallelGateway>
+        <bpmn2:endEvent id="EndEvent_2" name="End 1">
+            <bpmn2:extensionElements>
+                <ifl:property><key>componentVersion</key><value>1.1</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::MessageEndEvent/version::1.1.0</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+            <bpmn2:messageEventDefinition/>
+        </bpmn2:endEvent>
+        <bpmn2:endEvent id="EndEvent_4" name="End 2">
+            <bpmn2:extensionElements>
+                <ifl:property><key>componentVersion</key><value>1.1</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::MessageEndEvent/version::1.1.0</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
+            <bpmn2:messageEventDefinition/>
+        </bpmn2:endEvent>
+        <bpmn2:callActivity id="CA_Var" name="Write_RunStamp">
+            <bpmn2:extensionElements>
+                <ifl:property><key>visibility</key><value>local</value></ifl:property>
+                <ifl:property><key>encrypt</key><value>true</value></ifl:property>
+                <ifl:property><key>expire</key><value>90</value></ifl:property>
+                <ifl:property><key>variable</key><value>&lt;row&gt;&lt;cell&gt;LV_RUNSTAMP&lt;/cell&gt;&lt;cell&gt;&lt;/cell&gt;&lt;cell&gt;property&lt;/cell&gt;&lt;cell&gt;P_RUNSTAMP&lt;/cell&gt;&lt;cell&gt;local&lt;/cell&gt;&lt;/row&gt;</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.2</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Variables</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::Variables/version::1.2.0</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M5</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_M6</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CA_BranchB" name="CM_Branch_B">
+            <bpmn2:extensionElements>
+                <ifl:property><key>bodyType</key><value>expression</value></ifl:property>
+                <ifl:property><key>wrapContent</key><value></value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.6</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Enricher</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::Enricher/version::1.6.0</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_MC_B</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_B1</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CA_Seed" name="CM_Seed_Payload">
+            <bpmn2:extensionElements>
+                <ifl:property><key>bodyType</key><value>constant</value></ifl:property>
+                <ifl:property><key>wrapContent</key><value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;Lab run=&quot;stress&quot;&gt;&lt;Batch&gt;&lt;Order id=&quot;1001&quot;&gt;&lt;region&gt;US&lt;/region&gt;&lt;docType&gt;ORD&lt;/docType&gt;&lt;customer&gt;O&#x27;Brien Ltd&lt;/customer&gt;&lt;created&gt;2026-02-02&lt;/created&gt;&lt;amount&gt;6628.15&lt;/amount&gt;&lt;priority&gt;1&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;C-93&quot; qty=&quot;6&quot; price=&quot;914.14&quot;/&gt;&lt;line sku=&quot;A-46&quot; qty=&quot;3&quot; price=&quot;186.50&quot;/&gt;&lt;line sku=&quot;A-21&quot; qty=&quot;10&quot; price=&quot;43.79&quot;/&gt;&lt;line sku=&quot;C-16&quot; qty=&quot;11&quot; price=&quot;646.47&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1002&quot;&gt;&lt;region&gt;MX&lt;/region&gt;&lt;docType&gt;CRM&lt;/docType&gt;&lt;customer&gt;Diaz &amp;lt;Hermanos&amp;gt;&lt;/customer&gt;&lt;created&gt;2026-03-03&lt;/created&gt;&lt;amount&gt;7868.08&lt;/amount&gt;&lt;priority&gt;1&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;A-84&quot; qty=&quot;8&quot; price=&quot;175.75&quot;/&gt;&lt;line sku=&quot;B-77&quot; qty=&quot;5&quot; price=&quot;357.27&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1003&quot;&gt;&lt;region&gt;APJ&lt;/region&gt;&lt;docType&gt;INV&lt;/docType&gt;&lt;customer&gt;Quoted &amp;quot;Co&amp;quot;&lt;/customer&gt;&lt;created&gt;2026-04-04&lt;/created&gt;&lt;amount&gt;4715.01&lt;/amount&gt;&lt;priority&gt;2&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;A-77&quot; qty=&quot;2&quot; price=&quot;93.10&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1004&quot;&gt;&lt;region&gt;EU&lt;/region&gt;&lt;docType&gt;ORD&lt;/docType&gt;&lt;customer&gt;日本商事&lt;/customer&gt;&lt;created&gt;2026-05-05&lt;/created&gt;&lt;amount&gt;9102.18&lt;/amount&gt;&lt;priority&gt;5&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;C-50&quot; qty=&quot;3&quot; price=&quot;344.56&quot;/&gt;&lt;line sku=&quot;C-12&quot; qty=&quot;8&quot; price=&quot;412.21&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1005&quot;&gt;&lt;region&gt;US&lt;/region&gt;&lt;docType&gt;CRM&lt;/docType&gt;&lt;customer&gt;Ångström AB&lt;/customer&gt;&lt;created&gt;2026-06-06&lt;/created&gt;&lt;amount&gt;1472.65&lt;/amount&gt;&lt;priority&gt;1&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;C-33&quot; qty=&quot;12&quot; price=&quot;947.44&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1006&quot;&gt;&lt;region&gt;MX&lt;/region&gt;&lt;docType&gt;INV&lt;/docType&gt;&lt;customer&gt;Müller &amp;amp; Söhne&lt;/customer&gt;&lt;created&gt;2026-07-07&lt;/created&gt;&lt;amount&gt;8496.38&lt;/amount&gt;&lt;priority&gt;5&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;C-4&quot; qty=&quot;7&quot; price=&quot;525.07&quot;/&gt;&lt;line sku=&quot;A-88&quot; qty=&quot;10&quot; price=&quot;968.57&quot;/&gt;&lt;line sku=&quot;A-2&quot; qty=&quot;9&quot; price=&quot;433.17&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1007&quot;&gt;&lt;region&gt;APJ&lt;/region&gt;&lt;docType&gt;ORD&lt;/docType&gt;&lt;customer&gt;O&#x27;Brien Ltd&lt;/customer&gt;&lt;created&gt;2026-08-08&lt;/created&gt;&lt;amount&gt;5284.27&lt;/amount&gt;&lt;priority&gt;4&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;B-81&quot; qty=&quot;4&quot; price=&quot;51.44&quot;/&gt;&lt;line sku=&quot;A-21&quot; qty=&quot;12&quot; price=&quot;682.09&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1008&quot;&gt;&lt;region&gt;EU&lt;/region&gt;&lt;docType&gt;CRM&lt;/docType&gt;&lt;customer&gt;Diaz &amp;lt;Hermanos&amp;gt;&lt;/customer&gt;&lt;created&gt;2026-09-09&lt;/created&gt;&lt;amount&gt;2955.54&lt;/amount&gt;&lt;priority&gt;3&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;C-45&quot; qty=&quot;10&quot; price=&quot;286.89&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1009&quot;&gt;&lt;region&gt;US&lt;/region&gt;&lt;docType&gt;INV&lt;/docType&gt;&lt;customer&gt;Quoted &amp;quot;Co&amp;quot;&lt;/customer&gt;&lt;created&gt;2026-10-10&lt;/created&gt;&lt;amount&gt;5981.04&lt;/amount&gt;&lt;priority&gt;1&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;B-18&quot; qty=&quot;1&quot; price=&quot;288.04&quot;/&gt;&lt;line sku=&quot;C-49&quot; qty=&quot;9&quot; price=&quot;884.00&quot;/&gt;&lt;line sku=&quot;A-97&quot; qty=&quot;9&quot; price=&quot;387.61&quot;/&gt;&lt;line sku=&quot;A-43&quot; qty=&quot;9&quot; price=&quot;988.73&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1010&quot;&gt;&lt;region&gt;MX&lt;/region&gt;&lt;docType&gt;ORD&lt;/docType&gt;&lt;customer&gt;日本商事&lt;/customer&gt;&lt;created&gt;2026-11-11&lt;/created&gt;&lt;amount&gt;2118.19&lt;/amount&gt;&lt;priority&gt;4&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;B-13&quot; qty=&quot;9&quot; price=&quot;49.36&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1011&quot;&gt;&lt;region&gt;APJ&lt;/region&gt;&lt;docType&gt;CRM&lt;/docType&gt;&lt;customer&gt;Ångström AB&lt;/customer&gt;&lt;created&gt;2026-12-12&lt;/created&gt;&lt;amount&gt;3380.79&lt;/amount&gt;&lt;priority&gt;2&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;B-63&quot; qty=&quot;11&quot; price=&quot;449.23&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1012&quot;&gt;&lt;region&gt;EU&lt;/region&gt;&lt;docType&gt;INV&lt;/docType&gt;&lt;customer&gt;Müller &amp;amp; Söhne&lt;/customer&gt;&lt;created&gt;2026-01-13&lt;/created&gt;&lt;amount&gt;1236.61&lt;/amount&gt;&lt;priority&gt;4&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;C-93&quot; qty=&quot;9&quot; price=&quot;156.28&quot;/&gt;&lt;line sku=&quot;B-7&quot; qty=&quot;8&quot; price=&quot;860.53&quot;/&gt;&lt;line sku=&quot;A-39&quot; qty=&quot;11&quot; price=&quot;408.60&quot;/&gt;&lt;line sku=&quot;A-51&quot; qty=&quot;8&quot; price=&quot;721.55&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1013&quot;&gt;&lt;region&gt;US&lt;/region&gt;&lt;docType&gt;ORD&lt;/docType&gt;&lt;customer&gt;O&#x27;Brien Ltd&lt;/customer&gt;&lt;created&gt;2026-02-14&lt;/created&gt;&lt;amount&gt;5706.44&lt;/amount&gt;&lt;priority&gt;1&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;B-31&quot; qty=&quot;10&quot; price=&quot;10.81&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1014&quot;&gt;&lt;region&gt;MX&lt;/region&gt;&lt;docType&gt;CRM&lt;/docType&gt;&lt;customer&gt;Diaz &amp;lt;Hermanos&amp;gt;&lt;/customer&gt;&lt;created&gt;2026-03-15&lt;/created&gt;&lt;amount&gt;3454.95&lt;/amount&gt;&lt;priority&gt;5&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;A-77&quot; qty=&quot;4&quot; price=&quot;546.41&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1015&quot;&gt;&lt;region&gt;APJ&lt;/region&gt;&lt;docType&gt;INV&lt;/docType&gt;&lt;customer&gt;Quoted &amp;quot;Co&amp;quot;&lt;/customer&gt;&lt;created&gt;2026-04-16&lt;/created&gt;&lt;amount&gt;7229.23&lt;/amount&gt;&lt;priority&gt;1&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;A-41&quot; qty=&quot;11&quot; price=&quot;276.28&quot;/&gt;&lt;line sku=&quot;B-88&quot; qty=&quot;9&quot; price=&quot;261.67&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1016&quot;&gt;&lt;region&gt;EU&lt;/region&gt;&lt;docType&gt;ORD&lt;/docType&gt;&lt;customer&gt;日本商事&lt;/customer&gt;&lt;created&gt;2026-05-17&lt;/created&gt;&lt;amount&gt;4060.35&lt;/amount&gt;&lt;priority&gt;2&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;A-24&quot; qty=&quot;1&quot; price=&quot;944.87&quot;/&gt;&lt;line sku=&quot;A-84&quot; qty=&quot;11&quot; price=&quot;98.19&quot;/&gt;&lt;line sku=&quot;A-36&quot; qty=&quot;10&quot; price=&quot;694.48&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1017&quot;&gt;&lt;region&gt;US&lt;/region&gt;&lt;docType&gt;CRM&lt;/docType&gt;&lt;customer&gt;Ångström AB&lt;/customer&gt;&lt;created&gt;2026-06-18&lt;/created&gt;&lt;amount&gt;6216.88&lt;/amount&gt;&lt;priority&gt;3&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;C-34&quot; qty=&quot;11&quot; price=&quot;332.36&quot;/&gt;&lt;line sku=&quot;C-58&quot; qty=&quot;11&quot; price=&quot;312.02&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1018&quot;&gt;&lt;region&gt;MX&lt;/region&gt;&lt;docType&gt;INV&lt;/docType&gt;&lt;customer&gt;Müller &amp;amp; Söhne&lt;/customer&gt;&lt;created&gt;2026-07-19&lt;/created&gt;&lt;amount&gt;2296.23&lt;/amount&gt;&lt;priority&gt;2&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;B-14&quot; qty=&quot;11&quot; price=&quot;370.84&quot;/&gt;&lt;line sku=&quot;C-31&quot; qty=&quot;9&quot; price=&quot;157.95&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1019&quot;&gt;&lt;region&gt;APJ&lt;/region&gt;&lt;docType&gt;ORD&lt;/docType&gt;&lt;customer&gt;O&#x27;Brien Ltd&lt;/customer&gt;&lt;created&gt;2026-08-20&lt;/created&gt;&lt;amount&gt;7856.02&lt;/amount&gt;&lt;priority&gt;5&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;A-84&quot; qty=&quot;3&quot; price=&quot;113.73&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1020&quot;&gt;&lt;region&gt;EU&lt;/region&gt;&lt;docType&gt;CRM&lt;/docType&gt;&lt;customer&gt;Diaz &amp;lt;Hermanos&amp;gt;&lt;/customer&gt;&lt;created&gt;2026-09-21&lt;/created&gt;&lt;amount&gt;5751.35&lt;/amount&gt;&lt;priority&gt;5&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;C-93&quot; qty=&quot;3&quot; price=&quot;765.73&quot;/&gt;&lt;line sku=&quot;A-17&quot; qty=&quot;10&quot; price=&quot;239.55&quot;/&gt;&lt;line sku=&quot;A-64&quot; qty=&quot;11&quot; price=&quot;397.77&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1021&quot;&gt;&lt;region&gt;US&lt;/region&gt;&lt;docType&gt;INV&lt;/docType&gt;&lt;customer&gt;Quoted &amp;quot;Co&amp;quot;&lt;/customer&gt;&lt;created&gt;2026-10-22&lt;/created&gt;&lt;amount&gt;9792.47&lt;/amount&gt;&lt;priority&gt;5&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;A-7&quot; qty=&quot;10&quot; price=&quot;544.03&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1022&quot;&gt;&lt;region&gt;MX&lt;/region&gt;&lt;docType&gt;ORD&lt;/docType&gt;&lt;customer&gt;日本商事&lt;/customer&gt;&lt;created&gt;2026-11-23&lt;/created&gt;&lt;amount&gt;7791.18&lt;/amount&gt;&lt;priority&gt;1&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;A-59&quot; qty=&quot;3&quot; price=&quot;239.88&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1023&quot;&gt;&lt;region&gt;APJ&lt;/region&gt;&lt;docType&gt;CRM&lt;/docType&gt;&lt;customer&gt;Ångström AB&lt;/customer&gt;&lt;created&gt;2026-12-24&lt;/created&gt;&lt;amount&gt;4488.46&lt;/amount&gt;&lt;priority&gt;4&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;A-9&quot; qty=&quot;9&quot; price=&quot;138.22&quot;/&gt;&lt;line sku=&quot;A-28&quot; qty=&quot;6&quot; price=&quot;406.83&quot;/&gt;&lt;line sku=&quot;A-70&quot; qty=&quot;8&quot; price=&quot;510.45&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;Order id=&quot;1024&quot;&gt;&lt;region&gt;EU&lt;/region&gt;&lt;docType&gt;INV&lt;/docType&gt;&lt;customer&gt;Müller &amp;amp; Söhne&lt;/customer&gt;&lt;created&gt;2026-01-25&lt;/created&gt;&lt;amount&gt;2050.76&lt;/amount&gt;&lt;priority&gt;4&lt;/priority&gt;&lt;lines&gt;&lt;line sku=&quot;B-39&quot; qty=&quot;7&quot; price=&quot;444.58&quot;/&gt;&lt;/lines&gt;&lt;/Order&gt;&lt;/Batch&gt;&lt;/Lab&gt;</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.6</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Enricher</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::Enricher/version::1.6.0</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M0</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_M1</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CA_EU" name="CM_EU_Branch">
+            <bpmn2:extensionElements>
+                <ifl:property><key>bodyType</key><value>expression</value></ifl:property>
+                <ifl:property><key>wrapContent</key><value></value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.6</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Enricher</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::Enricher/version::1.6.0</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_R_EU</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CA_Digest" name="Digest_SHA256">
+            <bpmn2:extensionElements>
+                <ifl:property><key>filter</key><value></value></ifl:property>
+                <ifl:property><key>canonicalizationMethod</key><value>xml-c14n</value></ifl:property>
+                <ifl:property><key>targetHeader</key><value>SAPMessageDigest</value></ifl:property>
+                <ifl:property><key>digestAlgorithm</key><value>SHA-256</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.0</value></ifl:property>
+                <ifl:property><key>activityType</key><value>MessageDigest</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::MessageDigest/version::1.0.2</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M9</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_M10</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:exclusiveGateway id="GW_Router" name="Router_Any_EU" default="SequenceFlow_3">
+            <bpmn2:extensionElements>
+                <ifl:property><key>componentVersion</key><value>1.1</value></ifl:property>
+                <ifl:property><key>activityType</key><value>ExclusiveGateway</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::ExclusiveGateway/version::1.1.2</value></ifl:property>
+                <ifl:property><key>throwException</key><value>false</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_G1</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
+            <bpmn2:outgoing>SequenceFlow_R_EU</bpmn2:outgoing>
+        </bpmn2:exclusiveGateway>
+        <bpmn2:callActivity id="CA_JS" name="JS_Set_Header">
+            <bpmn2:extensionElements>
+                <ifl:property><key>scriptFunction</key><value></value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.0</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Script</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::JavaScript/version::1.0.2</value></ifl:property>
+                <ifl:property><key>subActivityType</key><value>JavaScript</value></ifl:property>
+                <ifl:property><key>script</key><value>stress_header.js</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M2</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_M3</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CA_Enc" name="Base64_Encode">
+            <bpmn2:extensionElements>
+                <ifl:property><key>activityType</key><value>Encoder</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::Base64 Encode</value></ifl:property>
+                <ifl:property><key>encoderType</key><value>Base64 Encode</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M7</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_M8</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:parallelGateway id="GW_MC" name="Parallel Multicast">
+            <bpmn2:extensionElements>
+                <ifl:property><key>componentVersion</key><value>1.1</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Multicast</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::Multicast/version::1.1.1</value></ifl:property>
+                <ifl:property><key>subActivityType</key><value>parallel</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M16</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_MC_A</bpmn2:outgoing>
+            <bpmn2:outgoing>SequenceFlow_MC_B</bpmn2:outgoing>
+        </bpmn2:parallelGateway>
+        <bpmn2:callActivity id="CA_GatherS" name="Gather_Splits">
+            <bpmn2:extensionElements>
+                <ifl:property><key>targetXPath</key><value></value></ifl:property>
+                <ifl:property><key>sourceXPath</key><value></value></ifl:property>
+                <ifl:property><key>messageType</key><value>SameXMLFormat</value></ifl:property>
+                <ifl:property><key>aggregationAlgorithm</key><value>sap-identical-multi-mapping</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.2</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Gather</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::Gather/version::1.2.0</value></ifl:property>
+                <ifl:property><key>gatherFileNames</key><value></value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M15</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_M16</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CA_GatherMC" name="Gather_Multicast">
+            <bpmn2:extensionElements>
+                <ifl:property><key>targetXPath</key><value></value></ifl:property>
+                <ifl:property><key>sourceXPath</key><value></value></ifl:property>
+                <ifl:property><key>messageType</key><value>SameXMLFormat</value></ifl:property>
+                <ifl:property><key>aggregationAlgorithm</key><value>sap-identical-multi-mapping</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.2</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Gather</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::Gather/version::1.2.0</value></ifl:property>
+                <ifl:property><key>gatherFileNames</key><value></value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_J1</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_G1</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CallActivity_3" name="JSON to XML Converter 1">
+            <bpmn2:extensionElements>
+                <ifl:property><key>additionalRootElementName</key><value>root</value></ifl:property>
+                <ifl:property><key>jsonNamespaceMapping</key><value></value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.1</value></ifl:property>
+                <ifl:property><key>activityType</key><value>JsonToXmlConverter</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::JsonToXmlConverter/version::1.1.2</value></ifl:property>
+                <ifl:property><key>useNamespaces</key><value>true</value></ifl:property>
+                <ifl:property><key>addXMLRootElement</key><value>true</value></ifl:property>
+                <ifl:property><key>additionalRootElementNamespace</key><value></value></ifl:property>
+                <ifl:property><key>jsonNamespaceSeparator</key><value>:</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CA_PC" name="Call_LIP_Transform">
+            <bpmn2:extensionElements>
+                <ifl:property><key>processId</key><value>Process_Lab_Transform</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.0</value></ifl:property>
+                <ifl:property><key>activityType</key><value>ProcessCallElement</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::NonLoopingProcess/version::1.0.3</value></ifl:property>
+                <ifl:property><key>subActivityType</key><value>NonLoopingProcess</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_M13</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CA_Split" name="General_Splitter">
+            <bpmn2:extensionElements>
+                <ifl:property><key>exprType</key><value>XPath</value></ifl:property>
+                <ifl:property><key>Streaming</key><value>false</value></ifl:property>
+                <ifl:property><key>StopOnExecution</key><value>true</value></ifl:property>
+                <ifl:property><key>SplitterThreads</key><value>10</value></ifl:property>
+                <ifl:property><key>splitExprValue</key><value>/Lab/Batch/Order</value></ifl:property>
+                <ifl:property><key>ParallelProcessing</key><value>false</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.5</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Splitter</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::GeneralSplitter/version::1.5.0</value></ifl:property>
+                <ifl:property><key>grouping</key><value></value></ifl:property>
+                <ifl:property><key>splitType</key><value>GeneralSplitter</value></ifl:property>
+                <ifl:property><key>timeOut</key><value>300</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M14</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_M15</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:startEvent id="StartEvent_1" name="Start Timer 1">
+            <bpmn2:outgoing>SequenceFlow_M0</bpmn2:outgoing>
+            <bpmn2:timerEventDefinition id="TimerEventDefinition_288347">
+                <bpmn2:extensionElements>
+                    <ifl:property><key>scheduleKey</key><value>&lt;row&gt;&lt;cell&gt;dateType&lt;/cell&gt;&lt;cell&gt;&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;timeType&lt;/cell&gt;&lt;cell&gt;&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;dayValue&lt;/cell&gt;&lt;cell&gt;&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;monthValue&lt;/cell&gt;&lt;cell&gt;&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;yearValue&lt;/cell&gt;&lt;cell&gt;&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;onWeekly&lt;/cell&gt;&lt;cell&gt;&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;onMonthly&lt;/cell&gt;&lt;cell&gt;&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;OnEveryMinute&lt;/cell&gt;&lt;cell&gt;&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;fromInterval&lt;/cell&gt;&lt;cell&gt;&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;toInterval&lt;/cell&gt;&lt;cell&gt;&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;timeZone&lt;/cell&gt;&lt;cell&gt;( UTC 0:00 ) Greenwich Mean Time(Etc/GMT)&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;secondValue&lt;/cell&gt;&lt;cell&gt;0&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;minutesValue&lt;/cell&gt;&lt;cell&gt;&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;hourValue&lt;/cell&gt;&lt;cell&gt;&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;triggerType&lt;/cell&gt;&lt;cell&gt;simple&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;noOfSchedules&lt;/cell&gt;&lt;cell&gt;1&lt;/cell&gt;&lt;/row&gt;&lt;row&gt;&lt;cell&gt;schedule1&lt;/cell&gt;&lt;cell&gt;fireNow=true&lt;/cell&gt;&lt;/row&gt;</value></ifl:property>
+                    <ifl:property><key>componentVersion</key><value>1.1</value></ifl:property>
+                    <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::intermediatetimer/version::1.1</value></ifl:property>
+                    <ifl:property><key>activityType</key><value>StartTimerEvent</value></ifl:property>
+                </bpmn2:extensionElements>
+            </bpmn2:timerEventDefinition>
+        </bpmn2:startEvent>
+        <bpmn2:callActivity id="CA_DSPut" name="DataStore_Put">
+            <bpmn2:extensionElements>
+                <ifl:property><key>visibility</key><value>local</value></ifl:property>
+                <ifl:property><key>alert</key><value>2</value></ifl:property>
+                <ifl:property><key>encrypt</key><value>true</value></ifl:property>
+                <ifl:property><key>expire</key><value>7</value></ifl:property>
+                <ifl:property><key>messageId</key><value></value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.5</value></ifl:property>
+                <ifl:property><key>override</key><value>true</value></ifl:property>
+                <ifl:property><key>activityType</key><value>DBstorage</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::put/version::1.5.1</value></ifl:property>
+                <ifl:property><key>operation</key><value>put</value></ifl:property>
+                <ifl:property><key>storageName</key><value>DS_StressLab</value></ifl:property>
+                <ifl:property><key>includeMessageHeaders</key><value>false</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M6</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_M7</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CA_X2C" name="XML_to_CSV">
+            <bpmn2:extensionElements>
+                <ifl:property><key>Field_Separator_in_CSV</key><value>,</value></ifl:property>
+                <ifl:property><key>Include_Attribute</key><value>false</value></ifl:property>
+                <ifl:property><key>Include_Header</key><value>false</value></ifl:property>
+                <ifl:property><key>Include_Master</key><value>false</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.1</value></ifl:property>
+                <ifl:property><key>activityType</key><value>XmlToCsvConverter</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::XmlToCsvConverter/version::1.1.2</value></ifl:property>
+                <ifl:property><key>Master_XPath_Field_Location</key><value></value></ifl:property>
+                <ifl:property><key>XPath_Field_Location</key><value>/Lab/Batch/Order</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_MC_A</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_A1</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CA_C2X" name="CSV_to_XML">
+            <bpmn2:extensionElements>
+                <ifl:property><key>Field_Separator_in_CSV</key><value>,</value></ifl:property>
+                <ifl:property><key>ignoreFirstLineAsHeader</key><value>false</value></ifl:property>
+                <ifl:property><key>XML_Schema_File_Path</key><value>/xsd/StressLabRows.xsd</value></ifl:property>
+                <ifl:property><key>headerMapping</key><value>mapHeadersToXSD</value></ifl:property>
+                <ifl:property><key>Record_Identifier_in_CSV</key><value></value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.4</value></ifl:property>
+                <ifl:property><key>activityType</key><value>CsvToXmlConverter</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::CsvToXmlConverter/version::1.4.0</value></ifl:property>
+                <ifl:property><key>XPath_Field_Location</key><value>/Rows/Row</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_A1</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_A2</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CA_Dec" name="Base64_Decode">
+            <bpmn2:extensionElements>
+                <ifl:property><key>componentVersion</key><value>1.0</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Decoder</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::Base64 Decode/version::1.0.2</value></ifl:property>
+                <ifl:property><key>encoderType</key><value>Base64 Decode</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M8</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_M9</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity id="CallActivity_0" name="XML to JSON Converter 1">
+            <bpmn2:extensionElements>
+                <ifl:property><key>xmlJsonUseStreaming</key><value>false</value></ifl:property>
+                <ifl:property><key>xmlJsonSuppressRootElement</key><value>false</value></ifl:property>
+                <ifl:property><key>xmlJsonPathTable</key><value></value></ifl:property>
+                <ifl:property><key>jsonOutputEncoding</key><value></value></ifl:property>
+                <ifl:property><key>jsonNamespaceMapping</key><value></value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.0</value></ifl:property>
+                <ifl:property><key>xmlJsonConvertAllElements</key><value>specific</value></ifl:property>
+                <ifl:property><key>activityType</key><value>XmlToJsonConverter</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::XmlToJsonConverter/version::1.0.8</value></ifl:property>
+                <ifl:property><key>useNamespaces</key><value>true</value></ifl:property>
+                <ifl:property><key>jsonNamespaceSeparator</key><value>:</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_M10</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:sequenceFlow id="SequenceFlow_M5" sourceRef="CA_Validate" targetRef="CA_Var"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_M4" sourceRef="CA_Filter" targetRef="CA_Validate"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_M14" sourceRef="CA_LPC" targetRef="CA_Split"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_M2" sourceRef="CA_Log" targetRef="CA_JS"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_J1" name="Branch 1" sourceRef="GW_Join" targetRef="CA_GatherMC"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_M6" sourceRef="CA_Var" targetRef="CA_DSPut"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_B1" sourceRef="CA_BranchB" targetRef="GW_Join"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_M1" sourceRef="CA_Seed" targetRef="CA_Log"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_5" sourceRef="CA_EU" targetRef="EndEvent_4"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_M10" sourceRef="CA_Digest" targetRef="CallActivity_0"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_3" name="Route 1" sourceRef="GW_Router" targetRef="EndEvent_2">
+            <bpmn2:extensionElements>
+                <ifl:property><key>expressionType</key><value>XML</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.0</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::GatewayRoute/version::1.0.0</value></ifl:property>
+            </bpmn2:extensionElements>
+        </bpmn2:sequenceFlow>
+        <bpmn2:sequenceFlow id="SequenceFlow_R_EU" name="EU orders" sourceRef="GW_Router" targetRef="CA_EU">
+            <bpmn2:extensionElements>
+                <ifl:property><key>expressionType</key><value>XML</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.0</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::GatewayRoute/version::1.0.0</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:conditionExpression>/Lab/Batch/Order[region = &#x27;EU&#x27;]</bpmn2:conditionExpression>
+        </bpmn2:sequenceFlow>
+        <bpmn2:sequenceFlow id="SequenceFlow_M3" sourceRef="CA_JS" targetRef="CA_Filter"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_M8" sourceRef="CA_Enc" targetRef="CA_Dec"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_MC_A" name="Branch 1" sourceRef="GW_MC" targetRef="CA_X2C"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_MC_B" name="Branch 2" sourceRef="GW_MC" targetRef="CA_BranchB"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_M16" sourceRef="CA_GatherS" targetRef="GW_MC"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_G1" sourceRef="CA_GatherMC" targetRef="GW_Router"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_4" sourceRef="CallActivity_3" targetRef="CA_PC"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_M13" sourceRef="CA_PC" targetRef="CA_LPC"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_M15" sourceRef="CA_Split" targetRef="CA_GatherS"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_M0" sourceRef="StartEvent_1" targetRef="CA_Seed"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_M7" sourceRef="CA_DSPut" targetRef="CA_Enc"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_A1" sourceRef="CA_X2C" targetRef="CA_C2X"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_A2" sourceRef="CA_C2X" targetRef="GW_Join"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_M9" sourceRef="CA_Dec" targetRef="CA_Digest"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="CallActivity_0" targetRef="CallActivity_3"/>
+    </bpmn2:process>
+    <bpmn2:process id="Process_Lab_Loop" name="LIP_Loop">
+        <bpmn2:extensionElements>
+                <ifl:property><key>transactionTimeout</key><value>30</value></ifl:property>
+                <ifl:property><key>processType</key><value>directCall</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.1</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowElementVariant/cname::LocalIntegrationProcess/version::1.1.2</value></ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:callActivity id="L2_GS" name="GS_Loop_Counter">
+            <bpmn2:extensionElements>
+                <ifl:property><key>scriptFunction</key><value></value></ifl:property>
+                <ifl:property><key>scriptBundleId</key><value></value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.1</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Script</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::GroovyScript/version::1.1.2</value></ifl:property>
+                <ifl:property><key>subActivityType</key><value>GroovyScript</value></ifl:property>
+                <ifl:property><key>script</key><value>stress_loop.groovy</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_L2a</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_L2b</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:endEvent id="L2_End" name="End L2">
+            <bpmn2:extensionElements>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::EndEvent</value></ifl:property>
+                <ifl:property><key>activityType</key><value>EndEvent</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_L2b</bpmn2:incoming>
+        </bpmn2:endEvent>
+        <bpmn2:startEvent id="L2_Start" name="Start L2">
+            <bpmn2:extensionElements>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::StartEvent</value></ifl:property>
+                <ifl:property><key>activityType</key><value>StartEvent</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:outgoing>SequenceFlow_L2a</bpmn2:outgoing>
+        </bpmn2:startEvent>
+        <bpmn2:sequenceFlow id="SequenceFlow_L2b" sourceRef="L2_GS" targetRef="L2_End"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_L2a" sourceRef="L2_Start" targetRef="L2_GS"/>
+    </bpmn2:process>
+    <bpmn2:process id="Process_Lab_Transform" name="LIP_Transform">
+        <bpmn2:extensionElements>
+                <ifl:property><key>transactionTimeout</key><value>30</value></ifl:property>
+                <ifl:property><key>processType</key><value>directCall</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.1</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowElementVariant/cname::LocalIntegrationProcess/version::1.1.2</value></ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:callActivity id="L1_XSLT" name="XSLT_Annotate_Totals">
+            <bpmn2:extensionElements>
+                <ifl:property><key>mappingoutputformat</key><value>String</value></ifl:property>
+                <ifl:property><key>mappinguri</key><value>dir://mapping/xslt/src/main/resources/mapping/StressLab_Annotate.xsl</value></ifl:property>
+                <ifl:property><key>mappingname</key><value>StressLab_Annotate</value></ifl:property>
+                <ifl:property><key>mappingHeaderNameKey</key><value></value></ifl:property>
+                <ifl:property><key>mappingpath</key><value>src/main/resources/mapping/StressLab_Annotate</value></ifl:property>
+                <ifl:property><key>mappingSource</key><value>mappingSrcIflow</value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.2</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Mapping</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::XSLTMapping/version::1.2.0</value></ifl:property>
+                <ifl:property><key>subActivityType</key><value>XSLTMapping</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_L1a</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_L1b</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:endEvent id="L1_End" name="End L1">
+            <bpmn2:extensionElements>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::EndEvent</value></ifl:property>
+                <ifl:property><key>activityType</key><value>EndEvent</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_L1c</bpmn2:incoming>
+        </bpmn2:endEvent>
+        <bpmn2:callActivity id="L1_CM" name="CM_L1_Note">
+            <bpmn2:extensionElements>
+                <ifl:property><key>bodyType</key><value>expression</value></ifl:property>
+                <ifl:property><key>wrapContent</key><value></value></ifl:property>
+                <ifl:property><key>componentVersion</key><value>1.6</value></ifl:property>
+                <ifl:property><key>activityType</key><value>Enricher</value></ifl:property>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::Enricher/version::1.6.0</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming>SequenceFlow_L1b</bpmn2:incoming>
+            <bpmn2:outgoing>SequenceFlow_L1c</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:startEvent id="L1_Start" name="Start L1">
+            <bpmn2:extensionElements>
+                <ifl:property><key>cmdVariantUri</key><value>ctype::FlowstepVariant/cname::StartEvent</value></ifl:property>
+                <ifl:property><key>activityType</key><value>StartEvent</value></ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:outgoing>SequenceFlow_L1a</bpmn2:outgoing>
+        </bpmn2:startEvent>
+        <bpmn2:sequenceFlow id="SequenceFlow_L1b" sourceRef="L1_XSLT" targetRef="L1_CM"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_L1c" sourceRef="L1_CM" targetRef="L1_End"/>
+        <bpmn2:sequenceFlow id="SequenceFlow_L1a" sourceRef="L1_Start" targetRef="L1_XSLT"/>
+    </bpmn2:process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Collaboration Diagram">
+        <bpmndi:BPMNPlane bpmnElement="Collaboration_1" id="BPMNPlane_1">
+            <bpmndi:BPMNShape bpmnElement="Participant_Process_1" id="BPMNShape_Participant_Process_1">
+                <dc:Bounds height="605.0" width="3806.0" x="250.0" y="260.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="SubProcess_Err" id="BPMNShape_SubProcess_Err"><dc:Bounds height="160.0" width="550.0" x="320.0" y="635.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_Validate" id="BPMNShape_CA_Validate"><dc:Bounds height="60.0" width="100.0" x="1070.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_Filter" id="BPMNShape_CA_Filter"><dc:Bounds height="60.0" width="100.0" x="920.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_LPC" id="BPMNShape_CA_LPC"><dc:Bounds height="60.0" width="100.0" x="2420.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_Log" id="BPMNShape_CA_Log"><dc:Bounds height="60.0" width="100.0" x="620.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="GW_Join" id="BPMNShape_GW_Join"><dc:Bounds height="40.0" width="40.0" x="3350.0" y="340.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="EndEvent_2" id="BPMNShape_EndEvent_2"><dc:Bounds height="32.0" width="32.0" x="3804.0" y="494.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="EndEvent_4" id="BPMNShape_EndEvent_4"><dc:Bounds height="32.0" width="32.0" x="3954.0" y="344.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_Var" id="BPMNShape_CA_Var"><dc:Bounds height="60.0" width="100.0" x="1220.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_BranchB" id="BPMNShape_CA_BranchB"><dc:Bounds height="60.0" width="100.0" x="3020.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_Seed" id="BPMNShape_CA_Seed"><dc:Bounds height="60.0" width="100.0" x="470.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_EU" id="BPMNShape_CA_EU"><dc:Bounds height="60.0" width="100.0" x="3770.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_Digest" id="BPMNShape_CA_Digest"><dc:Bounds height="60.0" width="100.0" x="1820.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="GW_Router" id="BPMNShape_GW_Router"><dc:Bounds height="40.0" width="40.0" x="3650.0" y="340.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_JS" id="BPMNShape_CA_JS"><dc:Bounds height="60.0" width="100.0" x="770.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_Enc" id="BPMNShape_CA_Enc"><dc:Bounds height="60.0" width="100.0" x="1520.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="GW_MC" id="BPMNShape_GW_MC"><dc:Bounds height="40.0" width="40.0" x="2900.0" y="340.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_GatherS" id="BPMNShape_CA_GatherS"><dc:Bounds height="60.0" width="100.0" x="2720.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_GatherMC" id="BPMNShape_CA_GatherMC"><dc:Bounds height="60.0" width="100.0" x="3470.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CallActivity_3" id="BPMNShape_CallActivity_3"><dc:Bounds height="60.0" width="100.0" x="2120.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_PC" id="BPMNShape_CA_PC"><dc:Bounds height="60.0" width="100.0" x="2270.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_Split" id="BPMNShape_CA_Split"><dc:Bounds height="60.0" width="100.0" x="2570.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="StartEvent_1" id="BPMNShape_StartEvent_1"><dc:Bounds height="32.0" width="32.0" x="354.0" y="344.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_DSPut" id="BPMNShape_CA_DSPut"><dc:Bounds height="60.0" width="100.0" x="1370.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_X2C" id="BPMNShape_CA_X2C"><dc:Bounds height="60.0" width="100.0" x="3020.0" y="480.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_C2X" id="BPMNShape_CA_C2X"><dc:Bounds height="60.0" width="100.0" x="3170.0" y="480.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_Dec" id="BPMNShape_CA_Dec"><dc:Bounds height="60.0" width="100.0" x="1670.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CallActivity_0" id="BPMNShape_CallActivity_0"><dc:Bounds height="60.0" width="100.0" x="1970.0" y="330.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="StartEvent_Err" id="BPMNShape_StartEvent_Err"><dc:Bounds height="32.0" width="32.0" x="414.0" y="699.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="CA_Alert" id="BPMNShape_CA_Alert"><dc:Bounds height="60.0" width="100.0" x="530.0" y="685.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="EndEvent_Err" id="BPMNShape_EndEvent_Err"><dc:Bounds height="32.0" width="32.0" x="714.0" y="699.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M5" id="BPMNEdge_SequenceFlow_M5" sourceElement="BPMNShape_CA_Validate" targetElement="BPMNShape_CA_Var"><di:waypoint x="1170.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="1220.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M4" id="BPMNEdge_SequenceFlow_M4" sourceElement="BPMNShape_CA_Filter" targetElement="BPMNShape_CA_Validate"><di:waypoint x="1020.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="1070.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M14" id="BPMNEdge_SequenceFlow_M14" sourceElement="BPMNShape_CA_LPC" targetElement="BPMNShape_CA_Split"><di:waypoint x="2520.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="2570.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M2" id="BPMNEdge_SequenceFlow_M2" sourceElement="BPMNShape_CA_Log" targetElement="BPMNShape_CA_JS"><di:waypoint x="720.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="770.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_J1" id="BPMNEdge_SequenceFlow_J1" sourceElement="BPMNShape_GW_Join" targetElement="BPMNShape_CA_GatherMC"><di:waypoint x="3390.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="3470.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M6" id="BPMNEdge_SequenceFlow_M6" sourceElement="BPMNShape_CA_Var" targetElement="BPMNShape_CA_DSPut"><di:waypoint x="1320.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="1370.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_B1" id="BPMNEdge_SequenceFlow_B1" sourceElement="BPMNShape_CA_BranchB" targetElement="BPMNShape_GW_Join"><di:waypoint x="3120.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="3350.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M1" id="BPMNEdge_SequenceFlow_M1" sourceElement="BPMNShape_CA_Seed" targetElement="BPMNShape_CA_Log"><di:waypoint x="570.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="620.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_5" id="BPMNEdge_SequenceFlow_5" sourceElement="BPMNShape_CA_EU" targetElement="BPMNShape_EndEvent_4"><di:waypoint x="3870.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="3954.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M10" id="BPMNEdge_SequenceFlow_M10" sourceElement="BPMNShape_CA_Digest" targetElement="BPMNShape_CallActivity_0"><di:waypoint x="1920.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="1970.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_3" id="BPMNEdge_SequenceFlow_3" sourceElement="BPMNShape_GW_Router" targetElement="BPMNShape_EndEvent_2"><di:waypoint x="3670.0" xsi:type="dc:Point" y="380.0"/><di:waypoint x="3670.0" xsi:type="dc:Point" y="510.0"/><di:waypoint x="3804.0" xsi:type="dc:Point" y="510.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_R_EU" id="BPMNEdge_SequenceFlow_R_EU" sourceElement="BPMNShape_GW_Router" targetElement="BPMNShape_CA_EU"><di:waypoint x="3690.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="3770.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M3" id="BPMNEdge_SequenceFlow_M3" sourceElement="BPMNShape_CA_JS" targetElement="BPMNShape_CA_Filter"><di:waypoint x="870.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="920.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M8" id="BPMNEdge_SequenceFlow_M8" sourceElement="BPMNShape_CA_Enc" targetElement="BPMNShape_CA_Dec"><di:waypoint x="1620.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="1670.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_MC_A" id="BPMNEdge_SequenceFlow_MC_A" sourceElement="BPMNShape_GW_MC" targetElement="BPMNShape_CA_X2C"><di:waypoint x="2920.0" xsi:type="dc:Point" y="380.0"/><di:waypoint x="2920.0" xsi:type="dc:Point" y="510.0"/><di:waypoint x="3020.0" xsi:type="dc:Point" y="510.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_MC_B" id="BPMNEdge_SequenceFlow_MC_B" sourceElement="BPMNShape_GW_MC" targetElement="BPMNShape_CA_BranchB"><di:waypoint x="2940.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="3020.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M16" id="BPMNEdge_SequenceFlow_M16" sourceElement="BPMNShape_CA_GatherS" targetElement="BPMNShape_GW_MC"><di:waypoint x="2820.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="2900.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_G1" id="BPMNEdge_SequenceFlow_G1" sourceElement="BPMNShape_CA_GatherMC" targetElement="BPMNShape_GW_Router"><di:waypoint x="3570.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="3650.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_4" id="BPMNEdge_SequenceFlow_4" sourceElement="BPMNShape_CallActivity_3" targetElement="BPMNShape_CA_PC"><di:waypoint x="2220.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="2270.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M13" id="BPMNEdge_SequenceFlow_M13" sourceElement="BPMNShape_CA_PC" targetElement="BPMNShape_CA_LPC"><di:waypoint x="2370.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="2420.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M15" id="BPMNEdge_SequenceFlow_M15" sourceElement="BPMNShape_CA_Split" targetElement="BPMNShape_CA_GatherS"><di:waypoint x="2670.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="2720.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M0" id="BPMNEdge_SequenceFlow_M0" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_CA_Seed"><di:waypoint x="386.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="470.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M7" id="BPMNEdge_SequenceFlow_M7" sourceElement="BPMNShape_CA_DSPut" targetElement="BPMNShape_CA_Enc"><di:waypoint x="1470.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="1520.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_A1" id="BPMNEdge_SequenceFlow_A1" sourceElement="BPMNShape_CA_X2C" targetElement="BPMNShape_CA_C2X"><di:waypoint x="3120.0" xsi:type="dc:Point" y="510.0"/><di:waypoint x="3170.0" xsi:type="dc:Point" y="510.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_A2" id="BPMNEdge_SequenceFlow_A2" sourceElement="BPMNShape_CA_C2X" targetElement="BPMNShape_GW_Join"><di:waypoint x="3270.0" xsi:type="dc:Point" y="510.0"/><di:waypoint x="3370.0" xsi:type="dc:Point" y="510.0"/><di:waypoint x="3370.0" xsi:type="dc:Point" y="380.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_M9" id="BPMNEdge_SequenceFlow_M9" sourceElement="BPMNShape_CA_Dec" targetElement="BPMNShape_CA_Digest"><di:waypoint x="1770.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="1820.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_1" id="BPMNEdge_SequenceFlow_1" sourceElement="BPMNShape_CallActivity_0" targetElement="BPMNShape_CallActivity_3"><di:waypoint x="2070.0" xsi:type="dc:Point" y="360.0"/><di:waypoint x="2120.0" xsi:type="dc:Point" y="360.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_E1" id="BPMNEdge_SequenceFlow_E1" sourceElement="BPMNShape_StartEvent_Err" targetElement="BPMNShape_CA_Alert"><di:waypoint x="446.0" xsi:type="dc:Point" y="715.0"/><di:waypoint x="530.0" xsi:type="dc:Point" y="715.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_E2" id="BPMNEdge_SequenceFlow_E2" sourceElement="BPMNShape_CA_Alert" targetElement="BPMNShape_EndEvent_Err"><di:waypoint x="630.0" xsi:type="dc:Point" y="715.0"/><di:waypoint x="714.0" xsi:type="dc:Point" y="715.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="Participant_Process_Lab_Loop" id="BPMNShape_Participant_Process_Lab_Loop"><dc:Bounds height="225.0" width="512.0" x="240.0" y="945.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="L2_GS" id="BPMNShape_L2_GS"><dc:Bounds height="60.0" width="100.0" x="416.0" y="1000.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="L2_End" id="BPMNShape_L2_End"><dc:Bounds height="32.0" width="32.0" x="600.0" y="1014.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="L2_Start" id="BPMNShape_L2_Start"><dc:Bounds height="32.0" width="32.0" x="300.0" y="1014.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Participant_Process_Lab_Transform" id="BPMNShape_Participant_Process_Lab_Transform"><dc:Bounds height="225.0" width="662.0" x="240.0" y="1230.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="L1_XSLT" id="BPMNShape_L1_XSLT"><dc:Bounds height="60.0" width="100.0" x="416.0" y="1285.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="L1_End" id="BPMNShape_L1_End"><dc:Bounds height="32.0" width="32.0" x="750.0" y="1299.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="L1_CM" id="BPMNShape_L1_CM"><dc:Bounds height="60.0" width="100.0" x="566.0" y="1285.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="L1_Start" id="BPMNShape_L1_Start"><dc:Bounds height="32.0" width="32.0" x="300.0" y="1299.0"/></bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_L2b" id="BPMNEdge_SequenceFlow_L2b" sourceElement="BPMNShape_L2_GS" targetElement="BPMNShape_L2_End"><di:waypoint x="516.0" xsi:type="dc:Point" y="1030.0"/><di:waypoint x="600.0" xsi:type="dc:Point" y="1030.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_L2a" id="BPMNEdge_SequenceFlow_L2a" sourceElement="BPMNShape_L2_Start" targetElement="BPMNShape_L2_GS"><di:waypoint x="332.0" xsi:type="dc:Point" y="1030.0"/><di:waypoint x="416.0" xsi:type="dc:Point" y="1030.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_L1b" id="BPMNEdge_SequenceFlow_L1b" sourceElement="BPMNShape_L1_XSLT" targetElement="BPMNShape_L1_CM"><di:waypoint x="516.0" xsi:type="dc:Point" y="1315.0"/><di:waypoint x="566.0" xsi:type="dc:Point" y="1315.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_L1c" id="BPMNEdge_SequenceFlow_L1c" sourceElement="BPMNShape_L1_CM" targetElement="BPMNShape_L1_End"><di:waypoint x="666.0" xsi:type="dc:Point" y="1315.0"/><di:waypoint x="750.0" xsi:type="dc:Point" y="1315.0"/></bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_L1a" id="BPMNEdge_SequenceFlow_L1a" sourceElement="BPMNShape_L1_Start" targetElement="BPMNShape_L1_XSLT"><di:waypoint x="332.0" xsi:type="dc:Point" y="1315.0"/><di:waypoint x="416.0" xsi:type="dc:Point" y="1315.0"/></bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

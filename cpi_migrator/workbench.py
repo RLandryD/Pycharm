@@ -61,10 +61,9 @@ from destinations.hub_fetcher import HubFetcher
 from destinations.resolver import DestinationResolver
 from fetcher.cpi_fetcher import CPIFetcher, CPIArtifact
 from fetcher.scc_configurator import auto_configure, TARGET_TOPOLOGY
-from fetcher.sap_samples_browser import SAPSamplesBrowser, SAPSamplePackage, INTEGRATION_REPOS
 from fetcher.github_fetcher import GitHubFetcher
+from fetcher.sap_samples_browser import SAPSamplesBrowser, SAPSamplePackage, INTEGRATION_REPOS
 from analyzer.clean_core_analyzer import CleanCoreAnalyzer, clean_core_summary
-from reporter.verifier import IntegrationVerifier, project_verification_summary
 from reporter.doc_generator import TDDGenerator
 from reporter.preflight_generator import PreflightGenerator
 from reporter.security_inventory import SecurityInventoryGenerator
@@ -76,7 +75,6 @@ from intake.isam_questionnaire import get_questions, evaluate, ISAMAnswer
 from extractor.esr_extractor import ESRExtractor, ESRFileParser
 from fetcher.cpi_uploader import CPIUploader
 from fetcher.hub_catalog import HubCatalogClient
-from fetcher.match_aggregator import MatchAggregator, MatchMode, MatchSource
 from scaffolder.groovy_generator import GroovyGenerator
 from scaffolder.pipeline_scaffolder import needs_eoio_pattern, generate_eoio_pattern
 from testing.payload_replayer import PayloadReplayer
@@ -142,6 +140,178 @@ except Exception:
     pass
 
 # ── page config ──────────────────────────────────────────────────────────────
+def _render_tenant_pull(expanded: bool = False):
+    """Pull-from-tenant UI — rendered from the dedicated source type
+    AND inside the Upload branch (same single implementation)."""
+    with st.expander("📡 Pull packages from a CPI tenant",
+                     expanded=expanded):
+        st.caption(
+            "End-to-end showcase: pull packages from the SOURCE tenant "
+            "(Profiles tab — falls back to the target connection), run "
+            "them through the workbench, and push the regenerated "
+            "packages to the target.")
+        _src_sess = (st.session_state.get("cpi_source_session")
+                     or st.session_state.get("cpi_session"))
+        _src_url = (st.session_state.get("cpi_source_base_url")
+                    or st.session_state.get("cpi_base_url"))
+        if not _src_sess:
+            st.info("Connect a tenant in the Profiles tab first.")
+        else:
+            if st.button("📋 List packages on source tenant",
+                         key="pull_list"):
+                try:
+                    _f = CPIFetcher(base_url=_src_url,
+                                    session=_src_sess)
+                    st.session_state["pull_pkg_list"] = \
+                        _f.list_packages()
+                except Exception as e:
+                    st.error(f"List failed: {e}")
+            _plist = st.session_state.get("pull_pkg_list") or []
+            if _plist:
+                _opts = {f"{p.get('Name', p.get('Id'))} "
+                         f"({p.get('Id')})": p.get("Id")
+                         for p in _plist}
+                _sel = st.multiselect(
+                    f"Packages on {_src_url.split('://')[-1].split('/')[0]}",
+                    list(_opts), key="pull_pkg_sel")
+                if _sel and st.button(
+                        "⬇ Download & ingest selected",
+                        key="pull_ingest", type="primary"):
+                    _f = CPIFetcher(base_url=_src_url,
+                                    session=_src_sess)
+                    _items, _errs = [], []
+                    with st.spinner("Exporting packages from the "
+                                    "tenant…"):
+                        for lbl in _sel:
+                            pid = _opts[lbl]
+                            try:
+                                _items.append(
+                                    (f"{pid}.zip",
+                                     _f.download_package_zip(pid)))
+                            except Exception as e:
+                                # some packages refuse whole-package export
+                                # (drafts/odd artifacts → 500); fall back to
+                                # artifact-by-artifact
+                                _got = 0
+                                try:
+                                    for _art in (_f.list_artifacts(pid)
+                                                 or []):
+                                        _aid2 = (_art.get("Id")
+                                                 if isinstance(_art, dict)
+                                                 else getattr(_art, "id",
+                                                              "")) or ""
+                                        if not _aid2:
+                                            continue
+                                        try:
+                                            _u2 = (f"{_src_url}/api/v1/"
+                                                   "IntegrationDesigntime"
+                                                   f"Artifacts(Id='{_aid2}',"
+                                                   "Version='active')/$value")
+                                            _r2 = _src_sess.get(_u2,
+                                                                timeout=120)
+                                            _r2.raise_for_status()
+                                            _items.append(
+                                                (f"{pid}__{_aid2}.zip",
+                                                 _r2.content))
+                                            _got += 1
+                                        except Exception:
+                                            pass
+                                except Exception:
+                                    pass
+                                if _got:
+                                    st.warning(
+                                        f"{pid}: whole-package export "
+                                        f"failed ({e}); recovered {_got} "
+                                        "artifact(s) individually.")
+                                else:
+                                    _errs.append((pid, str(e)))
+                    if _items:
+                        total, npkg, perr = _ingest_archive_items(
+                            _items)
+                        st.success(
+                            f"✅ Pulled {len(_items)} package(s) → "
+                            f"{total} interface(s) across {npkg} "
+                            "loaded package(s). Assess in Tab 2, "
+                            "regenerate + upload in Tab 5.")
+                        _errs.extend(perr)
+                    for pid, err in _errs:
+                        st.error(f"{pid}: {err}")
+
+
+def _ingest_archive_items(items):
+    """Shared intake for package archives — used by BOTH the file uploader
+    and the pull-from-tenant path (multi-tenant showcase: source tenant →
+    workbench → target tenant). items: list of (name, raw_bytes).
+    Returns (total_interfaces, package_count, parse_errors)."""
+    from extractor.iflow_parser import extract_endpoints
+    from extractor.pi_extractor import InterfaceRecord
+    from fetcher.artifact_router import extract_iflows_recursive
+    fetcher = CPIFetcher(
+        base_url=st.session_state.cpi_base_url or "http://localhost",
+        session=st.session_state.cpi_session)
+    pkgs, all_arts, parse_errors = [], [], []
+    for name, raw in items:
+        try:
+            flows = extract_iflows_recursive(
+                raw, container_name=name.rsplit(".", 1)[0])
+            try:
+                from library_builder.corpus_pipeline import (WIRING_EXTS,
+                                                             walk_zip_bytes)
+                _up = st.session_state.setdefault("uploaded_resources", {})
+                _up.update(walk_zip_bytes(raw, name.rsplit(".", 1)[0],
+                                          exts=WIRING_EXTS))
+                from scaffolder.passthrough import (
+                    collect_passthrough_from_zip as _cpz)
+                _pt = st.session_state.setdefault("uploaded_passthrough", {})
+                _pt.update(_cpz(raw))
+            except Exception:
+                pass
+            try:
+                arts = fetcher.download_from_upload(raw, name)
+            except Exception:
+                arts = []
+            all_arts.extend(arts)
+            pkgs.append({
+                "filename": name, "bytes": raw, "iflow_count": len(flows),
+                "iflows": [{"id": f["id"], "name": f["name"],
+                            "iflw_xml": f.get("iflw_xml", ""),
+                            "package": f.get("package", "")}
+                           for f in flows]})
+        except Exception as exc:
+            parse_errors.append((name, str(exc)))
+    existing = {p["filename"]: p
+                for p in st.session_state.uploaded_packages}
+    for p in pkgs:
+        existing[p["filename"]] = p
+    st.session_state.uploaded_packages = list(existing.values())
+    merged_records, seen_ids = [], set()
+    for p in st.session_state.uploaded_packages:
+        for fl in p["iflows"]:
+            if fl["id"] in seen_ids:
+                continue
+            seen_ids.add(fl["id"])
+            _ep = extract_endpoints(fl.get("iflw_xml", ""))
+            _snd = _ep.get("sender_system", "")
+            _rcv = _ep.get("receiver_system", "")
+            merged_records.append(InterfaceRecord(
+                id=fl["id"], name=fl["name"], namespace="",
+                software_component="", sender_system=_snd,
+                receiver_system=_rcv,
+                sender_adapter=(_ep.get("sender_adapter")
+                                or ("HTTPS" if _snd else "")),
+                receiver_adapter=(_ep.get("receiver_adapter")
+                                  or ("HTTPS" if _rcv else "")),
+                message_interface="", description="",
+                source_iflow_xml=fl.get("iflw_xml", ""),
+                package=fl.get("package", "")))
+    from analyzer.ma_assessments import assess_records
+    st.session_state.interfaces = merged_records
+    st.session_state.assessments = assess_records(merged_records)
+    st.session_state.all_artifacts = all_arts
+    return (len(merged_records), len(st.session_state.uploaded_packages),
+            parse_errors)
+
+
 st.set_page_config(
     page_title="CPI Migration Workbench",
     page_icon="🔄",
@@ -160,7 +330,6 @@ DEFAULTS = {
     "assessments":      [],       # list[MigrationAssessment]
     "selected":         [],       # list[str] interface names
     "all_artifacts":    [],       # list[CPIArtifact]
-    "matches":          {},       # {iface_name: CPIArtifact | None}
     "local_template_choice": {},   # {iface_name: local library template name}
     "target_ids":       {},       # {iface_name: str}
     "configs":          {},       # {iface_name: InterfaceConfig}
@@ -325,6 +494,8 @@ with st.sidebar:
                     _p = _store.load_profile(_sel_profile, _master_pw)
                     st.session_state.active_profile   = _p
                     st.session_state.profile_unlocked = True
+                    st.session_state["sb_service_keys"] = dict(
+                        getattr(_p, "service_keys", {}) or {})
 
                     # Set the environment selector to match the profile, so the
                     # correct field set renders (CF vs Neo).
@@ -415,6 +586,8 @@ with st.sidebar:
     # don't have to scroll to the bottom of the form. The full data-entry
     # surface stays in Tab 0; this is just a shortcut to persist it.
     with st.expander("💾 Save current profile"):
+        # Full profile management lives here now (former Tab 0): profiles
+        # are AES-256-encrypted at ~/.cpi_migrator/profiles/, local only.
         _qs_name = st.text_input(
             "Profile name",
             value=st.session_state.get("pm_name", ""),
@@ -453,6 +626,7 @@ with st.sidebar:
                         hub_api_key=_ss.get("pm_hub_key", ""),
                         github_token=_ss.get("pm_gh_token", ""),
                         targets=_ss.get("pm_targets", []),
+                        service_keys=_ss.get("sb_service_keys", {}) or {},
                         ctms_url=_ss.get("pm_ctms_url", ""),
                         ctms_client_id=_ss.get("pm_ctms_id", ""),
                         ctms_client_secret=_ss.get("pm_ctms_sec", ""),
@@ -462,6 +636,49 @@ with st.sidebar:
                 except Exception as _e:
                     st.error(f"Save failed: {_e}")
 
+        _del_names = _store.list_profiles() if '_store' in dir() else []
+        if _del_names:
+            _del_pick = st.selectbox("Delete profile", ["(none)"] + _del_names,
+                                     key="sb_profile_del_pick")
+            if _del_pick != "(none)" and st.button(
+                    f"🗑 Delete '{_del_pick}'", key="sb_profile_del_btn"):
+                _store.delete_profile(_del_pick)
+                st.success(f"Deleted profile {_del_pick}")
+                st.rerun()
+
+    # ── Per-client service-key wallet ────────────────────────────────────
+    # Any BTP key an engagement needs (ANS, cTMS, Content Agent, CI/CD…)
+    # lives in the active profile under a named slot — same pattern as the
+    # CPI key picker, same encryption. NEVER displayed unmasked.
+    with st.expander("🔑 Service keys (per client)"):
+        _sk = st.session_state.setdefault("sb_service_keys", {})
+        if _sk:
+            from models.credential_store import CPIProfile as _CPf
+            for _slot in sorted(_sk):
+                _kc1, _kc2 = st.columns([4, 1])
+                _kc1.caption(f"**{_slot}** — "
+                             f"{_CPf.mask_key(_sk[_slot])}")
+                if _kc2.button("🗑", key=f"sb_sk_del_{_slot}"):
+                    _sk.pop(_slot, None)
+                    st.rerun()
+        else:
+            st.caption("No service keys in this profile yet.")
+        _slot_pick = st.selectbox(
+            "Slot", ["ans", "ctms", "content_agent", "cicd", "custom…"],
+            key="sb_sk_slot")
+        _slot_name = (st.text_input("Custom slot name", key="sb_sk_custom")
+                      if _slot_pick == "custom…" else _slot_pick)
+        _sk_file = st.file_uploader("Service key (.json)", type=["json"],
+                                    key="sb_sk_file")
+        if st.button("➕ Add to profile", key="sb_sk_add",
+                     disabled=not (_sk_file and _slot_name)):
+            import json as _json
+            try:
+                _sk[_slot_name] = _json.loads(_sk_file.read())
+                st.success(f"Stored under '{_slot_name}' — quick-save the "
+                           f"profile to persist (encrypted).")
+            except Exception as _ske:
+                st.error(f"Not valid JSON: {_ske}")
     # Show where profiles live so it's clear they persist across project
     # re-installs (they're in your home dir, NOT the project folder).
     st.caption(f"📁 Profiles stored at: `{_store.profiles_dir}` "
@@ -529,6 +746,49 @@ with st.sidebar:
         status = "✅ Online" if st.session_state.cpi_connected else "⚫ Offline"
         st.markdown(f"**{status}**")
 
+    with st.expander("📡 Source tenant (pull packages from)",
+                     expanded=False):
+        st.caption(
+            "Multi-tenant: connect a SOURCE tenant to pull packages from, "
+            "while the connection above stays the TARGET everything "
+            "deploys to. For a same-tenant showcase (pull your own "
+            "packages, regenerate them as new ones, push them back), just "
+            "reuse the target connection.")
+        if st.button("Use target connection as source", key="src_use_tgt"):
+            if st.session_state.get("cpi_session"):
+                st.session_state["cpi_source_session"] = \
+                    st.session_state.cpi_session
+                st.session_state["cpi_source_base_url"] = \
+                    st.session_state.cpi_base_url
+                st.success("Source = target tenant")
+            else:
+                st.warning("Connect the target first.")
+        src_url = st.text_input("Source Tenant Base URL", key="src_cpi_url")
+        sc1, sc2 = st.columns(2)
+        with sc1:
+            src_token = st.text_input("Token URL", key="src_token_url")
+            src_cid = st.text_input("Client ID", key="src_client_id")
+        with sc2:
+            src_sec = st.text_input("Client Secret", type="password",
+                                    key="src_secret")
+        if st.button("Test source tenant", key="src_test"):
+            with st.spinner("Connecting…"):
+                try:
+                    _a = CFAuthenticator(src_token, src_cid, src_sec)
+                    _s = _a.get_session()
+                    r = _s.get(f"{src_url}/api/v1/IntegrationPackages"
+                               f"?$top=1&$format=json", timeout=15)
+                    r.raise_for_status()
+                    st.session_state["cpi_source_session"] = _s
+                    st.session_state["cpi_source_base_url"] = src_url
+                    st.success("✓ Source connected")
+                except Exception as e:
+                    st.error(f"✗ {e}")
+        if st.session_state.get("cpi_source_session"):
+            st.markdown("**Source: ✅ "
+                        + (st.session_state.get("cpi_source_base_url") or "")
+                        .split("://")[-1].split("/")[0] + "**")
+
     # ── Security Material check (also a connection self-test) ──────────
     if st.session_state.cpi_connected:
         with st.expander("🔐 Security Material"):
@@ -557,6 +817,76 @@ with st.sidebar:
 
     # ── Settings ─────────────────────────────────────────────────────
     with st.expander("⚙ Settings"):
+    # ── Local source folders (set once here, persisted; no CLI needed) ────
+        # These feed the Generate step (capability corpus) and the deploy step
+        # (clone-and-adapt template library). Empty paths are why those came up
+        # blank before — set them here, once.
+        from fetcher.user_settings import (get_setting as _gs_path,
+                                            set_setting as _ss_path)
+    
+        def _pick_folder_dialog():
+            """Native folder chooser on the user's desktop (this app runs locally).
+            Returns a path, or '' if unavailable/cancelled."""
+            try:
+                import tkinter as _tk
+                from tkinter import filedialog as _fd
+                _root = _tk.Tk()
+                _root.withdraw()
+                _root.wm_attributes("-topmost", 1)
+                picked = _fd.askdirectory(master=_root) or ""
+                _root.destroy()
+                return picked
+            except Exception:
+                return ""
+    
+        def _folder_input(label, setting_key, widget_key, help_text):
+            # apply a pending Browse result BEFORE the widget is instantiated
+            # (Streamlit forbids mutating a widget's state after creation)
+            pend = widget_key + "_pending"
+            if pend in st.session_state:
+                st.session_state[widget_key] = st.session_state.pop(pend)
+            if widget_key not in st.session_state:
+                st.session_state[widget_key] = _gs_path(setting_key, "")
+            col_in, col_btn = st.columns([5, 1])
+            with col_in:
+                val = st.text_input(label, key=widget_key, help=help_text)
+            with col_btn:
+                st.markdown("<div style='height:1.75em'></div>", unsafe_allow_html=True)
+                if st.button("📁 Browse", key=widget_key + "_browse"):
+                    picked = _pick_folder_dialog()
+                    if picked:
+                        st.session_state[pend] = picked
+                        _ss_path(setting_key, picked)
+                        st.rerun()
+                    else:
+                        st.caption("(no dialog — paste path)")
+            if val and val != _gs_path(setting_key, ""):
+                _ss_path(setting_key, val)
+            if val and os.path.isdir(val):
+                try:
+                    n = sum(1 for _ in os.scandir(val))
+                    st.caption(f"✓ found — {n} entr(y/ies)")
+                except OSError:
+                    st.caption("✓ set")
+            elif val:
+                st.caption("⚠ folder not found on disk")
+    
+        with st.expander("📁 Local libraries — fixed paths (edit in code, not here)",
+                         expanded=True):
+            def _folder_status(label, setting_key):
+                p = PINNED_LOCAL_DIRS.get(setting_key, "")
+                if p and os.path.isdir(p):
+                    try:
+                        n = sum(1 for _ in os.scandir(p))
+                        st.caption(f"**{label}**: `{p}` — ✓ {n} entr(y/ies)")
+                    except OSError:
+                        st.caption(f"**{label}**: `{p}` — ✓ set")
+                else:
+                    st.caption(f"**{label}**: `{p}` — ⚠ not found on disk")
+            _folder_status("Packages (deploy template ranking)", "template_library_dir")
+            _folder_status("Corpus (Generate artifact learning)", "capability_corpus_dir")
+            _folder_status("Schemas (canonical_library)", "schema_library_dir")
+
         out_dir = st.text_input("Output directory", value="./output")
         cache_ttl = st.number_input("Hub cache TTL (hours)", value=24, min_value=1)
         from fetcher.user_settings import get_setting as _get_setting, \
@@ -1062,144 +1392,90 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
                                f"and the full log for details.")
 
     # ── One-click: grab everything produced in this run as a single zip ───
-    with st.expander("⬇ Download all outputs (one zip)", expanded=False):
-        _out = Path(output_dir)
-        if not (_out.exists() and any(_out.iterdir())):
-            st.caption("Nothing generated yet — run Generate/Deploy first.")
-        else:
-            if st.button("Build outputs zip", key="build_out_zip"):
-                import io as _io, zipfile as _zip
-                buf = _io.BytesIO()
-                with _zip.ZipFile(buf, "w", _zip.ZIP_DEFLATED) as z:
-                    for p in _out.rglob("*"):
-                        if p.is_file():
-                            z.write(p, p.relative_to(_out))
-                st.session_state["_out_zip"] = buf.getvalue()
-            if st.session_state.get("_out_zip"):
-                st.download_button("⬇ Download outputs.zip",
-                                   st.session_state["_out_zip"],
-                                   file_name="cpi_migrator_outputs.zip",
-                                   mime="application/zip", key="dl_all_outputs")
-
     # ── Fetch real run info (MPL) from the tenant into ONE file ───────────
-    with st.expander("📥 Message runs (executions) from tenant — Message "
-                     "Processing Logs", expanded=False):
-        if not st.session_state.get("cpi_connected"):
-            st.caption("Connect to the CPI tenant in the sidebar to fetch runs.")
-        else:
-            st.caption("These are **message executions**, not deployments. A "
-                       "freshly deployed iFlow shows 0 runs until it actually "
-                       "processes a message (e.g. you POST to its endpoint). For "
-                       "*what's deployed* and its Started/Error status, use the "
-                       "runtime-status panel below, not this.")
-            fc1, fc2, fc3 = st.columns([2, 1, 1])
-            with fc1:
-                mpl_iflow = st.text_input("Filter by iFlow name (optional)",
-                                          key="mpl_iflow_filter")
-            with fc2:
-                mpl_status = st.selectbox(
-                    "Status", ["(any)", "COMPLETED", "FAILED", "RETRY",
-                               "ESCALATED", "PROCESSING"], key="mpl_status_filter")
-            with fc3:
-                mpl_top = st.number_input("Max rows", 1, 1000, 50, key="mpl_top")
-            runs_path = Path(output_dir) / "cpi_runs.json"
-            if st.button("📥 Fetch runs now", key="fetch_runs_btn"):
-                from fetcher.mpl_fetcher import MPLFetcher
-                from fetcher.run_collector import append_runs, load_runs
-                try:
-                    mf = MPLFetcher(st.session_state.cpi_base_url,
-                                    st.session_state.cpi_session)
-                    runs = mf.recent_runs(
-                        iflow_name=(mpl_iflow or ""),
-                        status=("" if mpl_status == "(any)" else mpl_status),
-                        top=int(mpl_top))
-                    added, total = append_runs(str(runs_path), runs)
-                    if runs:
-                        st.success(f"Fetched {len(runs)} run(s) — {added} new, "
-                                   f"{total} total in {runs_path.name}.")
-                    else:
-                        # Explain WHY it's empty instead of a silent 0.
-                        diag = (f"HTTP {mf.last_status} from {mf.last_url}")
-                        if mf.last_status == 403:
-                            diag += " — the OAuth client lacks the monitoring " \
-                                    "read role (add it on the tenant)."
-                        elif mf.last_status == 200:
-                            diag += " — endpoint returned 200 but no rows. Check " \
-                                    "the iFlow-name filter, or a WebUI-vs-API host " \
-                                    "mismatch (SAP KBA 3435127)."
-                        elif mf.last_status in (401,):
-                            diag += " — not authenticated (token/role)."
-                        if mf.last_error:
-                            diag += f"  detail: {mf.last_error[:200]}"
-                        st.warning(f"Fetched 0 runs. {diag}")
-                    st.session_state["_last_runs"] = load_runs(str(runs_path))
-                except Exception as e:                       # noqa
-                    st.error(f"Fetch failed: {e}")
-            _runs = st.session_state.get("_last_runs") or []
-            if _runs:
-                import pandas as pd
-                cols = ["MessageGuid", "Status", "IntegrationFlowName",
-                        "LogStart", "LogEnd"]
-                st.dataframe(
-                    pd.DataFrame([{c: r.get(c, "") for c in cols}
-                                  for r in _runs[:200]]),
-                    hide_index=True, use_container_width=True)
-                failed = next((r for r in _runs
-                               if r.get("Status") == "FAILED"), None)
-                if failed and st.button("Show error text for newest FAILED",
-                                        key="mpl_err_btn"):
-                    from fetcher.mpl_fetcher import MPLFetcher as _MF
-                    mf2 = _MF(st.session_state.cpi_base_url,
-                              st.session_state.cpi_session)
-                    st.code(mf2.error_text(failed.get("MessageGuid", ""))
-                            or "(no error text returned)")
-                if runs_path.exists():
-                    st.download_button("⬇ Download runs file",
-                                       runs_path.read_bytes(),
-                                       file_name="cpi_runs.json",
-                                       mime="application/json", key="dl_runs")
-
-    # ── Deployed artifacts + runtime status (what's deployed, not message runs) ──
-    with st.expander("🛰 Deployed artifacts + runtime status", expanded=False):
-        if not st.session_state.get("cpi_connected"):
-            st.caption("Connect to the CPI tenant in the sidebar.")
-        else:
-            st.caption("Lists every artifact deployed to the runtime and whether "
-                       "it's STARTED or ERROR — this is what you usually mean by "
-                       "'is it deployed', separate from message runs above.")
-            if st.button("🛰 Fetch deployed artifacts", key="fetch_runtime_btn"):
-                from fetcher.cpi_uploader import CPIUploader as _CU2
-                try:
-                    _u2 = _CU2(st.session_state.cpi_base_url,
-                               st.session_state.cpi_session)
-                    arts = _u2.list_runtime_artifacts()
-                    if arts:
-                        import pandas as _pd
-                        _df = _pd.DataFrame([{
-                            "Id": a.get("Id", ""),
-                            "Version": a.get("Version", ""),
-                            "Status": a.get("Status", ""),
-                            "Type": a.get("Type", ""),
-                        } for a in arts])
-                        st.dataframe(_df, hide_index=True, use_container_width=True)
-                        _err = sum(1 for a in arts if a.get("Status") == "ERROR")
-                        st.caption(f"{len(arts)} deployed · "
-                                   f"{sum(1 for a in arts if a.get('Status')=='STARTED')} started · "
-                                   f"{_err} error")
-                    else:
-                        diag = f"HTTP {getattr(_u2,'last_runtime_status',0)}"
-                        if getattr(_u2, "last_runtime_error", ""):
-                            diag += f" — {_u2.last_runtime_error[:200]}"
-                        st.warning(f"No deployed artifacts returned. {diag}")
-                except Exception as _e:
-                    st.error(f"Fetch failed: {_e}")
-
     # ── Background poller: collects runs into the same file, on its own ───
     with st.expander("🔁 Background run poller (runs even when you're away)",
                      expanded=False):
         import subprocess as _subprocess, sys as _sys, signal as _signal
         from fetcher.user_settings import get_setting as _gs
         pid_path = Path(output_dir) / "poller.pid"
+
+        # ── 🔔 Alerting (ANS) — ops-retainer seed (#3) ────────────────────
+        # Failed runs the poller sees become ANS events routed to email or
+        # webhook. Provisioning (condition/action/subscription) is created
+        # programmatically and idempotently from the wallet key; the only
+        # manual step ever is clicking the email confirmation ANS sends.
+        with st.container(border=True):
+            st.markdown("**🔔 Alerting** — notify on failed message runs "
+                        "(SAP Alert Notification)")
+            _ans_en = st.checkbox(
+                "Enable alerting while the poller runs",
+                key="ans_alert_enabled")
+            _ac1, _ac2 = st.columns([1, 2])
+            _ans_tt = _ac1.selectbox("Target", ["email", "webhook"],
+                                     key="ans_target_type")
+            _ans_tg = _ac2.text_input(
+                "Email address / webhook URL", key="ans_target",
+                placeholder="ops@client.com or https://hooks…")
+            st.session_state.setdefault(
+                "ans_key_path", "~/.cpi_migrator/keys/ans_key.json")
+            st.text_input("ANS key file (used by the background process)",
+                          key="ans_key_path")
+
+            def _ans_client_from_wallet():
+                _k = (st.session_state.get("sb_service_keys") or {}).get(
+                    "ans")
+                if not _k:
+                    import os as _aos, json as _ajs
+                    _p = _aos.path.expanduser(
+                        st.session_state.get("ans_key_path", ""))
+                    if _p and _aos.path.exists(_p):
+                        with open(_p) as _fh:
+                            _k = _ajs.load(_fh)
+                if not _k:
+                    st.error("No ANS key: add one to the profile wallet "
+                             "(slot 'ans') or set the key file path.")
+                    return None
+                from fetcher.ans_notifier import ANSClient
+                return ANSClient(_k)
+
+            _ab1, _ab2 = st.columns(2)
+            if _ab1.button("🛠 Provision alerting (idempotent)",
+                           key="ans_provision_btn",
+                           disabled=not _ans_tg):
+                _cl = _ans_client_from_wallet()
+                if _cl:
+                    try:
+                        _res = _cl.ensure_provisioning(
+                            _ans_tg, target_type=_ans_tt)
+                        if all(_res.values()):
+                            st.success(f"Provisioned: {_res}. Email "
+                                       f"targets must confirm the "
+                                       f"activation mail ANS just sent.")
+                        else:
+                            st.warning(f"Partial: {_res} — see poller/app "
+                                       f"log for the failing entity.")
+                    except Exception as _ae:
+                        st.error(f"Provisioning failed: {_ae}")
+            if _ab2.button("📨 Send test event", key="ans_test_btn"):
+                _cl = _ans_client_from_wallet()
+                if _cl:
+                    try:
+                        from fetcher.ans_notifier import build_failure_event
+                        _ok = _cl.produce_event(build_failure_event(
+                            {"IntegrationFlowName": "cpi_migrator_test",
+                             "MessageGuid": "TEST-" + str(int(__import__(
+                                 "time").time())),
+                             "Status": "FAILED"},
+                            tenant=st.session_state.get("sb_cpi_url", "")))
+                        (st.success if _ok else st.error)(
+                            "Test event accepted by ANS — check the "
+                            "target." if _ok else
+                            "ANS rejected the test event — check key/"
+                            "provisioning.")
+                    except Exception as _ae:
+                        st.error(f"Test event failed: {_ae}")
+
         runs_path2 = Path(output_dir) / "cpi_runs.json"
 
         def _poller_pid():
@@ -1264,6 +1540,20 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
                        "--stop-file", str(stop_path)]
                 if poll_iflow:
                     cmd += ["--iflow", poll_iflow]
+                # ANS alerting (no secrets in the config file: key as PATH)
+                if st.session_state.get("ans_alert_enabled"):
+                    import json as _aj
+                    _acfg_path = Path(output_dir) / "ans_alert_config.json"
+                    _acfg_path.write_text(_aj.dumps({
+                        "enabled": True,
+                        "key_path": st.session_state.get(
+                            "ans_key_path",
+                            "~/.cpi_migrator/keys/ans_key.json"),
+                        "target": st.session_state.get("ans_target", ""),
+                        "target_type": st.session_state.get(
+                            "ans_target_type", "email"),
+                    }), encoding="utf-8")
+                    cmd += ["--alert-config", str(_acfg_path)]
                 try:
                     _logf = open(log_path, "w", encoding="utf-8")
                     proc = _subprocess.Popen(
@@ -1321,7 +1611,7 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
             if not cands:
                 try:
                     from scaffolder.iflow_scaffolder import IFlowScaffolder
-                    _scaf = IFlowScaffolder(output_dir=output_dir, resources_dir=PINNED_LOCAL_DIRS["template_library_dir"])
+                    _scaf = IFlowScaffolder(output_dir=output_dir, resources_dir=PINNED_LOCAL_DIRS["template_library_dir"], extra_resources=st.session_state.get("uploaded_resources"), passthrough=st.session_state.get("uploaded_passthrough"), gold_error_handling=st.session_state.get("gold_eh_variant"), gold_eh_replace=bool(st.session_state.get("gold_eh_replace")), gold_eh_notify=bool(st.session_state.get("gold_eh_notify")), gold_eh_sftp=bool(st.session_state.get("gold_eh_sftp")), gold_eh_company=st.session_state.get("company_code", ""))
                     cands = [Path(_scaf.scaffold(a))]
                 except Exception as _e:
                     wire_log.log_note(f"artifact export: could not generate iFlow for {name}: {_e}")
@@ -1356,7 +1646,7 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
             if not cands:
                 try:
                     from scaffolder.iflow_scaffolder import IFlowScaffolder
-                    _scaf = IFlowScaffolder(output_dir=output_dir, resources_dir=PINNED_LOCAL_DIRS["template_library_dir"])
+                    _scaf = IFlowScaffolder(output_dir=output_dir, resources_dir=PINNED_LOCAL_DIRS["template_library_dir"], extra_resources=st.session_state.get("uploaded_resources"), passthrough=st.session_state.get("uploaded_passthrough"), gold_error_handling=st.session_state.get("gold_eh_variant"), gold_eh_replace=bool(st.session_state.get("gold_eh_replace")), gold_eh_notify=bool(st.session_state.get("gold_eh_notify")), gold_eh_sftp=bool(st.session_state.get("gold_eh_sftp")), gold_eh_company=st.session_state.get("company_code", ""))
                     cands = [Path(_scaf.scaffold(a))]
                 except Exception as _e:
                     wire_log.log_note(f"export: could not generate iFlow for {name}: {_e}")
@@ -1388,6 +1678,60 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
         else:
             st.warning("No package zips written — see the log.")
 
+    _eh_choice = st.selectbox(
+        "Gold-standard error handling (flows without an exception subprocess)",
+        ["Off (pure fidelity)", "Error End (Guidelines baseline)",
+         "Escalation End", "Message End (don't throw error)"],
+        key="gold_eh_choice",
+        help="Injects the SAP Design Guidelines 'Handle Errors Gracefully' "
+             "pattern — Error Start → error-capture Groovy (MPL attachments, "
+             "custom status) → chosen end — ONLY into flows that have no "
+             "exception subprocess. Flows that already handle errors are "
+             "never touched.")
+    st.session_state["gold_eh_variant"] = {
+        "Off (pure fidelity)": None,
+        "Error End (Guidelines baseline)": "error_end",
+        "Escalation End": "escalation_end",
+        "Message End (don't throw error)": "message_end",
+    }[_eh_choice]
+    if st.session_state["gold_eh_variant"]:
+        _eh_scope = st.radio(
+            "Apply to",
+            ["Only flows without error handling",
+             "Replace existing error handling too"],
+            key="gold_eh_scope", horizontal=True,
+            help="'Replace' swaps each flow's current main-process exception "
+                 "subprocess (including mail-alert wiring) for the chosen "
+                 "gold variant — for clients who want one standardized "
+                 "pattern. LIP-level exception subprocesses are always kept "
+                 "(they scope to their own process).")
+        st.session_state["gold_eh_replace"] = \
+            _eh_scope.startswith("Replace")
+        st.session_state["gold_eh_notify"] = st.checkbox(
+            "Notify by mail (RCI093 alert pattern, externalized SMTP "
+            "parameters)",
+            key="gold_eh_notify_cb",
+            help="Error-report CM → Send → Mail receiver, body and shape "
+                 "verbatim from RCI093's production alert with {company} "
+                 "filled from Tab 1 · Company code. Subject defaults to "
+                 "'iFlow name: reason' (the capture script classifies the "
+                 "error: Endpoint / Incoming message / Outgoing message / "
+                 "Mapping / Execution). If the source flow already defines "
+                 "mail parameters (ConnectionError_Mail* family or a mail "
+                 "credential), those are REUSED so the client's configured "
+                 "values flow straight in.")
+        st.session_state["gold_eh_sftp"] = st.checkbox(
+            "Also archive the error report to SFTP",
+            key="gold_eh_sftp_cb",
+            help="RCI093's own shape: the alert body fans out through a "
+                 "parallel Multicast to the mail leg AND an SFTP receiver "
+                 "(+ MPL attachment script). Connection externalized as "
+                 "{{ALERT_SFTP_HOST}}, _DIRECTORY, _FILENAME, _CRED, _AUTH, "
+                 "_TIMEOUT…")
+    else:
+        st.session_state["gold_eh_replace"] = False
+        st.session_state["gold_eh_notify"] = False
+        st.session_state["gold_eh_sftp"] = False
     if st.button("⬆ Upload all iFlows to CPI", type="primary",
                  key="deploy_btn"):
         from fetcher import wire_log
@@ -1401,11 +1745,27 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
         results   = []
         pending_deploys = {}   # artifact_id -> UploadResult, resolved after loop
 
+        _uploaded_ids_this_run = set()
         for i, a in enumerate(selected_assessments):
             name   = a.interface.name
             cfg    = configs.get(name)
             status = st.empty()
             status.text(f"Uploading {name}…")
+
+            # one artifact id per run: the same flow can arrive from two
+            # pulled packages (e.g. the source package AND a previous
+            # showcase package) — uploading both means the second silently
+            # clobbers the first via delete+recreate (seen in a live run)
+            _aid = CPIUploader.sanitize_package_id(name)
+            if _aid in _uploaded_ids_this_run:
+                wire_log.log_note(
+                    f"SKIP duplicate: '{name}' resolves to artifact id "
+                    f"'{_aid}' which was already uploaded in this run "
+                    "(same flow present in multiple loaded packages)")
+                st.warning(f"⏭ {name}: duplicate of an already-uploaded "
+                           "flow in this run — skipped")
+                continue
+            _uploaded_ids_this_run.add(_aid)
 
             # EOIO check
             if needs_eoio_pattern(a.interface):
@@ -1426,7 +1786,7 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
             candidates = []
             try:
                 from scaffolder.iflow_scaffolder import IFlowScaffolder
-                _scaf = IFlowScaffolder(output_dir=output_dir, resources_dir=PINNED_LOCAL_DIRS["template_library_dir"])
+                _scaf = IFlowScaffolder(output_dir=output_dir, resources_dir=PINNED_LOCAL_DIRS["template_library_dir"], extra_resources=st.session_state.get("uploaded_resources"), passthrough=st.session_state.get("uploaded_passthrough"), gold_error_handling=st.session_state.get("gold_eh_variant"), gold_eh_replace=bool(st.session_state.get("gold_eh_replace")), gold_eh_notify=bool(st.session_state.get("gold_eh_notify")), gold_eh_sftp=bool(st.session_state.get("gold_eh_sftp")), gold_eh_company=st.session_state.get("company_code", ""))
                 _tid = target_ids.get(name, "s4hana_cloud") if "target_ids" in dir() else "s4hana_cloud"
                 _resolved = st.session_state.get("resolutions", {}).get(name, {}).get(_tid)
                 _gen = _scaf.scaffold(a, resolved=_resolved)
@@ -1458,19 +1818,38 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
                     pkg_display = target["name"]
                     pkg_preexists = False
                 else:
-                    # Auto: Id derived from source/target; Name follows convention.
-                    pkg_id = generate_package_name(
-                        "",
-                        a.interface.sender_system or "SRC",
-                        a.interface.receiver_system or "TGT",
-                        a.interface.namespace or "",
-                    ).replace(" ", "_")[:50]
-                    pkg_display = generate_package_display_name(
-                        a.interface.sender_system or "Source",
-                        a.interface.receiver_system or "Target",
-                        a.interface.namespace or "",
-                    )
-                    pkg_preexists = False
+                    # Auto: prefer the SOURCE package identity carried on the
+                    # interface (records built from uploaded CPI packages) so
+                    # the tenant package MIRRORS the original — same name, and
+                    # every flow lands with its true siblings. The synthesized
+                    # Sender/Receiver convention name is the fallback for
+                    # PI/PO-export records, which have no source package.
+                    _src_pkg = (getattr(a.interface, "package", "") or "").strip()
+                    if _src_pkg:
+                        import re as _re
+                        # browser download counters ('Pkg (4)', 'Pkg__4_') are
+                        # filename noise, not package identity — strip for the
+                        # display/id; the RAW name (kept on the interface)
+                        # still drives on-disk zip matching.
+                        _stem = _re.sub(r"(?:\s*\(\d+\)|__\d+_?)\s*$", "",
+                                        _src_pkg).strip(" _")
+                        pkg_display = (_stem or _src_pkg).replace("_", " ").strip()
+                        pkg_id = CPIUploader.sanitize_package_id(pkg_display)
+                        pkg_preexists = False
+                    else:
+                        # Auto: Id derived from source/target; Name follows convention.
+                        pkg_id = generate_package_name(
+                            "",
+                            a.interface.sender_system or "SRC",
+                            a.interface.receiver_system or "TGT",
+                            a.interface.namespace or "",
+                        ).replace(" ", "_")[:50]
+                        pkg_display = generate_package_display_name(
+                            a.interface.sender_system or "Source",
+                            a.interface.receiver_system or "Target",
+                            a.interface.namespace or "",
+                        )
+                        pkg_preexists = False
 
                 # Ensure the package exists. For an existing tenant package we
                 # skip creation (it's already there); otherwise create the shell
@@ -1495,6 +1874,13 @@ def render_deploy_section(selected_assessments, configs, unique_targets, output_
                     continue
                 _art_id = name.replace(" ", "_")[:60]
                 _extras = st.session_state.get("artifact_bundles", {}).get(name)
+                # Regenerated flows (real source XML) ship their REAL resources
+                # from __meta — the clone-era synthesized stubs (<name>_mapping
+                # .mmap / <name>_process.groovy) must NOT ride along: the stub
+                # mmap fails the editor's mapping migration ('Unused Resource:
+                # ... Stream after migration is null', seen on RCI093 v1.0.0).
+                if (getattr(a.interface, "source_iflow_xml", "") or "").strip():
+                    _extras = None
                 result = uploader.upload_iflow(
                     candidates[0], pkg_id, _art_id, name,
                     overwrite=overwrite, extra_artifacts=_extras,
@@ -2233,7 +2619,7 @@ def render_ceiling_and_intervention(
             from scaffolder.iflow_scaffolder import IFlowScaffolder
             from scaffolder.parameter_injector import build_parameters_prop
 
-            scaffolder = IFlowScaffolder(output_dir=str(Path(output_dir) / "iflows"), resources_dir=PINNED_LOCAL_DIRS["template_library_dir"])
+            scaffolder = IFlowScaffolder(output_dir=str(Path(output_dir) / "iflows"), resources_dir=PINNED_LOCAL_DIRS["template_library_dir"], extra_resources=st.session_state.get("uploaded_resources"), passthrough=st.session_state.get("uploaded_passthrough"), gold_error_handling=st.session_state.get("gold_eh_variant"), gold_eh_replace=bool(st.session_state.get("gold_eh_replace")), gold_eh_notify=bool(st.session_state.get("gold_eh_notify")), gold_eh_sftp=bool(st.session_state.get("gold_eh_sftp")), gold_eh_company=st.session_state.get("company_code", ""))
             uploader = None
             if _b_upload and st.session_state.cpi_connected:
                 uploader = CPIUploader(st.session_state.cpi_base_url,
@@ -2559,12 +2945,11 @@ if _active_program == "migration":
     # toggle caused the "Match iFlow flickers / hides" bug AND hid the corpus
     # folder selector (needed for pattern extraction even in timer mode). The
     # endpoint toggle now only sets the default deploy shape, never the tab set.
-    _labels = ["🔑 0 · Profiles", "📥 1 · Source", "🔍 2 · Interfaces",
-               "🎯 3 · Match iFlow", "⚙ 4 · Configure",
-               "🚀 5 · Generate", "🛡 6 · Clean Core", "✅ 7 · Verify",
-               "🤖 8 · AI Solver", "📋 9 · Client Tracker"]
+    _labels = ["📥 1 · Source", "🔍 2 · Interfaces", "⚙ 3 · Configure",
+               "🚀 4 · Generate & Deploy", "🤖 5 · AI Solver",
+               "📋 6 · Client Tracker", "🧪 7 · Payload Lab"]
     _t = st.tabs(_labels)
-    tab0, tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = _t
+    (tab1, tab2, tab4, tab5, tab8, tab9, tab10) = _t
     _apim_active = False
     _migration_sink = None
 else:
@@ -2583,7 +2968,7 @@ else:
     _apim_active = True
     _migration_sink = st.empty()
     _sink_container = _migration_sink.container()
-    tab0 = tab1 = tab2 = tab3 = tab4 = tab5 = tab6 = tab7 = tab8 = tab9 = _sink_container
+    tab1 = tab2 = tab4 = tab5 = tab8 = tab9 = tab10 = _sink_container
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -2659,7 +3044,8 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
 
     source_type = st.radio(
         "Source type",
-        ["Live PI/PO REST API", "Upload package / ZIP", "Upload Excel inventory",
+        ["Live PI/PO REST API", "Upload package / ZIP",
+         "📡 Pull from CPI tenant", "Upload Excel inventory",
          "🛠 SAP Migration Assessment (Excel)"],
         horizontal=True,
         key="source_type",
@@ -2707,7 +3093,25 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
                 key="company_code_input",
             )
             st.session_state["company_code"] = company_code.upper()
-            st.caption("Used in package names: ACME_ECC_S4HANA_Finance")
+            _sep_label = st.radio(
+                "Word separator for generated names",
+                ["Underscore (_)", "Hyphen (-)", "Space ( )"],
+                key="word_sep_choice", horizontal=True,
+                help="Some clients have a naming convention — applies to "
+                     "generated iFlow/package names and injected error-"
+                     "handling step names. CPI ids are sanitized "
+                     "separately and never carry spaces.")
+            _sep = {"Underscore (_)": "_", "Hyphen (-)": "-",
+                    "Space ( )": " "}[_sep_label]
+            st.session_state["word_separator"] = _sep
+            from scaffolder.pipeline_scaffolder import set_word_separator \
+                as _set_ws_pipe
+            from scaffolder.error_handling import set_word_separator \
+                as _set_ws_eh
+            _set_ws_pipe(_sep)
+            _set_ws_eh(_sep)
+            st.caption("Used in package names: "
+                       + _sep.join(["ACME", "ECC", "S4HANA", "Finance"]))
 
     if source_type == "Live PI/PO REST API":
         c1, c2 = st.columns(2)
@@ -2732,13 +3136,217 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
                     records = extractor.extract_all()
                     if pi_ns:
                         records = [r for r in records if pi_ns in r.namespace]
-                    analyzer = ComplexityAnalyzer(st.session_state.cfg or {})
+                    from analyzer.ma_assessments import assess_records
                     st.session_state.interfaces  = records
-                    st.session_state.assessments = analyzer.assess_all(records)
+                    st.session_state.assessments = assess_records(records)
                     st.session_state.pi_connected = True
                     st.success(f"✅ Loaded {len(records)} interfaces from PI/PO")
                 except Exception as e:
                     st.error(f"Connection failed: {e}")
+
+        if st.button("🔐 Download channels & credentials", key="pi_dl_ch",
+                     help="Pulls every communication channel (adapter config "
+                          "+ attributes) via the Directory API, harvests the "
+                          "credential references, and lets you replicate the "
+                          "missing ones into CPI Security Material. PI never "
+                          "exposes passwords or private keys — created "
+                          "credentials carry a placeholder to re-key, and "
+                          "certificates are listed for manual transport."):
+            with st.spinner("Fetching communication channels…"):
+                try:
+                    from fetcher.pipo_directory import (PIChannelExtractor,
+                                                        harvest_credentials)
+                    pi_sess = PIAuthenticator(pi_user, pi_pass).get_session()
+                    chans = PIChannelExtractor(pi_url,
+                                               pi_sess).extract_all()
+                    creds, certs = harvest_credentials(chans)
+                    from fetcher.pipo_directory import \
+                        harvest_security_needs
+                    st.session_state["pi_sec_needs"] = \
+                        harvest_security_needs(chans)
+                    st.session_state["pi_channels"] = chans
+                    st.session_state["pi_credentials"] = creds
+                    st.session_state["pi_cert_refs"] = certs
+                    st.success(f"✅ {len(chans)} channels · "
+                               f"{len(creds)} credential reference(s) · "
+                               f"{len(certs)} certificate reference(s)")
+                except Exception as e:
+                    st.error(f"Channel download failed: {e}")
+
+        if st.button("🎭 Load sample channels (demo)", key="pi_dl_demo",
+                     help="No PI/PO system at hand? Loads realistic demo "
+                          "channels so the whole pipeline — harvest, tenant "
+                          "check, replication, worksheets — is testable. "
+                          "Replication runs against your REAL CPI tenant "
+                          "(named placeholder credentials, easy to delete "
+                          "in Security Material afterwards)."):
+            from fetcher.pipo_directory import (harvest_credentials,
+                                                sample_channels)
+            chans = sample_channels()
+            creds, certs = harvest_credentials(chans)
+            from fetcher.pipo_directory import harvest_security_needs
+            st.session_state["pi_sec_needs"] = harvest_security_needs(chans)
+            st.session_state["pi_channels"] = chans
+            st.session_state["pi_credentials"] = creds
+            st.session_state["pi_cert_refs"] = certs
+            st.info(f"🎭 Demo data: {len(chans)} channels · {len(creds)} "
+                    f"credential reference(s) · {len(certs)} certificate "
+                    "reference(s)")
+
+        if st.session_state.get("pi_credentials") is not None:
+            from fetcher.pipo_directory import (channels_to_csv,
+                                                credentials_to_csv,
+                                                replicate_credentials)
+            _creds = st.session_state["pi_credentials"]
+            _certs = st.session_state.get("pi_cert_refs") or []
+            st.markdown(f"**Credential references found: {len(_creds)}**")
+            if _creds:
+                st.dataframe(
+                    [{"CPI alias": c.alias, "User": c.user, "Auth": c.auth,
+                      "Adapter": c.adapter, "Channels": len(c.channels),
+                      "On tenant": {True: "✅ exists", False: "❌ missing"}
+                      .get(c.exists_in_cpi, "—")} for c in _creds],
+                    use_container_width=True)
+            if _certs:
+                st.caption(f"🔏 {len(_certs)} certificate/keystore "
+                           "reference(s) — private keys can NOT be exported "
+                           "from PI; transport them into the CPI keystore "
+                           "manually (listed in the worksheet).")
+            _needs = st.session_state.get("pi_sec_needs") or []
+            if _needs:
+                st.markdown(f"**Other security material: {len(_needs)} "
+                            "item(s)**")
+                st.dataframe(
+                    [{"Kind": n.kind,
+                      "Automated": "✅ API" if n.automated else "✋ manual",
+                      "Adapter": n.adapter, "Detail": n.detail,
+                      "Channel": n.channel} for n in _needs],
+                    use_container_width=True)
+                _oauth = [n for n in _needs if n.kind == "OAUTH2_CLIENT"]
+                if _oauth and st.button(
+                        f"🚀 Replicate {len(_oauth)} OAuth2 client(s) "
+                        "to CPI", key="pi_oauth_rep"):
+                    if not st.session_state.get("cpi_session"):
+                        st.warning("Connect to the tenant first "
+                                   "(Profiles tab).")
+                    else:
+                        from fetcher.pipo_directory import replicate_oauth2
+                        from fetcher.security_material import \
+                            SecurityMaterialClient
+                        _sm = SecurityMaterialClient(
+                            st.session_state.cpi_base_url,
+                            st.session_state.cpi_session)
+                        _os = replicate_oauth2(
+                            _oauth, _sm,
+                            st.session_state.get("pi_cred_ph")
+                            or "ChangeMe-2026!",
+                            sep=st.session_state.get("word_separator", "_"))
+                        if _os["created"]:
+                            st.success("Created: "
+                                       + ", ".join(_os["created"])
+                                       + " — ⚠ placeholder secrets, re-key")
+                        if _os["existing"]:
+                            st.info("Already exist: "
+                                    + ", ".join(_os["existing"]))
+                        if _os["failed"]:
+                            st.error("Failed: " + ", ".join(_os["failed"]))
+                            for _al, _msg in (_os.get("errors")
+                                              or {}).items():
+                                st.code(f"{_al}: {_msg[:300]}")
+                if any(n.kind.startswith("PGP") for n in _needs):
+                    st.caption(
+                        "🔐 PGP keyrings can NOT be replicated by API: CPI "
+                        "only accepts keyring upload through the UI, and "
+                        "PI never exposes the secret keys. Each PGP row in "
+                        "the worksheet names the key files involved and "
+                        "the exact manual step.")
+            _ph = st.text_input(
+                "Placeholder password for created credentials",
+                value="ChangeMe-2026!", type="password", key="pi_cred_ph",
+                help="PI never returns passwords — every created credential "
+                     "uses this placeholder and is flagged for re-keying.")
+            cba, cbb, cbc = st.columns(3)
+            with cba:
+                if st.button("🔬 Test write access", key="pi_cred_probe",
+                             help="Creates + deletes a probe credential "
+                                  "and shows the exact HTTP outcome — "
+                                  "diagnoses 403 (missing write role), "
+                                  "CSRF, or payload issues in one click."):
+                    if not st.session_state.get("cpi_session"):
+                        st.warning("Connect to the tenant first "
+                                   "(Profiles tab).")
+                    else:
+                        from fetcher.security_material import \
+                            SecurityMaterialClient
+                        _smp = SecurityMaterialClient(
+                            st.session_state.cpi_base_url,
+                            st.session_state.cpi_session)
+                        _pr = _smp.probe_write_access()
+                        (st.success if _pr.startswith("WRITE OK")
+                         else st.error)(_pr)
+                if st.button("🔎 Check against tenant", key="pi_cred_chk"):
+                    if not st.session_state.get("cpi_session"):
+                        st.warning("Connect to the tenant first "
+                                   "(Profiles tab).")
+                    else:
+                        from fetcher.security_material import \
+                            SecurityMaterialClient
+                        _sm = SecurityMaterialClient(
+                            st.session_state.cpi_base_url,
+                            st.session_state.cpi_session)
+                        _sum = replicate_credentials(_creds, _sm, _ph,
+                                                     dry_run=True)
+                        st.info(f"{len(_sum['existing'])} exist · "
+                                f"{len(_sum['missing'])} missing")
+            with cbb:
+                if st.button("🚀 Replicate missing to CPI",
+                             key="pi_cred_rep", type="primary"):
+                    if not st.session_state.get("cpi_session"):
+                        st.warning("Connect to the tenant first "
+                                   "(Profiles tab).")
+                    else:
+                        from fetcher.security_material import \
+                            SecurityMaterialClient
+                        _sm = SecurityMaterialClient(
+                            st.session_state.cpi_base_url,
+                            st.session_state.cpi_session)
+                        _sum = replicate_credentials(_creds, _sm, _ph)
+                        if _sum["created"]:
+                            st.success(f"Created: "
+                                       f"{', '.join(_sum['created'])} — "
+                                       "⚠ placeholder passwords, re-key "
+                                       "before go-live")
+                        if _sum["failed"]:
+                            st.error(f"Failed: {', '.join(_sum['failed'])}")
+                            for _al, _msg in (_sum.get("errors")
+                                              or {}).items():
+                                st.code(f"{_al}: {_msg[:300]}")
+                        if not _sum["created"] and not _sum["failed"]:
+                            st.info("Nothing to create — all credentials "
+                                    "already exist.")
+            with cbc:
+                st.download_button(
+                    "⬇ Credentials worksheet (CSV)",
+                    credentials_to_csv(
+                        _creds, _certs,
+                        st.session_state.get("pi_sec_needs")),
+                    file_name="pi_credentials_worksheet.csv",
+                    key="pi_cred_csv")
+                st.download_button(
+                    "⬇ Channels inventory (CSV)",
+                    channels_to_csv(st.session_state.get("pi_channels")
+                                    or []),
+                    file_name="pi_channels.csv", key="pi_ch_csv")
+
+    elif source_type == "📡 Pull from CPI tenant":
+        st.info("Multi-tenant: pulls packages straight from a CPI tenant "
+                "and runs them through the same pipeline as uploaded "
+                "exports. The SOURCE connection comes from the sidebar "
+                "('📡 Source tenant' expander) and falls back to the "
+                "target connection — for a same-tenant showcase just "
+                "connect normally and click 'Use target connection as "
+                "source'.")
+        _render_tenant_pull(expanded=True)
 
     elif source_type == "Upload package / ZIP":
         st.info("Upload one or more exported PI/PO integration packages, CPI "
@@ -2746,6 +3354,8 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
                 ".tar, .tar.gz, .tgz, .tar.bz2. Max size 10 GB each. "
                 "Interfaces are counted as iFlows (ICOs) inside the archive — "
                 "including nested package zips — not as packages.")
+        _render_tenant_pull(expanded=False)
+
         uploaded_files = st.file_uploader(
             "Choose archive file(s) (.zip / .tar / .tar.gz / .tgz / .tar.bz2)",
             type=["zip", "tar", "gz", "tgz", "bz2"],
@@ -2767,101 +3377,15 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
                 st.rerun()
 
         if uploaded_files and parse_clicked:
-            from fetcher.artifact_router import extract_iflows_recursive
-            from extractor.pi_extractor import InterfaceRecord
-            from extractor.iflow_parser import extract_endpoints
             with st.spinner(f"Parsing {len(uploaded_files)} archive(s)…"):
-                fetcher = CPIFetcher(
-                    base_url=st.session_state.cpi_base_url or "http://localhost",
-                    session=st.session_state.cpi_session,
-                )
-                # Start fresh for this parse action, but accumulate across the
-                # multiple files selected in THIS upload.
-                pkgs = []
-                all_records = []
-                all_arts = []
-                parse_errors = []
-                for uf in uploaded_files:
-                    try:
-                        raw = uf.read()
-                        # Count/identify iFlows recursively (interfaces/ICOs).
-                        flows = extract_iflows_recursive(raw)
-                        # Keep the artifacts too (for Tab 3 matching / details).
-                        try:
-                            arts = fetcher.download_from_upload(raw, uf.name)
-                        except Exception:
-                            arts = []
-                        all_arts.extend(arts)
-                        # One InterfaceRecord per iFlow (NOT per package).
-                        for fl in flows:
-                            _ep = extract_endpoints(fl.get("iflw_xml", ""))
-                            _snd = _ep.get("sender_system", "")
-                            _rcv = _ep.get("receiver_system", "")
-                            all_records.append(InterfaceRecord(
-                                id=fl["id"], name=fl["name"],
-                                namespace="", software_component="",
-                                sender_system=_snd, receiver_system=_rcv,
-                                sender_adapter=(_ep.get("sender_adapter")
-                                                or ("HTTPS" if _snd else "")),
-                                receiver_adapter=(_ep.get("receiver_adapter")
-                                                  or ("HTTPS" if _rcv else "")),
-                                message_interface="", description="",
-                                source_iflow_xml=fl.get("iflw_xml", ""),
-                            ))
-                        pkgs.append({
-                            "filename": uf.name,
-                            "bytes": raw,
-                            "iflow_count": len(flows),
-                            "iflows": [{"id": f["id"], "name": f["name"],
-                                        "iflw_xml": f.get("iflw_xml", "")}
-                                       for f in flows],
-                        })
-                    except Exception as exc:
-                        parse_errors.append((uf.name, str(exc)))
-
-                # Accumulate onto any previously-uploaded packages, de-duping by
-                # filename so re-parsing the same selection doesn't double-count.
-                existing = {p["filename"]: p
-                            for p in st.session_state.uploaded_packages}
-                for p in pkgs:
-                    existing[p["filename"]] = p
-                st.session_state.uploaded_packages = list(existing.values())
-
-                # Rebuild interfaces/assessments from ALL uploaded packages so
-                # the count reflects everything currently loaded.
-                merged_records = []
-                seen_ids = set()
-                for p in st.session_state.uploaded_packages:
-                    for fl in p["iflows"]:
-                        if fl["id"] in seen_ids:
-                            continue
-                        seen_ids.add(fl["id"])
-                        _ep = extract_endpoints(fl.get("iflw_xml", ""))
-                        _snd = _ep.get("sender_system", "")
-                        _rcv = _ep.get("receiver_system", "")
-                        merged_records.append(InterfaceRecord(
-                            id=fl["id"], name=fl["name"],
-                            namespace="", software_component="",
-                            sender_system=_snd, receiver_system=_rcv,
-                            sender_adapter=(_ep.get("sender_adapter")
-                                            or ("HTTPS" if _snd else "")),
-                            receiver_adapter=(_ep.get("receiver_adapter")
-                                              or ("HTTPS" if _rcv else "")),
-                            message_interface="", description="",
-                            source_iflow_xml=fl.get("iflw_xml", ""),
-                        ))
-                analyzer = ComplexityAnalyzer({})
-                st.session_state.interfaces  = merged_records
-                st.session_state.assessments = analyzer.assess_all(merged_records)
-                st.session_state.all_artifacts = all_arts
-
-                total = len(merged_records)
-                npkg = len(st.session_state.uploaded_packages)
+                total, npkg, parse_errors = _ingest_archive_items(
+                    [(uf.name, uf.read()) for uf in uploaded_files])
                 st.success(f"✅ {total} interface(s) (iFlows) across {npkg} "
                            f"uploaded package(s) — go to Tab 2 to assess, or "
                            f"Tab 5 to upload to the tenant.")
                 if parse_errors:
-                    with st.expander(f"⚠ {len(parse_errors)} file(s) failed to parse"):
+                    with st.expander(f"⚠ {len(parse_errors)} file(s) "
+                                     "failed to parse"):
                         for nm, err in parse_errors:
                             st.markdown(f"- **{nm}**: {err}")
 
@@ -2902,7 +3426,7 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
                                      format_func=lambda x: x if x == "(any)" else DESTINATION_REGISTRY.get(x, type("",(),{"label":x})()).label,
                                      key="gh_target")
         with fc4:
-            gh_complexity = st.selectbox("Complexity hint", ["(any)", "LOW", "MEDIUM", "HIGH"], key="gh_complexity")
+            gh_complexity = st.selectbox("Size hint", ["(any)", "S", "M", "L", "XL"], key="gh_complexity")
 
         col_a, col_b, col_c = st.columns([2, 2, 3])
         with col_a:
@@ -2928,7 +3452,8 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
                         query=gh_query,
                         adapter=gh_adapter if gh_adapter != "(any)" else "",
                         target_id=gh_target if gh_target != "(any)" else "",
-                        complexity=gh_complexity if gh_complexity != "(any)" else "",
+                        complexity={"S": "LOW", "M": "MEDIUM", "L": "HIGH",
+                                    "XL": "HIGH"}.get(gh_complexity, ""),
                         top_n=gh_max_results,
                     )
                     st.session_state["gh_packages"] = packages
@@ -3109,11 +3634,11 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
                             st.warning(f"⚠ {pkg.name}: {e}")
 
                 if all_records:
-                    from analyzer.complexity_analyzer import ComplexityAnalyzer
+                    from analyzer.ma_assessments import assess_records
                     existing = st.session_state.interfaces or []
                     all_ifaces = existing + all_records
                     st.session_state.interfaces = all_ifaces
-                    st.session_state.assessments = ComplexityAnalyzer({}).assess_all(all_ifaces)
+                    st.session_state.assessments = assess_records(all_ifaces)
                     st.success(f"✅ Imported {len(all_records)} interfaces from SAP GitHub — go to Tab 2")
 
         # Cache status
@@ -3155,9 +3680,9 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
                     tmp.write_bytes(uploaded_xl.read())
                     extractor = PIFileExtractor(str(tmp))
                     records   = extractor.extract_all()
-                    analyzer  = ComplexityAnalyzer({})
+                    from analyzer.ma_assessments import assess_records
                     st.session_state.interfaces  = records
-                    st.session_state.assessments = analyzer.assess_all(records)
+                    st.session_state.assessments = assess_records(records)
                     st.success(f"✅ Loaded {len(records)} interfaces from Excel")
                 except Exception as e:
                     st.error(f"Read failed: {e}")
@@ -3179,9 +3704,11 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
                     tmp.write_bytes(uploaded_ma.read())
                     report = parse_sap_ma_excel(str(tmp))
 
-                    analyzer = ComplexityAnalyzer({})
+                    from analyzer.ma_assessments import assess_records
                     st.session_state.interfaces  = report.interfaces
-                    st.session_state.assessments = analyzer.assess_all(report.interfaces)
+                    # MODE 1: completely loyal to the MA file's weights,
+                    # bands and Est. Effort — no re-scoring
+                    st.session_state.assessments = assess_records(report.interfaces)
                     st.session_state["sap_ma_summary"] = report.summary
                     st.session_state["sap_ma_rules"]   = report.rules
                     st.session_state["sap_ma_report"]  = report
@@ -3247,6 +3774,179 @@ Select **"SAP Migration Assessment (Excel)"** as the source type below, upload t
 # ═══════════════════════════════════════════════════════════════════════════════
 # TAB 2 — INTERFACE BROWSER
 # ═══════════════════════════════════════════════════════════════════════════════
+
+    # ═══ 📚 LIBRARY — the distilled, growing, deletable-source asset ═══
+    # Additive content-hash store (library_builder/library_store.py):
+    # re-extraction adds only unseen content; client-tenant harvests stay
+    # in scoped workspaces (client IP) unless explicitly promoted.
+    st.divider()
+    with st.expander("📚 Library — extract, grow, compare", expanded=False):
+        from library_builder.library_store import LibraryStore
+        from fetcher.user_settings import (get_setting as _lb_gs,
+                                            set_setting as _lb_ss)
+        _lb_default = str(_RESOURCES_ROOT / "Library")
+        _lb_dir = st.text_input("Library folder", value=_lb_gs(
+            "library_dir", _lb_default), key="lib_dir")
+        if _lb_dir != _lb_gs("library_dir", _lb_default):
+            _lb_ss("library_dir", _lb_dir)
+        _lib = LibraryStore(_lb_dir)
+        _stat = _lib.stats()
+        sc1, sc2, sc3 = st.columns(3)
+        sc1.metric("Unique files", _stat["unique_files"])
+        sc2.metric("Size", f"{_stat['bytes'] // 1024 // 1024} MB")
+        sc3.metric("Client workspaces", len(_lib.scopes()))
+        if _stat["by_ext"]:
+            st.caption(" · ".join(f"{k} {v}" for k, v in
+                                  list(_stat["by_ext"].items())[:8]))
+
+        lc1, lc2 = st.columns(2)
+        with lc1:
+            if st.button("📥 Extract uploaded packages → library",
+                         key="lib_from_uploads",
+                         disabled=not st.session_state.get(
+                             "uploaded_packages")):
+                _tot = [0, 0]
+                for _p in st.session_state.uploaded_packages:
+                    _r = _lib.add_from_zip(_p["bytes"],
+                                           source=_p["filename"])
+                    _tot[0] += _r.added; _tot[1] += _r.duplicates
+                st.success(f"+{_tot[0]} new, {_tot[1]} already known")
+                st.rerun()
+        with lc2:
+            _lb_src = st.text_input(
+                "…or local packages folder", key="lib_src_dir",
+                placeholder=str(_RESOURCES_ROOT / "Packages"))
+            if st.button("📥 Extract folder → library",
+                         key="lib_from_dir", disabled=not _lb_src):
+                import os as _os
+                if _os.path.isdir(_lb_src):
+                    _r = _lib.add_from_dir(_lb_src)
+                    st.success(f"+{_r.added} new, {_r.duplicates} known, "
+                               f"{_r.skipped} skipped")
+                    st.rerun()
+                else:
+                    st.error("folder not found")
+
+        # ── safe-to-delete check ─────────────────────────────────────
+        _cv_src = st.text_input("Coverage check — folder of package zips",
+                                key="lib_cov_dir",
+                                placeholder="(does the library fully "
+                                            "cover this folder?)")
+        if st.button("🔍 Check coverage", key="lib_cov_btn",
+                     disabled=not _cv_src):
+            import os as _os
+            if _os.path.isdir(_cv_src):
+                _cv = _lib.coverage(_cv_src)
+                if _cv["safe_to_delete"]:
+                    st.success(f"✅ {_cv['covered']}/{_cv['total']} "
+                               f"(100%) — the library fully covers this "
+                               f"folder; deleting the raw zips loses "
+                               f"nothing the resolver needs.")
+                else:
+                    st.warning(f"⚠ {_cv['covered']}/{_cv['total']} "
+                               f"({_cv['pct']}%) covered — extract this "
+                               f"folder first; do NOT delete yet.")
+            else:
+                st.error("folder not found")
+
+        # ── tenant harvest → CLIENT WORKSPACE (never the main library) ──
+        st.markdown("**🛰 Harvest tenant content** — lands in a scoped "
+                    "client workspace; promote individual files to the "
+                    "main library explicitly.")
+        _scope = st.text_input("Client workspace label", key="lib_scope",
+                               placeholder="acme-prod")
+        if st.button("⬇ Pull all tenant packages → workspace",
+                     key="lib_pull_btn", disabled=not _scope):
+            _src_sess = (st.session_state.get("cpi_source_session")
+                         or st.session_state.get("cpi_session"))
+            _src_url = (st.session_state.get("cpi_source_base_url")
+                        or st.session_state.get("cpi_base_url"))
+            if not _src_sess:
+                st.error("Connect a tenant first (sidebar).")
+            else:
+                _f = CPIFetcher(base_url=_src_url, session=_src_sess)
+                try:
+                    _pids = [p.get("Id") for p in
+                             (_f.list_packages() or [])]
+                except Exception as _e:
+                    _pids = []
+                    st.error(f"package list failed: {_e}")
+                _new = _known = _failed = 0
+                _prog = st.progress(0)
+                for _i, _pid in enumerate(_pids):
+                    try:
+                        _zb = _f.download_package_zip(_pid)
+                        _r = _lib.add_from_zip(
+                            _zb, source=f"tenant:{_pid}", scope=_scope)
+                        _new += _r.added; _known += _r.duplicates
+                    except Exception:
+                        _failed += 1
+                    _prog.progress((_i + 1) / max(1, len(_pids)))
+                st.success(f"Workspace '{_scope}': +{_new} files the "
+                           f"library didn't have, {_known} already "
+                           f"known, {_failed} package(s) failed")
+
+        # ── promote from a workspace ─────────────────────────────────
+        if _lib.scopes():
+            _pr_scope = st.selectbox("Promote from workspace",
+                                     _lib.scopes(), key="lib_pr_scope")
+            _pr_idx = _lib.load_index(_pr_scope)
+            _pr_opts = {f"{e['names'][0].rsplit('/', 1)[-1]}  "
+                        f"({e['ext']}, {e['size']}B)": _sha
+                        for _sha, e in _pr_idx.items()}
+            if _pr_opts:
+                _pr_pick = st.selectbox("File", list(_pr_opts),
+                                        key="lib_pr_pick")
+                if st.button("⬆ Promote to main library",
+                             key="lib_pr_btn"):
+                    if _lib.promote(_pr_opts[_pr_pick], _pr_scope):
+                        st.success("Promoted.")
+                        st.rerun()
+
+        # ── conversion linter: 3-layer reference (SAP API + GDK 2.4/4.0
+        #    extracted from Apache source + stdlib heuristics) ──────────
+        if st.button("🔬 Lint library scripts (Groovy 2.4 vs 4.0.29 "
+                     "runtime)", key="lib_lint_btn"):
+            from tools.script_lint import lint_corpus
+            _sm = lint_corpus(_lib.as_corpus())
+            v = _sm["verdicts"]
+            lm1, lm2, lm3, lm4 = st.columns(4)
+            lm1.metric("Runs on both", v.get("both", 0))
+            lm2.metric("4.x-only", v.get("needs_4_runtime", 0))
+            lm3.metric("Breaks on 4.0.29", v.get("breaks_on_4", 0))
+            lm4.metric("Review", v.get("review", 0))
+            if _sm["breaks_on_4"]:
+                st.error("These import groovy.util XML classes that were "
+                         "REMOVED in Groovy 4 — they fail on the 4.0.29 "
+                         "runtime:")
+                for _k in _sm["breaks_on_4"]:
+                    st.markdown(f"- `{_k.rsplit('/', 1)[-1]}`")
+            if _sm["unknown_calls"]:
+                st.caption("Unresolved calls (custom helpers or typos): "
+                           + ", ".join(f"{k}×{c}" for k, c in sorted(
+                               _sm["unknown_calls"].items(),
+                               key=lambda kv: -kv[1])[:8]))
+
+        # ── persisted, additive capability catalog ───────────────────
+        if st.button("🧠 Rebuild capability catalog (additive merge)",
+                     key="lib_cat_btn"):
+            _corpus = _lib.as_corpus()
+            _by_type = {"groovy": {}, "xslt": {}, "mmap": {}, "schema": {},
+                        "js": {}, "props": {}, "iflw": {}}
+            for _k, _t in _corpus.items():
+                _e = "." + _k.rsplit(".", 1)[-1].lower()
+                _kind = {".groovy": "groovy", ".gsh": "groovy",
+                         ".xsl": "xslt", ".xslt": "xslt", ".mmap": "mmap",
+                         ".xsd": "schema", ".wsdl": "schema",
+                         ".edmx": "schema", ".js": "js", ".prop": "props",
+                         ".propdef": "props", ".iflw": "iflw"}.get(_e)
+                if _kind:
+                    _by_type[_kind][_k] = _t
+            _cat = _lib.merged_catalog(_by_type)
+            st.success("Catalog merged: " + " · ".join(
+                f"{_k}: {(_v.get('count') if isinstance(_v, dict) else None) or len(_v.get('capabilities', _v.get('identities', []))) if isinstance(_v, dict) else '?'}"
+                for _k, _v in _cat.items()))
+
 
 with tab2:
     st.header("Interface Browser")
@@ -3485,315 +4185,6 @@ with tab2:
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # TAB 3 — MATCH STANDARD IFLOW
-# ═══════════════════════════════════════════════════════════════════════════════
-
-with tab3:
-    st.header("Match Standard iFlow")
-
-    # ── Local source folders (set once here, persisted; no CLI needed) ────
-    # These feed the Generate step (capability corpus) and the deploy step
-    # (clone-and-adapt template library). Empty paths are why those came up
-    # blank before — set them here, once.
-    from fetcher.user_settings import (get_setting as _gs_path,
-                                        set_setting as _ss_path)
-
-    def _pick_folder_dialog():
-        """Native folder chooser on the user's desktop (this app runs locally).
-        Returns a path, or '' if unavailable/cancelled."""
-        try:
-            import tkinter as _tk
-            from tkinter import filedialog as _fd
-            _root = _tk.Tk()
-            _root.withdraw()
-            _root.wm_attributes("-topmost", 1)
-            picked = _fd.askdirectory(master=_root) or ""
-            _root.destroy()
-            return picked
-        except Exception:
-            return ""
-
-    def _folder_input(label, setting_key, widget_key, help_text):
-        # apply a pending Browse result BEFORE the widget is instantiated
-        # (Streamlit forbids mutating a widget's state after creation)
-        pend = widget_key + "_pending"
-        if pend in st.session_state:
-            st.session_state[widget_key] = st.session_state.pop(pend)
-        if widget_key not in st.session_state:
-            st.session_state[widget_key] = _gs_path(setting_key, "")
-        col_in, col_btn = st.columns([5, 1])
-        with col_in:
-            val = st.text_input(label, key=widget_key, help=help_text)
-        with col_btn:
-            st.markdown("<div style='height:1.75em'></div>", unsafe_allow_html=True)
-            if st.button("📁 Browse", key=widget_key + "_browse"):
-                picked = _pick_folder_dialog()
-                if picked:
-                    st.session_state[pend] = picked
-                    _ss_path(setting_key, picked)
-                    st.rerun()
-                else:
-                    st.caption("(no dialog — paste path)")
-        if val and val != _gs_path(setting_key, ""):
-            _ss_path(setting_key, val)
-        if val and os.path.isdir(val):
-            try:
-                n = sum(1 for _ in os.scandir(val))
-                st.caption(f"✓ found — {n} entr(y/ies)")
-            except OSError:
-                st.caption("✓ set")
-        elif val:
-            st.caption("⚠ folder not found on disk")
-
-    with st.expander("📁 Local libraries — fixed paths (edit in code, not here)",
-                     expanded=True):
-        def _folder_status(label, setting_key):
-            p = PINNED_LOCAL_DIRS.get(setting_key, "")
-            if p and os.path.isdir(p):
-                try:
-                    n = sum(1 for _ in os.scandir(p))
-                    st.caption(f"**{label}**: `{p}` — ✓ {n} entr(y/ies)")
-                except OSError:
-                    st.caption(f"**{label}**: `{p}` — ✓ set")
-            else:
-                st.caption(f"**{label}**: `{p}` — ⚠ not found on disk")
-        _folder_status("Packages (deploy template ranking)", "template_library_dir")
-        _folder_status("Corpus (Generate artifact learning)", "capability_corpus_dir")
-        _folder_status("Schemas (canonical_library)", "schema_library_dir")
-
-    if not st.session_state.selected:
-        st.info("Select interfaces in **Tab 2** first.")
-    else:
-        # ── Source selector + Hub auth status ─────────────────────────
-        from fetcher.user_settings import get_setting as _get_setting
-        hub_api_key = st.session_state.cfg.get("destinations", {}).get(
-            "hub_api_key", "") or _get_setting("hub_api_key", "")
-        ms1, ms2 = st.columns([2, 3])
-        with ms1:
-            mode_label = st.selectbox(
-                "Match source",
-                options=["Computer (local library)", "Tenant"],
-                index=0,
-                key="tab3_source_mode",
-                help=("Computer (default): match against the local library "
-                      "folder above — what actually gets cloned on deploy. "
-                      "Tenant: also pull match candidates from your CPI tenant."),
-            )
-        _use_tenant = (mode_label == "Tenant")
-        with ms2:
-            st.caption("Sources: local templates" + (" + CPI tenant" if _use_tenant
-                       else "") + " (Business Accelerator Hub and GitHub are "
-                       "disabled).")
-
-        # Hub + GitHub are unpaired — sources are computer or tenant only.
-        hub_client_inst = None
-        samples_browser_inst = None
-        active_mode = MatchMode.TENANT_ONLY  # local_tpls are added separately
-
-        # Only reach for the tenant when the user explicitly chose it. In
-        # Computer mode the local library (loaded per-interface below as
-        # local_tpls) is the match source, so we don't load — or warn about —
-        # tenant artifacts.
-        if _use_tenant and not st.session_state.all_artifacts:
-            with st.spinner("Loading CPI artifacts…"):
-                if st.session_state.cpi_connected and st.session_state.cpi_session:
-                    try:
-                        fetcher = CPIFetcher(
-                            st.session_state.cpi_base_url,
-                            st.session_state.cpi_session,
-                        )
-                        st.session_state.all_artifacts = fetcher.list_all_artifacts()
-                        st.success(f"Loaded {len(st.session_state.all_artifacts)} artifacts from CPI tenant")
-                    except Exception as e:
-                        st.warning(f"CPI fetch failed ({e}) — using local templates")
-                        fetcher = CPIFetcher("http://localhost", None)
-                        st.session_state.all_artifacts = fetcher._load_local_artifacts()
-
-        artifacts     = st.session_state.all_artifacts if _use_tenant else []
-        assessments   = st.session_state.assessments
-        artifact_map  = {a.id: a for a in artifacts}
-
-        if _use_tenant and not artifacts:
-            st.warning("No artifacts found on the tenant. Connect CPI in the "
-                       "sidebar, or switch Match source back to Computer.")
-
-        for _row_i, name in enumerate(st.session_state.selected):
-            assessment = next((a for a in assessments if a.interface.name == name), None)
-            if not assessment:
-                continue
-            iface = assessment.interface
-            _bsz, _bwt = _ma_size_weight(iface)
-
-            with st.expander(f"**{name}** — {iface.sender_adapter} → {iface.receiver_adapter}  `{_bsz}` (w{_bwt})", expanded=True):
-                mc1, mc2 = st.columns([1, 2])
-
-                with mc1:
-                    # Destination target
-                    target_ids   = list(DESTINATION_REGISTRY.keys())
-                    current_tid  = st.session_state.target_ids.get(name) \
-                        or _default_target_for(iface, target_ids)
-                    chosen_tid   = st.selectbox(
-                        "Destination target",
-                        options=target_ids,
-                        index=target_ids.index(current_tid) if current_tid in target_ids else 0,
-                        format_func=lambda x: DESTINATION_REGISTRY[x].label,
-                        key=f"target_{_row_i}_{name}",
-                    )
-                    st.session_state.target_ids[name] = chosen_tid
-
-                    # Suggest matches via the aggregator (tenant + Hub + GitHub)
-                    fetcher_local = CPIFetcher("http://localhost", None)
-                    aggregator    = MatchAggregator(
-                        cpi_fetcher=fetcher_local,
-                        hub_client=hub_client_inst,
-                        samples_browser=samples_browser_inst,
-                    )
-                    match_results = aggregator.find_matches(
-                        interface_name=name,
-                        sender_adapter=iface.sender_adapter,
-                        receiver_adapter=iface.receiver_adapter,
-                        target_id=chosen_tid,
-                        tenant_artifacts=artifacts,
-                        mode=active_mode,
-                    )
-
-                    # Source-tagged labels in the dropdown
-                    def _label(r):
-                        badge = {"Tenant": "🏠", "Hub": "🌐",
-                                 "GitHub Recipes": "📚"}.get(r.source.value, "•")
-                        pkg = f" [{r.package_id}]" if r.package_id else ""
-                        return f"{badge} {r.source.value}: {r.name}{pkg}"
-
-                    # Local library (the user's own packages folder) — ranked by
-                    # this interface's adapters. These are what actually get cloned
-                    # on deploy, so they lead the list and the top one is the
-                    # auto-recommendation.
-                    from fetcher.user_settings import get_dir as _get_dir
-                    from scaffolder.template_library import rank_templates as _rank_tpls
-                    lib_dir = _get_dir("template_library_dir")
-                    local_tpls = []
-                    if lib_dir:
-                        try:
-                            local_tpls = _rank_tpls(
-                                lib_dir, sender=iface.sender_adapter,
-                                receiver=iface.receiver_adapter, top_n=8)
-                        except Exception:
-                            local_tpls = []
-                    local_by_label = {f"📁 Local library: {t.name}": t.name
-                                      for t in local_tpls}
-                    local_labels = list(local_by_label.keys())
-
-                    art_options  = (["(none — use generic template)"]
-                                    + local_labels
-                                    + [_label(r) for r in match_results])
-
-                    # Default: a prior explicit pick wins; else a prior tenant
-                    # match; else auto-recommend the best local match.
-                    prior_local   = st.session_state.local_template_choice.get(name, "")
-                    current_match = st.session_state.matches.get(name)
-                    current_idx   = 0
-                    prior_local_label = f"📁 Local library: {prior_local}"
-                    if prior_local and prior_local_label in art_options:
-                        current_idx = art_options.index(prior_local_label)
-                    elif current_match:
-                        for i, r in enumerate(match_results):
-                            if r.id == getattr(current_match, "id", ""):
-                                current_idx = 1 + len(local_labels) + i
-                    elif local_labels:
-                        current_idx = 1  # auto-recommend the top local match
-
-                    chosen_label = st.selectbox(
-                        "Standard iFlow",
-                        options=art_options,
-                        index=current_idx,
-                        key=f"match_{_row_i}_{name}",
-                    )
-                    if local_labels and chosen_label in local_by_label \
-                            and current_idx == 1 and not prior_local:
-                        st.caption("✨ Auto-recommended from your library "
-                                   f"(top of {len(local_tpls)} adapter matches) — "
-                                   "used as a reference match (informational).")
-                    chosen_result = None
-                    chosen_art    = None  # tenant artifact, set only for tenant picks
-                    chosen_local  = ""
-                    if chosen_label in local_by_label:
-                        chosen_local = local_by_label[chosen_label]
-                    elif chosen_label != "(none — use generic template)":
-                        for r in match_results:
-                            if _label(r) == chosen_label:
-                                chosen_result = r
-                                if r.source == MatchSource.TENANT:
-                                    chosen_art = r.raw
-                                break
-                    # Remember the explicit local pick so deploy clones THAT one.
-                    st.session_state.local_template_choice[name] = chosen_local
-                    st.session_state.matches[name] = chosen_art  # tenant only — keeps legacy callers safe
-
-                    # Update config with chosen target; tenant-source matches
-                    # also set std_iflow_id/package the way they always did
-                    if name in st.session_state.configs:
-                        st.session_state.configs[name].target_id = chosen_tid
-                        if chosen_art:
-                            st.session_state.configs[name].std_iflow_id      = chosen_art.id
-                            st.session_state.configs[name].std_iflow_package  = chosen_art.package_id
-
-                with mc2:
-                    if chosen_art:
-                        # Tenant artifact — original tenant-specific rendering
-                        st.markdown(f"**{chosen_art.name}**")
-                        st.caption(f"Package: `{chosen_art.package_id}` · Version: `{chosen_art.version}`")
-                        if chosen_art.description:
-                            st.write(chosen_art.description)
-                        st.markdown(f"**Adapters:** `{chosen_art.adapter_summary}`")
-                        if chosen_art.parameters:
-                            st.markdown("**Externalized parameters:**")
-                            param_df = [{"Parameter": k, "Default": v}
-                                        for k, v in chosen_art.parameters.items()]
-                            import pandas as pd
-                            st.dataframe(pd.DataFrame(param_df), hide_index=True,
-                                         use_container_width=True)
-
-                            if st.button(f"⬇ Download from CPI", key=f"dl_{_row_i}_{name}",
-                                         disabled=not st.session_state.cpi_connected):
-                                with st.spinner(f"Downloading {chosen_art.id}…"):
-                                    try:
-                                        dl_fetcher = CPIFetcher(
-                                            st.session_state.cpi_base_url,
-                                            st.session_state.cpi_session,
-                                        )
-                                        dl_fetcher.download_artifact(chosen_art)
-                                        st.success(f"✓ Downloaded to templates/{chosen_art.package_id}/{chosen_art.id}/")
-                                    except Exception as e:
-                                        st.error(str(e))
-                    elif chosen_result is not None:
-                        # Hub or GitHub result — show source-specific metadata
-                        src = chosen_result.source.value
-                        badge = "🌐 Business Accelerator Hub" if chosen_result.source == MatchSource.HUB \
-                                else "📚 SAP GitHub Recipe"
-                        st.markdown(f"**{chosen_result.name}**")
-                        st.caption(f"Source: {badge}")
-                        if chosen_result.description:
-                            st.write(chosen_result.description)
-                        if chosen_result.url:
-                            st.markdown(f"[Open in browser ↗]({chosen_result.url})")
-                        if chosen_result.artifact_count:
-                            st.caption(f"Contains {chosen_result.artifact_count} iFlows")
-                        st.info("This is a reference package, not a tenant artifact. "
-                                "Open it on its source to download / browse, then upload "
-                                "to your tenant via Tab 5.")
-                    else:
-                        st.info("No standard iFlow selected — a generic template will be used.")
-                        target = DESTINATION_REGISTRY.get(chosen_tid)
-                        if target:
-                            st.markdown("**Target migration hints:**")
-                            for h in target.migration_hints[:4]:
-                                st.markdown(f"- {h}")
-
-        if st.button("✅ Confirm matches → Configure", type="primary"):
-            st.success("Matches confirmed. Go to **Tab 4** to configure each interface.")
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# TAB 4 — CONFIGURE
 # ═══════════════════════════════════════════════════════════════════════════════
 
 with tab4:
@@ -4063,21 +4454,6 @@ with tab4:
                         value=cfg_obj.message.xslt_program,
                         key=f"xslt_{chosen_iface}")
 
-                # Show standard iFlow parameters if available
-                match = st.session_state.matches.get(chosen_iface)
-                if match and match.parameters:
-                    st.divider()
-                    st.subheader("Standard iFlow parameter values")
-                    st.caption("These parameters come from the selected standard iFlow. Fill in client-specific values.")
-                    extra = cfg_obj.message.__dict__.get("extra", {})
-                    for param_key, default_val in match.parameters.items():
-                        user_val = st.text_input(
-                            param_key, value=extra.get(param_key, default_val),
-                            key=f"param_{chosen_iface}_{param_key}")
-                        if not hasattr(cfg_obj.message, "extra"):
-                            cfg_obj.message.__dict__["extra"] = {}
-                        cfg_obj.message.__dict__["extra"][param_key] = user_val
-
             # ── Reliability ───────────────────────────────────────────
             with cfg_tabs[3]:
                 st.subheader("Error handling & reliability")
@@ -4227,7 +4603,6 @@ with tab5:
             cfg_obj = configs.get(name)
             tid = target_ids.get(name, "?")
             target_label = DESTINATION_REGISTRY.get(tid, type("", (), {"label": tid})()).label
-            match = st.session_state.matches.get(name)
             if a:
                 _gsz, _gwt, _gd, _glo, _ghi = _ma_assess(a.interface)
                 _tot_lo += _glo
@@ -4240,7 +4615,6 @@ with tab5:
                 "Size":         _gsz,
                 "Weight":       _gwt,
                 "Effort (d)":   f"{_glo:g}–{_ghi:g}" if a else "?",
-                "Std iFlow":    match.name if match else "Generic template",
                 "Sender":       cfg_obj.sender_adapter if cfg_obj else "?",
                 "Receiver":     cfg_obj.receiver_adapter if cfg_obj else "?",
                 "Async":        "✓" if (cfg_obj and cfg_obj.message.is_async) else "",
@@ -4263,6 +4637,18 @@ with tab5:
             selected_assessments = [a for a in assessments
                                     if a.interface.name in selected]
             unique_targets = list(set(target_ids.values()))
+
+            # Clean-core analysis runs automatically (former Tab 6) so the
+            # generated reports always carry RISE/clean-core verdicts —
+            # generation itself already follows clean-core patterns.
+            try:
+                _cc = CleanCoreAnalyzer()
+                for _a in selected_assessments:
+                    _cfg = st.session_state.configs.get(_a.interface.name)
+                    st.session_state.clean_core[_a.interface.name] = \
+                        _cc.analyze_record(_a.interface, cfg=_cfg)
+            except Exception as _ccerr:
+                logger.warning("clean-core auto-run skipped: %s", _ccerr)
 
             # Build resolutions
             from fetcher.user_settings import get_setting as _get_setting
@@ -4313,9 +4699,15 @@ with tab5:
                     st.error(f"Pipeline generation failed: {e}")
             else:
                 templates_dir = str(ROOT / "templates")
+                _eh_now = st.session_state.get("gold_eh_variant")
+                st.caption("Gold-standard error handling: "
+                           + (_eh_now or "off — pure fidelity")
+                           + " (set via the selector in the upload section)")
                 scaffolder    = IFlowScaffolder(templates_dir=templates_dir,
                                                 output_dir=output_dir,
-                                                resources_dir=PINNED_LOCAL_DIRS["template_library_dir"])
+                                                resources_dir=PINNED_LOCAL_DIRS["template_library_dir"],
+                                                extra_resources=st.session_state.get("uploaded_resources"), passthrough=st.session_state.get("uploaded_passthrough"),
+                                                gold_error_handling=st.session_state.get("gold_eh_variant"), gold_eh_replace=bool(st.session_state.get("gold_eh_replace")), gold_eh_notify=bool(st.session_state.get("gold_eh_notify")), gold_eh_sftp=bool(st.session_state.get("gold_eh_sftp")), gold_eh_company=st.session_state.get("company_code", ""))
                 # Load the learned capability corpus ONCE (heavy; cached). When
                 # available, generate_bundle pulls REAL learned artifacts instead
                 # of generic templates. Falls back to template-mode (corpus=None)
@@ -4451,94 +4843,13 @@ with tab5:
             res_df = pd.DataFrame(results)[["interface", "status", "file"]]
             st.dataframe(res_df, hide_index=True, use_container_width=True)
 
-            # Download button
-            zip_bytes = _build_zip()
-            st.download_button(
-                label="⬇ Download all (.zip)",
-                data=zip_bytes,
-                file_name=f"cpi_migration_{datetime.now().strftime('%Y%m%d_%H%M')}.zip",
-                mime="application/zip",
-                type="primary",
+            # Deploy directly under Results — generate, review, push. The two
+            # disk-export buttons inside the deploy section cover every
+            # manual-import case; everything below is review material.
+            render_deploy_section(
+                selected_assessments, configs,
+                unique_targets, output_dir
             )
-
-            # ── Manual-import diagnostic ──
-            # Build the exact per-iFlow zip that WOULD be uploaded, so it can
-            # be imported manually in CPI (Design → Integrations → Import) to
-            # get a real error if the API upload keeps failing.
-            with st.expander("📦 Download importable package zips"):
-                st.caption("⚠ Import the downloaded **.zip** itself — do NOT "
-                           "unzip it. In CPI: Design → (your package) → Edit → "
-                           "Add → Integration Flow → Upload, OR Design → "
-                           "Integrations → Import, and select the .zip. CPI "
-                           "rejects loose .iflw/.mmap/.groovy files — it only "
-                           "accepts the zipped bundle (which is what this is).")
-                from fetcher.cpi_uploader import CPIUploader
-                for _row_i, r in enumerate(results):
-                    fpath = r.get("file")
-                    if not fpath or not Path(fpath).exists():
-                        continue
-                    name = r["interface"]
-                    try:
-                        extra = st.session_state.get("artifact_bundles", {}).get(name)
-                        zdata = CPIUploader._package_iflow(
-                            Path(fpath),
-                            CPIUploader.sanitize_package_id(name),
-                            name, "", extra_artifacts=extra)
-                        if zdata:
-                            st.download_button(
-                                f"⬇ {name}_import.zip", data=zdata,
-                                file_name=f"{CPIUploader.sanitize_package_id(name)}_import.zip",
-                                key=f"imp_{_row_i}_{name}")
-                    except Exception as e:
-                        st.caption(f"({name}: {e})")
-
-            # ── Download a DEPLOYABLE package (a valid multi-artifact export) ──
-            # Unlike the per-iFlow bundles above, this is a full export with a
-            # correct resources.cnt (ContentPackage entry + AGGREGATION relations),
-            # so cpi_api_deploy.py --zip and a tenant Import both read it.
-            with st.expander("📦 Download deployable package (valid export)",
-                             expanded=True):
-                st.caption("One package zip with every generated iFlow and a correct "
-                           "resources.cnt. Deploy it hash-free with cpi_api_deploy.py "
-                           "(--zip), or Import it in CPI to get a precise error.")
-                _dep_name = st.text_input("Package name", value="Generated Migration",
-                                          key="dep_pkg_name")
-                if st.button("Build deployable package", key="build_dep_pkg"):
-                    import requests as _rq
-                    from fetcher.cpi_uploader import CPIUploader
-                    bundles = []
-                    for r in results:
-                        fpath = r.get("file")
-                        if not fpath or not Path(fpath).exists():
-                            continue
-                        nm = r["interface"]
-                        extra = st.session_state.get("artifact_bundles", {}).get(nm)
-                        inner = CPIUploader._package_iflow(
-                            Path(fpath), CPIUploader.sanitize_package_id(nm),
-                            nm, "", extra_artifacts=extra)
-                        if inner:
-                            bundles.append((CPIUploader.sanitize_package_id(nm),
-                                            nm, inner))
-                    if not bundles:
-                        st.warning("No generated iFlows found to package.")
-                    else:
-                        _u = CPIUploader(
-                            st.session_state.get("cpi_base_url") or "https://tenant",
-                            st.session_state.get("cpi_session") or _rq.Session())
-                        st.session_state["deployable_pkg_zip"] = \
-                            _u.build_package_export_zip(
-                                bundles,
-                                CPIUploader.sanitize_package_id(_dep_name)
-                                or "GeneratedPackage",
-                                _dep_name)
-                        st.success(f"Built a valid export with {len(bundles)} iFlow(s).")
-                if st.session_state.get("deployable_pkg_zip"):
-                    from fetcher.cpi_uploader import CPIUploader as _CU
-                    st.download_button(
-                        "⬇ Download deployable package (.zip)",
-                        data=st.session_state["deployable_pkg_zip"],
-                        file_name=f"{_CU.sanitize_package_id(_dep_name) or 'package'}.zip",
-                        mime="application/zip", key="dl_dep_pkg")
 
             # Auto-generated "what's left" per iFlow — computed from the real
             # preflight tasks each interface triggers (WE20 for IDoc, comm
@@ -4573,6 +4884,28 @@ with tab5:
                     if ad & _NEEDS_CRED:
                         out.append(("Add credentials under Monitor → Manage Security Material",
                                     "Client Security"))
+                    try:
+                        from analyzer.orchestration_flag import (
+                            assess_orchestration)
+                        _kinds = {}
+                        _src = getattr(rec, "source_iflow_xml", "") or ""
+                        if _src:
+                            from extractor.iflow_parser import parse_iflow
+                            _m = parse_iflow(_src, "o")
+                            for _s in _m.steps.values():
+                                _kinds[_s.kind] = _kinds.get(_s.kind, 0) + 1
+                            _kinds["__processes__"] = len(
+                                getattr(_m, "processes", []) or [])
+                        _of = assess_orchestration(
+                            kinds=_kinds, name=getattr(rec, "name", ""))
+                        if _of.flagged:
+                            out.append((
+                                "⚠ Orchestration-shaped (ccBPM profile) — "
+                                "architecture decision needed: CPI + SBPA "
+                                "split or stateless redesign. "
+                                + "; ".join(_of.reasons[:3]), "Architect"))
+                    except Exception:
+                        pass
                     return out
 
                 def _fill_count(nm):
@@ -4619,14 +4952,6 @@ with tab5:
             except Exception as _wlerr:
                 st.caption(f"(remaining-work view unavailable: {_wlerr})")
 
-            # Deploy + Replay (upload to Integration Suite) — tenant
-            # connection required. Placed FIRST so the upload action is
-            # immediately reachable without scrolling past offline extras.
-            render_deploy_section(
-                selected_assessments, configs,
-                unique_targets, output_dir
-            )
-
             # Additional outputs: parameters.prop per interface, BSR bundle.
             # All offline, tenant-independent. Hidden behind buttons so they
             # don't auto-run on every page load.
@@ -4656,961 +4981,6 @@ with tab5:
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # TAB 6 — CLEAN CORE
-# ═══════════════════════════════════════════════════════════════════════════════
-
-with tab6:
-    st.header("🛡 Clean Core Compliance")
-    st.caption("Analyzes interfaces against SAP Clean Core principles and RISE readiness.")
-
-    if not st.session_state.assessments:
-        st.info("Load interfaces in **Tab 1** first.")
-    else:
-        # Auto-configure button
-        c1, c2, c3 = st.columns(3)
-        with c1:
-            if st.button("▶ Run Clean Core Analysis", type="primary"):
-                analyzer = CleanCoreAnalyzer()
-                with st.spinner("Analyzing…"):
-                    for a in st.session_state.assessments:
-                        cfg = st.session_state.configs.get(a.interface.name)
-                        report = analyzer.analyze_record(a.interface, cfg=cfg)
-                        st.session_state.clean_core[a.interface.name] = report
-                st.success(f"✅ Analyzed {len(st.session_state.assessments)} interfaces")
-
-        with c2:
-            if st.session_state.selected and st.button("⚡ Auto-configure SCC/OAuth"):
-                scc_loc  = st.session_state.get("scc_location_id", "")
-                scc_host = st.session_state.get("scc_virtual_host", "")
-                applied  = []
-                for name in st.session_state.selected:
-                    cfg = st.session_state.configs.get(name)
-                    tid = st.session_state.target_ids.get(name, "s4hana_cloud")
-                    if cfg:
-                        updated_cfg, changes = auto_configure(
-                            cfg, tid,
-                            scc_location_id=scc_loc,
-                            scc_virtual_host=scc_host,
-                        )
-                        st.session_state.configs[name] = updated_cfg
-                        applied.extend(changes)
-                if applied:
-                    st.success(f"Applied {len(applied)} auto-configuration changes")
-                    with st.expander("Changes applied"):
-                        for c in applied:
-                            st.markdown(f"- {c}")
-
-        # SCC settings
-        with st.expander("⚙ Cloud Connector settings (for auto-configure)"):
-            st.session_state["scc_location_id"]   = st.text_input(
-                "SCC Location ID", value=st.session_state.get("scc_location_id", ""),
-                placeholder="MyLocationID")
-            st.session_state["scc_virtual_host"]  = st.text_input(
-                "SCC Virtual Host", value=st.session_state.get("scc_virtual_host", ""),
-                placeholder="virtual-host.internal")
-
-        if st.session_state.clean_core:
-            reports = list(st.session_state.clean_core.values())
-            summary = clean_core_summary(reports)
-
-            st.divider()
-            m1, m2, m3, m4, m5 = st.columns(5)
-            m1.metric("🟢 Green",      summary["green"])
-            m2.metric("🟡 Amber",      summary["amber"])
-            m3.metric("🔴 Red",        summary["red"])
-            m4.metric("RISE Ready",    summary["rise_ready"])
-            m5.metric("Avg Score",     f"{summary['avg_score']}/100")
-
-            st.divider()
-
-            # Per-interface breakdown. The data_editor owns its checkbox
-            # state between reruns (Streamlit preserves widget edits via
-            # the key), so we feed Select=False on input and read whichever
-            # row is currently checked. That checked row drives the detail
-            # panel below.
-            import pandas as pd
-            cc_names = list(st.session_state.clean_core.keys())
-            rows = []
-            for name, r in st.session_state.clean_core.items():
-                rows.append({
-                    "Select":      False,
-                    "Interface":   name,
-                    "Score":       r.score,
-                    "Status":      r.traffic_light,
-                    "RISE Ready":  "✓" if r.rise_ready else "✗",
-                    "Blockers":    r.blocker_count,
-                    "Warnings":    r.major_count,
-                    "Minor":       r.minor_count,
-                })
-            df = pd.DataFrame(rows)
-            edited_cc = st.data_editor(
-                df,
-                column_config={
-                    "Select": st.column_config.CheckboxColumn(
-                        "Pick", default=False,
-                        help="Tick one row to focus the detail panel below."),
-                },
-                disabled=[c for c in df.columns if c != "Select"],
-                hide_index=True,
-                use_container_width=True,
-                key="cc_table_editor",
-            )
-            picked_rows = [r["Interface"] for _, r in edited_cc.iterrows() if r["Select"]]
-            # If nothing checked yet, default to first interface
-            selected_for_detail = (picked_rows[0] if picked_rows
-                                   else (cc_names[0] if cc_names else None))
-            if selected_for_detail:
-                st.caption(f"Showing details for: **{selected_for_detail}** "
-                           f"(tick a different row above to switch)")
-            if selected_for_detail:
-                report = st.session_state.clean_core[selected_for_detail]
-                st.markdown(f"**Score: {report.score}/100** [{report.traffic_light}] "
-                            f"| RISE Ready: {'✓' if report.rise_ready else '✗'}")
-
-                if report.violations:
-                    st.subheader("Violations")
-                    for v in report.violations:
-                        sev_icon = {"BLOCKER":"🔴","MAJOR":"🟡","MINOR":"🔵"}.get(v.rule.severity,"•")
-                        with st.expander(f"{sev_icon} [{v.rule.id}] {v.rule.name}"):
-                            st.write(f"**Detail:** {v.detail}")
-                            st.write(f"**Fix:** {v.rule.remediation}")
-                            if v.rule.api_alternative:
-                                st.info(f"💡 API alternative: {v.rule.api_alternative}")
-
-                if report.passed_rules:
-                    with st.expander(f"✅ Passed checks ({len(report.passed_rules)})"):
-                        for r in report.passed_rules:
-                            st.markdown(f"- {r}")
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# TAB 7 — VERIFY
-# ═══════════════════════════════════════════════════════════════════════════════
-
-with tab7:
-    st.header("✅ Verification & Gap Analysis")
-    st.caption("Checks each interface against original requirements and flags missing items.")
-
-    if not st.session_state.selected:
-        st.info("Select and configure interfaces in Tabs 2–4 first.")
-    else:
-        vc1, vc2, vc3 = st.columns(3)
-        with vc1:
-            if st.button("▶ Run Verification", type="primary"):
-                verifier = IntegrationVerifier(output_dir=out_dir if 'out_dir' in dir() else "./output")
-                with st.spinner("Verifying…"):
-                    for a in st.session_state.assessments:
-                        name = a.interface.name
-                        if name not in st.session_state.selected:
-                            continue
-                        cfg = st.session_state.configs.get(name)
-                        if not cfg:
-                            continue
-                        cc_report  = st.session_state.clean_core.get(name)
-                        tid        = st.session_state.target_ids.get(name, "")
-                        report     = verifier.verify(a, cfg,
-                                                     clean_core_report=cc_report,
-                                                     target_id=tid)
-                        st.session_state.verifications[name] = report
-                st.success(f"Verified {len(st.session_state.verifications)} interface(s)")
-
-        with vc2:
-            if st.session_state.verifications and st.button("🔧 Auto-fix warnings"):
-                verifier = IntegrationVerifier()
-                fixed_count = 0
-                for name, v_report in st.session_state.verifications.items():
-                    cfg = st.session_state.configs.get(name)
-                    if cfg:
-                        fixed = verifier.auto_fix(cfg, v_report.gaps)
-                        fixed_count += len(fixed)
-                        st.session_state.configs[name] = cfg
-                st.success(f"Auto-fixed {fixed_count} issue(s) — re-run verification to confirm")
-
-        with vc3:
-            if st.session_state.verifications and st.button("📄 Generate TDD docs"):
-                gen = TDDGenerator(output_dir="./output")
-                with st.spinner("Generating Word documents…"):
-                    paths = gen.generate_all(
-                        [a for a in st.session_state.assessments
-                         if a.interface.name in st.session_state.selected],
-                        configs=st.session_state.configs,
-                        clean_core_reports=st.session_state.clean_core,
-                        verification_reports={
-                            name: r for name, r in st.session_state.verifications.items()
-                        },
-                    )
-                st.success(f"Generated {len(paths)} TDD document(s) → output/docs/")
-
-        if st.session_state.verifications:
-            import pandas as pd
-            summary = project_verification_summary(
-                list(st.session_state.verifications.values())
-            )
-            sm1, sm2, sm3, sm4 = st.columns(4)
-            sm1.metric("✅ Complete",     summary["complete"])
-            sm2.metric("⚠ Needs Review", summary["needs_review"])
-            sm3.metric("❌ Incomplete",   summary["incomplete"])
-            sm4.metric("Avg Completion", f"{summary['avg_completion']}%")
-
-            st.divider()
-
-            # Interface table with clickable Pick column. data_editor owns
-            # its checkbox state, so we feed Select=False and read whichever
-            # row is checked.
-            v_names = list(st.session_state.verifications.keys())
-            rows = []
-            for name, r in st.session_state.verifications.items():
-                rows.append({
-                    "Select":       False,
-                    "Interface":    name,
-                    "Status":       r.status,
-                    "Completion":   f"{r.completion_pct:.0f}%",
-                    "Blocking":     len(r.blocking_gaps),
-                    "Warnings":     len(r.warning_gaps),
-                    "Passed":       len(r.passed_checks),
-                })
-            v_df = pd.DataFrame(rows)
-            edited_v = st.data_editor(
-                v_df,
-                column_config={
-                    "Select": st.column_config.CheckboxColumn(
-                        "Pick", default=False,
-                        help="Tick one row to focus the gap detail below."),
-                },
-                disabled=[c for c in v_df.columns if c != "Select"],
-                hide_index=True,
-                use_container_width=True,
-                key="verify_table_editor",
-            )
-            v_picked = [r["Interface"] for _, r in edited_v.iterrows() if r["Select"]]
-            sel = (v_picked[0] if v_picked
-                   else (v_names[0] if v_names else None))
-            if sel:
-                st.caption(f"Showing gap detail for: **{sel}** "
-                           f"(tick a different row above to switch)")
-            if sel:
-                report = st.session_state.verifications[sel]
-                st.markdown(f"**{report.status}** — {report.completion_pct:.0f}% complete")
-
-                if report.gaps:
-                    for gap in report.gaps:
-                        icon = {"BLOCKING":"🔴","WARNING":"🟡","INFO":"🔵"}.get(gap.severity,"•")
-                        with st.expander(f"{icon} [{gap.severity}] {gap.category}: {gap.description[:60]}…"):
-                            st.write(f"**Issue:** {gap.description}")
-                            st.write(f"**Fix:** {gap.suggested_fix}")
-                            if gap.auto_fixable:
-                                st.success("✓ This can be auto-fixed")
-
-                if report.passed_checks:
-                    with st.expander(f"✅ Passed ({len(report.passed_checks)})"):
-                        for p in report.passed_checks:
-                            st.markdown(f"- {p}")
-
-        # Complexity reasoning section
-        st.divider()
-        st.subheader("📊 Complexity Reasoning")
-        if st.session_state.assessments:
-            sel_a = st.selectbox(
-                "Interface reasoning",
-                options=[a.interface.name for a in st.session_state.assessments
-                         if a.interface.name in st.session_state.selected],
-                key="reasoning_select",
-            )
-            if sel_a:
-                a = next((x for x in st.session_state.assessments
-                          if x.interface.name == sel_a), None)
-                if a and a.reasoning:
-                    _rsz, _rwt, _rd, _rlo, _rhi = _ma_assess(a.interface)
-                    st.markdown(f"**Size {_rsz}** · weight {_rwt} · effort {_rlo:g}–{_rhi:g}d")
-                    for reason in a.reasoning:
-                        st.markdown(f"- {reason}")
-
-        # Requirement file intake
-        st.divider()
-        st.subheader("📋 Requirements Intake")
-        st.caption("Upload a technical requirement document to pre-fill interfaces.")
-        req_type = st.radio("Document type",
-                            ["Excel template", "Free text / Word"],
-                            horizontal=True, key="req_type")
-
-        if req_type == "Excel template":
-            tpl_bytes = generate_excel_template()
-            st.download_button("⬇ Download requirements template",
-                               data=tpl_bytes,
-                               file_name="requirements_template.xlsx",
-                               mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-            req_file = st.file_uploader("Upload filled requirements Excel",
-                                        type=["xlsx"], key="req_xl")
-            if req_file and st.button("📥 Import requirements"):
-                with st.spinner("Parsing…"):
-                    try:
-                        results = parse_requirements(req_file.read(), source_type="excel")
-                        records  = [r.to_interface_record() for r in results]
-                        configs  = {r.name: r.to_interface_config() for r in results}
-                        from analyzer.complexity_analyzer import ComplexityAnalyzer
-                        assessments = ComplexityAnalyzer({}).assess_all(records)
-                        st.session_state.interfaces  = records
-                        st.session_state.assessments = assessments
-                        for name, cfg in configs.items():
-                            st.session_state.configs[name] = cfg
-                        st.success(f"✅ Imported {len(results)} interfaces from requirements")
-                    except Exception as e:
-                        st.error(f"Import failed: {e}")
-        else:
-            req_text = st.text_area(
-                "Paste requirement text or upload .docx",
-                height=200,
-                placeholder="Paste your technical requirement document here…",
-                key="req_text",
-            )
-            req_docx = st.file_uploader("Or upload .docx", type=["docx"], key="req_docx")
-            if st.button("🤖 Parse with AI"):
-                with st.spinner("Parsing with Claude…"):
-                    try:
-                        if req_docx:
-                            results = parse_requirements(req_docx.read(), source_type="docx")
-                        elif req_text:
-                            results = parse_requirements(req_text, source_type="text")
-                        else:
-                            st.warning("Provide text or upload a .docx file")
-                            results = []
-                        if results:
-                            records  = [r.to_interface_record() for r in results]
-                            configs  = {r.name: r.to_interface_config() for r in results}
-                            from analyzer.complexity_analyzer import ComplexityAnalyzer
-                            assessments = ComplexityAnalyzer({}).assess_all(records)
-                            st.session_state.interfaces  = records
-                            st.session_state.assessments = assessments
-                            for name, cfg_r in configs.items():
-                                st.session_state.configs[name] = cfg_r
-                            st.success(f"✅ Parsed {len(results)} interfaces from document")
-                            for r in results:
-                                if r.needs_review:
-                                    with st.expander(f"⚠ {r.name} — review needed"):
-                                        for nr in r.needs_review:
-                                            st.markdown(f"- {nr}")
-                    except Exception as e:
-                        st.error(f"AI parsing failed: {e}")
-
-        # ── Advanced analysis ─────────────────────────────────────────
-        # Runs four read-only analyzers that surface non-functional concerns
-        # the main verification doesn't cover: endpoint collisions, transaction
-        # behavior advisories, OData replacement suggestions for RFC/BAPI
-        # interfaces, and the APIM fault-code catalog.
-        st.divider()
-        with st.expander("🔬 Advanced analysis (collision / transaction / "
-                          "OData suggestions / APIM faults)", expanded=False):
-            an1, an2, an3, an4 = st.columns(4)
-
-            # Endpoint collisions
-            with an1:
-                if st.button("🔀 Detect endpoint collisions",
-                             key="adv_collision_btn",
-                             help="Finds interfaces whose sender adapters would "
-                                  "collide on the same address path."):
-                    from analyzer.endpoint_collision import detect_collisions
-                    channels = []
-                    for cfg in st.session_state.configs.values():
-                        ch = getattr(cfg, "sender_connectivity", None)
-                        if ch:
-                            channels.append(ch)
-                    findings = detect_collisions(channels)
-                    if findings:
-                        st.warning(f"⚠ {len(findings)} potential collision(s)")
-                        for f in findings[:10]:
-                            st.markdown(f"- **{f.address}**: "
-                                        f"{', '.join(f.colliding_interfaces[:4])}")
-                    else:
-                        st.success("✓ No endpoint collisions detected")
-
-            # Transaction advisor
-            with an2:
-                if st.button("💳 Transaction advisory",
-                             key="adv_txn_btn",
-                             help="Advises Required / RequiresNew / NotSupported "
-                                  "for each interface based on adapters + QoS."):
-                    from analyzer.transaction_advisor import advise_all
-                    records = [a.interface for a in st.session_state.assessments
-                               if a.interface.name in st.session_state.selected]
-                    advisories = advise_all(records, configs=st.session_state.configs)
-                    if advisories:
-                        import pandas as pd
-                        df = pd.DataFrame([
-                            {"Interface": adv.interface_name,
-                             "Handling": adv.handling,
-                             "Reasoning": adv.reasoning[:80]}
-                            for adv in advisories
-                        ])
-                        st.dataframe(df, hide_index=True, use_container_width=True)
-
-            # OData suggester
-            with an3:
-                if st.button("🔄 OData replacements (RFC/BAPI)",
-                             key="adv_odata_btn",
-                             help="For each RFC interface, suggests the S/4HANA "
-                                  "released OData API to replace it."):
-                    from fetcher.odata_suggester import ODataSuggester
-                    suggester = ODataSuggester()
-                    rfc_records = [a.interface
-                                   for a in st.session_state.assessments
-                                   if a.interface.name in st.session_state.selected
-                                   and "RFC" in (a.interface.sender_adapter,
-                                                  a.interface.receiver_adapter)]
-                    if not rfc_records:
-                        st.info("No RFC-based interfaces in current selection.")
-                    else:
-                        import pandas as pd
-                        rows = []
-                        for r in rfc_records[:25]:
-                            sugs = suggester.suggest_for_interface(r.name, top=1)
-                            if sugs:
-                                rows.append({
-                                    "Interface": r.name,
-                                    "Suggested API": sugs[0].api_name,
-                                    "Path": sugs[0].api_path[:50],
-                                    "Confidence": sugs[0].confidence,
-                                })
-                        if rows:
-                            st.dataframe(pd.DataFrame(rows), hide_index=True,
-                                         use_container_width=True)
-                            st.caption(f"Showing {len(rows)} of {len(rfc_records)} "
-                                       f"RFC interface(s); first match per name.")
-                        else:
-                            st.info("No curated OData matches for these names. "
-                                    "Hub fallback would need a Hub API key.")
-
-            # APIM fault catalog
-            with an4:
-                fault_query = st.text_input("APIM fault search",
-                                             key="adv_fault_search",
-                                             placeholder="quota, latency, auth…")
-                if st.button("📚 Show APIM faults", key="adv_fault_btn"):
-                    from analyzer.apim_faults import all_codes, search as search_faults
-                    faults = (search_faults(fault_query) if fault_query
-                              else all_codes())
-                    if faults:
-                        import pandas as pd
-                        # all_codes returns strings; search returns APIMFault
-                        if isinstance(faults[0], str):
-                            from analyzer.apim_faults import lookup
-                            faults = [lookup(c) for c in faults if lookup(c)]
-                        st.dataframe(pd.DataFrame([
-                            {"Code": f.code, "Category": f.category,
-                             "HTTP": f.http_status,
-                             "Meaning": f.meaning[:60],
-                             "Remediation": f.remediation[:60]}
-                            for f in faults[:30]
-                        ]), hide_index=True, use_container_width=True)
-
-        # ── Shadow Test (Level 2: XSLT fixture harness) ─────────────────
-        # Runs generated XSLT against fixture files locally — no CPI tenant
-        # needed. Diff result counts cosmetic-vs-real differences separately
-        # so number/date format quirks don't fail the test.
-        st.divider()
-        with st.expander("🧪 Shadow Test — local XSLT/fixture validation "
-                          "(no tenant required)", expanded=False):
-            st.caption(
-                "Runs an XSLT against `*.input.xml` files in a fixture folder "
-                "and diffs the output against matching `*.expected.xml` files. "
-                "Uses configurable tolerance rules (whitespace, namespace "
-                "prefixes, number/date formats) so cosmetic differences "
-                "don't fail the test. The full diff config lives in "
-                "`config.yaml` inside each fixture folder.")
-
-            st1, st2 = st.columns([3, 2])
-            with st1:
-                fixtures_root_str = st.text_input(
-                    "Fixtures root directory",
-                    value=st.session_state.get("shadow_fixtures_root",
-                                                "./fixtures"),
-                    key="shadow_fixtures_root",
-                    help="Each subfolder under this path is one interface's "
-                         "fixture set. Defaults to ./fixtures relative to the "
-                         "workbench working directory.")
-            with st2:
-                run_shadow_btn = st.button("▶ Run shadow tests",
-                                            key="shadow_run_btn",
-                                            type="primary")
-
-            sc1, sc2 = st.columns(2)
-            with sc1:
-                if st.button("📁 Create sample fixture skeleton",
-                             key="shadow_create_skel"):
-                    from testing.fixture_harness import create_fixture_skeleton
-                    from pathlib import Path as _P
-                    target = _P(fixtures_root_str) / "EXAMPLE_INTERFACE"
-                    try:
-                        create_fixture_skeleton(target, "EXAMPLE_INTERFACE")
-                        st.success(f"Created fixture skeleton at `{target}`. "
-                                   f"Edit `transform.xsl` and the request_001 "
-                                   f"files, then click 'Run shadow tests'.")
-                    except Exception as e:
-                        st.error(f"Could not create skeleton: {e}")
-            with sc2:
-                st.caption(
-                    "Each fixture folder contains: `transform.xsl`, "
-                    "`*.input.xml` + matching `*.expected.xml` pairs, "
-                    "and optional `config.yaml` for tolerance rules.")
-
-            if run_shadow_btn:
-                from pathlib import Path as _P
-                from testing.fixture_harness import run_all_fixtures
-                root = _P(fixtures_root_str)
-                if not root.exists():
-                    st.error(f"Fixtures root `{root}` does not exist.")
-                else:
-                    with st.spinner(f"Running fixtures under {root}…"):
-                        results = run_all_fixtures(root)
-                    st.session_state["shadow_results"] = results
-                    total_iface = len(results)
-                    passed_iface = sum(1 for r in results if r.passed)
-                    total_cases  = sum(len(r.cases) for r in results)
-                    passed_cases = sum(r.pass_count for r in results)
-                    if total_iface == 0:
-                        st.warning(
-                            "No fixture folders found. Click 'Create sample "
-                            "fixture skeleton' first.")
-                    else:
-                        col_a, col_b, col_c = st.columns(3)
-                        col_a.metric("Interfaces", total_iface,
-                                     delta=f"{passed_iface} passed",
-                                     delta_color="normal" if passed_iface == total_iface else "inverse")
-                        col_b.metric("Test cases", total_cases,
-                                     delta=f"{passed_cases} passed")
-                        col_c.metric("Pass rate",
-                                     f"{100 * passed_cases / total_cases:.0f}%"
-                                     if total_cases else "—")
-
-            # Detail view — render whatever's in session state (survives reruns)
-            shadow_results = st.session_state.get("shadow_results", [])
-            if shadow_results:
-                st.divider()
-                st.markdown("### Per-interface results")
-                for r in shadow_results:
-                    icon = "✅" if r.passed else "❌"
-                    label = (f"{icon} {r.interface_name} — "
-                             f"{r.pass_count}/{len(r.cases)} cases pass")
-                    if not r.cases:
-                        label = f"⚠ {r.interface_name} — no cases or config issues"
-                    with st.expander(label):
-                        for warning in r.config_warnings:
-                            st.warning(warning)
-                        for case in r.cases:
-                            case_icon = "✅" if case.passed else "❌"
-                            st.markdown(f"**{case_icon} {case.case_name}** — "
-                                        f"{case.summary}")
-                            if case.diff_result and case.diff_result.entries:
-                                # Show first few real diffs
-                                real_diffs = case.diff_result.real_diffs[:8]
-                                cosmetic = case.diff_result.cosmetic_diffs[:5]
-                                if real_diffs:
-                                    st.markdown("*Real differences:*")
-                                    for entry in real_diffs:
-                                        st.markdown(
-                                            f"  - `{entry.path}`: "
-                                            f"expected `{entry.expected[:60]}` "
-                                            f"vs actual `{entry.actual[:60]}`")
-                                if cosmetic:
-                                    st.markdown("*Cosmetic (passed):*")
-                                    for entry in cosmetic:
-                                        st.markdown(
-                                            f"  - `{entry.path}`: {entry.note}")
-
-        # ── ISA-M Questionnaire ───────────────────────────────────────
-        st.divider()
-        render_isam_questionnaire()
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# TAB 0 — PROFILE MANAGER
-# ═══════════════════════════════════════════════════════════════════════════════
-
-with tab0:
-    st.header("🔑 Credential Profiles")
-    st.caption(
-        "Profiles are encrypted with AES-256 and stored locally at "
-        "`~/.cpi_migrator/profiles/`. Nothing is sent to any server. "
-        "Each client gets their own profile — switch instantly from the sidebar."
-    )
-
-    _store = CredentialStore()
-    profile_names = _store.list_profiles()
-
-    pm_tab_create, pm_tab_manage = st.tabs([
-        "➕ Create / Edit Profile",
-        "📋 Manage Profiles",
-    ])
-
-    # ── CREATE / EDIT ─────────────────────────────────────────────────
-    with pm_tab_create:
-        st.subheader("Create or edit a credential profile")
-
-        # Load existing for editing
-        edit_source = st.selectbox(
-            "Start from existing profile (or create new)",
-            ["✨ New profile"] + profile_names,
-            key="pm_edit_source",
-        )
-
-        edit_pw = ""
-        existing_profile = None
-        if edit_source != "✨ New profile":
-            edit_pw = st.text_input("Master password to load",
-                                     type="password", key="pm_edit_pw")
-            if edit_pw and st.button("Load for editing"):
-                try:
-                    existing_profile = _store.load_profile(edit_source, edit_pw)
-                    st.session_state["pm_editing"] = existing_profile
-                    # Seed every form widget key DIRECTLY from the profile.
-                    # Streamlit ignores value= once a keyed widget exists, so
-                    # the session_state key is the single source of truth. We
-                    # set them here and rerun so the form renders populated.
-                    _ep = existing_profile
-                    _seed = {
-                        "pm_name": _ep.name or "",
-                        "pm_code": _ep.company_code or "",
-                        "pm_desc": _ep.description or "",
-                        "pm_env": ("Cloud Foundry (BTP)"
-                                   if _ep.cpi_environment != "neo" else "Neo"),
-                        "pm_cpi_url": _ep.cpi_base_url or "",
-                        "pm_token_url": _ep.cpi_token_url or "",
-                        "pm_client_id": _ep.cpi_client_id or "",
-                        "pm_client_sec": _ep.cpi_client_secret or "",
-                        "pm_neo_url": _ep.cpi_base_url or "",
-                        "pm_neo_user": _ep.cpi_username or "",
-                        "pm_neo_pass": _ep.cpi_password or "",
-                        "pm_pi_mode": ("Excel export file" if _ep.pi_export_file
-                                       else "Live PI/PO REST API"),
-                        "pm_pi_url": _ep.pi_base_url or "",
-                        "pm_pi_user": _ep.pi_username or "",
-                        "pm_pi_pass": _ep.pi_password or "",
-                        "pm_pi_file": _ep.pi_export_file or "",
-                        "pm_scc_loc": _ep.scc_location_id or "",
-                        "pm_scc_host": _ep.scc_virtual_host or "",
-                        "pm_scc_port": _ep.scc_virtual_port or 443,
-                        "pm_hub_key": _ep.hub_api_key or "",
-                        "pm_gh_token": _ep.github_token or "",
-                        "pm_ctms_url": _ep.ctms_url or "",
-                        "pm_ctms_id": _ep.ctms_client_id or "",
-                        "pm_ctms_sec": _ep.ctms_client_secret or "",
-                    }
-                    for _k, _v in _seed.items():
-                        st.session_state[_k] = _v
-                    st.session_state.pm_targets = list(_ep.targets or [])
-                    st.success(f"Loaded '{edit_source}' for editing")
-                    st.rerun()
-                except ValueError:
-                    st.error("Wrong master password")
-
-        # Get profile being edited (if any)
-        ep = st.session_state.get("pm_editing") or CPIProfile()
-
-        # One-time default for a fresh form: pre-fill the Hub API key field
-        # (handy default) only if it has never been set in this session.
-        if "pm_hub_key" not in st.session_state:
-            st.session_state["pm_hub_key"] = ep.hub_api_key or \
-                "DBKd0P21o9JxICIsJzJ4kJKoaz6KaHfy"
-
-        st.divider()
-
-        # ── Project info ─────────────────────────────────────────────
-        st.subheader("📁 Project")
-        pc1, pc2, pc3 = st.columns(3)
-        with pc1:
-            p_name = st.text_input("Profile name *",
-                placeholder="ACME_Migration",
-                key="pm_name")
-        with pc2:
-            p_code = st.text_input("Company code",
-                placeholder="ACME",
-                key="pm_code")
-        with pc3:
-            p_desc = st.text_input("Description",
-                placeholder="ECC → S4HANA Cloud migration",
-                key="pm_desc")
-
-        st.divider()
-
-        # ── CPI Tenant ───────────────────────────────────────────────
-        st.subheader("🔌 CPI Tenant")
-        p_env = st.radio("Environment",
-                          ["Cloud Foundry (BTP)", "Neo"],
-                          horizontal=True, key="pm_env")
-
-        if "CF" in p_env:
-            cc1, cc2 = st.columns(2)
-            with cc1:
-                p_cpi_url   = st.text_input("Base URL *",
-                    placeholder="https://tenant.it-cpi018.cfapps.eu10.hana.ondemand.com",
-                    key="pm_cpi_url")
-                p_token_url = st.text_input("Token URL *",
-                    placeholder="https://tenant.authentication.eu10.hana.ondemand.com/oauth/token",
-                    key="pm_token_url")
-            with cc2:
-                p_client_id  = st.text_input("Client ID *",
-                    key="pm_client_id")
-                p_client_sec = st.text_input("Client Secret *",
-                    type="password", key="pm_client_sec")
-            p_cpi_user = p_cpi_pass = ""
-        else:
-            nc1, nc2 = st.columns(2)
-            with nc1:
-                p_cpi_url  = st.text_input("Base URL *",
-                    key="pm_neo_url")
-                p_cpi_user = st.text_input("Username *",
-                    key="pm_neo_user")
-            with nc2:
-                p_cpi_pass = st.text_input("Password *",
-                    type="password", key="pm_neo_pass")
-            p_token_url = p_client_id = p_client_sec = ""
-
-        st.divider()
-
-        # ── PI/PO Source ─────────────────────────────────────────────
-        st.subheader("📤 PI/PO Source")
-        pi_mode = st.radio("Source mode",
-                           ["Live PI/PO REST API", "Excel export file"],
-                           horizontal=True, key="pm_pi_mode")
-        if pi_mode == "Live PI/PO REST API":
-            pp1, pp2 = st.columns(2)
-            with pp1:
-                p_pi_url  = st.text_input("PI/PO Host URL",
-                    placeholder="http://pihost:50000",
-                    key="pm_pi_url")
-                p_pi_user = st.text_input("Username",
-                    key="pm_pi_user")
-            with pp2:
-                p_pi_pass = st.text_input("Password",
-                    type="password", key="pm_pi_pass")
-            p_pi_file = ""
-        else:
-            p_pi_file = st.text_input("Export file path",
-                placeholder="./sample_interfaces.xlsx",
-                key="pm_pi_file")
-            p_pi_url = p_pi_user = p_pi_pass = ""
-
-        st.divider()
-
-        # ── Cloud Connector ──────────────────────────────────────────
-        st.subheader("☁ Cloud Connector")
-        sc1, sc2, sc3 = st.columns(3)
-        with sc1:
-            p_scc_loc  = st.text_input("Location ID",
-                placeholder="MyLocationID",
-                key="pm_scc_loc")
-        with sc2:
-            p_scc_host = st.text_input("Virtual host",
-                placeholder="virtualhost.internal",
-                key="pm_scc_host")
-        with sc3:
-            p_scc_port = st.number_input("Virtual port",
-                min_value=1, max_value=65535,
-                key="pm_scc_port")
-
-        st.divider()
-
-        # ── API Keys ─────────────────────────────────────────────────
-        st.subheader("🔑 API Keys")
-        ak1, ak2 = st.columns(2)
-        with ak1:
-            p_hub_key = st.text_input("SAP Hub API Key",
-                type="password", key="pm_hub_key")
-        with ak2:
-            p_gh_token = st.text_input("GitHub Token (optional)",
-                type="password", key="pm_gh_token")
-
-        st.divider()
-
-        # ── Target systems ───────────────────────────────────────────
-        st.subheader("🎯 Target System Credentials")
-        st.caption("Add credentials for each destination system used in this project.")
-
-        if "pm_targets" not in st.session_state:
-            st.session_state.pm_targets = ep.targets or []
-
-        # Add target button
-        if st.button("➕ Add target system"):
-            st.session_state.pm_targets.append({
-                "target_id": "s4hana_cloud",
-                "label": "New Target",
-                "auth_method": "OAuth2",
-                "base_url": "", "token_url": "", "client_id": "",
-                "client_secret": "", "username": "", "password": "",
-                "api_key": "", "certificate_alias": "",
-            })
-
-        targets_to_remove = []
-        for idx, target in enumerate(st.session_state.pm_targets):
-            with st.expander(
-                f"Target {idx+1}: {target.get('label') or target.get('target_id','?')}",
-                expanded=True
-            ):
-                ta, tb, tc = st.columns([2, 2, 1])
-                with ta:
-                    target["target_id"] = st.selectbox(
-                        "Target system",
-                        options=list(DESTINATION_REGISTRY.keys()),
-                        index=list(DESTINATION_REGISTRY.keys()).index(
-                            target.get("target_id","s4hana_cloud"))
-                        if target.get("target_id") in DESTINATION_REGISTRY else 0,
-                        format_func=lambda x: DESTINATION_REGISTRY[x].label,
-                        key=f"pm_tgt_id_{idx}")
-                    target["label"] = DESTINATION_REGISTRY[target["target_id"]].label
-                with tb:
-                    target["auth_method"] = st.selectbox(
-                        "Auth method",
-                        ["OAuth2", "Basic", "API Key", "Certificate", "None"],
-                        index=["OAuth2","Basic","API Key","Certificate","None"].index(
-                            target.get("auth_method","OAuth2")),
-                        key=f"pm_tgt_auth_{idx}")
-                with tc:
-                    if st.button("🗑 Remove", key=f"pm_tgt_rm_{idx}"):
-                        targets_to_remove.append(idx)
-
-                if target["auth_method"] == "OAuth2":
-                    t1, t2 = st.columns(2)
-                    with t1:
-                        target["base_url"]     = st.text_input("Base URL", value=target.get("base_url",""), key=f"pm_tgt_url_{idx}")
-                        target["token_url"]    = st.text_input("Token URL", value=target.get("token_url",""), key=f"pm_tgt_turl_{idx}")
-                    with t2:
-                        target["client_id"]    = st.text_input("Client ID", value=target.get("client_id",""), key=f"pm_tgt_cid_{idx}")
-                        target["client_secret"]= st.text_input("Client Secret", value=target.get("client_secret",""), type="password", key=f"pm_tgt_csec_{idx}")
-
-                elif target["auth_method"] == "Basic":
-                    t1, t2 = st.columns(2)
-                    with t1:
-                        target["base_url"]  = st.text_input("Base URL", value=target.get("base_url",""), key=f"pm_tgt_burl_{idx}")
-                        target["username"]  = st.text_input("Username", value=target.get("username",""), key=f"pm_tgt_user_{idx}")
-                    with t2:
-                        target["password"]  = st.text_input("Password", value=target.get("password",""), type="password", key=f"pm_tgt_pass_{idx}")
-
-                elif target["auth_method"] == "API Key":
-                    t1, t2 = st.columns(2)
-                    with t1:
-                        target["base_url"] = st.text_input("Base URL", value=target.get("base_url",""), key=f"pm_tgt_akurl_{idx}")
-                    with t2:
-                        target["api_key"]  = st.text_input("API Key", value=target.get("api_key",""), type="password", key=f"pm_tgt_ak_{idx}")
-
-        for idx in reversed(targets_to_remove):
-            st.session_state.pm_targets.pop(idx)
-
-        st.divider()
-
-        # ── cTMS ─────────────────────────────────────────────────────
-        with st.expander("🚚 Cloud Transport Management (cTMS) — optional"):
-            ct1, ct2 = st.columns(2)
-            with ct1:
-                p_ctms_url = st.text_input("cTMS Service URL",
-                    key="pm_ctms_url")
-                p_ctms_id  = st.text_input("Client ID",
-                    key="pm_ctms_id")
-            with ct2:
-                p_ctms_sec = st.text_input("Client Secret",
-                    type="password", key="pm_ctms_sec")
-
-        st.divider()
-
-        # ── Save ──────────────────────────────────────────────────────
-        st.subheader("💾 Save Profile")
-        sv1, sv2 = st.columns(2)
-        with sv1:
-            save_pw1 = st.text_input("Master password *",
-                type="password", key="pm_save_pw1",
-                help="Used to encrypt the profile. You'll need this to load it.")
-        with sv2:
-            save_pw2 = st.text_input("Confirm master password *",
-                type="password", key="pm_save_pw2")
-
-        if st.button("💾 Save Profile", type="primary"):
-            if not p_name:
-                st.error("Profile name is required")
-            elif not save_pw1:
-                st.error("Master password is required")
-            elif save_pw1 != save_pw2:
-                st.error("Passwords do not match")
-            else:
-                try:
-                    new_profile = CPIProfile(
-                        name=p_name,
-                        company_code=p_code,
-                        description=p_desc,
-                        cpi_environment="cf" if "CF" in p_env else "neo",
-                        cpi_base_url=p_cpi_url,
-                        cpi_token_url=p_token_url,
-                        cpi_client_id=p_client_id,
-                        cpi_client_secret=p_client_sec,
-                        cpi_username=p_cpi_user,
-                        cpi_password=p_cpi_pass,
-                        pi_base_url=p_pi_url,
-                        pi_username=p_pi_user,
-                        pi_password=p_pi_pass,
-                        pi_export_file=p_pi_file,
-                        scc_location_id=p_scc_loc,
-                        scc_virtual_host=p_scc_host,
-                        scc_virtual_port=int(p_scc_port),
-                        hub_api_key=p_hub_key,
-                        github_token=p_gh_token,
-                        targets=st.session_state.pm_targets,
-                        ctms_url=p_ctms_url if 'p_ctms_url' in dir() else "",
-                        ctms_client_id=p_ctms_id if 'p_ctms_id' in dir() else "",
-                        ctms_client_secret=p_ctms_sec if 'p_ctms_sec' in dir() else "",
-                    )
-                    _store.save_profile(new_profile, save_pw1)
-                    st.session_state["pm_editing"] = None
-                    st.session_state.pm_targets    = []
-                    st.success(f"✅ Profile **{p_name}** saved and encrypted successfully!")
-                    st.info("Load it from the sidebar dropdown → enter your master password → Load Profile")
-                except Exception as e:
-                    st.error(f"Save failed: {e}")
-
-    # ── MANAGE ────────────────────────────────────────────────────────
-    with pm_tab_manage:
-        st.subheader("Manage saved profiles")
-
-        if not profile_names:
-            st.info("No profiles saved yet. Create one in the **Create / Edit** tab.")
-        else:
-            st.markdown(f"**{len(profile_names)} profile(s)** saved at "
-                        f"`~/.cpi_migrator/profiles/`")
-
-            import pandas as pd
-            profile_df = pd.DataFrame({
-                "Profile Name": profile_names,
-                "File": [f"{n.replace(' ','_')}.profile" for n in profile_names],
-            })
-            st.dataframe(profile_df, hide_index=True, use_container_width=True)
-
-            st.divider()
-            st.subheader("Delete a profile")
-            del_name = st.selectbox("Profile to delete",
-                                     ["(select)"] + profile_names,
-                                     key="pm_del_name")
-            if del_name != "(select)":
-                st.warning(f"This permanently deletes **{del_name}** — cannot be undone.")
-                if st.button("🗑 Delete permanently", type="primary"):
-                    _store.delete_profile(del_name)
-                    st.success(f"Deleted '{del_name}'")
-                    st.rerun()
-
-            st.divider()
-            st.info(
-                "💡 **Tip:** Profile files are encrypted — safe to back up to a USB drive "
-                "or cloud storage. Without the master password they cannot be read."
-            )
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# TAB 5 ADDITIONS — Deploy, Groovy, EOIO, Replay
-# Appended as a new section after the existing Tab 5 content.
-# ═══════════════════════════════════════════════════════════════════════════════
-
-# ─── ISA-M Questionnaire (wired into Tab 7) ────────────────────────────────────
-# Available as a standalone widget via the function below.
-# Called from Tab 7 ISA-M section.
-
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# TAB 8 — AI SOLVER
 # ═══════════════════════════════════════════════════════════════════════════════
 
 with tab8:
@@ -6064,11 +5434,70 @@ def render_client_tracker_tab():
 
     tracker = ClientProblemTracker()
 
-    ct_tab1, ct_tab2, ct_tab3 = st.tabs([
+    ct_tab1, ct_tab2, ct_tab3, ct_tab4 = st.tabs([
         "🔍 Problem overview",
         "👥 Clients",
         "✉ Follow-ups ready",
+        "📐 Effort model",
     ])
+
+    # ── Two-axis effort model (build × delivery friction) ─────────────
+    # Axis 1 (build days) comes from artifact weight × a coefficient that
+    # CALIBRATES from logged actuals; Axis 2 is the 30-second consultant
+    # enrichment per interface (the factors no scan can see). PIMAS/SAP
+    # numbers stay in reports as the client-trusted reference — this is
+    # the planning truth.
+    with ct_tab4:
+        st.subheader("📐 Two-axis effort estimate")
+        from analyzer.delivery_friction import (
+            FrictionProfile, FRICTION_FACTORS, CalibrationStore,
+            ActualRecord, estimate_calibrated)
+        _cal = CalibrationStore()
+        c1, c2 = st.columns(2)
+        c1.metric("Calibration records", _cal.n_records())
+        c2.metric("Build coeff (days/weight pt)", f"{_cal.build_coeff():.3f}")
+        if not st.session_state.assessments:
+            st.info("Load interfaces in **Tab 1** first.")
+        else:
+            _names = [a.interface.name
+                      for a in st.session_state.assessments]
+            _pick = st.selectbox("Interface", _names, key="fr_iface")
+            _a = next(a for a in st.session_state.assessments
+                      if a.interface.name == _pick)
+            _, _w, _, _, _ = _ma_assess(_a.interface)
+            _answers = {}
+            _cols = st.columns(len(FRICTION_FACTORS))
+            for _col, (_factor, _table) in zip(_cols,
+                                               FRICTION_FACTORS.items()):
+                _answers[_factor] = _col.selectbox(
+                    _factor.replace("_", " "), list(_table),
+                    key=f"fr_{_factor}")
+            _est = estimate_calibrated(_pick, int(_w),
+                                       FrictionProfile(**_answers),
+                                       store=_cal)
+            m1, m2, m3 = st.columns(3)
+            m1.metric("Build effort", f"{_est.build_days:g} days")
+            m2.metric("Friction", f"×{_est.friction_multiplier:g}")
+            m3.metric("Calendar", f"{_est.calendar_weeks:g} weeks")
+            st.caption("Calendar = build × friction ÷ 5 + 1 wk wave "
+                       "overhead. Waves parallelize across interfaces; "
+                       "this is per-interface pressure, not a sum.")
+            with st.expander("✍ Record actuals (calibrates every future "
+                             "estimate)"):
+                _ab = st.number_input("Actual build days", 0.0, 500.0,
+                                      0.0, 0.5, key="fr_actual_build")
+                _ac = st.number_input("Actual calendar weeks", 0.0, 200.0,
+                                      0.0, 0.5, key="fr_actual_cal")
+                _an = st.text_input("Note", key="fr_actual_note")
+                if st.button("💾 Record actual", key="fr_record") \
+                        and _ab > 0:
+                    _cal.record_actual(ActualRecord(
+                        interface=_pick, weight=int(_w),
+                        actual_build_days=float(_ab),
+                        actual_calendar_weeks=float(_ac),
+                        profile=_answers, note=_an))
+                    st.success(f"Recorded. New coeff: "
+                               f"{_cal.build_coeff():.3f}")
 
     # ── Problem overview ──────────────────────────────────────────────
     with ct_tab1:
@@ -6187,6 +5616,243 @@ def render_client_tracker_tab():
 
 with tab9:
     render_client_tracker_tab()
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# TAB 10 — PAYLOAD LAB (analyzer · redactor · flow tester · MPL check)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+with tab10:
+    st.header("🧪 Payload Lab")
+
+    # ── 🔍 Trace analysis (#5): the troubleshooting view ─────────────────
+    # Reads tools/dump_traces.py output: execution timeline, failure
+    # pinpoint with the real Camel exception, per-step payload evolution.
+    with st.expander("🔍 Trace analysis — step-by-step run forensics"):
+        _tr_dir = st.text_input("Trace dump folder", key="trace_dir",
+                                value="output/traces")
+        import os as _tos
+        if _tos.path.isdir(_tr_dir):
+            from analyzer.trace_analysis import load_dump, analyze
+            _msgs = load_dump(_tr_dir)
+            if not _msgs:
+                st.info("No dumped messages found here — run "
+                        "`python3 -m tools.dump_traces …` first.")
+            else:
+                _opts = {f"{m.status:>9} · {m.iflow} · {m.guid[:14]}… "
+                         f"({len(m.steps)} steps)": m for m in _msgs}
+                _pick = st.selectbox("Message", list(_opts),
+                                     key="trace_pick")
+                _mt = _opts[_pick]
+                _names = {}
+                _src = st.session_state.get("trace_iflw_xml", "")
+                _f = analyze(_mt, model_names=_names or None)
+                if _f["failure"]:
+                    _fl = _f["failure"]
+                    st.error(f"💥 Failed at step #{_fl['order']} "
+                             f"**{_fl['at']}** — `{_fl['exception']}`\n\n"
+                             f"{_fl['message']}")
+                    if _fl["last_good_payload"]:
+                        st.caption("Last good payload entering the "
+                                   "failing step:")
+                        st.code(_fl["last_good_payload"][:400],
+                                language="xml")
+                elif _mt.steps:
+                    st.success(f"✅ COMPLETED — {len(_mt.steps)} steps")
+                else:
+                    st.warning("No step data (trace probably wasn't "
+                               "active when this message ran).")
+                if _mt.steps:
+                    st.dataframe([{
+                        "#": t.order, "step": t.model_step_id or t.step_id,
+                        "status": t.status or "·",
+                        "ms": t.duration_ms or "",
+                        "payload": (f"{t.payload_size} B"
+                                    if t.payload_size >= 0 else "—"),
+                        "kind": t.payload_kind,
+                        "branch": t.branch}
+                        for t in _mt.steps], use_container_width=True,
+                        height=320)
+                    if _f["payload_evolution"]:
+                        _changes = [p for p in _f["payload_evolution"]
+                                    if p["delta"] or p["kind_changed"]]
+                        if _changes:
+                            st.caption("Payload changed at: " + " · ".join(
+                                f"#{p['order']} {p['step']} "
+                                f"(Δ{p['delta']:+d}"
+                                + (", kind→" + p["kind"]
+                                   if p["kind_changed"] else "") + ")"
+                                for p in _changes[:8]))
+                    if _f["hotspots"]:
+                        st.caption("Slowest steps: " + " · ".join(
+                            f"{h['step']} {h['ms']}ms"
+                            for h in _f["hotspots"]))
+                    _ps = st.selectbox(
+                        "Inspect step payload",
+                        [t.model_step_id or t.step_id or str(t.order)
+                         for t in _mt.steps if t.payload_size >= 0],
+                        key="trace_payload_pick") if any(
+                        t.payload_size >= 0 for t in _mt.steps) else None
+                    if _ps:
+                        _t = next(t for t in _mt.steps
+                                  if (t.model_step_id or t.step_id or
+                                      str(t.order)) == _ps)
+                        st.code(_t.payload_head or "(empty)",
+                                language="xml"
+                                if _t.payload_kind == "xml" else None)
+                        if _t.headers:
+                            st.json({k: v for k, v in list(
+                                _t.headers.items())[:12]})
+        else:
+            st.caption("Folder not found — dump traces first "
+                       "(tools/dump_traces.py).")
+
+    st.caption(
+        "Troubleshoot client payloads safely: analyze the structure, produce "
+        "a redacted copy (values masked, every name/format token kept), "
+        "validate against requirements, and test the payload against an "
+        "iFlow's actual step expectations to localize the failing step — "
+        "all locally, nothing leaves this machine.")
+
+    _pl_file = st.file_uploader(
+        "Payload (XML · JSON · CSV · EDI · flat)", key="pl_payload",
+        accept_multiple_files=False)
+    _pl_keep = st.text_input(
+        "Values to keep unredacted (comma-separated — e.g. routing codes)",
+        key="pl_keep",
+        help="Everything else is masked type-preservingly: digits→9, "
+             "letters→X/x, separators/lengths/dates keep their shape.")
+    c1, c2 = st.columns(2)
+    with c1:
+        _pl_schema = st.file_uploader("Optional schema (XSD / JSON Schema)",
+                                      key="pl_schema")
+    with c2:
+        _pl_flow = st.file_uploader(
+            "Optional iFlow bundle or package export (.zip)",
+            key="pl_flow",
+            help="Single bundle → that flow is tested. Package export → "
+                 "every iFlow in it is tested (per-package troubleshooting).")
+    _pl_xslt = st.checkbox("Also apply XSLT 1.0 mappings locally",
+                           key="pl_xslt")
+
+    if _pl_file and st.button("🔬 Inspect payload", key="pl_inspect",
+                              type="primary"):
+        from inspector.core import inspect_payload
+        _keep = [k.strip() for k in (_pl_keep or "").split(",") if k.strip()]
+        _schema_txt = _pl_schema.getvalue().decode("utf-8", "replace")             if _pl_schema else None
+        _kind = None
+        if _pl_schema:
+            _kind = "xsd" if _pl_schema.name.lower().endswith(".xsd")                 else "json"
+        _rep = inspect_payload(_pl_file.getvalue(), schema=_schema_txt,
+                               schema_kind=_kind, keep_values=_keep)
+        st.subheader(f"Format: `{_rep.fmt}` — "
+                     + ("parsed ✓" if _rep.parse_ok
+                        else f"PARSE FAILED: {_rep.parse_error}"))
+        _ic1, _ic2 = st.columns(2)
+        with _ic1:
+            st.markdown("**Structure profile**")
+            st.json(_rep.profile, expanded=False)
+        with _ic2:
+            st.markdown("**Findings**")
+            for f in _rep.findings:
+                _icon = {"PASS": "✅", "FAIL": "❌", "WARN": "⚠️",
+                         "INFO": "ℹ️"}.get(f.level, "·")
+                st.markdown(f"{_icon} **{f.check}** — {f.detail}"
+                            + (f"  \n`{f.path}`" if f.path else ""))
+        if _rep.redacted:
+            st.markdown("**Redacted copy (safe to share)**")
+            st.code(_rep.redacted[:4000] +
+                    ("\n…(truncated preview)"
+                     if len(_rep.redacted) > 4000 else ""),
+                    language=_rep.fmt if _rep.fmt in ("xml", "json")
+                    else None)
+            st.download_button(
+                "⬇ Download redacted payload", _rep.redacted,
+                file_name=f"redacted_{_pl_file.name}", key="pl_dl")
+
+    if _pl_file and _pl_flow and st.button(
+            "🎯 Test payload against iFlow(s)", key="pl_flowtest"):
+        import io as _io
+        import zipfile as _zf
+        from inspector.flow_test import test_payload_against_flow
+        _payload = _pl_file.getvalue().decode("utf-8", "replace")
+        _raw = _pl_flow.getvalue()
+        _bundles = []
+        try:
+            _z = _zf.ZipFile(_io.BytesIO(_raw))
+            _names = _z.namelist()
+            if any(n.endswith(".iflw") for n in _names):
+                _f = next(n for n in _names if n.endswith(".iflw"))
+                _bundles.append((_f.rsplit("/", 1)[-1][:-5],
+                                 _z.read(_f).decode("utf-8", "replace"),
+                                 {m: _z.read(m) for m in _names if m != _f}))
+            else:
+                for _n in _names:
+                    if not _n.endswith("_content"):
+                        continue
+                    _rawi = _z.read(_n)
+                    if _rawi[:2] != b"PK":
+                        continue
+                    _zb = _zf.ZipFile(_io.BytesIO(_rawi))
+                    _bn = _zb.namelist()
+                    for _f in _bn:
+                        if _f.endswith(".iflw"):
+                            _bundles.append(
+                                (_f.rsplit("/", 1)[-1][:-5],
+                                 _zb.read(_f).decode("utf-8", "replace"),
+                                 {m: _zb.read(m) for m in _bn if m != _f}))
+        except _zf.BadZipFile:
+            st.error("Not a readable zip.")
+        if not _bundles:
+            st.warning("No .iflw found in the upload.")
+        for _name, _iflw, _res in _bundles:
+            with st.expander(f"Flow: {_name}", expanded=len(_bundles) == 1):
+                try:
+                    _finds = test_payload_against_flow(
+                        _iflw, _payload, _res, apply_xslt=_pl_xslt)
+                except Exception as _exc:
+                    st.error(f"Flow test failed: {_exc}")
+                    continue
+                _fails = sum(1 for f in _finds if f.level == "FAIL")
+                st.markdown(f"**{len(_finds)} check(s), {_fails} FAIL**")
+                for f in _finds:
+                    _icon = {"PASS": "✅", "FAIL": "❌", "WARN": "⚠️",
+                             "INFO": "ℹ️", "SKIP": "⏭"}.get(f.level, "·")
+                    st.markdown(
+                        f"{_icon} `{f.kind}` **{f.step}** — "
+                        f"{f.check}: {f.detail}")
+        st.caption(
+            "Checks run against THIS payload as the flow's input. Steps "
+            "after a format conversion (JSON→XML wraps in <root>, CSV→XML, "
+            "EDI→XML) see the converted intermediate — grab it from the "
+            "tenant trace and test it here as its own payload to check "
+            "those steps.")
+
+    st.divider()
+    st.markdown("**Tenant check — last runs of a deployed artifact**")
+    _mpl_id = st.text_input("Artifact Id (as deployed)", key="pl_mpl_id")
+    if _mpl_id and st.button("📡 Fetch last MPLs", key="pl_mpl_btn"):
+        if not st.session_state.get("cpi_session"):
+            st.warning("Connect to the tenant first (Profiles tab).")
+        else:
+            from fetcher.cpi_uploader import CPIUploader
+            _u = CPIUploader(st.session_state.cpi_base_url,
+                             st.session_state.cpi_session)
+            _rows = _u.fetch_mpls(_mpl_id.strip(), top=5)
+            if not _rows:
+                st.info("No MPLs returned (artifact never ran, id wrong, "
+                        "or API blocked).")
+            for _r in _rows:
+                _sicon = {"COMPLETED": "✅", "FAILED": "❌",
+                          "PROCESSING": "⏳", "ESCALATED": "🟠",
+                          "RETRY": "🔁"}.get(_r.get("Status"), "·")
+                st.markdown(
+                    f"{_sicon} **{_r.get('Status')}** "
+                    f"{(_r.get('CustomStatus') or '')} — "
+                    f"{_r.get('LogStart')} → {_r.get('LogEnd')}  \n"
+                    f"`{_r.get('MessageGuid')}`")
+                if _r.get("Error"):
+                    st.code(_r["Error"][:1200])
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

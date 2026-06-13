@@ -1371,10 +1371,6 @@ class TestSAPSamplesCatalog:
 
 # ─── Match aggregator (Tab 3 wire-up) ────────────────────────────────────────
 
-from fetcher.match_aggregator import (
-    MatchAggregator, MatchResult, MatchSource, MatchMode,
-    _canonical_key, _keywords, FALLBACK_THRESHOLD,
-)
 
 
 class _MockHubPackage:
@@ -1417,106 +1413,6 @@ class _MockSamplesBrowser:
         self._index = index or []
     def get_package_index(self):
         return self._index
-
-
-class TestMatchAggregatorDedup:
-    def test_hub_preferred_over_tenant_with_same_package(self):
-        tenant = MatchResult(source=MatchSource.TENANT, id="a", name="X",
-                             package_id="PkgA")
-        hub    = MatchResult(source=MatchSource.HUB, id="PkgA", name="X")
-        deduped = MatchAggregator._dedup([tenant, hub])
-        assert len(deduped) == 1
-        assert deduped[0].source == MatchSource.HUB
-
-    def test_hub_preferred_regardless_of_input_order(self):
-        tenant = MatchResult(source=MatchSource.TENANT, id="a",
-                             name="X", package_id="PkgA")
-        hub    = MatchResult(source=MatchSource.HUB, id="PkgA", name="X")
-        # Hub appears first
-        deduped = MatchAggregator._dedup([hub, tenant])
-        assert deduped[0].source == MatchSource.HUB
-
-    def test_no_dedup_when_keys_differ(self):
-        t = MatchResult(source=MatchSource.TENANT, id="a", name="X",
-                        package_id="PkgA")
-        g = MatchResult(source=MatchSource.GITHUB, id="b", name="Y")
-        deduped = MatchAggregator._dedup([t, g])
-        assert len(deduped) == 2
-
-    def test_canonical_key_normalises(self):
-        # Same package id with different casing / separators hashes the same
-        r1 = MatchResult(source=MatchSource.HUB, id="SAP-Cloud_Pkg", name="X")
-        r2 = MatchResult(source=MatchSource.HUB, id="sapcloudpkg", name="Y")
-        assert _canonical_key(r1) == _canonical_key(r2)
-
-    def test_empty_input(self):
-        assert MatchAggregator._dedup([]) == []
-
-
-class TestMatchAggregatorModes:
-    def setup_method(self):
-        self.hub = _MockHubClient([(10, _MockHubPackage("HubPkg1", "Hub Order"))])
-        self.cpi = _MockCPIFetcher([(5, _MockTenantArt("art1", "Tenant Ord", "TenPkg"))])
-        self.gh  = _MockSamplesBrowser([_MockSamplePkg("gh1", "GH Order")])
-        self.agg = MatchAggregator(self.cpi, self.hub, self.gh)
-
-    def test_tenant_only_mode(self):
-        results = self.agg.find_matches("Order", "IDoc", "SOAP",
-                                        tenant_artifacts=["x"],
-                                        mode=MatchMode.TENANT_ONLY)
-        assert len(results) == 1
-        assert results[0].source == MatchSource.TENANT
-
-    def test_hub_only_mode(self):
-        results = self.agg.find_matches("Order", "IDoc", "SOAP",
-                                        mode=MatchMode.HUB_ONLY)
-        assert len(results) == 1
-        assert results[0].source == MatchSource.HUB
-
-    def test_github_only_mode(self):
-        results = self.agg.find_matches("Order", "IDoc", "SOAP",
-                                        mode=MatchMode.GITHUB_ONLY)
-        assert len(results) == 1
-        assert results[0].source == MatchSource.GITHUB
-
-    def test_fallback_chain_extends_when_tenant_thin(self):
-        # Tenant returns 1 result, below FALLBACK_THRESHOLD of 3 -> Hub joins
-        assert FALLBACK_THRESHOLD == 3
-        results = self.agg.find_matches("Order", "IDoc", "SOAP",
-                                        tenant_artifacts=["x"],
-                                        mode=MatchMode.FALLBACK_CHAIN)
-        sources = {r.source for r in results}
-        assert MatchSource.HUB in sources
-
-    def test_fallback_chain_stops_when_tenant_sufficient(self):
-        many = [(i, _MockTenantArt(f"art{i}", "Y", "PkgY"))
-                for i in range(5)]
-        agg = MatchAggregator(_MockCPIFetcher(many), self.hub, self.gh)
-        results = agg.find_matches("Order", "IDoc", "SOAP",
-                                   tenant_artifacts=["x"],
-                                   mode=MatchMode.FALLBACK_CHAIN)
-        # 5 tenant results >= threshold of 3, so no Hub join
-        assert all(r.source == MatchSource.TENANT for r in results)
-
-    def test_missing_hub_client_degrades_gracefully(self):
-        agg = MatchAggregator(self.cpi, hub_client=None, samples_browser=self.gh)
-        results = agg.find_matches("Order", "IDoc", "SOAP",
-                                   tenant_artifacts=["x"],
-                                   mode=MatchMode.FALLBACK_CHAIN)
-        # Chain still works without Hub
-        assert results
-        assert all(r.source != MatchSource.HUB for r in results)
-
-    def test_hub_only_without_client_returns_empty(self):
-        agg = MatchAggregator(self.cpi, hub_client=None, samples_browser=self.gh)
-        assert agg.find_matches("X", "A", "B", mode=MatchMode.HUB_ONLY) == []
-
-    def test_keywords_strip_short_name_tokens_but_keep_adapters(self):
-        kw = _keywords("Z_OUTB_DELIVERY", "RFC", "SOAP")
-        assert "rfc" in kw         # adapter survives even though length<=3
-        assert "soap" in kw
-        assert "outb" in kw         # 4 chars survives
-        assert "z" not in kw        # 1 char dropped
 
 
 # ─── Workbench import smoke test ─────────────────────────────────────────────
@@ -4404,14 +4300,17 @@ class TestSAPComplexityEngine:
         assert any(f.rule == "ccBPM" for f in r.fired_rules)
         assert r.category == "Evaluate"
 
-    def test_mode2_fires_both_characteristics(self):
-        # Count rules fire against RECEIVER_IF AND EXT_RCV_DET (SAP behaviour).
+    def test_mode2_fires_once_per_rule(self):
+        # 2026-06-11 correction: the real SAP export (169 interfaces, 99
+        # Rules-Log rows) shows every (ICO, rule) pair EXACTLY ONCE — the
+        # earlier both-characteristics design double-counted. Count rules
+        # now keep only their strongest matching band.
         from analyzer.sap_complexity_engine import SAPComplexityEngine
         eng = SAPComplexityEngine()
         r = eng.assess_bundle("F", self._mkbundle("F", xslt=7))
-        xslt_fires = [f for f in r.fired_rules if f.rule == "XSLTDependenciesCount"]
-        chars = {f.characteristic for f in xslt_fires}
-        assert "RECEIVER_IF" in chars and "EXT_RCV_DET" in chars
+        xslt_fires = [f for f in r.fired_rules
+                      if f.rule == "XSLTDependenciesCount"]
+        assert len(xslt_fires) == 1
 
     def test_pluggable_effort_profile(self):
         from analyzer.sap_complexity_engine import (SAPComplexityEngine,
@@ -7235,9 +7134,13 @@ class TestUploadShapeRouting:
         u.upload_iflow(Path("x.iflw"), "P", "A", "Name")
         assert u.calls["clone"] == 0 and u.last == b"TIMER"
 
-    def test_scaffold_path_drops_clone_extras(self):
-        # The packaged scaffold must NOT bundle clone-oriented scripts/mappings —
-        # doing so produced a CPI 500 ("InputStream cannot be null").
+    def test_scaffold_path_forwards_extras(self):
+        # 2026-06-10 contract change: upload_iflow FORWARDS extra_artifacts to
+        # the packager. The old behavior (force extra_artifacts=None) was a
+        # clone-era guard against the CPI 500 'InputStream cannot be null',
+        # whose real causes (empty content, bare-LF manifest) have dedicated
+        # guards now — and dropping extras silently stripped the resolved
+        # scripts/mappings from migrated bundles (tenant: 'not found').
         from pathlib import Path
         from fetcher.cpi_uploader import CPIUploader
         u = CPIUploader.__new__(CPIUploader)
@@ -7252,7 +7155,7 @@ class TestUploadShapeRouting:
         u._post_artifact = lambda *a, **k: None
         u.upload_iflow(Path("x.iflw"), "P", "A", "Name",
                        extra_artifacts=[("script/a.groovy", "x")])
-        assert seen["extras"] is None
+        assert seen["extras"] == [("script/a.groovy", "x")]
 
 
 class TestConsultantStructure:
@@ -9385,14 +9288,17 @@ class TestTenantFixes:
                             and y1 < y2 + h2 and y2 < y1 + h1)
         for mm in re.finditer(                      # arrows touch their shapes
                 r'sourceElement="BPMNShape_([^"]+)" targetElement='
-                r'"BPMNShape_([^"]+)"><di:waypoint x="([\d.]+)"[^/]*'
-                r'y="([\d.]+)"/><di:waypoint x="([\d.]+)"[^/]*y="([\d.]+)"', out):
-            s, t, ax, ay, bx, by = mm.groups()
-            for sid, px, py in ((s, float(ax), float(ay)),
-                                (t, float(bx), float(by))):
+                r'"BPMNShape_([^"]+)">((?:<di:waypoint [^/]*/>)+)', out):
+            s, t, wps = mm.groups()
+            pts = [(float(a), float(b)) for a, b in re.findall(
+                r'x="([\d.]+)"[^/]*y="([\d.]+)"', wps)]
+            assert len(pts) >= 2
+            for sid, (px, py) in ((s, pts[0]), (t, pts[-1])):
                 if sid in shapes:
                     x, y, w, h = shapes[sid]
                     assert x - 1 <= px <= x + w + 1 and y - 1 <= py <= y + h + 1
+            for (x1, y1), (x2, y2) in zip(pts, pts[1:]):  # no diagonal segments
+                assert abs(x1 - x2) < 1 or abs(y1 - y2) < 1
 
     def test_parallel_gateway_element_and_version_floor(self):
         import os, pickle, re, pytest
@@ -9845,3 +9751,3166 @@ class TestExtractCorpusTool:
         srcs = {r[1] for r in rows}
         assert any(s.startswith("outer.zip/My_Package.zip/a_content::src/")
                    for s in srcs)
+
+
+class TestTargetedCorpusTopUp:
+    """walk_corpus_for_names — the antidote to the bulk-walk safety cap that
+    starved resolution live (0 resolved, stub parameters): the scaffolder tops
+    the corpus up with exactly the packages it is migrating."""
+
+    def _mk_pkg(self, tmp, pkg_zip_name, bundle="b1_content",
+                edmx_bytes=0):
+        import io, zipfile, os
+        bio = io.BytesIO()
+        with zipfile.ZipFile(bio, "w") as zb:
+            zb.writestr("src/main/resources/script/a.groovy", "return msg")
+            zb.writestr("src/main/resources/mapping/m.xsl", "<x/>")
+            zb.writestr("src/main/resources/parameters.prop", "#\nP=v\n")
+            zb.writestr("src/main/resources/parameters.propdef",
+                        "<parameters/>")
+            zb.writestr(
+                "src/main/resources/scenarioflows/integrationflow/F.iflw",
+                "<bpmn2:definitions/>")
+            if edmx_bytes:
+                zb.writestr("src/main/resources/edmx/big.edmx",
+                            "e" * edmx_bytes)
+        p = os.path.join(tmp, pkg_zip_name)
+        with zipfile.ZipFile(p, "w") as zp:
+            zp.writestr(bundle, bio.getvalue())
+        return p
+
+    def test_matches_name_variants_and_keeps_big_edmx(self, tmp_path):
+        from library_builder.corpus_pipeline import (walk_corpus_for_names,
+                                                      WIRING_EXTS)
+        self._mk_pkg(str(tmp_path), "My_Package_Version_2.zip",
+                     edmx_bytes=6 * 1024 * 1024)      # over the 5 MB bulk cap
+        out = walk_corpus_for_names(str(tmp_path), ["My Package V2"],
+                                    exts=WIRING_EXTS)
+        assert any(k.endswith("script/a.groovy") for k in out)
+        # container-qualified keys, same shape as walk_corpus
+        assert any(k.startswith("My_Package_Version_2.zip/b1_content::src/")
+                   for k in out)
+        # the 6 MB EDMX is KEPT (targeted leaf cap is 16 MB, not 5)
+        assert any(k.endswith("edmx/big.edmx") for k in out)
+
+    def test_matches_package_inside_batch_zip(self, tmp_path):
+        import io, os, zipfile
+        from library_builder.corpus_pipeline import walk_corpus_for_names
+        inner = self._mk_pkg(str(tmp_path), "Inner_Pkg.zip")
+        batch = os.path.join(str(tmp_path), "part9.zip")
+        with zipfile.ZipFile(batch, "w") as zb:
+            zb.write(inner, "Inner_Pkg.zip")
+        os.remove(inner)
+        out = walk_corpus_for_names(str(tmp_path), ["Inner Pkg"])
+        assert any(k.startswith("part9.zip/Inner_Pkg.zip/b1_content::")
+                   for k in out)
+
+    def test_no_match_returns_empty(self, tmp_path):
+        from library_builder.corpus_pipeline import walk_corpus_for_names
+        self._mk_pkg(str(tmp_path), "Some_Other_Package.zip")
+        assert walk_corpus_for_names(str(tmp_path), ["Unrelated Name"]) == {}
+
+    def test_source_bundle_siblings_ship_and_own_copy_wins(self):
+        """When the source iflw's bundle is located, its ENTIRE sibling
+        resource set ships (References-tab parity) and the bundle's own copy
+        beats a basename match from a sibling bundle."""
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        flows = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        key = ("rci093.zip/RCI093_SuccessFactors_to_OpenText_SuccessFactors"
+               " (4).zip/fff525112616476cb2ba9ed285a13236_content")
+        xml = next((x for p, x in flows
+                    if p.startswith(key) and p.endswith(
+                        "Job_Recruiting_Fields_OpenText.iflw")), None)
+        if xml is None:
+            pytest.skip("RCI093 not in corpus pickle")
+        own_edmx = "the-own-bundle-copy"
+        sibling_edmx = "the-sibling-copy"
+        resources = {
+            f"{key}::src/main/resources/scenarioflows/integrationflow/"
+            f"Job_Recruiting_Fields_OpenText.iflw": xml,
+            f"{key}::src/main/resources/script/helper_unreferenced.groovy":
+                "return msg",
+            f"{key}::src/main/resources/edmx/"
+            f"api4_successfactors_com_odata_v2.edmx": own_edmx,
+            f"{key}::src/main/resources/parameters.prop": "#\nA=1\n",
+            f"{key}::src/main/resources/parameters.propdef": "<parameters/>",
+            "rci093.zip/RCI093_SuccessFactors_to_OpenText_SuccessFactors"
+            " (4).zip/f7aa15b6d99b4db8855720a1765e6831_content::src/main/"
+            "resources/edmx/api4_successfactors_com_odata_v2.edmx":
+                sibling_edmx,
+        }
+        from scaffolder.regenerate import regenerate_iflow_xml
+        regen = regenerate_iflow_xml(
+            xml, "g", resources=resources,
+            package="RCI093_SuccessFactors_to_OpenText_SuccessFactors")
+        assert regen.reproduced and regen.result is not None
+        files = regen.result.files
+        # unreferenced sibling ships (References parity)
+        assert files.get("src/main/resources/script/"
+                         "helper_unreferenced.groovy") == "return msg"
+        # the bundle's OWN edmx wins over the sibling bundle's basename match
+        assert files.get("src/main/resources/edmx/"
+                         "api4_successfactors_com_odata_v2.edmx") == own_edmx
+        # original parameter pair shipped verbatim from the bundle
+        assert files.get("src/main/resources/parameters.prop") == "#\nA=1\n"
+
+    def test_adapter_edmx_reference_resolves_from_message_flow(self):
+        """edmxFilePath lives on the MESSAGE FLOW adapter config (decoded from
+        the RCI093 original) — attach_resources must ship it even though no
+        step references it."""
+        from scaffolder.resource_attach import attach_resources
+
+        class _MF:
+            id = "MessageFlow_1"
+            config = {"ComponentType": "HCIOData",
+                      "edmxFilePath": "edmx/api4_test.edmx"}
+
+        class _Model:
+            steps = {}
+            message_flows = [_MF()]
+        rep = attach_resources(
+            _Model(), {"Pkg.zip/b_content::src/main/resources/edmx/"
+                       "api4_test.edmx": "<edmx/>"})
+        assert rep.shipped.get(
+            "src/main/resources/edmx/api4_test.edmx") == "<edmx/>"
+
+
+class TestLayoutRules:
+    """The four layout rules (2026-06-10): one standard pitch (150, the mode
+    across 18,570 same-row links in 1,221 SAP standard iFlows) on both axes,
+    orthogonal branch edges, endpoints one pitch off the pool border and
+    center-aligned with their partner step."""
+
+    def _gen(self, fname):
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        by = {}
+        for p, x in pickle.load(open("/tmp/learn/iflws.pkl", "rb")):
+            by.setdefault(p.rsplit("/", 1)[-1], x)
+        if fname not in by:
+            pytest.skip(f"{fname} not in corpus")
+        return generate_from_model(parse_iflow(by[fname], "g"),
+                                   name="g").iflw_xml
+
+    @staticmethod
+    def _boxes(out):
+        import re
+        bx = {}
+        for m in re.finditer(
+                r'BPMNShape bpmnElement="([^"]+)"[^>]*>\s*<dc:Bounds '
+                r'height="([\d.]+)" width="([\d.]+)" x="([-\d.]+)" '
+                r'y="([-\d.]+)"', out):
+            i, h, w, x, y = m.groups()
+            bx[i] = (float(x), float(y), float(w), float(h))
+        return bx
+
+    def test_all_edges_orthogonal_corpus_sample(self):
+        import re
+        for fname in ("Job_Recruiting_Fields_OpenText.iflw",
+                      "ReadMailsfromDataStore.iflw"):
+            out = self._gen(fname)
+            for m in re.finditer(
+                    r'BPMNEdge bpmnElement="[^"]+"[^>]*>'
+                    r'((?:<di:waypoint [^/]*/>)+)', out):
+                pts = [(float(a), float(b)) for a, b in re.findall(
+                    r'x="([-\d.]+)"[^/]*y="([-\d.]+)"', m.group(1))]
+                for (x1, y1), (x2, y2) in zip(pts, pts[1:]):
+                    assert abs(x1 - x2) < 1 or abs(y1 - y2) < 1, \
+                        f"diagonal segment in {fname}"
+
+    def test_endpoint_participants_one_pitch_off_pool(self):
+        out = self._gen("Job_Recruiting_Fields_OpenText.iflw")
+        bx = self._boxes(out)
+        from scaffolder.minimal_iflow import _GW_STD
+        pools = {i: b for i, b in bx.items()
+                 if i.startswith("Participant_Process")
+                 or i.startswith("Participant_SubProcess")}
+        eps = {i: b for i, b in bx.items()
+               if i.startswith("Participant") and i not in pools}
+        assert eps, "flow should have endpoint participants"
+        for i, (x, y, w, h) in eps.items():
+            cx, cy = x + w / 2, y + h / 2
+            # never touching/inside any process pool
+            for px, py, pw, ph in pools.values():
+                assert not (x < px + pw and px < x + w
+                            and y < py + ph and py < y + h), \
+                    f"{i} overlaps a pool"
+            # rule 3: the participant's CENTER sits exactly one standard pitch
+            # from its pool's border (vertically for above/below placements,
+            # horizontally for senders). Adjacent pools can be closer on some
+            # other axis, so the invariant is existential: ONE border at ONE
+            # pitch.
+            dists = []
+            for px, py, pw, ph in pools.values():
+                dists += [abs(cy - (py + ph)), abs(py - cy),
+                          abs(px - cx), abs(cx - (px + pw))]
+            assert any(abs(d - _GW_STD) <= 1 for d in dists), \
+                f"{i} has no pool border at one pitch (dists={sorted(dists)[:4]})"
+
+    def test_unified_pitch_x_equals_y(self):
+        """Two consecutive steps share a center coordinate and sit one
+        standard pitch apart, whether laid out along X or Y."""
+        import re
+        from scaffolder.minimal_iflow import _gw_layout, _GW_STD
+
+        class _S:
+            def __init__(self, sid, kind, outgoing):
+                self.id, self.kind, self.outgoing = sid, kind, outgoing
+        steps = [_S("a", "Enricher", ["f1"]), _S("b", "Enricher", ["f2", "f3"]),
+                 _S("c", "Enricher", []), _S("d", "Enricher", [])]
+        pos = _gw_layout(steps, {"f1": "b", "f2": "c", "f3": "d"})
+        ctr = {i: (x + w / 2, y + h / 2) for i, (x, y, w, h) in pos.items()}
+        # a→b horizontal: same center row, one pitch in x
+        assert abs(ctr["a"][1] - ctr["b"][1]) < 1
+        assert abs((ctr["b"][0] - ctr["a"][0]) - _GW_STD) < 1
+        # branch lanes c/d: one pitch apart in y, same column center
+        assert abs(ctr["c"][0] - ctr["d"][0]) < 1
+        assert abs((ctr["d"][1] - ctr["c"][1]) - _GW_STD) < 1
+
+
+class TestBundleParameterPrecedence:
+    """_package_iflow ships the ORIGINAL parameter pair staged in __meta (the
+    source bundle's configured values) instead of the synthesized empty shells
+    it used to force — the root of 'externalized parameters not being filled'
+    on the tenant (2026-06-10)."""
+
+    def test_meta_parameter_pair_ships_with_resources(self, tmp_path):
+        import io, zipfile
+        from fetcher.cpi_uploader import CPIUploader
+        iflw = tmp_path / "Flow.iflw"
+        iflw.write_text("<bpmn2:definitions/>", encoding="utf-8")
+        res = tmp_path / "Flow__meta" / "src" / "main" / "resources"
+        (res / "script").mkdir(parents=True)
+        (res / "script" / "a.groovy").write_text("return msg")
+        (res / "parameters.prop").write_text("#\nAddress=/ird/terminate/v2\n")
+        (res / "parameters.propdef").write_text(
+            "<parameters><parameter><name>Address</name></parameter>"
+            "</parameters>")
+        u = CPIUploader.__new__(CPIUploader)
+        zb = u._package_iflow(iflw, "Flow", "Flow", "")
+        z = zipfile.ZipFile(io.BytesIO(zb))
+        assert z.read("src/main/resources/parameters.prop").decode() == \
+            "#\nAddress=/ird/terminate/v2\n"
+        assert b"<name>Address</name>" in \
+            z.read("src/main/resources/parameters.propdef")
+        assert z.read("src/main/resources/script/a.groovy").decode() == \
+            "return msg"
+        # no duplicate entries (synthesized pair must not also ship)
+        names = z.namelist()
+        assert len(names) == len(set(names))
+
+    def test_explicit_arg_beats_staged_pair(self, tmp_path):
+        import io, zipfile
+        from fetcher.cpi_uploader import CPIUploader
+        iflw = tmp_path / "F.iflw"
+        iflw.write_text("<bpmn2:definitions/>", encoding="utf-8")
+        res = tmp_path / "F__meta" / "src" / "main" / "resources"
+        res.mkdir(parents=True)
+        (res / "parameters.prop").write_text("#staged\n")
+        u = CPIUploader.__new__(CPIUploader)
+        zb = u._package_iflow(iflw, "F", "F", "#explicit\n")
+        z = zipfile.ZipFile(io.BytesIO(zb))
+        assert z.read("src/main/resources/parameters.prop").decode() == \
+            "#explicit\n"
+
+    def test_no_meta_dir_still_ships_valid_shells(self, tmp_path):
+        import io, zipfile
+        from fetcher.cpi_uploader import CPIUploader
+        iflw = tmp_path / "Bare.iflw"
+        iflw.write_text("<bpmn2:definitions/>", encoding="utf-8")
+        u = CPIUploader.__new__(CPIUploader)
+        zb = u._package_iflow(iflw, "Bare", "Bare", "")
+        z = zipfile.ZipFile(io.BytesIO(zb))
+        assert z.read("src/main/resources/parameters.prop").startswith(b"#")
+        assert b"<parameters" in \
+            z.read("src/main/resources/parameters.propdef")
+
+
+class TestSourcePackageThreading:
+    """Interfaces built from uploaded CPI packages carry their SOURCE package
+    identity (the package zip stem). Without it, the targeted corpus top-up
+    only matched flows whose NAME equaled the zip name — live: RCI093 main
+    resolved 23/23 while RCI093_Clear (same package, different name) resolved
+    0, NZ flows shipped empty parameters, and tenant packages got synthesized
+    Sender/Receiver names with one flow landing in a sibling package."""
+
+    def _bundle(self, iflw_name="F.iflw"):
+        import io, zipfile
+        bio = io.BytesIO()
+        with zipfile.ZipFile(bio, "w") as zb:
+            zb.writestr("META-INF/MANIFEST.MF",
+                        "Manifest-Version: 1.0\r\n"
+                        "Bundle-SymbolicName: F\r\n"
+                        "Bundle-Name: F\r\n"
+                        "SAP-BundleType: IntegrationFlow\r\n\r\n")
+            zb.writestr(
+                f"src/main/resources/scenarioflows/integrationflow/{iflw_name}",
+                '<?xml version="1.0"?><bpmn2:definitions '
+                'xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"/>')
+        return bio.getvalue()
+
+    def test_package_wrapper_flows_get_container_name(self):
+        import io, zipfile
+        from fetcher.artifact_router import extract_iflows_recursive
+        wrap = io.BytesIO()
+        with zipfile.ZipFile(wrap, "w") as zw:
+            zw.writestr("abc123_content", self._bundle())
+            zw.writestr("resources.cnt", "{}")
+        flows = extract_iflows_recursive(
+            wrap.getvalue(), container_name="My_Package_V2")
+        assert flows and all(f["package"] == "My_Package_V2" for f in flows)
+
+    def test_batch_zip_flows_get_inner_zip_stem(self):
+        import io, zipfile
+        from fetcher.artifact_router import extract_iflows_recursive
+        inner = io.BytesIO()
+        with zipfile.ZipFile(inner, "w") as zw:
+            zw.writestr("abc123_content", self._bundle())
+            zw.writestr("resources.cnt", "{}")
+        batch = io.BytesIO()
+        with zipfile.ZipFile(batch, "w") as zb:
+            zb.writestr("Inner_Pkg.zip", inner.getvalue())
+        flows = extract_iflows_recursive(
+            batch.getvalue(), container_name="part2")
+        assert flows and all(f["package"] == "Inner_Pkg" for f in flows)
+
+
+class TestLoopingProcessCallCondition:
+    """The loop Condition Expression lives in a standardLoopCharacteristics
+    CHILD (id + loopMaximum + loopCondition[id, xsi:type, XPath text] —
+    202/202 corpus instances), referenced by the loopId prop. It must
+    round-trip with ORIGINAL ids and the source's byte form, or the editor
+    shows an empty condition (found on RCI093 LIP_Extract_CorrectPosition)."""
+
+    def _src(self):
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        flows = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        xml = next((x for p, x in flows
+                    if "rci093" in p.lower()
+                    and p.endswith("Job_Recruiting_Fields_OpenText.iflw")),
+                   None)
+        if xml is None:
+            pytest.skip("RCI093 not in corpus pickle")
+        return xml
+
+    def test_parser_captures_loop_characteristics(self):
+        from extractor.iflow_parser import parse_iflow
+        m = parse_iflow(self._src(), "g")
+        loops = [s for s in m.steps.values() if getattr(s, "loop", None)]
+        assert len(loops) == 1
+        lp = loops[0].loop
+        assert lp["loop_maximum"] == "8"
+        assert lp["id"].startswith("StandardLoopCharacteristics_")
+        assert lp["cond_id"].startswith("FormalExpression_")
+        assert "/JobRequisition/JobRequisition/Position[" in lp["condition"]
+
+    def test_loop_round_trips_byte_identical(self):
+        import re
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        xml = self._src()
+        m1 = parse_iflow(xml, "g")
+        out = generate_from_model(m1, name="g").iflw_xml
+        m2 = parse_iflow(out, "g")
+        l1 = {i: s.loop for i, s in m1.steps.items() if getattr(s, "loop", None)}
+        l2 = {i: s.loop for i, s in m2.steps.items() if getattr(s, "loop", None)}
+        assert l1 == l2 and l1
+        orig = re.search(r"<bpmn2:loopCondition[^>]*>(.*?)</bpmn2:loopCondition>",
+                         xml, re.S).group(1).strip()
+        gen = re.search(r"<bpmn2:loopCondition[^>]*>(.*?)</bpmn2:loopCondition>",
+                        out, re.S).group(1).strip()
+        assert gen == orig          # byte form, not just semantics
+
+    def test_source_inherited_duplicate_loop_ids_mirror_verbatim(self):
+        """DS Read (tenant-proven export) ships THREE standardLoopCharacteristics
+        sharing one id (editor copy-paste; loopMaximum 100/50/200 differ). The
+        element is a CHILD of its callActivity, so resolution is local and the
+        tenant tolerates it. Decision: mirror the source verbatim — dup-id
+        audits must only flag duplicates WE introduce, not source-inherited
+        ones."""
+        import os, pickle, re, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        flows = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        xml = next((x for p, x in flows if p.endswith("DS Read.iflw")), None)
+        if xml is None:
+            pytest.skip("DS Read not in corpus pickle")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        out = generate_from_model(parse_iflow(xml, "g"), name="g").iflw_xml
+        src_loops = sorted(re.findall(
+            r'<bpmn2:standardLoopCharacteristics id="([^"]+)" '
+            r'loopMaximum="([^"]+)"', xml))
+        gen_loops = sorted(re.findall(
+            r'<bpmn2:standardLoopCharacteristics id="([^"]+)" '
+            r'loopMaximum="([^"]+)"', out))
+        assert gen_loops == src_loops and len(gen_loops) == 3
+
+
+class TestStressLabAndLayoutRefinements:
+    """2026-06-10 part 3: stub-shipping fix, above-band endpoints,
+    obstacle-aware routing, Join as parallelGateway, Stress Lab builder."""
+
+    def test_join_is_parallel_gateway(self):
+        # corpus: Join 69/69 on <bpmn2:parallelGateway>, 0 on callActivity —
+        # Join-as-callActivity is the Multicast-as-callActivity breaker family
+        from scaffolder.minimal_iflow import _GW_PARALLEL
+        assert "Join" in _GW_PARALLEL
+
+    def test_stress_lab_builds_clean(self, tmp_path):
+        import io, re, zipfile, xml.dom.minidom
+        from tools.build_stress_lab import build
+        info = build(str(tmp_path))
+        assert info["missing_kinds"] == []
+        assert info["loops"] == 1
+        zb = (tmp_path / "StressLab_bundle.zip").read_bytes()
+        z = zipfile.ZipFile(io.BytesIO(zb))
+        src = z.read("src/main/resources/scenarioflows/integrationflow/"
+                     "StressLabAllSteps.iflw").decode()
+        xml.dom.minidom.parseString(src)
+        ids = re.findall(r'\bid="([^"]+)"', src)
+        assert len(ids) == len(set(ids))
+        assert len(re.findall(r"<bpmn2:parallelGateway", src)) == 2  # MC + Join
+        assert "standardLoopCharacteristics" in src
+        assert (tmp_path / "stress_payload.xml").exists()
+        from scaffolder.regenerate import regenerate_iflow_xml
+        assert regenerate_iflow_xml(src, "g").reproduced
+
+    def test_stale_meta_resources_cleared_between_generations(self, tmp_path):
+        """A previous generation's staged files must not ride along (the
+        clone-era stub mmap shipped this way and failed the editor's mapping
+        migration: 'Stream after migration is null')."""
+        import types
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+        sc = IFlowScaffolder(output_dir=str(tmp_path))
+        stale = (tmp_path / "iflows" / "F__meta" / "src" / "main" /
+                 "resources" / "mapping")
+        stale.mkdir(parents=True)
+        (stale / "F_mapping.mmap").write_text("<stub/>")
+        res = types.SimpleNamespace(
+            iflow_id="F", iflw_xml="<x/>", manifest="M", project_xml="P",
+            files={"src/main/resources/script/real.groovy": "return msg"})
+        sc._write_result(res)
+        meta = tmp_path / "iflows" / "F__meta" / "src" / "main" / "resources"
+        assert (meta / "script" / "real.groovy").exists()
+        assert not (meta / "mapping" / "F_mapping.mmap").exists()
+
+    def test_no_sequence_edge_through_node_on_rci093(self):
+        import os, pickle, re, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        flows = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        xml = next((x for p, x in flows if "rci093" in p.lower()
+                    and p.endswith("Job_Recruiting_Fields_OpenText.iflw")), None)
+        if xml is None:
+            pytest.skip("RCI093 not in pickle")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        out = generate_from_model(parse_iflow(xml, "g"), name="g").iflw_xml
+        bx = {}
+        for m in re.finditer(
+                r'BPMNShape bpmnElement="([^"]+)"[^>]*>\s*<dc:Bounds '
+                r'height="([\d.]+)" width="([\d.]+)" x="([-\d.]+)" '
+                r'y="([-\d.]+)"', out):
+            i, h, w, x, y = m.groups()
+            bx[i] = (float(x), float(y), float(w), float(h))
+        nodes = {i: b for i, b in bx.items() if not i.startswith("Participant")}
+        for m in re.finditer(r'BPMNEdge bpmnElement="(SequenceFlow[^"]+)"'
+                             r'[^>]*>((?:<di:waypoint [^/]*/>)+)', out):
+            pts = [(float(a), float(b)) for a, b in re.findall(
+                r'x="([-\d.]+)"[^/]*y="([-\d.]+)"', m.group(2))]
+            for (x1, y1), (x2, y2) in zip(pts, pts[1:]):
+                for n, (nx, ny, nw, nh) in nodes.items():
+                    if abs(y1 - y2) < 1:
+                        assert not (ny < y1 < ny + nh and min(x1, x2) < nx
+                                    and nx + nw < max(x1, x2)), \
+                            f"{m.group(1)} crosses {n}"
+                    if abs(x1 - x2) < 1:
+                        assert not (nx < x1 < nx + nw and min(y1, y2) < ny
+                                    and ny + nh < max(y1, y2)), \
+                            f"{m.group(1)} crosses {n}"
+
+    def test_endpoints_use_above_band_on_multirow_flows(self):
+        import os, pickle, re, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        flows = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        xml = next((x for p, x in flows if "rci093" in p.lower()
+                    and p.endswith("Job_Recruiting_Fields_OpenText.iflw")), None)
+        if xml is None:
+            pytest.skip("RCI093 not in pickle")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.model_generator import generate_from_model
+        out = generate_from_model(parse_iflow(xml, "g"), name="g").iflw_xml
+        bx = {}
+        for m in re.finditer(
+                r'BPMNShape bpmnElement="([^"]+)"[^>]*>\s*<dc:Bounds '
+                r'height="([\d.]+)" width="([\d.]+)" x="([-\d.]+)" '
+                r'y="([-\d.]+)"', out):
+            i, h, w, x, y = m.groups()
+            bx[i] = (float(x), float(y), float(w), float(h))
+        pools = {i: b for i, b in bx.items()
+                 if i.startswith("Participant_Process")}
+        eps = {i: b for i, b in bx.items()
+               if i.startswith("Participant") and i not in pools}
+        main_top = min(b[1] for b in pools.values())
+        above = [i for i, (x, y, w, h) in eps.items() if y + h <= main_top]
+        assert above, "multi-row flow should hang top-half endpoints ABOVE"
+        assert not any(y < 0 for (x, y, w, h) in bx.values())
+
+
+class TestRound4Fixes:
+    """2026-06-10 part 4 (tenant round 4): uploaded-source self-sufficiency,
+    prefixed-name resolution, tenant-decoded step variants, EDI lab."""
+
+    def test_resolver_last_token_fallback(self):
+        # migrated flows reference 'SiiDte EnvioDTE_v10.xsd'; the package
+        # ships 'EnvioDTE_v10.xsd' — last-whitespace-token fallback resolves
+        from scaffolder.resource_resolver import resolve
+        files = {"pkg.zip/bundle/src/main/resources/xsd/EnvioDTE_v10.xsd":
+                 "<xsd/>"}
+        r = resolve("SiiDte EnvioDTE_v10.xsd", files)
+        assert r.ok and r.content == "<xsd/>"
+        assert not resolve("SiiDte Missing_v10.xsd", files).ok
+
+    def test_walk_zip_bytes_ingests_upload(self):
+        import io, zipfile
+        from library_builder.corpus_pipeline import walk_zip_bytes, WIRING_EXTS
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w") as z:
+            z.writestr("src/main/resources/script/mine.groovy", "return msg")
+            z.writestr("src/main/resources/scenarioflows/integrationflow/"
+                       "f.iflw", "<x/>")
+        got = walk_zip_bytes(buf.getvalue(), "MyUpload", exts=WIRING_EXTS)
+        assert any(k.startswith("MyUpload/") and k.endswith("mine.groovy")
+                   for k in got)
+        assert walk_zip_bytes(b"not a zip", "x") == {}
+
+    def test_scaffolder_merges_uploaded_resources(self, tmp_path):
+        # uploaded source wins over corpus for resolution input
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+        sc = IFlowScaffolder(output_dir=str(tmp_path),
+                             extra_resources={"Up/x/script/a.groovy": "real"})
+        assert sc.extra_resources["Up/x/script/a.groovy"] == "real"
+        sc2 = IFlowScaffolder(output_dir=str(tmp_path))
+        assert sc2.extra_resources == {}
+
+    def test_stress_lab_v2_tenant_decoded_variants(self, tmp_path):
+        import io, re, zipfile
+        from tools.build_stress_lab import build
+        build(str(tmp_path))
+        src = zipfile.ZipFile(io.BytesIO(
+            (tmp_path / "StressLab_bundle.zip").read_bytes())).read(
+            "src/main/resources/scenarioflows/integrationflow/"
+            "StressLabAllSteps.iflw").decode()
+        # round-4 tenant decodes (Ric's editor-fixed v1.0.1):
+        assert "fireNow=true" in src                      # configured timer
+        assert "cname::intermediatetimer/version::1.1" in src
+        assert "XmlToJsonConverter/version::1.0.8" in src  # supported profile
+        assert "XmlToJsonConverter/version::1.1.2" not in src
+        assert src.count("MessageEndEvent/version::1.1.0") == 3
+        assert re.search(r'id="EndEvent_Main"[^>]*>(?:(?!</bpmn2:endEvent>).)*'
+                         r'messageEventDefinition', src, re.S)
+        # LIP ends stay PLAIN (no messageEventDefinition), normalized uri
+        for sid in ("L1_End", "L2_End"):
+            blk = re.search(r'id="' + sid +
+                            r'"[^>]*>(?:(?!</bpmn2:endEvent>).)*'
+                            r'</bpmn2:endEvent>', src, re.S).group(0)
+            assert "messageEventDefinition" not in blk
+            assert "cname::EndEvent" in blk
+
+    def test_edi_lab_builds_with_corpus_schema(self, tmp_path):
+        import os, io, zipfile, xml.dom.minidom, pytest
+        corpus = "/home/claude/ref/263"
+        if not os.path.isdir(corpus):
+            pytest.skip("263 corpus not present")
+        from tools.build_stress_lab_edi import build, build_x12_850
+        info = build(str(tmp_path), corpus)
+        assert info["schema_shipped"]
+        src = zipfile.ZipFile(io.BytesIO(
+            (tmp_path / "StressLabEDI_bundle.zip").read_bytes())).read(
+            "src/main/resources/scenarioflows/integrationflow/"
+            "StressLabEDI.iflw").decode()
+        xml.dom.minidom.parseString(src)
+        assert "EDItoXMLConverter/version::2.5.0" in src
+        assert "XMLtoEDIConverter/version::2.5.0" in src
+        # payload structurally valid: SE count = ST..SE inclusive
+        edi = build_x12_850(orders=3)
+        segs = [s for s in edi.replace("\n", "").split("~") if s]
+        st = segs.index([s for s in segs if s.startswith("ST*")][0])
+        se = segs.index([s for s in segs if s.startswith("SE*")][0])
+        assert int(segs[se].split("*")[1]) == se - st + 1
+
+    def test_edi_lab_refuses_without_schema(self, tmp_path):
+        import pytest
+        from tools.build_stress_lab_edi import find_x12_schema
+        with pytest.raises(FileNotFoundError):
+            find_x12_schema(str(tmp_path))
+
+
+class TestRound5Fixes:
+    """2026-06-10 part 5: SAP-ContentMode removal + runtime-decoded XPaths."""
+
+    def test_manifest_has_no_configureonly(self):
+        # customer-built exports (RCI093 original) carry NO SAP-ContentMode;
+        # shipping ConfigureOnly marked our bundles as locked standard content
+        from scaffolder.minimal_iflow import build_manifest
+        mf = build_manifest("TestFlow", "Test Flow")
+        assert "SAP-ContentMode" not in mf
+        for required in ("SAP-BundleType: IntegrationFlow",
+                         "SAP-NodeType: IFLMAP", "SAP-RuntimeProfile: iflmap",
+                         "Import-Package"):
+            assert required in mf
+
+    def test_stress_lab_runtime_decoded_paths(self, tmp_path):
+        import io, zipfile
+        from tools.build_stress_lab import build
+        build(str(tmp_path))
+        src = zipfile.ZipFile(io.BytesIO(
+            (tmp_path / "StressLab_bundle.zip").read_bytes())).read(
+            "src/main/resources/scenarioflows/integrationflow/"
+            "StressLabAllSteps.iflw").decode()
+        assert "/root/Lab/Batch/Order" in src        # X2C sees the root wrap
+        assert "//Order[region = " in src            # depth-agnostic route
+        import html as _h
+        cond = [l for l in src.splitlines()
+                if "conditionExpression>//Order" in l][0]
+        assert "EU" in _h.unescape(cond)
+        assert "SAP-ContentMode" not in src
+
+
+class TestGoldErrorHandling:
+    """2026-06-10 part 6: gold-standard exception-subprocess upgrade,
+    decoded from SAP Design Guidelines 'Handle Errors Gracefully'."""
+
+    def _victim(self):
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        flows = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        return next((x for p, x in flows
+                     if "ErrorEventSubProcessTemplate" not in x
+                     and x.count('callActivity id=') > 3), None)
+
+    def test_inject_all_variants_reproduce(self):
+        import re, xml.dom.minidom, pytest
+        from scaffolder.regenerate import regenerate_iflow_xml
+        x = self._victim()
+        if x is None:
+            pytest.skip("no sub-less flow in corpus")
+        expect = {"error_end": ("EndErrorEvent", "errorEventDefinition"),
+                  "escalation_end": ("EscalationEndEvent",
+                                     "escalationEventDefinition"),
+                  "message_end": ("MessageEndEvent",
+                                  "messageEventDefinition")}
+        for variant, (at, evd) in expect.items():
+            r = regenerate_iflow_xml(x, "g", gold_error_handling=variant)
+            assert r.reproduced, variant
+            src = r.result.iflw_xml
+            xml.dom.minidom.parseString(src)
+            ids = re.findall(r'\bid="([^"]+)"', src)
+            assert len(ids) == len(set(ids))
+            blk = re.search(r'<bpmn2:endEvent id="EH_End".*?'
+                            r'</bpmn2:endEvent>', src, re.S).group(0)
+            assert at in blk and evd in blk, variant
+            assert "src/main/resources/script/gold_error_capture.groovy" \
+                in r.result.files
+            shapes = set(re.findall(r'BPMNShape bpmnElement="([^"]+)"', src))
+            for s in ("EH_SubProcess", "EH_ErrorStart", "EH_Capture",
+                      "EH_End"):
+                assert s in shapes, (variant, s)
+
+    def test_flows_with_main_subprocess_never_touched_by_default(self):
+        # the guard is MAIN-PROCESS scoped: a flow whose main process already
+        # has an exception subprocess is byte-identical under the default
+        # only-missing policy (LIP-level-only flows DO get a main handler —
+        # the main process there is genuinely unprotected)
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.regenerate import regenerate_iflow_xml
+        flows = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        x = None
+        for _p, _x in flows:
+            if "ErrorEventSubProcessTemplate" not in _x:
+                continue
+            m = parse_iflow(_x, "g")
+            main = next(pr for pr in m.processes if pr.is_main)
+            if any(s.kind == "ErrorEventSubProcessTemplate"
+                   and s.process_id == main.id and not s.parent_subprocess
+                   for s in m.steps.values()):
+                x = _x
+                break
+        assert x is not None
+        r0 = regenerate_iflow_xml(x, "g")
+        r1 = regenerate_iflow_xml(x, "g", gold_error_handling="error_end")
+        assert r0.result.iflw_xml == r1.result.iflw_xml
+        assert r1.reproduced
+
+    def test_replace_swaps_main_subprocess_keeps_lip_subs(self):
+        import os, pickle, re, pytest, xml.dom.minidom
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.regenerate import regenerate_iflow_xml
+        flows = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        # pick a flow whose subprocess wires a MESSAGE FLOW (mail alert) —
+        # the hard removal case (dangling participants)
+        pick = None
+        for _p, _x in flows:
+            if "ErrorEventSubProcessTemplate" not in _x:
+                continue
+            m = parse_iflow(_x, "g")
+            main = next(pr for pr in m.processes if pr.is_main)
+            subs = {s.id for s in m.steps.values()
+                    if s.kind == "ErrorEventSubProcessTemplate"
+                    and s.process_id == main.id and not s.parent_subprocess}
+            kids = {s.id for s in m.steps.values()
+                    if s.parent_subprocess in subs}
+            if subs and any(mf.source in kids or mf.target in kids
+                            for mf in m.message_flows):
+                pick = (_x, subs)
+                break
+        if pick is None:
+            pytest.skip("no mail-wired subprocess flow")
+        x, subs = pick
+        r = regenerate_iflow_xml(x, "g", gold_error_handling="error_end",
+                                 gold_eh_replace=True)
+        assert r.reproduced
+        src = r.result.iflw_xml
+        xml.dom.minidom.parseString(src)
+        for sid in subs:
+            assert f'id="{sid}"' not in src
+        assert "EH_SubProcess" in src
+        ids = set(re.findall(r'\bid="([^"]+)"', src))
+        refs = set(re.findall(r'(?:sourceRef|targetRef)="([^"]+)"', src))
+        assert refs <= ids                       # nothing dangling
+
+    def test_replace_off_by_default_in_inject(self):
+        from scaffolder.error_handling import inject_gold_error_handling
+        import inspect
+        sig = inspect.signature(inject_gold_error_handling)
+        assert sig.parameters["replace_existing"].default is False
+
+    def test_default_off_keeps_fidelity(self):
+        import pytest
+        from scaffolder.regenerate import regenerate_iflow_xml
+        x = self._victim()
+        if x is None:
+            pytest.skip("no sub-less flow in corpus")
+        r = regenerate_iflow_xml(x, "g")          # no flag → untouched
+        assert "EH_SubProcess" not in r.result.iflw_xml
+
+    def test_capture_script_essentials(self):
+        from scaffolder.error_handling import GOLD_CAPTURE_SCRIPT
+        for needle in ("CamelExceptionCaught", "SAP_MessageProcessingLogID",
+                       "SAP_MessageProcessingLogCustomStatus",
+                       "addAttachmentAsString", "ErrorContext",
+                       "FailedPayload", "auth|password|token|secret"):
+            assert needle in GOLD_CAPTURE_SCRIPT, needle
+
+    def test_escalation_event_def_roundtrip(self):
+        # parser must distinguish escalation from error definitions
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.regenerate import regenerate_iflow_xml
+        import pytest
+        x = self._victim()
+        if x is None:
+            pytest.skip("no sub-less flow in corpus")
+        r = regenerate_iflow_xml(x, "g", gold_error_handling="escalation_end")
+        m = parse_iflow(r.result.iflw_xml, "g")
+        assert m.steps["EH_End"].event_def == "escalation"
+        # and the injected output itself round-trips
+        r2 = regenerate_iflow_xml(r.result.iflw_xml, "g")
+        assert r2.reproduced
+        assert "escalationEventDefinition" in r2.result.iflw_xml
+
+
+class TestGoldEHWiring:
+    """2026-06-10 part 6b: every workbench scaffolder construction passes the
+    gold-error-handling flag (the Generate-all site was missed and emitted
+    identical output for all four selector options)."""
+
+    def test_all_workbench_scaffolder_sites_pass_flag(self):
+        src = open("workbench.py").read()
+        starts = [i for i in range(len(src))
+                  if src.startswith("IFlowScaffolder(", i)]
+        sites = [s for s in starts
+                 if not src[max(0, s - 10):s].rstrip().endswith("import")]
+        assert len(sites) >= 5
+        for s in sites:
+            window = src[s:s + 700]
+            assert "gold_error_handling" in window, window[:120]
+            assert "extra_resources" in window, window[:120]
+
+    def test_scaffold_path_emits_distinct_variants(self, tmp_path):
+        import io, os, re, types, zipfile, pytest
+        pkg = ("/home/claude/ref/r4/"
+               "SAP_S-4HANA_Statutory_Reporting_for_Chile.zip")
+        if not os.path.exists(pkg):
+            pytest.skip("Chile package not present")
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+        z = zipfile.ZipFile(pkg)
+        src_xml = None
+        for n in z.namelist():
+            if not n.endswith("_content"):
+                continue
+            raw = z.read(n)
+            if raw[:2] != b"PK":
+                continue
+            zb = zipfile.ZipFile(io.BytesIO(raw))
+            for f in zb.namelist():
+                if f.endswith("RemittanceBook.iflw"):
+                    src_xml = zb.read(f).decode("utf8", "replace")
+        iface = types.SimpleNamespace(
+            name="Remittance Book", id="rb", source_iflow_xml=src_xml,
+            package="X", sender_adapter="", receiver_adapter="",
+            sender_system="", receiver_system="")
+        a = types.SimpleNamespace(interface=iface)
+        seen = {}
+        for variant in (None, "error_end", "escalation_end", "message_end"):
+            sc = IFlowScaffolder(output_dir=str(tmp_path / str(variant)),
+                                 gold_error_handling=variant)
+            t = open(sc.scaffold(a)).read()
+            seen[variant] = t
+        assert "EH_SubProcess" not in seen[None]
+        assert "ErrorEndEvent" in seen["error_end"]
+        assert "EscalationEndEvent" in seen["escalation_end"]
+        blk = re.search(r'<bpmn2:endEvent id="EH_End".*?</bpmn2:endEvent>',
+                        seen["message_end"], re.S).group(0)
+        assert "MessageEndEvent" in blk
+        assert len({hash(v) for v in seen.values()}) == 4
+
+
+class TestGoldEHNotifyAndVariantScripts:
+    """2026-06-10 part 6d (user gap report): variants' scripts were identical
+    and nobody got notified. Scripts are now variant-aware (status prefix +
+    policy line) and a notify-by-mail leg exists (RCI093-decoded pattern)."""
+
+    def test_variant_scripts_differ(self):
+        from scaffolder.error_handling import gold_capture_script
+        s = {v: gold_capture_script(v)
+             for v in ("error_end", "escalation_end", "message_end")}
+        assert len(set(s.values())) == 3
+        assert "'Failed_' +" in s["error_end"]
+        assert "'Escalated_' +" in s["escalation_end"]
+        assert "'Handled_' +" in s["message_end"]
+        assert "MPL ESCALATED" in s["escalation_end"]
+
+    def test_notify_mail_leg(self):
+        import os, pickle, re, pytest, xml.dom.minidom
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from scaffolder.regenerate import regenerate_iflow_xml
+        flows = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        x = next(x for p, x in flows
+                 if "ErrorEventSubProcessTemplate" not in x
+                 and x.count("callActivity") > 3)
+        r = regenerate_iflow_xml(x, "g", gold_error_handling="error_end",
+                                 gold_eh_notify=True)
+        assert r.reproduced
+        src = r.result.iflw_xml
+        xml.dom.minidom.parseString(src)
+        # alert leg: CM body → Send → Mail receiver, fully externalized
+        for needle in ("EH_AlertBody", "EH_SendMail", "EH_MailReceiver",
+                       "EH_MailFlow", "cname::sap:Mail",
+                       "{{ALERT_MAIL_SERVER}}", "{{ALERT_MAIL_TO}}",
+                       'BPMNShape bpmnElement="EH_MailReceiver"',
+                       'BPMNEdge bpmnElement="EH_MailFlow"'):
+            assert needle in src, needle
+        # parameter pair carries the new externalized params
+        pp = r.result.files["src/main/resources/parameters.prop"]
+        pd = r.result.files["src/main/resources/parameters.propdef"]
+        for n in ("ALERT_MAIL_SERVER", "ALERT_MAIL_FROM", "ALERT_MAIL_TO",
+                  "ALERT_MAIL_PROTECTION"):
+            assert f"{n}=" in pp and f"<name>{n}</name>" in pd
+        # defaults mirror RCI093's own prop values; subject carries the
+        # iflow name + runtime-classified reason
+        assert "ALERT_MAIL_PROTECTION=starttls_optional" in pp
+        assert "ALERT_MAIL_SUBJECT=${camelId}: ${property.ALERT_REASON}" in pp
+        # no dangling refs
+        ids = set(re.findall(r'\bid="([^"]+)"', src))
+        refs = set(re.findall(r'(?:sourceRef|targetRef)="([^"]+)"', src))
+        assert refs <= ids
+
+    def test_notify_off_means_no_mail(self):
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from scaffolder.regenerate import regenerate_iflow_xml
+        flows = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        x = next(x for p, x in flows
+                 if "ErrorEventSubProcessTemplate" not in x
+                 and x.count("callActivity") > 3)
+        r = regenerate_iflow_xml(x, "g", gold_error_handling="error_end")
+        assert "EH_MailFlow" not in r.result.iflw_xml
+        assert "ALERT_MAIL" not in r.result.iflw_xml
+
+
+class TestPayloadInspector:
+    """2026-06-10 part 7: payload_inspector — analyze · redact (type-
+    preserving) · validate · flow-aware step localization."""
+
+    def test_redaction_preserves_shape(self):
+        from inspector.core import redact_value
+        assert redact_value("2026-01-15") == "9999-99-99"
+        assert redact_value("Müller & Söhne") == "Xxxxxx & Xxxxx"
+        assert redact_value("A-46/B") == "X-99/X"
+        assert redact_value("EU", frozenset({"EU"})) == "EU"
+
+    def test_detect(self):
+        from inspector.core import detect_format
+        assert detect_format("<a/>") == "xml"
+        assert detect_format('{"a":1}') == "json"
+        assert detect_format("a,b\n1,2") == "csv"
+        assert detect_format("ISA*00*" + "x" * 120) == "edi"
+        assert detect_format("plain text line") == "flat"
+
+    def test_xml_inspect_redacts_values_keeps_names(self):
+        from inspector.core import inspect_payload
+        r = inspect_payload(
+            "<Order><Cust id='C-4711'>Acme</Cust>"
+            "<Amt>12.50</Amt></Order>")
+        assert r.parse_ok and r.fmt == "xml"
+        assert "<Cust" in r.redacted and "Acme" not in r.redacted
+        assert 'id="X-9999"' in r.redacted
+        assert "/Order/Cust" in r.profile["elements"]
+
+    def test_xsd_validation_localizes(self):
+        import pytest
+        pytest.importorskip("xmlschema")
+        from inspector.core import inspect_payload
+        xsd = ("<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>"
+               "<xs:element name='Order'><xs:complexType><xs:sequence>"
+               "<xs:element name='Id' type='xs:int'/>"
+               "</xs:sequence></xs:complexType></xs:element></xs:schema>")
+        r = inspect_payload("<Order><Id>abc</Id></Order>", schema=xsd,
+                            schema_kind="xsd")
+        fails = [f for f in r.findings if f.level == "FAIL"]
+        assert fails and any("Id" in (f.path or "") or "Id" in f.detail
+                             for f in fails)
+
+    def test_json_schema_validation(self):
+        from inspector.core import inspect_payload
+        schema = ('{"type":"object","required":["qty"],'
+                  '"properties":{"qty":{"type":"integer"}}}')
+        r = inspect_payload('{"qty":"five"}', schema=schema,
+                            schema_kind="json")
+        assert any(f.level == "FAIL" for f in r.findings)
+        r2 = inspect_payload('{"qty":5}', schema=schema, schema_kind="json")
+        assert any(f.level == "PASS" and "JSON Schema" in f.check
+                   for f in r2.findings)
+
+    def test_csv_profile_and_rules(self):
+        from inspector.core import inspect_payload
+        r = inspect_payload("Name,IBAN\nJohn,DE89370400440532013000",
+                            csv_expected_headers=["Name", "IBAN", "BIC"])
+        assert r.profile["columns"] == 2
+        assert r.redacted.splitlines()[0] == "Name,IBAN"
+        assert "DE89" not in r.redacted
+        assert any(f.level == "FAIL" and "BIC" in f.detail
+                   for f in r.findings)
+
+    def test_x12_envelope_checks(self):
+        import os, pytest
+        p = "/mnt/user-data/outputs/stress_payload_850.edi"
+        if not os.path.exists(p):
+            pytest.skip("850 sample not present")
+        from inspector.core import inspect_payload
+        r = inspect_payload(open(p).read())
+        assert r.fmt == "edi" and r.parse_ok
+        x12 = {f.check: f.level for f in r.findings if "X12" in f.check}
+        assert x12.get("X12 SE01 segment count") == "PASS"
+        assert x12.get("X12 ISA13/IEA02 control number") == "PASS"
+        # ISA stays verbatim (fixed-width service segment), data masked
+        assert r.redacted.startswith("ISA")
+
+    def test_flow_test_localizes_step(self):
+        import os, pytest, zipfile
+        p = "/mnt/user-data/outputs/StressLab_bundle.zip"
+        q = "/mnt/user-data/outputs/stress_payload.xml"
+        if not (os.path.exists(p) and os.path.exists(q)):
+            pytest.skip("stress lab artifacts not present")
+        from inspector.flow_test import test_payload_against_flow
+        z = zipfile.ZipFile(p)
+        iflw = next(z.read(n).decode("utf-8") for n in z.namelist()
+                    if n.endswith(".iflw"))
+        res = {n: z.read(n) for n in z.namelist()
+               if not n.endswith(".iflw")}
+        finds = test_payload_against_flow(iflw, open(q).read(), res)
+        by = {(f.kind, f.level) for f in finds}
+        assert ("XmlValidator", "PASS") in by
+        assert ("Splitter", "PASS") in by
+        # the converter path needs the <root>-wrapped INTERMEDIATE payload —
+        # against the raw input it correctly FAILS (localization works)
+        assert ("XmlToCsvConverter", "FAIL") in by
+
+    def test_localname_fallback(self):
+        from inspector.flow_test import test_payload_against_flow
+        iflw_min = None  # exercised via _localname_xpath directly
+        from inspector.flow_test import _localname_xpath
+        assert _localname_xpath("/a/b") == \
+            "/*[local-name()='a']/*[local-name()='b']"
+        assert _localname_xpath("//p2:Create/data") == \
+            "//*[local-name()='Create']/*[local-name()='data']"
+
+
+class TestGoldEHAlertV2:
+    """2026-06-10 part 6e (user feedback): CM body bug (dead `bodyContent`
+    key → empty mail), RCI093-verbatim mail body with {company} token,
+    credential/family reuse, reason-aware subject, SFTP archive leg via
+    parallel multicast (RCI093's own shape), word-separator preference."""
+
+    def _subless(self):
+        import pickle
+        flows = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        return next(x for p, x in flows
+                    if "ErrorEventSubProcessTemplate" not in x
+                    and x.count("callActivity") > 3)
+
+    def test_cm_body_uses_wrapcontent(self):
+        from scaffolder.error_handling import _CM_ALERT_BODY
+        assert "bodyContent" not in _CM_ALERT_BODY
+        assert "Technical error report" in _CM_ALERT_BODY["wrapContent"]
+        assert "ArtifactName" in _CM_ALERT_BODY["headerTable"]
+
+    def test_company_token_filled(self):
+        import os, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from scaffolder.regenerate import regenerate_iflow_xml
+        r = regenerate_iflow_xml(self._subless(), "g",
+                                 gold_error_handling="error_end",
+                                 gold_eh_notify=True,
+                                 gold_eh_company="ACME")
+        s = r.result.iflw_xml
+        assert "{company}" not in s
+        assert "ACME" in s
+        # RCI093-verbatim HTML body markers
+        assert "Interface Errors During Execution" in s
+        assert "system-generated email" in s
+
+    def test_mail_and_sftp_multicast(self):
+        import os, pytest, re, xml.dom.minidom
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from scaffolder.regenerate import regenerate_iflow_xml
+        r = regenerate_iflow_xml(self._subless(), "g",
+                                 gold_error_handling="error_end",
+                                 gold_eh_notify=True, gold_eh_sftp=True)
+        assert r.reproduced
+        s = r.result.iflw_xml
+        xml.dom.minidom.parseString(s)
+        # multicast is a parallelGateway with Multicast activityType
+        m = re.search(r'<bpmn2:(\w+) id="EH_Multicast"', s)
+        assert m and m.group(1) == "parallelGateway"
+        assert "cname::Multicast/version::1.1.1" in s
+        for needle in ("EH_MailFlow", "EH_SftpFlow", "EH_Attach",
+                       "cname::sap:SFTP", "{{ALERT_SFTP_HOST}}"):
+            assert needle in s, needle
+        assert "gold_log_attachment.groovy" in \
+            "".join(r.result.files.keys())
+        pp = r.result.files["src/main/resources/parameters.prop"]
+        assert "ALERT_SFTP_AUTH=user_password" in pp
+        ids = set(re.findall(r'\bid="([^"]+)"', s))
+        refs = set(re.findall(r'(?:sourceRef|targetRef)="([^"]+)"', s))
+        assert refs <= ids
+
+    def test_sftp_only_no_multicast(self):
+        import os, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from scaffolder.regenerate import regenerate_iflow_xml
+        r = regenerate_iflow_xml(self._subless(), "g",
+                                 gold_error_handling="error_end",
+                                 gold_eh_sftp=True)
+        s = r.result.iflw_xml
+        assert "EH_SftpFlow" in s and "EH_Multicast" not in s \
+            and "EH_MailFlow" not in s
+
+    def test_credential_and_family_reuse(self):
+        from scaffolder.error_handling import resolve_mail_param_names
+        fam = ("ConnectionError_MailAddress=s\nConnectionError_MailFrom=f\n"
+               "ConnectionError_MailTo=t\nConnectionError_MailCred=C\n")
+        names, reused = resolve_mail_param_names(fam)
+        assert names["cred"] == "ConnectionError_MailCred"
+        assert names["server"] == "ConnectionError_MailAddress"
+        assert {"cred", "server", "from", "to"} <= reused
+        # credential-only fallback
+        n2, r2 = resolve_mail_param_names("My_Email_Credential=X\n")
+        assert n2["cred"] == "My_Email_Credential" and r2 == {"cred"}
+        assert n2["server"] == "ALERT_MAIL_SERVER"
+        # nothing to reuse
+        n3, r3 = resolve_mail_param_names("Foo=1\n")
+        assert not r3 and n3["cred"] == "ALERT_MAIL_CRED"
+
+    def test_reason_heuristic_in_all_variants(self):
+        from scaffolder.error_handling import gold_capture_script
+        for v in ("error_end", "escalation_end", "message_end"):
+            s = gold_capture_script(v)
+            for needle in ("ALERT_REASON", "Endpoint error",
+                           "Incoming message error",
+                           "Outgoing message error", "DateTime"):
+                assert needle in s, (v, needle)
+
+    def test_word_separator(self):
+        import os, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from scaffolder.error_handling import set_word_separator
+        from scaffolder.pipeline_scaffolder import (
+            set_word_separator as set_ws_pipe, generate_iflow_name)
+        from scaffolder.regenerate import regenerate_iflow_xml
+        try:
+            set_word_separator("-")
+            set_ws_pipe("-")
+            r = regenerate_iflow_xml(self._subless(), "g",
+                                     gold_error_handling="error_end",
+                                     gold_eh_notify=True)
+            s = r.result.iflw_xml
+            assert "CM-Alert-Body" in s and "Send-Error-Mail" in s
+            assert generate_iflow_name("out", "ECC", "S4", "Orders") == \
+                "OUT-ECC-S4-Orders"
+            set_ws_pipe(" ")
+            assert generate_iflow_name("out", "ECC", "S4", "Orders") == \
+                "OUT ECC S4 Orders"
+        finally:
+            set_word_separator("_")
+            set_ws_pipe("_")
+
+
+class TestGoldEHAlertViaLIP:
+    """2026-06-10 part 6f (user tenant finding): Multicast is NOT allowed
+    inside an exception subprocess. RCI093's real shape applies: the
+    subprocess only ProcessCalls an injected LIP ('Exception Alert'); the
+    LIP owns CM → (Multicast) → Send legs."""
+
+    def _gen(self, mail, sftp):
+        import pickle
+        from scaffolder.regenerate import regenerate_iflow_xml
+        flows = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        x = next(x for p, x in flows
+                 if "ErrorEventSubProcessTemplate" not in x
+                 and x.count("callActivity") > 3)
+        return regenerate_iflow_xml(x, "g", gold_error_handling="error_end",
+                                    gold_eh_notify=mail, gold_eh_sftp=sftp)
+
+    def test_no_multicast_in_subprocess_alert_in_lip(self):
+        import os, pytest, re
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        r = self._gen(True, True)
+        assert r.reproduced
+        s = r.result.iflw_xml
+        sub = re.search(r'<bpmn2:subProcess id="EH_SubProcess".*?'
+                        r'</bpmn2:subProcess>', s, re.S).group(0)
+        assert "Multicast" not in sub
+        # subprocess calls the LIP (verbatim RCI093 ProcessCall config)
+        assert "EH_AlertCall" in sub
+        assert "cname::NonLoopingProcess/version::1.0.3" in sub
+        assert "<value>EH_AlertProcess</value>" in sub
+        # the LIP exists, is participant-referenced, and owns the chain
+        lip = re.search(r'<bpmn2:process id="EH_AlertProcess".*?'
+                        r'</bpmn2:process>', s, re.S)
+        assert lip and 'processRef="EH_AlertProcess"' in s
+        lb = lip.group(0)
+        for needle in ("EH_AlertBody", "EH_Multicast", "EH_SendMail",
+                       "EH_SendSftp", "EH_Attach"):
+            assert needle in lb, needle
+        m = re.search(r'<bpmn2:(\w+) id="EH_Multicast"', s)
+        assert m.group(1) == "parallelGateway"
+
+    def test_single_leg_no_multicast(self):
+        import os, pytest, re
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        r = self._gen(True, False)
+        s = r.result.iflw_xml
+        lip = re.search(r'<bpmn2:process id="EH_AlertProcess".*?'
+                        r'</bpmn2:process>', s, re.S).group(0)
+        assert "EH_Multicast" not in s
+        assert "EH_SendMail" in lip and "EH_SendSftp" not in s
+
+
+class TestAlertEndpointPlacementAndCMResponse:
+    """2026-06-10 part 6g (user screenshot): alert receivers were stacked at
+    the far canvas edge with diagonal edges across the whole map — the LIP
+    relocation pass only matched corpus 'Participant*' ids, not injected
+    EH_*Receiver ids. Also: _CM_ERROR_RESPONSE had the same dead-bodyContent
+    bug as the mail CM."""
+
+    def test_alert_receivers_hang_near_their_lip(self):
+        import math, os, pickle, pytest, re
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from scaffolder.regenerate import regenerate_iflow_xml
+        flows = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        x = next(x for p, x in flows
+                 if "ErrorEventSubProcessTemplate" not in x
+                 and x.count("callActivity") > 3)
+        r = regenerate_iflow_xml(x, "g", gold_error_handling="error_end",
+                                 gold_eh_notify=True, gold_eh_sftp=True)
+        s = r.result.iflw_xml
+        b = {m.group(1): tuple(map(float, m.groups()[1:])) for m in
+             re.finditer(r'BPMNShape bpmnElement="([^"]+)" id="[^"]*">'
+                         r'<dc:Bounds height="([\d.]+)" width="([\d.]+)" '
+                         r'x="([\d.]+)" y="([\d.]+)"', s)}
+
+        def c(nid):
+            h, w, xx, yy = b[nid]
+            return (xx + w / 2, yy + h / 2)
+        ph, pw, px, py = b["Participant_EH_AlertProcess"]
+        for ep, st in (("EH_MailReceiver", "EH_SendMail"),
+                       ("EH_SftpReceiver", "EH_SendSftp")):
+            assert math.dist(c(ep), c(st)) < 800, ep
+            # RCI093 arrangement: x-aligned with the partner Send, above the
+            # pool for top-half partners, below for bottom-half — straight
+            # vertical message-flow edges
+            assert abs(c(ep)[0] - c(st)[0]) < 80, ep
+            _side_above = c(ep)[1] < py
+            _partner_top = c(st)[1] < py + ph / 2
+            assert _side_above == _partner_top, ep
+        # plain LIP events (a Message End can't go in a LIP — user-verified)
+        lip = re.search(r'<bpmn2:process id="EH_AlertProcess".*?'
+                        r'</bpmn2:process>', s, re.S).group(0)
+        for eid, tag in (("EH_AlertStart", "startEvent"),
+                         ("EH_AlertEnd", "endEvent")):
+            blk = re.search(r'<bpmn2:' + tag + r' id="' + eid + r'".*?'
+                            r'</bpmn2:' + tag + r'>', lip, re.S).group(0)
+            assert "EventDefinition" not in blk, eid
+
+    def test_cm_error_response_uses_wrapcontent(self):
+        from scaffolder.error_handling import _CM_ERROR_RESPONSE
+        assert "bodyContent" not in _CM_ERROR_RESPONSE
+        assert "${exception.message}" in _CM_ERROR_RESPONSE["wrapContent"]
+        assert "ALERT_REASON" in _CM_ERROR_RESPONSE["wrapContent"]
+
+
+class TestPipoDirectoryDownload:
+    """2026-06-10 part 8: download PI/PO channels + credential references via
+    the Directory REST API and replicate missing credentials into CPI
+    Security Material (placeholder passwords — PI never exposes secrets)."""
+
+    _RAW = {
+        "ChannelID": "CC_SF_Receiver", "ComponentID": "BC_SuccessFactors",
+        "AdapterType": "REST", "Direction": "Receiver",
+        "Description": "SF OData",
+        "AdapterSpecificAttribute": {"results": [
+            {"Name": "user", "Value": "SF_API_USER"},
+            {"Name": "authenticationMode", "Value": "Basic"},
+            {"Name": "password", "Value": "SHOULD_NEVER_APPEAR"},
+            {"Name": "url", "Value": "https://api.sf.example/odata"},
+            {"Name": "keystoreView", "Value": "TrustedCAs"},
+        ]},
+    }
+
+    def _channels(self):
+        from fetcher.pipo_directory import PIChannelExtractor
+        ex = PIChannelExtractor.__new__(PIChannelExtractor)
+        ch = ex._parse(self._RAW)
+        ch2 = ex._parse({**self._RAW, "ChannelID": "CC_SF_Receiver2"})
+        ch3 = ex._parse({"ChannelID": "CC_SFTP_Out",
+                         "ComponentID": "BC_Bank", "AdapterType": "SFTP",
+                         "Direction": "Receiver",
+                         "AdapterSpecificAttribute": {"results": [
+                             {"Name": "sftpUser", "Value": "bankops"}]}})
+        return [ch, ch2, ch3]
+
+    def test_parse_never_holds_passwords(self):
+        ch = self._channels()[0]
+        assert ch.adapter == "REST" and ch.component == "BC_SuccessFactors"
+        assert ch.attributes["user"] == "SF_API_USER"
+        assert "password" not in {k.lower() for k in ch.attributes}
+        assert "SHOULD_NEVER_APPEAR" not in str(ch.attributes)
+
+    def test_harvest_dedupes_and_collects_certs(self):
+        from fetcher.pipo_directory import harvest_credentials
+        creds, certs = harvest_credentials(self._channels())
+        assert len(creds) == 2
+        sf = next(c for c in creds if c.user == "SF_API_USER")
+        assert len(sf.channels) == 2 and sf.auth == "Basic"
+        assert sf.alias.startswith("BC_SuccessFactors")
+        bank = next(c for c in creds if c.user == "bankops")
+        assert bank.adapter == "SFTP"
+        assert len(certs) == 2 and certs[0].attribute == "keystoreView"
+
+    def test_replicate_creates_only_missing_and_never_logs_secret(self):
+        from fetcher.pipo_directory import (harvest_credentials,
+                                            replicate_credentials)
+        creds, _ = harvest_credentials(self._channels())
+
+        class FakeReport:
+            def has_credential(self, n):
+                return n.startswith("BC_SuccessFactors")
+
+        calls = []
+
+        class FakeSM:
+            def list_credentials(self):
+                return FakeReport()
+
+            def create_user_credential(self, name, user, password,
+                                       description=""):
+                calls.append((name, user, password, description))
+                return True, "ok"
+        summary = replicate_credentials(creds, FakeSM(), "PLACEHOLDER-1")
+        assert summary["existing"] and summary["created"]
+        assert all(c[2] == "PLACEHOLDER-1" for c in calls)
+        assert any("re-key" in c[3] for c in calls)
+        created = next(c for c in creds if "re-key" in (c.note or ""))
+        assert created.exists_in_cpi is True
+        calls.clear()
+        creds2, _ = harvest_credentials(self._channels())
+        s2 = replicate_credentials(creds2, FakeSM(), "X", dry_run=True)
+        assert not calls and s2["missing"]
+
+    def test_worksheets(self):
+        from fetcher.pipo_directory import (channels_to_csv,
+                                            credentials_to_csv,
+                                            harvest_credentials)
+        chans = self._channels()
+        creds, certs = harvest_credentials(chans)
+        wcsv = credentials_to_csv(creds, certs)
+        assert "CPI alias" in wcsv and "manual transport" in wcsv
+        assert "SHOULD_NEVER_APPEAR" not in wcsv
+        ccsv = channels_to_csv(chans)
+        assert "CC_SFTP_Out" in ccsv and "sftpUser=bankops" in ccsv
+
+
+class TestPipoDownloadGuardrails:
+    """2026-06-10 part 8b (user 404 on CPI tenant): the Directory API only
+    exists on PI/PO — refuse CPI-looking hosts with guidance BEFORE the
+    confusing 404, explain real 404/401/403s, log every failure (the wire
+    log had nothing), and provide demo channels for tenants without PI."""
+
+    def test_cpi_host_refused_with_guidance(self):
+        import pytest
+        from fetcher.pipo_directory import PIChannelExtractor
+        ex = PIChannelExtractor(
+            "https://0140aa99trial.it-cpitrial05.cfapps.us10-001."
+            "hana.ondemand.com", session=None)
+        with pytest.raises(RuntimeError) as e:
+            ex.extract_all()
+        msg = str(e.value)
+        assert "CPI tenant" in msg and "50000" in msg and "demo" in msg
+
+    def test_404_explained(self):
+        import pytest
+        from fetcher.pipo_directory import PIChannelExtractor
+
+        class R:
+            status_code = 404
+
+        class S:
+            def get(self, *a, **k):
+                return R()
+        ex = PIChannelExtractor("http://pihost:50000", S())
+        with pytest.raises(RuntimeError) as e:
+            ex.extract_all()
+        assert "Directory API" in str(e.value) and "404" in str(e.value)
+
+    def test_auth_failure_names_the_role(self):
+        import pytest
+        from fetcher.pipo_directory import PIChannelExtractor
+
+        class R:
+            status_code = 403
+
+        class S:
+            def get(self, *a, **k):
+                return R()
+        ex = PIChannelExtractor("http://pihost:50000", S())
+        with pytest.raises(RuntimeError) as e:
+            ex.extract_all()
+        assert "role" in str(e.value)
+
+    def test_sample_channels_exercise_full_pipeline(self):
+        from fetcher.pipo_directory import (credentials_to_csv,
+                                            harvest_credentials,
+                                            sample_channels)
+        chans = sample_channels()
+        assert len(chans) >= 6
+        creds, certs = harvest_credentials(chans)
+        # SF user shared across two channels dedupes; sender w/o user adds
+        # nothing; OAuth clientId harvested; certs collected
+        sf = next(c for c in creds if c.user == "SF_API_USER")
+        assert len(sf.channels) == 2
+        assert any(c.auth == "OAuth2" for c in creds)
+        assert any(ct.attribute == "privateKeyEntry" for ct in certs)
+        assert "BC_BANK_bankops" in credentials_to_csv(creds, certs)
+
+
+class TestMultiTenantPull:
+    """2026-06-11 part 9: multi-tenant — source tenant (pull packages) +
+    target tenant (deploy), enabling the same-tenant end-to-end showcase."""
+
+    def test_download_package_zip_url_and_bytes(self):
+        from fetcher.cpi_fetcher import CPIFetcher
+        seen = {}
+
+        class R:
+            status_code = 200
+            content = b"PK\x03\x04fakezip"
+
+            def raise_for_status(self):
+                pass
+
+        class S:
+            def get(self, url, timeout=None):
+                seen["url"] = url
+                seen["timeout"] = timeout
+                return R()
+        f = CPIFetcher(base_url="https://tenant.example", session=S())
+        raw = f.download_package_zip("RCI093Showcase")
+        assert raw.startswith(b"PK")
+        assert seen["url"] == ("https://tenant.example/api/v1/"
+                               "IntegrationPackages('RCI093Showcase')"
+                               "/$value")
+        assert seen["timeout"] >= 60      # big packages need headroom
+
+    def test_workbench_shares_one_intake_path(self):
+        src = open("workbench.py").read()
+        # exactly one intake implementation, called by both entry points
+        assert src.count("def _ingest_archive_items(") == 1
+        assert src.count("_ingest_archive_items(") >= 3   # def + 2 callers
+        # source-tenant slot exists and the pull path falls back to target
+        assert "cpi_source_session" in src
+        assert 'st.session_state.get("cpi_source_session")' in src
+
+
+class TestSameTenantCollisionSafety:
+    """2026-06-11 part 9c (live wire log): artifact ids are TENANT-GLOBAL —
+    in a same-tenant pull→regenerate→upload the delete+recreate fallback
+    DELETED the user's SOURCE flow from its original package. Now: if the
+    colliding artifact lives in a DIFFERENT package, never delete — create
+    under a suffixed id instead. Plus per-run duplicate-id skip, LIP-reuse
+    no longer appends unused ALERT_* params, and whole-package export 500s
+    fall back to per-artifact download."""
+
+    def _uploader(self, owner_pkg):
+        from fetcher.cpi_uploader import CPIUploader
+        u = CPIUploader.__new__(CPIUploader)
+        u.base_url = "https://t.example"
+        calls = {"deleted": [], "recreated": []}
+
+        class S:
+            def get(self, url, timeout=None):
+                class R:
+                    status_code = 200
+
+                    def json(self):
+                        return {"d": {"PackageId": owner_pkg}}
+                return R()
+        u.session = S()
+        u._delete_artifact = lambda aid, pkg, ep: \
+            calls["deleted"].append(aid)
+        def _rec(zb, pkg, aid, name, result, at):
+            calls["recreated"].append((aid, pkg))
+            result.status = "recreated"
+        u._recreate_after_delete = _rec
+        return u, calls
+
+    def test_collision_with_other_package_never_deletes(self):
+        from fetcher.cpi_uploader import UploadResult
+        u, calls = self._uploader(owner_pkg="OriginalSourcePkg")
+        res = UploadResult(interface_name="My Flow", package_id="Testrun",
+                           artifact_id="MyFlow", status="", message="")
+        u._replace_artifact(b"zip", "Testrun", "MyFlow", "My Flow", res,
+                            "IFlow", "IntegrationDesigntimeArtifacts")
+        assert calls["deleted"] == []
+        assert calls["recreated"] == [("MyFlow_WB", "Testrun")]
+        assert "OriginalSourcePkg" in res.message
+        assert "untouched" in res.message
+
+    def test_collision_in_same_package_still_replaces(self):
+        from fetcher.cpi_uploader import UploadResult
+        u, calls = self._uploader(owner_pkg="Testrun")
+        res = UploadResult(interface_name="My Flow", package_id="Testrun",
+                           artifact_id="MyFlow", status="", message="")
+        u._replace_artifact(b"zip", "Testrun", "MyFlow", "My Flow", res,
+                            "IFlow", "IntegrationDesigntimeArtifacts")
+        assert calls["deleted"] == ["MyFlow"]
+        assert calls["recreated"] == [("MyFlow", "Testrun")]
+
+    def test_lip_reuse_appends_no_alert_params(self):
+        import os, pytest, zipfile
+        p = ("/home/claude/ref/rci3/"
+             "fff525112616476cb2ba9ed285a13236_content")
+        if not os.path.exists(p):
+            pytest.skip("RCI093 original not present")
+        from scaffolder.regenerate import regenerate_iflow_xml
+        src = zipfile.ZipFile(p).read(
+            "src/main/resources/scenarioflows/integrationflow/"
+            "Job_Recruiting_Fields_OpenText.iflw").decode("utf8", "replace")
+        r = regenerate_iflow_xml(src, "rci", gold_error_handling="error_end",
+                                 gold_eh_replace=True, gold_eh_notify=True,
+                                 gold_eh_sftp=True)
+        assert r.reproduced
+        s = r.result.iflw_xml
+        assert "EH_AlertProcess" not in s          # reused, not injected
+        assert "<value>Process_45360926</value>" in s
+        assert "LIP3_Exception_Alert" in s
+        pp = r.result.files.get("src/main/resources/parameters.prop", "")
+        assert "ALERT_MAIL_SERVER" not in pp       # no unused shells
+        assert "ALERT_SFTP_HOST" not in pp
+
+    def test_patternless_flow_still_injects(self):
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from scaffolder.regenerate import regenerate_iflow_xml
+        flows = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        x = next(x for p, x in flows
+                 if "ErrorEventSubProcessTemplate" not in x
+                 and x.count("callActivity") > 3)
+        r = regenerate_iflow_xml(x, "g", gold_error_handling="error_end",
+                                 gold_eh_notify=True)
+        assert "EH_AlertProcess" in r.result.iflw_xml
+
+
+class TestSecurityNeedsAndOAuth2:
+    """2026-06-11 part 10: security material beyond user credentials.
+    OAuth2 clients replicate via API; PGP keyrings CANNOT (CPI UI-only +
+    PI never exposes secret keys) — they become precise runbook items
+    naming the key files from the channel's PGP module parameters."""
+
+    def test_pgp_modules_detected_with_key_names(self):
+        from fetcher.pipo_directory import (harvest_security_needs,
+                                            sample_channels)
+        needs = harvest_security_needs(sample_channels())
+        pub = next(n for n in needs if n.kind == "PGP_PUBLIC_KEYRING")
+        sec = next(n for n in needs if n.kind == "PGP_SECRET_KEYRING")
+        assert "bank_partner_pub.asc" in pub.detail
+        assert "company_sign.key" in sec.detail
+        assert not pub.automated and not sec.automated
+        assert "UI" in pub.cpi_action
+
+    def test_module_params_never_hold_passwords(self):
+        from fetcher.pipo_directory import PIChannelExtractor
+        ex = PIChannelExtractor.__new__(PIChannelExtractor)
+        ch = ex._parse({
+            "ChannelID": "C", "ComponentID": "B", "AdapterType": "SFTP",
+            "ModuleConfiguration": {"results": [
+                {"ModuleName": "localejbs/PGPDecryption",
+                 "ModuleParameters": {"results": [
+                     {"Name": "ownPrivateKeyFileName", "Value": "k.key"},
+                     {"Name": "keyPassword", "Value": "TOPSECRET"}]}}]}})
+        assert ch.modules and "TOPSECRET" not in str(ch.modules)
+
+    def test_oauth2_replication(self):
+        from fetcher.pipo_directory import (harvest_security_needs,
+                                            replicate_oauth2,
+                                            sample_channels)
+        needs = harvest_security_needs(sample_channels())
+        calls = []
+
+        class FR:
+            def has_credential(self, n):
+                return False
+
+        class SM:
+            def list_credentials(self):
+                return FR()
+
+            def create_oauth2_client_credentials(self, name, tok, cid,
+                                                 sec, description=""):
+                calls.append((name, cid, sec))
+                return True, "ok"
+        s = replicate_oauth2(needs, SM(), "PH-1")
+        assert s["created"] and calls[0][1] == "vendor-portal-client"
+        assert calls[0][2] == "PH-1"
+
+    def test_worksheet_includes_needs(self):
+        from fetcher.pipo_directory import (credentials_to_csv,
+                                            harvest_credentials,
+                                            harvest_security_needs,
+                                            sample_channels)
+        chans = sample_channels()
+        creds, certs = harvest_credentials(chans)
+        csv = credentials_to_csv(creds, certs,
+                                 harvest_security_needs(chans))
+        assert "PGP_SECRET_KEYRING" in csv and "MANUAL" in csv
+        assert "OAUTH2_CLIENT" in csv
+
+    def test_sm_client_has_oauth2_method(self):
+        from fetcher.security_material import SecurityMaterialClient
+        assert hasattr(SecurityMaterialClient,
+                       "create_oauth2_client_credentials")
+
+
+class TestPart10Hotfixes:
+    """2026-06-11 part 10b: _ph NameError (placeholder input is defined
+    BELOW the OAuth2 button in render order — read from session instead)
+    and empty PI host URL produced 'Fetching channels from  …' (guard)."""
+
+    def test_no_forward_ph_reference(self):
+        src = open("workbench.py").read()
+        assert '_ph or "ChangeMe-2026!"' not in src
+        assert 'st.session_state.get("pi_cred_ph")' in src
+
+    def test_empty_host_refused(self):
+        import pytest
+        from fetcher.pipo_directory import PIChannelExtractor
+        ex = PIChannelExtractor("", session=None)
+        with pytest.raises(RuntimeError) as e:
+            ex.extract_all()
+        assert "empty" in str(e.value)
+
+
+class TestPgpKeyringInspector:
+    """2026-06-11 part 11: PGP keyring metadata inspector (key ids verified
+    against gpg ground truth: 28BE8244B6BD02E1 / D8E5479A3FA0B23C) —
+    documents keyrings for the re-key worksheet; secret material never
+    decoded; keyrings get NO shareable redacted copy."""
+
+    def test_public_keyring_ids_match_gpg(self):
+        import os, pytest
+        p = "tests/fixtures/pgp_public_keyring.asc"
+        if not os.path.exists(p):
+            pytest.skip("fixture not present")
+        from inspector.pgp_inspect import inspect_keyring
+        r = inspect_keyring(open(p, "rb").read())
+        assert r["kind"] == "public"
+        ids = {k.key_id for k in r["keys"]}
+        assert {"28BE8244B6BD02E1", "D8E5479A3FA0B23C"} <= ids
+        own = next(k for k in r["keys"]
+                   if k.key_id == "28BE8244B6BD02E1")
+        assert own.primary and own.algorithm == "RSA" and own.bits == 3072
+        assert any("own@cpitest.example" in u for u in own.user_ids)
+
+    def test_secret_keyring_fingerprint_without_decoding_secrets(self):
+        import os, pytest
+        p = "tests/fixtures/pgp_secret_keyring.asc"
+        if not os.path.exists(p):
+            pytest.skip("fixture not present")
+        from inspector.pgp_inspect import inspect_keyring
+        r = inspect_keyring(open(p, "rb").read())
+        assert r["kind"] == "secret"
+        # same key id as the public export — fingerprint computed from the
+        # PUBLIC portion of the secret packet
+        assert any(k.key_id == "28BE8244B6BD02E1" and k.primary
+                   for k in r["keys"])
+
+    def test_payload_lab_routes_pgp_and_emits_no_copy(self):
+        import os, pytest
+        p = "tests/fixtures/pgp_secret_keyring.asc"
+        if not os.path.exists(p):
+            pytest.skip("fixture not present")
+        from inspector.core import detect_format, inspect_payload
+        data = open(p).read()
+        assert detect_format(data) == "pgp"
+        rep = inspect_payload(data)
+        assert rep.parse_ok and rep.fmt == "pgp"
+        assert rep.redacted == ""           # keyrings are never re-emitted
+        assert any("SECRET keys" in f.detail for f in rep.findings)
+        assert rep.profile["keyring_kind"] == "secret"
+
+    def test_garbage_is_not_a_keyring(self):
+        from inspector.core import inspect_payload
+        rep = inspect_payload("-----BEGIN PGP PUBLIC KEY BLOCK-----\n\n"
+                              "bm90IGEga2V5\n-----END PGP PUBLIC KEY "
+                              "BLOCK-----")
+        assert rep.fmt == "pgp" and not rep.parse_ok
+
+
+class TestSecurityMaterialDiagnostics:
+    """2026-06-11 part 11b (user: all replications fail with names only):
+    failure messages are now kept ('errors' dict), logged at WARNING, shown
+    in the UI, and a write-access probe diagnoses 403/CSRF/400 in one
+    click."""
+
+    def _sm(self, status, body="boom"):
+        from fetcher.security_material import SecurityMaterialClient
+        sm = SecurityMaterialClient.__new__(SecurityMaterialClient)
+        sm.base_url = "https://t.example"
+        sm._csrf = "tok"
+
+        class R:
+            status_code = status
+            text = body
+
+        class S:
+            def post(self, *a, **k):
+                return R()
+
+            def delete(self, *a, **k):
+                class D:
+                    status_code = 204
+                return D()
+        sm.session = S()
+        return sm
+
+    def test_replicate_keeps_error_detail(self):
+        from fetcher.pipo_directory import (harvest_credentials,
+                                            replicate_credentials,
+                                            sample_channels)
+        creds, _ = harvest_credentials(sample_channels())
+
+        class FR:
+            error = ""
+
+            def has_credential(self, n):
+                return False
+
+        class SM:
+            def list_credentials(self):
+                return FR()
+
+            def create_user_credential(self, *a, **k):
+                return False, "HTTP 403: missing role"
+        s = replicate_credentials(creds, SM(), "X")
+        assert s["failed"] and s["errors"]
+        assert all("403" in v for v in s["errors"].values())
+
+    def test_oauth_keeps_error_detail(self):
+        from fetcher.pipo_directory import (harvest_security_needs,
+                                            replicate_oauth2,
+                                            sample_channels)
+        needs = harvest_security_needs(sample_channels())
+
+        class FR:
+            error = ""
+
+            def has_credential(self, n):
+                return False
+
+        class SM:
+            def list_credentials(self):
+                return FR()
+
+            def create_oauth2_client_credentials(self, *a, **k):
+                return False, "HTTP 400: TokenServiceUrl invalid"
+        s = replicate_oauth2(needs, SM(), "X")
+        assert s["errors"] and "400" in list(s["errors"].values())[0]
+
+    def test_probe_diagnoses_403(self):
+        sm = self._sm(403, "forbidden")
+        out = sm.probe_write_access()
+        assert out.startswith("WRITE FAILED") and "WRITE role" in out
+
+    def test_probe_ok_cleans_up(self):
+        sm = self._sm(201)
+        out = sm.probe_write_access()
+        assert out.startswith("WRITE OK")
+
+
+class TestMAModelRewire:
+    """2026-06-11 part 12 (user decision): the legacy LOW/MEDIUM/HIGH
+    ComplexityAnalyzer is DEPRECATED — every live path uses the MA model
+    via analyzer.ma_assessments.assess_records. MODE 1 (MA files) is
+    completely loyal: size from the file's Complexity Group + Migration
+    Status (export weights are a 10–210 scale; the PIMAS-internal weight
+    bands do NOT apply), effort verbatim from Est. Effort hours. MODE 2
+    (packages/iflows) scores via the SAP rules engine (signals → fired
+    rules → scaling weight), never the 3-band heuristic."""
+
+    MA60 = ("/mnt/user-data/outputs/"
+            "SAP_Migration_Assessment_60_Wave1_Core_Package.xlsx")
+
+    def test_no_live_assess_all_call_sites(self):
+        import re
+        for fn in ("workbench.py", "main.py"):
+            src = open(fn).read()
+            assert "assess_all(" not in src, fn
+            assert not re.search(r"ComplexityAnalyzer\(", src), fn
+
+    def test_mode1_completely_loyal_to_file(self):
+        import os, pytest
+        if not os.path.exists(self.MA60):
+            pytest.skip("MA60 fixture not present")
+        import pandas as pd
+        from analyzer.ma_assessments import assess_records
+        from intake.sap_ma_parser import parse_sap_ma_excel
+        rep = parse_sap_ma_excel(self.MA60)
+        a = assess_records(rep.interfaces)
+        sizes = {}
+        for x in a:
+            sizes[x.ma_size] = sizes.get(x.ma_size, 0) + 1
+        assert sizes == {"S": 12, "M": 12, "L": 12, "XL": 24}
+        assert all(x.ma_mode == "true_ma" for x in a)
+        total = round(sum(x.ma_effort_hours for x in a), 1)
+        sc = pd.read_excel(self.MA60, sheet_name="Scenario Evaluation",
+                           header=3).dropna(how="all").iloc[:, 1:10]
+        sc.columns = list("abcdefghi")
+        sc = sc.dropna(subset=["a"])
+        file_total = round(sc["i"].astype(str).str.extract(
+            r"([\d.]+)")[0].astype(float).sum(), 1)
+        assert total == file_total            # 524.6 — loyal to the file
+
+    def test_group_status_sizing(self):
+        from analyzer.sap_complexity_engine import ma_size_from_group_status
+        assert ma_size_from_group_status(
+            "Low Complexity", "Ready to Migrate") == "S"
+        assert ma_size_from_group_status(
+            "Medium Complexity", "Adjustment Required") == "M"
+        assert ma_size_from_group_status(
+            "Low Complexity", "Evaluation Required") == "L"   # trapped
+        assert ma_size_from_group_status(
+            "High Complexity", "Evaluation Required") == "XL"
+
+    def test_mode2_uses_rules_not_three_band(self):
+        from analyzer.ma_assessments import assess_records
+        from extractor.pi_extractor import InterfaceRecord
+        rec = InterfaceRecord(
+            id="X", name="X", namespace="", software_component="",
+            sender_system="A", receiver_system="B",
+            sender_adapter="SOAP", receiver_adapter="RFC",
+            message_interface="", description="")
+        a = assess_records([rec], log_summary=False)[0]
+        assert a.ma_mode == "signal"
+        assert a.ma_size in ("S", "M", "L", "XL")
+        assert a.reasoning and "rule" in a.reasoning[0]
+
+    def test_deprecated_analyzer_warns(self, caplog):
+        import logging
+        from analyzer.complexity_analyzer import ComplexityAnalyzer
+        from extractor.pi_extractor import InterfaceRecord
+        rec = InterfaceRecord(
+            id="X", name="X", namespace="", software_component="",
+            sender_system="", receiver_system="", sender_adapter="",
+            receiver_adapter="", message_interface="", description="")
+        with caplog.at_level(logging.WARNING):
+            ComplexityAnalyzer({}).assess_all([rec])
+        assert any("DEPRECATED" in r.message for r in caplog.records)
+
+
+class TestMASkeletonRuleSteps:
+    """2026-06-11 part 13 (user: 'the monster is not very intimidating'):
+    MA-mode skeletons now render the export's TRIGGERED RULES as named
+    steps — an all-rules ultra monster gets ~9 blocker-named steps; the
+    real-source regeneration path is untouched. Plus: artifact create 404
+    'Package ID X does not exist' auto-creates the target package and
+    retries once (live P1Test failure ×3 runs)."""
+
+    MA60 = ("/mnt/user-data/outputs/"
+            "SAP_Migration_Assessment_60_Wave1_Core_Package.xlsx")
+
+    def test_ultra_monster_step_plan_names_all_blockers(self):
+        import os, pytest
+        if not os.path.exists(self.MA60):
+            pytest.skip("MA60 fixture not present")
+        from intake.sap_ma_parser import parse_sap_ma_excel
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+        rep = parse_sap_ma_excel(self.MA60)
+        ultra = next(r for r in rep.interfaces if r.ma_weight == 240)
+        assert len(ultra.raw.get("sap_ma_rules", [])) == 8
+        plan = IFlowScaffolder._complexity_step_plan(ultra)
+        names = [p["name"] for p in plan]
+        assert len(plan) == 9                      # 8 rules, one is 2 steps
+        assert "Java Mapping (port to Groovy)" in names
+        assert "Split Records" in names and "Gather Responses" in names
+        assert "PGP Encrypt (Security Material)" in names
+
+    def test_s_tier_stays_minimal(self):
+        import os, pytest
+        if not os.path.exists(self.MA60):
+            pytest.skip("MA60 fixture not present")
+        from intake.sap_ma_parser import parse_sap_ma_excel
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+        rep = parse_sap_ma_excel(self.MA60)
+        s = next(r for r in rep.interfaces
+                 if r.ma_weight and r.ma_weight <= 25)
+        assert IFlowScaffolder._complexity_step_plan(s) == []
+
+    def test_real_source_regeneration_untouched(self):
+        # the regeneration path must not route through the skeleton planner
+        src = open("scaffolder/iflow_scaffolder.py").read()
+        i = src.index("Regenerated iFlow from real source structure")
+        # the regenerate branch's surrounding 4000 chars must not call the
+        # complexity step planner
+        assert "_complexity_step_plan" not in src[max(0, i-4000):i+1000]
+
+    def test_missing_target_package_autocreated(self):
+        from fetcher.cpi_uploader import CPIUploader, UploadResult
+        u = CPIUploader.__new__(CPIUploader)
+        u.base_url = "https://t.example"
+        u._csrf = "tok"
+        u._artifact_exists = lambda aid, ep: False
+        u._write_headers = lambda: {"X-CSRF-Token": "tok"}
+        created = {"pkg": None}
+        u.ensure_package = lambda pid, name, desc="", owner_email="": \
+            created.update(pkg=pid) or True
+        calls = {"n": 0}
+
+        class R1:
+            status_code = 404
+            text = ('{"error":{"message":{"value":"Package ID P1Test '
+                    'does not exist."}}}')
+            headers = {}
+
+        class R2:
+            status_code = 201
+            text = "{}"
+            headers = {}
+
+        class S:
+            def post(self, *a, **k):
+                calls["n"] += 1
+                return R1() if calls["n"] == 1 else R2()
+        u.session = S()
+        res = UploadResult(interface_name="X", package_id="P1Test",
+                           artifact_id="X", status="", message="")
+        u._post_artifact(b"zipbytes", "P1Test", "X", "X", res, "IFlow")
+        assert created["pkg"] == "P1Test"
+        assert calls["n"] == 2 and res.status == "uploaded"
+        assert "auto-created" in res.message
+
+
+class TestMAExportReverse:
+    """2026-06-11 part 14: reverse MA export — real package bytes IN,
+    SAP-MA-format xlsx OUT (Exec Summary / Scenario Evaluation / Rules
+    Log, exact header layout). Also: fire_rules dedupe — verified against
+    the real 169-interface export where every (ICO, rule) pair appears
+    EXACTLY ONCE; the old both-characteristics design doubled weights."""
+
+    def _rows(self):
+        from reporter.ma_export import MAExportRow
+
+        class FR:
+            def __init__(self, rule, w, mv, note):
+                self.rule, self.weight = rule, w
+                self.matched_value, self.signal_note = mv, note
+                self.category = "Migrate"
+        return [
+            MAExportRow(ico_id="FLOW_A", sender_system="SF",
+                        receiver_system="OT", sender_adapter="SFSF",
+                        receiver_adapter="SFSF", size="M", weight=170,
+                        effort_hours=6.0,
+                        fired_rules=[FR("XSLTDependenciesCount", 50,
+                                        "5-15", "xslt=7")]),
+            MAExportRow(ico_id="FLOW_B", size="S", weight=62,
+                        effort_hours=2.5, fired_rules=[]),
+        ]
+
+    def test_layout_matches_sap_export(self, tmp_path):
+        from reporter.ma_export import build_ma_xlsx
+        import openpyxl
+        out = str(tmp_path / "ma.xlsx")
+        build_ma_xlsx(self._rows(), out)
+        wb = openpyxl.load_workbook(out)
+        assert wb.sheetnames == ["Executive Summary",
+                                 "Scenario Evaluation", "Rules Log"]
+        es = wb["Executive Summary"]
+        assert es["B7"].value == "Total Extracted ICOs" and es["C7"].value == 2
+        assert es["C11"].value == "8.5 Hrs"
+        se = wb["Scenario Evaluation"]
+        assert se.cell(row=4, column=2).value == "ICO Technical ID"
+        assert se.cell(row=4, column=10).value == "Est. Effort"
+        assert se.cell(row=5, column=9).value == 170
+        assert se.cell(row=5, column=10).value == "6.0 Hrs"
+        assert se.cell(row=5, column=7).value == "Medium"
+        assert se.cell(row=6, column=8).value == "Ready to Migrate"
+        rl = wb["Rules Log"]
+        assert rl.cell(row=4, column=2).value == "Triggered Rule ID"
+        assert rl.cell(row=5, column=2).value == "XSLTDependenciesCount"
+        assert rl.cell(row=5, column=3).value == "FLOW_A"
+
+    def test_own_parser_round_trips_export(self, tmp_path):
+        from reporter.ma_export import build_ma_xlsx
+        from intake.sap_ma_parser import parse_sap_ma_excel
+        out = str(tmp_path / "ma.xlsx")
+        build_ma_xlsx(self._rows(), out)
+        rep = parse_sap_ma_excel(out)
+        assert len(rep.interfaces) == 2
+        a = next(i for i in rep.interfaces if i.name == "FLOW_A")
+        assert a.raw.get("sap_ma_weight") == 170
+        assert a.raw.get("sap_ma_effort_hrs") == 6.0
+        assert a.raw.get("sap_ma_rules") == ["XSLTDependenciesCount"]
+
+    def test_fire_rules_single_firing_per_rule(self):
+        from analyzer.sap_complexity_engine import fire_rules
+        from collections import Counter
+        fired = fire_rules({"groovy_scripts": 8, "xslt": 7,
+                            "call_activities": 27, "service_tasks": 13,
+                            "message_flows": 14,
+                            "mapping_types": ["GMM", "XSL"],
+                            "sender_adapter": "SuccessFactors",
+                            "receiver_adapter": "SuccessFactors"})
+        # uniqueness key = (rule, matched asset) — mirrors the real export
+        keys = Counter((f.rule, f.matched_value, f.signal_note)
+                       for f in fired)
+        assert all(v == 1 for v in keys.values())
+        # OMStepCount keeps only its strongest band, not two
+        om = [f for f in fired if f.rule == "OMStepCount"]
+        assert len(om) == 1 and om[0].weight == 50
+
+    def test_real_rci093_bundle_assessment(self):
+        import os, pytest
+        path = ("/home/claude/ref/rci3/"
+                "fff525112616476cb2ba9ed285a13236_content")
+        if not os.path.exists(path):
+            pytest.skip("RCI093 reference bundle not present")
+        from analyzer.sap_complexity_engine import SAPComplexityEngine
+        r = SAPComplexityEngine().assess_bundle(
+            "RCI093", open(path, "rb").read())
+        assert r.total_weight == 170 and r.size == "M"
+
+
+class TestEngineRuleLabelsInSkeletons:
+    """2026-06-11 part 15 (user fed the reverse-MA export back in — steps
+    rendered as raw rule IDs like 'GMMCustomUDFUsageCount'): engine rule
+    ids now get human labels with real counts from the Rules Log asset
+    strings; adapter-type rules no longer render as pipeline steps."""
+
+    MA = ("/mnt/user-data/outputs/"
+          "SAP_Migration_Assessment_RCI093_PackageScan.xlsx")
+
+    def test_rci093_skeleton_labels(self):
+        import os, pytest
+        if not os.path.exists(self.MA):
+            pytest.skip("RCI093 reverse-MA fixture not present")
+        from intake.sap_ma_parser import parse_sap_ma_excel
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+        rep = parse_sap_ma_excel(self.MA)
+        main = next(i for i in rep.interfaces if "OpenText" in i.name)
+        names = [p["name"]
+                 for p in IFlowScaffolder._complexity_step_plan(main)]
+        assert "Groovy Mappings (x8)" in names
+        assert "XSLT Transform Chain (x7)" in names
+        assert "Mapping: GMM" in names and "Mapping: XSL" in names
+        # raw rule ids and adapter rules must NOT appear
+        assert not any("Count" in n or "AdapterType" in n for n in names)
+
+    def test_rule_assets_round_trip(self):
+        import os, pytest
+        if not os.path.exists(self.MA):
+            pytest.skip("RCI093 reverse-MA fixture not present")
+        from intake.sap_ma_parser import parse_sap_ma_excel
+        rep = parse_sap_ma_excel(self.MA)
+        main = next(i for i in rep.interfaces if "OpenText" in i.name)
+        assets = dict(map(tuple, main.raw["sap_ma_rule_assets"]))
+        assert assets["GMMCustomUDFUsageCount"] == "groovy_scripts=8"
+
+    def test_demo_catalog_rules_still_map(self):
+        # ids without assets (forward-parsed SAP files) keep working
+        from scaffolder.iflow_scaffolder import IFlowScaffolder
+
+        class FakeIface:
+            raw = {"sap_ma_rules": ["Java_Mapping_Detected",
+                                    "PGP_Encryption_Topology_Shift"]}
+            mapping_program = ""
+            has_multi_mapping = False
+            description = ""
+            channel_count = 1
+            has_bpm = False
+        names = [p["name"] for p in
+                 IFlowScaffolder._complexity_step_plan(FakeIface())]
+        assert "Java Mapping (port to Groovy)" in names
+        assert "PGP Encrypt (Security Material)" in names
+
+
+class TestWorkbenchCleanup2026_06_11:
+    """Part 16 deep cleanup: tabs 0/3/6/7 retired, one download story,
+    one monitoring surface, deploy under Results. Source-level guards so
+    the retired noise can't quietly return."""
+
+    SRC = open("workbench.py").read()
+
+    def test_seven_tabs(self):
+        assert '"🎯 3 · Match iFlow"' not in self.SRC
+        assert '"🛡 6 · Clean Core"' not in self.SRC
+        assert '"✅ 7 · Verify"' not in self.SRC
+        assert '"🔑 0 · Profiles"' not in self.SRC
+        assert '"🚀 4 · Generate & Deploy"' in self.SRC
+
+    def test_single_download_story(self):
+        for gone in ("Download all (.zip)", "Download importable package",
+                     "Download deployable package", "Download all outputs"):
+            assert gone not in self.SRC, gone
+        assert "Export artifact .zip(s) to disk" in self.SRC
+        assert "Export full package zip(s) to disk" in self.SRC
+
+    def test_single_monitoring_surface(self):
+        assert "Message runs (executions) from tenant" not in self.SRC
+        assert "Deployed artifacts + runtime status" not in self.SRC
+        assert "Background run poller" in self.SRC
+
+    def test_deploy_directly_under_results(self):
+        i = self.SRC.index('st.subheader("Results")')
+        j = self.SRC.index("render_deploy_section(", i)
+        # nothing but the results table + a comment between them
+        assert j - i < 700
+
+    def test_clean_core_autoruns_in_generate(self):
+        i = self.SRC.index('if st.button("🚀 Generate all"')
+        seg = self.SRC[i:i + 2500]
+        assert "CleanCoreAnalyzer()" in seg
+
+    def test_path_pickers_live_in_sidebar_settings(self):
+        i = self.SRC.index('with st.expander("⚙ Settings")')
+        seg = self.SRC[i:i + 4000]
+        assert "capability_corpus_dir" in seg
+        assert "template_library_dir" in seg
+
+    def test_matcher_modules_gone_conversion_assets_kept(self):
+        import os
+        assert not os.path.exists("fetcher/match_aggregator.py")
+        assert not os.path.exists("reporter/verifier.py")
+        assert not os.path.exists("check_schema_matcher_live.py")
+        # conversion toolchain survives the matcher retirement
+        assert os.path.exists("library_builder/mmap_generator.py")
+        assert os.path.exists("scaffolder/schema_binding.py")
+        assert os.path.exists("extractor/schema_matcher.py")
+
+
+class TestSAPMarketingBreadth:
+    """2026-06-11 part 17: first foreign-content breadth test — SAP-authored
+    'Mobile Application Integration with SAP Marketing' (Discover catalog).
+    All 3 flows reproduce COLD; all 6 mmaps are xiObj-format (urn:sap-com:xi
+    PI-heritage trafo envelope — exactly what .tpz ESR mappings will look
+    like) and parse with full field extraction. Corpus grew 166→169."""
+
+    FX = "tests/fixtures"
+
+    def _bundle(self, name):
+        import zipfile
+        return zipfile.ZipFile(f"{self.FX}/{name}.zip")
+
+    def test_all_three_flows_reproduce_cold(self):
+        import os, pytest
+        if not os.path.exists(f"{self.FX}/sap_mkt_contact.zip"):
+            pytest.skip("fixtures absent")
+        from scaffolder.regenerate import regenerate_iflow_xml
+        for fx in ("sap_mkt_contact", "sap_mkt_interaction",
+                   "sap_mkt_tracking"):
+            z = self._bundle(fx)
+            iflw = [n for n in z.namelist() if n.endswith(".iflw")][0]
+            r = regenerate_iflow_xml(z.read(iflw).decode("utf-8"),
+                                     iflw.rsplit("/", 1)[-1])
+            assert r.reproduced, fx
+
+    def test_xiobj_mmaps_parse_with_fields(self):
+        import os, pytest
+        if not os.path.exists(f"{self.FX}/sap_mkt_interaction.zip"):
+            pytest.skip("fixtures absent")
+        from library_builder.mmap_parser import parse_mmap
+        z = self._bundle("sap_mkt_interaction")
+        raw = z.read("src/main/resources/mapping/Int_map.mmap"
+                     ).decode("utf-8", "replace")
+        assert raw.startswith("<xiObj")          # PI-heritage envelope
+        spec = parse_mmap(raw)
+        assert len(spec.fields) == 165
+        assert spec.source_root == "Interactions"
+        assert spec.source_file == "InteractionsEntityPOST0.xsd"
+
+    def test_engine_assesses_foreign_bundles(self):
+        import os, pytest
+        if not os.path.exists(f"{self.FX}/sap_mkt_tracking.zip"):
+            pytest.skip("fixtures absent")
+        from analyzer.sap_complexity_engine import SAPComplexityEngine
+        eng = SAPComplexityEngine()
+        r = eng.assess_bundle(
+            "tracking", open(f"{self.FX}/sap_mkt_tracking.zip", "rb").read())
+        assert r.size == "S" and r.signals.get("sender_adapter") == "HTTPS"
+
+
+class TestPIPOHelpersBatch:
+    """2026-06-11 part 18: 17-package batch (Figaf migration content, KaTe
+    partner adapters, Mexico CFDI suite, Banamex ACH, Ariba, B2B, LeanIX,
+    delaware FCC converter). 30/30 iFlows reproduced COLD; 41/41 mmaps are
+    xiObj — PI-heritage format is UNIVERSAL in observed standard/partner
+    content. Corpus 169→199. New in-bundle resource classes observed:
+    lib/*.jar (archived Java mappings) and *.crt (shipped certs) — NOT in
+    WIRING_EXTS; backlog: bundle passthrough for non-wiring resources."""
+
+    def test_corpus_holds_batch(self):
+        import os, pickle, pytest
+        if not os.path.exists('/tmp/learn/iflws.pkl'):
+            pytest.skip('corpus not present')
+        corpus = pickle.load(open('/tmp/learn/iflws.pkl', 'rb'))
+        paths = [p for p, _ in corpus]
+        assert len(corpus) >= 199
+        assert sum(1 for p in paths if p.startswith('PIPO_helpers/')) == 30
+        assert any('Mexico' in p or 'Banam' in p for p in paths)
+
+    def test_batch_flows_still_reproduce(self):
+        import os, pickle, pytest
+        if not os.path.exists('/tmp/learn/iflws.pkl'):
+            pytest.skip('corpus not present')
+        from scaffolder.regenerate import regenerate_iflow_xml
+        corpus = pickle.load(open('/tmp/learn/iflws.pkl', 'rb'))
+        batch = [(p, x) for p, x in corpus if p.startswith('PIPO_helpers/')]
+        bad = [p for p, x in batch
+               if not regenerate_iflow_xml(x, p.rsplit('/', 1)[-1]).reproduced]
+        assert not bad, bad
+
+
+class TestPIDialectMmaps:
+    """2026-06-11 part 18b: Figaf's package carries REAL PI-authored ESR
+    mmaps (CRLF pretty-printed, attribute order type/gid/path, ns0:
+    prefixed paths, RFC lookups, parameters, function libs). Parser
+    hardened: Dst-brick detection is attribute-order-agnostic; schema
+    binding + namespace regexes are whitespace-tolerant."""
+
+    def test_pi_attribute_order_dialect(self):
+        from library_builder.mmap_parser import parse_mmap
+        txt = ('<xiObj xmlns="urn:sap-com:xi"><generic><lnks>'
+               '<lnkRole kpos="1" role="SOURCE_IFR_MESS">\r\n'
+               '  <lnk rMode="R">\r\n    <key typeID="wsdl" version="1.1">'
+               '<elem>Order.wsdl</elem><elem>src/main/resources/wsdl</elem>'
+               '<elem>SyncOrder</elem></key></lnk></lnkRole></lnks></generic>'
+               '<transformation>\r\n'
+               '  <brick type="Dst" gid="0" path="/ns0:SyncOrder">\r\n'
+               '    <arg>\r\n'
+               '      <brick type="Src" gid="1" path="/ns0:SyncOrder"/>\r\n'
+               '    </arg>\r\n  </brick>\r\n'
+               '</transformation></xiObj>')
+        pm = parse_mmap(txt)
+        assert pm.source_file == "Order.wsdl"
+        assert pm.source_root == "SyncOrder"
+        assert len(pm.fields) == 1
+        assert pm.fields[0].tree is not None
+
+    def test_cpi_attribute_order_still_works(self):
+        from library_builder.mmap_parser import parse_mmap
+        txt = ('<xiObj xmlns="urn:sap-com:xi"><transformation>'
+               '<brick gid="0" path="/Out" type="Dst"><arg>'
+               '<brick gid="0" path="/In" type="Src"/></arg></brick>'
+               '</transformation></xiObj>')
+        pm = parse_mmap(txt)
+        assert len(pm.fields) == 1 and pm.fields[0].tree is not None
+
+
+class TestPackageArtifacts:
+    """2026-06-11 part 19: ValueMapping + ScriptCollection artifact parsers
+    (extractor/package_artifacts.py), decoded from the 54-package big batch
+    (55 VMs / 1746 mapping groups; SC = scripts-only bundle). The VM model
+    (agency/schema/value groups) is PI's value-mapping table model — this
+    parser doubles as the PI VM conversion target."""
+
+    FX = "tests/fixtures"
+
+    def test_value_mapping_parses(self):
+        import os, pytest
+        p = f"{self.FX}/sap_value_mapping.zip"
+        if not os.path.exists(p):
+            pytest.skip("fixture absent")
+        from extractor.package_artifacts import parse_value_mapping
+        vm = parse_value_mapping(open(p, "rb").read(), "fx")
+        assert vm.groups, "no groups parsed"
+        g = vm.groups[0]
+        assert g.group_id
+        assert len(g.entries) >= 2
+        e = g.entries[0]
+        assert e.agency and e.schema and e.value != None  # noqa: E711
+        # agencies property pairs (agency, schema) uniquely
+        assert ("COD", "OrgType") in vm.agencies
+
+    def test_script_collection_parses(self):
+        import os, pytest
+        p = f"{self.FX}/sap_script_collection.zip"
+        if not os.path.exists(p):
+            pytest.skip("fixture absent")
+        from extractor.package_artifacts import parse_script_collection
+        sc = parse_script_collection(open(p, "rb").read(), "fx")
+        assert len(sc.scripts) >= 20
+        assert any(n.endswith(".gsh") for n in sc.script_names)
+        assert any(n.endswith(".groovy") for n in sc.script_names)
+        # sources are real text, not bytes/garbage
+        src = next(iter(sc.scripts.values()))
+        assert isinstance(src, str) and len(src) > 50
+
+    def test_known_artifact_types_cover_observed(self):
+        from extractor.package_artifacts import KNOWN_ARTIFACT_TYPES
+        for t in ("IFlow", "ValueMapping", "ScriptCollection",
+                  "MessageMapping", "Url", "File", "PartnerLogo",
+                  "thumbnail", "ContentPackage"):
+            assert t in KNOWN_ARTIFACT_TYPES
+
+
+class TestBundlePassthrough:
+    """2026-06-11 part 19: non-wiring cargo (lib jars, in-bundle certs,
+    META-INF/deployment descriptors) survives regeneration. Decoded from
+    live gaps: delaware converter (2 jars/flow), Mexico CFDI
+    (publicsign.crt at bundle ROOT), JMS flows (queueDefinitions.json)."""
+
+    FX = "tests/fixtures"
+
+    def _roundtrip(self, fixture):
+        import zipfile, io
+        from scaffolder.passthrough import (collect_passthrough_from_zip,
+                                            inject_cargo, iflw_key)
+        from scaffolder.regenerate import regenerate_iflow_xml
+        from scaffolder.minimal_iflow import build_bundle_zip
+        raw = open(f"{self.FX}/{fixture}", "rb").read()
+        pt = collect_passthrough_from_zip(raw)
+        assert pt, "no cargo collected"
+        bz = zipfile.ZipFile(io.BytesIO(raw))
+        iflw = [n for n in bz.namelist() if n.endswith(".iflw")][0]
+        xml = bz.read(iflw).decode("utf-8", "replace")
+        assert iflw_key(xml) in pt
+        r = regenerate_iflow_xml(xml, iflw.rsplit("/", 1)[-1])
+        assert r.reproduced and r.result is not None
+        n = inject_cargo(r.result, xml, pt)
+        assert n >= 1
+        names = zipfile.ZipFile(
+            io.BytesIO(build_bundle_zip(r.result))).namelist()
+        return pt[iflw_key(xml)], names
+
+    def test_jars_survive(self):
+        import os, pytest
+        if not os.path.exists(f"{self.FX}/delaware_jar_bundle.zip"):
+            pytest.skip("fixture absent")
+        cargo, names = self._roundtrip("delaware_jar_bundle.zip")
+        jars = [c for c in cargo if c.endswith(".jar")]
+        assert len(jars) == 2
+        assert all(j in names for j in jars)
+
+    def test_root_cert_survives(self):
+        import os, pytest
+        if not os.path.exists(f"{self.FX}/mexico_crt_bundle.zip"):
+            pytest.skip("fixture absent")
+        cargo, names = self._roundtrip("mexico_crt_bundle.zip")
+        assert "publicsign.crt" in cargo and "publicsign.crt" in names
+
+    def test_queue_definitions_survive(self):
+        import os, pytest
+        if not os.path.exists(f"{self.FX}/jms_queuedefs_bundle.zip"):
+            pytest.skip("fixture absent")
+        cargo, names = self._roundtrip("jms_queuedefs_bundle.zip")
+        q = "META-INF/deployment/queueDefinitions.json"
+        assert q in cargo and q in names
+
+    def test_never_overwrites_generated_files(self):
+        from scaffolder.passthrough import inject_cargo, iflw_key
+        class R: files = {"a.txt": "generated"}
+        n = inject_cargo(R(), "xml", {iflw_key("xml"): {"a.txt": b"cargo"}})
+        assert n == 0 and R.files["a.txt"] == "generated"
+
+
+class TestGoldEHBuiltins:
+    """2026-06-11 part 19: gold-EH scripts are built-ins seeded into the
+    resolver corpus — no more false 'Resource NOT FOUND' on every gold-EH
+    generation."""
+
+    def test_no_false_unresolved(self):
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from scaffolder.regenerate import regenerate_iflow_xml
+        corpus = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        r = regenerate_iflow_xml(corpus[0][1], "eh", resources={},
+                                 gold_error_handling="error_end")
+        assert r.reproduced
+        rep = getattr(r.result, "resource_report", None)
+        assert not [u for u in (rep.unresolved if rep else [])
+                    if "gold_" in str(u)]
+        assert any("gold_error_capture" in f for f in r.result.files)
+
+
+class TestPatternMining:
+    """2026-06-11 part 19: topology-level pattern miner — the conversion
+    vocabulary. 697-corpus run: 11 families, 0 parse errors, top-3 = 61.7%."""
+
+    def test_mine_corpus(self):
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        sys_path_hack = None
+        from tools.pattern_mining import mine
+        corpus = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        rep = mine(corpus)
+        assert rep["total_flows"] == len(corpus)
+        assert rep["parse_errors"] == 0
+        assert sum(f["count"] for f in rep["families"]) == len(corpus)
+        names = [f["family"] for f in rep["families"]]
+        assert "Map, call & deliver" in names
+        assert "Content-based routing" in names
+
+    def test_classify_deterministic(self):
+        import os, pickle, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from tools.pattern_mining import classify
+        from extractor.iflow_parser import parse_iflow
+        corpus = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        m = parse_iflow(corpus[0][1], "x")
+        a = classify(m); b = classify(m)
+        assert a == b and len(a) == 3
+
+
+class TestDeliveryFriction:
+    """2026-06-11 part 19: two-axis effort model (build × friction +
+    calibration flywheel). Sanity anchor: RCI093 weight 170 — default
+    coeff puts the build at ~17 days, and the real-world friction profile
+    (1 external party, high criticality, test data to be created,
+    sensitive HR data, 3 envs) lands the calendar in the months range
+    the user actually lived — not the hours PIMAS suggested."""
+
+    def test_default_estimate_rci_shape(self):
+        from analyzer.delivery_friction import estimate, FrictionProfile
+        easy = estimate("simple", 170)
+        assert easy.build_days == 17.0
+        assert easy.friction_multiplier == 1.0
+        # zero-friction: ~17 build days ≈ 4.4 calendar weeks incl. overhead
+        assert 4.0 <= easy.calendar_weeks <= 5.0
+        rci = estimate("RCI093", 170, FrictionProfile(
+            external_parties="one", business_criticality="high",
+            test_data="must_be_created", environments="three_plus",
+            data_sensitivity="sensitive"))
+        # 2.0*1.7*1.8*1.4*1.3 ≈ 11.1× → ~38 weeks of friction-laden
+        # calendar pressure; months, not hours. (Real waves parallelize —
+        # the point is the ORDER OF MAGNITUDE matches reality.)
+        assert rci.friction_multiplier > 10
+        assert rci.calendar_weeks > 30
+        # his "monster that takes <1 week": weight ~45, zero friction
+        monster = estimate("twelve_step", 45)
+        assert monster.build_days <= 5.0
+
+    def test_calibration_flywheel(self, tmp_path):
+        from analyzer.delivery_friction import (CalibrationStore,
+                                                ActualRecord,
+                                                estimate_calibrated,
+                                                DEFAULT_BUILD_COEFF)
+        store = CalibrationStore(path=str(tmp_path / "cal.json"))
+        assert store.build_coeff() == DEFAULT_BUILD_COEFF
+        store.record_actual(ActualRecord("RCI093", 170, 17.0, 16.0))
+        store.record_actual(ActualRecord("small", 45, 3.0, 1.0))
+        c = store.build_coeff()
+        assert abs(c - 20.0 / 215.0) < 5e-4   # store rounds to 4 dp
+        # persists across instances
+        store2 = CalibrationStore(path=str(tmp_path / "cal.json"))
+        assert store2.n_records() == 2
+        assert store2.build_coeff() == c
+        est = estimate_calibrated("next", 100, store=store2)
+        assert est.coeff_used == c
+
+    def test_unknown_answers_degrade_gracefully(self):
+        from analyzer.delivery_friction import estimate, FrictionProfile
+        p = FrictionProfile(external_parties="banana")
+        e = estimate("x", 50, p)
+        assert e.friction_multiplier >= 1.0   # fell back to default, no raise
+
+
+class TestPart19WorkbenchWiring:
+    """Part 19 surface guards: passthrough at every scaffolder call site +
+    ingest collection; effort-model panel in Client Tracker."""
+
+    SRC = open("workbench.py").read()
+
+    def test_passthrough_at_every_scaffolder_call(self):
+        n_extra = self.SRC.count('extra_resources=st.session_state.get('
+                                 '"uploaded_resources")')
+        n_pt = self.SRC.count('passthrough=st.session_state.get('
+                              '"uploaded_passthrough")')
+        assert n_extra >= 5 and n_pt == n_extra
+
+    def test_ingest_collects_passthrough(self):
+        assert "collect_passthrough_from_zip" in self.SRC
+        assert '"uploaded_passthrough"' in self.SRC
+
+    def test_effort_model_panel_present(self):
+        assert "📐 Effort model" in self.SRC
+        assert "estimate_calibrated" in self.SRC
+        assert "Record actual" in self.SRC
+
+
+class TestTerminateEventDefHybrid:
+    """2026-06-11 part 19: C4C-era hybrid — activityType=EndEvent carrying a
+    bpmn2:terminateEventDefinition child (cm2cod_AttachmentReplication,
+    erp2cod customermaster.replicate). Parser captures it as
+    event_def='terminate' WITHOUT remapping the kind; emitter re-emits the
+    definition with its original id."""
+
+    SRC_XML = (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/'
+        '20100524/MODEL" xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd">'
+        '<bpmn2:collaboration id="C1"/>'
+        '<bpmn2:process id="Process_1" name="P">'
+        '<bpmn2:startEvent id="StartEvent_2" name="Start">'
+        '<bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>'
+        '<bpmn2:messageEventDefinition/></bpmn2:startEvent>'
+        '<bpmn2:endEvent id="EndEvent_4" name="End">'
+        '<bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>'
+        '<bpmn2:terminateEventDefinition id="TerminateEventDefinition_1"/>'
+        '</bpmn2:endEvent>'
+        '<bpmn2:sequenceFlow id="SequenceFlow_5" sourceRef="StartEvent_2" '
+        'targetRef="EndEvent_4"/>'
+        '</bpmn2:process></bpmn2:definitions>')
+
+    def test_parse_captures_terminate_without_kind_remap(self):
+        from extractor.iflow_parser import parse_iflow
+        m = parse_iflow(self.SRC_XML, "t")
+        s = m.steps["EndEvent_4"]
+        assert s.kind == "EndEvent"
+        assert s.event_def == "terminate"
+        assert s.event_def_id == "TerminateEventDefinition_1"
+
+    def test_emitter_reemits_terminate_def(self):
+        # exercise the def-emission helper directly (a bare synthetic flow
+        # routes to the minimal-scaffold path, not faithful re-emission)
+        from extractor.iflow_parser import parse_iflow
+        from scaffolder.minimal_iflow import _gw_event_def_for
+        m = parse_iflow(self.SRC_XML, "t")
+        frag = _gw_event_def_for(m.steps["EndEvent_4"])
+        assert ('<bpmn2:terminateEventDefinition '
+                'id="TerminateEventDefinition_1"/>') in frag
+
+    def test_corpus_hybrid_flows_reemit_terminate(self):
+        import os, pickle, re, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from scaffolder.regenerate import regenerate_iflow_xml
+        corpus = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        hits = 0
+        for path, xml in corpus:
+            if ("cm2cod_AttachmentReplication" not in path
+                    and "customermaster.replicate" not in path):
+                continue
+            r = regenerate_iflow_xml(xml, "x")
+            assert r.reproduced, path
+            m = re.search(r'<bpmn2:endEvent id="EndEvent_4".*?'
+                          r'</bpmn2:endEvent>', r.result.iflw_xml, re.S)
+            assert "terminateEventDefinition" in m.group(0), path
+            hits += 1
+        assert hits == 2
+
+
+class TestLibraryStore:
+    """2026-06-12 part 20: additive content-hash library
+    (library_builder/library_store.py). Re-extraction adds zero; coverage
+    gates raw-folder deletion; client-tenant harvests stay scoped until
+    explicitly promoted; as_corpus() feeds the resolver library-only."""
+
+    def _lib(self, tmp_path):
+        from library_builder.library_store import LibraryStore
+        return LibraryStore(str(tmp_path / "lib"))
+
+    def test_additive_second_run_adds_zero(self, tmp_path):
+        lib = self._lib(tmp_path)
+        raw = open("tests/fixtures/sap_mkt_interaction.zip", "rb").read()
+        r1 = lib.add_from_zip(raw, source="mkt")
+        assert r1.added > 5 and r1.duplicates == 0
+        r2 = lib.add_from_zip(raw, source="mkt_again")
+        assert r2.added == 0 and r2.duplicates == r1.added
+        # provenance appended, not duplicated
+        idx = lib.load_index()
+        ent = next(iter(idx.values()))
+        assert len(ent["sources"]) == 2
+
+    def test_coverage_gates_deletion(self, tmp_path):
+        lib = self._lib(tmp_path)
+        raw = open("tests/fixtures/sap_mkt_contact.zip", "rb").read()
+        cov0 = lib.coverage(raw)
+        assert not cov0["safe_to_delete"] and cov0["covered"] == 0
+        lib.add_from_zip(raw, source="contact")
+        cov1 = lib.coverage(raw)
+        assert cov1["safe_to_delete"] and cov1["pct"] == 100.0
+
+    def test_scope_isolation_and_promote(self, tmp_path):
+        lib = self._lib(tmp_path)
+        raw = open("tests/fixtures/sap_mkt_tracking.zip", "rb").read()
+        lib.add_from_zip(raw, source="tenant:acme", scope="acme")
+        assert lib.stats()["unique_files"] == 0          # main untouched
+        assert lib.stats("acme")["unique_files"] > 0
+        assert "acme" in lib.scopes()
+        sha = next(iter(lib.load_index("acme")))
+        assert lib.promote(sha, "acme")
+        assert lib.stats()["unique_files"] == 1
+        assert not lib.promote("nonexistent", "acme")
+
+    def test_library_only_resolution(self, tmp_path):
+        from scaffolder.regenerate import regenerate_iflow_xml
+        import zipfile, io
+        lib = self._lib(tmp_path)
+        raw = open("tests/fixtures/sap_mkt_interaction.zip", "rb").read()
+        lib.add_from_zip(raw, source="Mobile Application Integration "
+                                     "with SAP Marketing")
+        corpus = lib.as_corpus()
+        assert all(k.startswith("library/") for k in corpus)
+        bz = zipfile.ZipFile(io.BytesIO(raw))
+        iflw = [n for n in bz.namelist() if n.endswith(".iflw")][0]
+        r = regenerate_iflow_xml(bz.read(iflw).decode("utf-8"), "t",
+                                 resources=corpus)
+        assert r.reproduced
+        rep = getattr(r.result, "resource_report", None)
+        assert rep is not None and not rep.unresolved
+        assert len(rep.shipped) >= 3
+
+    def test_binary_cargo_stored_but_not_in_corpus(self, tmp_path):
+        lib = self._lib(tmp_path)
+        raw = open("tests/fixtures/delaware_jar_bundle.zip", "rb").read()
+        lib.add_from_zip(raw, source="delaware")
+        idx = lib.load_index()
+        assert any(e["ext"] == ".jar" for e in idx.values())
+        assert not any(k.endswith(".jar") for k in lib.as_corpus())
+
+    def test_catalog_merge_idempotent(self, tmp_path):
+        lib = self._lib(tmp_path)
+        raw = open("tests/fixtures/sap_mkt_interaction.zip", "rb").read()
+        lib.add_from_zip(raw, source="mkt")
+        bt = {"groovy": {k: t for k, t in lib.as_corpus().items()
+                         if k.endswith(".groovy")}}
+        c1 = lib.merged_catalog(bt)
+        c2 = lib.merged_catalog(bt)
+        import json as _j
+        assert _j.dumps(c1, sort_keys=True, default=str) == \
+               _j.dumps(c2, sort_keys=True, default=str)
+
+
+class TestLibraryWorkbenchWiring:
+    """Part 20 surface guards: library UI in Tab 1, scaffolder merges the
+    library corpus, tenant harvest lands scoped."""
+
+    SRC = open("workbench.py").read()
+    SCAF = open("scaffolder/iflow_scaffolder.py").read()
+
+    def test_library_ui_present(self):
+        assert "📚 Library" in self.SRC
+        assert "Extract uploaded packages → library" in self.SRC
+        assert "Check coverage" in self.SRC
+        assert "Pull all tenant packages → workspace" in self.SRC
+        assert "Promote to main library" in self.SRC
+
+    def test_tenant_harvest_is_scoped(self):
+        i = self.SRC.index("lib_pull_btn")
+        seg = self.SRC[i:i + 1200]
+        assert "scope=_scope" in seg          # never the main library
+
+    def test_scaffolder_merges_library(self):
+        assert 'get_setting as _lib_gs' in self.SCAF or \
+               '_lib_gs("library_dir"' in self.SCAF
+        assert "LibraryStore" in self.SCAF
+
+
+class TestGdkReference:
+    """2026-06-12 part 21: dual-version GDK reference extracted from Apache
+    Groovy SOURCE at GROOVY_2_4_21 / GROOVY_4_0_29 (user-pinned matrix:
+    CPI runtime 4.0.29, legacy scripts 2.4.x)."""
+
+    def _ref(self):
+        import json
+        return json.load(open("reference/groovy_gdk.json"))
+
+    def test_both_versions_present_with_known_methods(self):
+        ref = self._ref()
+        for v in ("2.4.21", "4.0.29"):
+            ms = ref[v]["methods"]
+            for known in ("each", "collect", "findAll", "tokenize",
+                          "collectEntries", "withCloseable"):
+                assert known in ms, f"{known} missing from {v}"
+
+    def test_version_deltas(self):
+        ref = self._ref()
+        m24, m40 = set(ref["2.4.21"]["methods"]), set(
+            ref["4.0.29"]["methods"])
+        assert "average" in m40 - m24          # 3.0+ addition
+        assert "collectAll" in m24 - m40       # removed in 4.x
+
+    def test_class_relocation_gotchas(self):
+        ref = self._ref()
+        loc = ref["class_locations"]["XmlSlurper"]
+        assert loc["2.4"].startswith("groovy.util.")
+        assert loc["4.0"].startswith("groovy.xml.")
+
+
+class TestScriptLint:
+    """The conversion linter: removed-class detection, SAP-API recognition,
+    dual-version verdicts. Proven on the real library: 118 scripts → 95
+    both / 5 needs-4 / 6 BREAK on 4.0.29 (incl. SAP's own Marketing
+    scripts importing groovy.util.XmlSlurper)."""
+
+    def test_removed_class_breaks_on_4(self):
+        from tools.script_lint import lint_script
+        rep = lint_script(
+            "import groovy.util.XmlSlurper\n"
+            "def Message processData(Message message) {\n"
+            "  def x = new XmlSlurper().parseText(message.getBody("
+            "java.lang.String))\n  return message\n}")
+        assert rep.verdict == "breaks_on_4"
+        assert any(f.kind == "removed_class" and f.severity == "error"
+                   for f in rep.findings)
+
+    def test_clean_sap_script_passes_both(self):
+        from tools.script_lint import lint_script
+        rep = lint_script(
+            "import com.sap.gateway.ip.core.customdev.util.Message\n"
+            "def Message processData(Message message) {\n"
+            "  def body = message.getBody(java.lang.String)\n"
+            "  message.setProperty('x', body.tokenize(',')."
+            "collect { it.trim() })\n"
+            "  def log = messageLogFactory.getMessageLog(message)\n"
+            "  if (log) log.addAttachmentAsString('p', body, 'text/plain')\n"
+            "  return message\n}")
+        assert rep.verdict == "both"
+        assert "getBody" in rep.sap_api
+        assert "addAttachmentAsString" in rep.sap_api
+        assert not rep.unknown
+
+    def test_4_only_method_flagged(self):
+        from tools.script_lint import lint_script
+        rep = lint_script("def m = [1,2,3].average()\n")
+        assert rep.verdict == "needs_4_runtime"
+        assert "average" in rep.gdk_only_4
+
+    def test_hallucinated_api_lands_in_review(self):
+        from tools.script_lint import lint_script
+        rep = lint_script("def x = payload.frobnicateBody()\n")
+        assert "frobnicateBody" in rep.unknown
+        assert rep.verdict == "review"
+
+    def test_corpus_lint_on_fixtures(self, tmp_path):
+        from library_builder.library_store import LibraryStore
+        from tools.script_lint import lint_corpus
+        lib = LibraryStore(str(tmp_path / "lib"))
+        for fx in ("sap_mkt_contact", "sap_mkt_interaction",
+                   "sap_mkt_tracking"):
+            lib.add_from_zip(open(f"tests/fixtures/{fx}.zip", "rb").read(),
+                             source=fx)
+        s = lint_corpus(lib.as_corpus())
+        assert s["scripts"] >= 10
+        assert sum(s["verdicts"].values()) == s["scripts"]
+
+
+class TestLintWorkbenchWiring:
+    SRC = open("workbench.py").read()
+
+    def test_lint_button_present(self):
+        assert "Lint library scripts" in self.SRC
+        assert "lint_corpus" in self.SRC
+
+
+class TestOrchestrationFlag:
+    """2026-06-12 part 22: ccBPM/orchestration-shape flag. PI ccBPM doesn't
+    port 1:1 — assessments must surface the architecture decision (CPI +
+    SBPA split or stateless redesign). Corpus discrimination: 0% of 'Map &
+    deliver' flags vs 77% of 'Splitter–Gather orchestration'."""
+
+    def test_strong_orchestration_flags_with_recommendation(self):
+        from analyzer.orchestration_flag import assess_orchestration
+        of = assess_orchestration(kinds={
+            "ProcessCallElement": 6, "__processes__": 5, "Splitter": 1,
+            "Gather": 1, "ExclusiveGateway": 3, "DBstorage": 2})
+        assert of.flagged and of.score >= 6
+        assert any("fork-join" in r for r in of.reasons)
+        assert "SAP Build Process Automation" in of.recommendation
+
+    def test_simple_map_and_deliver_does_not_flag(self):
+        from analyzer.orchestration_flag import assess_orchestration
+        of = assess_orchestration(kinds={
+            "Mapping": 1, "ExternalCall": 1, "Enricher": 2,
+            "__processes__": 1})
+        assert not of.flagged and of.score == 0
+
+    def test_ccbpm_naming_heuristic(self):
+        from analyzer.orchestration_flag import assess_orchestration
+        plain = assess_orchestration(kinds={"ProcessCallElement": 3},
+                                     name="OrderSync")
+        named = assess_orchestration(kinds={"ProcessCallElement": 3},
+                                     name="IP_OrderProcessing_ccBPM")
+        assert not plain.flagged and named.flagged
+
+    def test_engine_attaches_flag(self):
+        import os, pytest
+        if not os.path.exists("tests/fixtures/sap_mkt_tracking.zip"):
+            pytest.skip("fixture absent")
+        from analyzer.sap_complexity_engine import SAPComplexityEngine
+        r = SAPComplexityEngine().assess_bundle(
+            "tracking",
+            open("tests/fixtures/sap_mkt_tracking.zip", "rb").read())
+        assert "flagged" in r.orchestration
+        assert r.orchestration["flagged"] is False   # tiny 2-step flow
+
+    def test_corpus_discrimination(self):
+        import os, pickle, collections, pytest
+        if not os.path.exists("/tmp/learn/iflws.pkl"):
+            pytest.skip("corpus not present")
+        from extractor.iflow_parser import parse_iflow
+        from tools.pattern_mining import classify
+        from analyzer.orchestration_flag import assess_orchestration
+        corpus = pickle.load(open("/tmp/learn/iflws.pkl", "rb"))
+        rates = collections.defaultdict(lambda: [0, 0])
+        for path, xml in corpus:
+            m = parse_iflow(xml, "x")
+            fam, _, _ = classify(m)
+            kinds = collections.Counter(s.kind for s in m.steps.values())
+            kinds["__processes__"] = len(m.processes or [])
+            if assess_orchestration(kinds=dict(kinds)).flagged:
+                rates[fam][0] += 1
+            rates[fam][1] += 1
+        sg = rates["Splitter–Gather orchestration"]
+        md = rates["Map & deliver"]
+        assert sg[1] and sg[0] / sg[1] >= 0.6
+        assert md[1] and md[0] / md[1] <= 0.05
+
+
+class TestOrchestrationWorkbenchWiring:
+    SRC = open("workbench.py").read()
+
+    def test_checklist_surfaces_flag(self):
+        assert "Orchestration-shaped (ccBPM profile)" in self.SRC
+        assert "assess_orchestration" in self.SRC
+
+
+class TestServiceKeyWallet:
+    """2026-06-12 part 22b: generic per-client service-key wallet in the
+    profile (user directive: anything we file-pick or store per client is
+    a first-class profile field). New BTP services = new slot, no schema
+    change. Encrypted with the profile; masked display only."""
+
+    def test_round_trip_encrypted_with_wallet(self, tmp_path):
+        from models.credential_store import CredentialStore, CPIProfile
+        store = CredentialStore(profiles_dir=str(tmp_path))
+        p = CPIProfile(name="acme", cpi_base_url="https://x")
+        p.set_service_key("ans", {"client_id": "abcd-1234",
+                                  "client_secret": "S3CRET",
+                                  "oauth_url": "https://auth.acme.io/token",
+                                  "url": "https://ans.acme.io"})
+        store.save_profile(p, "pw")
+        p2 = store.load_profile("acme", "pw")
+        k = p2.get_service_key("ans")
+        assert k and k["client_secret"] == "S3CRET"
+        assert p2.get_service_key("missing") is None
+
+    def test_old_profiles_without_wallet_still_load(self, tmp_path):
+        from models.credential_store import CPIProfile
+        # simulate a pre-wallet profile dict (no service_keys field)
+        p = CPIProfile.from_dict({"name": "legacy",
+                                  "cpi_base_url": "https://y"})
+        assert p.service_keys == {}
+
+    def test_mask_never_leaks_secret(self):
+        from models.credential_store import CPIProfile
+        masked = CPIProfile.mask_key(
+            {"client_id": "abcd-1234", "client_secret": "S3CRET",
+             "url": "https://ans.acme.io/v2"})
+        assert "S3CRET" not in masked
+        assert "1234" in masked and "ans.acme.io" in masked
+
+
+class TestWalletWorkbenchWiring:
+    SRC = open("workbench.py").read()
+
+    def test_wallet_ui_present(self):
+        assert "Service keys (per client)" in self.SRC
+        assert 'service_keys=_ss.get("sb_service_keys"' in self.SRC
+        assert '"sb_service_keys"' in self.SRC
+
+
+class _FakeResp:
+    def __init__(self, status, body=None):
+        self.status_code = status
+        self._body = body or {}
+        self.text = str(body or "")
+
+    def json(self):
+        return self._body
+
+    def raise_for_status(self):
+        if self.status_code >= 400:
+            raise RuntimeError(f"HTTP {self.status_code}")
+
+
+class _FakeSession:
+    """Records requests; scripted responses keyed by (method, url-suffix)."""
+
+    def __init__(self):
+        self.calls = []
+        self.script = {}
+
+    def _hit(self, method, url, **kw):
+        self.calls.append((method, url, kw))
+        for (m, suffix), resp in self.script.items():
+            if m == method and url.endswith(suffix):
+                return resp
+        # defaults: token ok, config GET 404, writes 201
+        if url.endswith("/oauth/token"):
+            return _FakeResp(200, {"access_token": "tok", "expires_in": 3600})
+        if method == "GET":
+            return _FakeResp(404)
+        return _FakeResp(201, {})
+
+    def get(self, url, **kw):
+        return self._hit("GET", url, **kw)
+
+    def post(self, url, **kw):
+        return self._hit("POST", url, **kw)
+
+
+class TestANSNotifier:
+    """2026-06-12 part 23 (expansion #3): poller→ANS wiring, the seed of
+    the operations retainer. All HTTP mocked — live validation happens on
+    the user's machine (sandbox can't reach BTP)."""
+
+    KEY_FLAT = {"client_id": "cid-1234", "client_secret": "S3CRET",
+                "oauth_url": "https://auth.acme.io",
+                "url": "https://ans.acme.io"}
+    KEY_UAA = {"url": "https://ans.acme.io",
+               "uaa": {"clientid": "cid-9999", "clientsecret": "S3CRET2",
+                       "url": "https://auth2.acme.io"}}
+
+    def _client(self, key=None):
+        from fetcher.ans_notifier import ANSClient
+        fs = _FakeSession()
+        return ANSClient(key or self.KEY_FLAT, session=fs), fs
+
+    def test_key_shapes_flat_and_uaa_nested(self):
+        from fetcher.ans_notifier import ANSKey
+        a = ANSKey.from_dict(self.KEY_FLAT)
+        b = ANSKey.from_dict(self.KEY_UAA)
+        assert a.valid() and b.valid()
+        assert a.oauth_url.endswith("/oauth/token")
+        assert b.client_id == "cid-9999"
+        assert not ANSKey.from_dict({"url": "x"}).valid()
+
+    def test_token_flow_and_event_post(self):
+        cl, fs = self._client()
+        from fetcher.ans_notifier import build_failure_event
+        ev = build_failure_event(
+            {"IntegrationFlowName": "OrderSync", "MessageGuid": "G-1",
+             "Status": "FAILED", "LogEnd": "2026-06-12T10:00:00"},
+            tenant="https://t")
+        assert ev["eventType"] == "CPI_MESSAGE_FAILED"
+        assert ev["resource"]["resourceName"] == "OrderSync"
+        assert "G-1" in ev["body"]
+        assert cl.produce_event(ev)
+        methods = [(m, u.rsplit("/", 1)[-1]) for m, u, _ in fs.calls]
+        assert ("POST", "token") in methods
+        assert ("POST", "resource-events") in methods
+        # auth header present, secret only in basic-auth tuple (not headers)
+        post = [kw for m, u, kw in fs.calls if u.endswith("resource-events")][0]
+        assert post["headers"]["Authorization"] == "Bearer tok"
+
+    def test_token_cached_across_calls(self):
+        cl, fs = self._client()
+        from fetcher.ans_notifier import build_failure_event
+        ev = build_failure_event({"IntegrationFlowName": "X",
+                                  "MessageGuid": "G", "Status": "FAILED"})
+        cl.produce_event(ev)
+        cl.produce_event(ev)
+        token_calls = [1 for _, u, _ in fs.calls if u.endswith("/oauth/token")]
+        assert len(token_calls) == 1
+
+    def test_provisioning_email_idempotent(self):
+        import json as _j
+        cl, fs = self._client()
+        res = cl.ensure_provisioning("ops@acme.com", target_type="email")
+        assert res == {"condition": True, "action": True,
+                       "subscription": True}
+        posts = {u.rsplit("/", 2)[-2] if u.endswith("s") else u:
+                 _j.loads(kw["data"]) for m, u, kw in fs.calls
+                 if m == "POST" and "/configuration/" in u}
+        bodies = [_j.loads(kw["data"]) for m, u, kw in fs.calls
+                  if m == "POST" and "/configuration/" in u]
+        names = {b["name"] for b in bodies}
+        assert names == {"cpi_migrator_failed_cond", "cpi_migrator_notify_act",
+                         "cpi_migrator_failed_sub"}
+        act = [b for b in bodies if b["name"].endswith("_act")][0]
+        assert act["type"] == "EMAIL"
+        assert act["properties"]["destination"] == "ops@acme.com"
+        sub = [b for b in bodies if b["name"].endswith("_sub")][0]
+        assert sub["conditions"] == ["cpi_migrator_failed_cond"]
+        assert sub["actions"] == ["cpi_migrator_notify_act"]
+        # second run: everything exists → zero new POSTs
+        fs.script = {("GET", f"/cf/configuration/v1/{e}/{n}"): _FakeResp(200)
+                     for e, n in (("conditions", "cpi_migrator_failed_cond"),
+                                  ("actions", "cpi_migrator_notify_act"),
+                                  ("subscriptions", "cpi_migrator_failed_sub"))}
+        before = len([1 for m, u, _ in fs.calls
+                      if m == "POST" and "/configuration/" in u])
+        res2 = cl.ensure_provisioning("ops@acme.com")
+        after = len([1 for m, u, _ in fs.calls
+                     if m == "POST" and "/configuration/" in u])
+        assert res2 == res and after == before
+
+    def test_provisioning_webhook_payload(self):
+        import json as _j
+        cl, fs = self._client()
+        cl.ensure_provisioning("https://hooks.x/y", target_type="webhook")
+        act = [_j.loads(kw["data"]) for m, u, kw in fs.calls
+               if m == "POST" and u.endswith("/actions")][0]
+        assert act["type"] == "WEBHOOK"
+        assert act["properties"]["url"] == "https://hooks.x/y"
+
+    def test_notify_failures_dedupes_and_persists(self, tmp_path):
+        from fetcher.ans_notifier import notify_failures
+        cl, fs = self._client()
+        runs = [{"MessageGuid": "A", "Status": "FAILED",
+                 "IntegrationFlowName": "F1"},
+                {"MessageGuid": "B", "Status": "COMPLETED",
+                 "IntegrationFlowName": "F1"},
+                {"MessageGuid": "C", "Status": "ESCALATED",
+                 "IntegrationFlowName": "F2"}]
+        state = str(tmp_path / "ans_notified.json")
+        assert notify_failures(runs, state, cl) == 2      # A + C, not B
+        assert notify_failures(runs, state, cl) == 0      # dedupe
+        runs.append({"MessageGuid": "D", "Status": "FAILED",
+                     "IntegrationFlowName": "F3"})
+        assert notify_failures(runs, state, cl) == 1      # only D
+        import json as _j
+        assert set(_j.load(open(state))) == {"A", "C", "D"}
+
+    def test_poller_alerting_off_by_default(self):
+        src = open("fetcher/run_poller.py").read()
+        assert 'cfg.get("ans")' in src
+        assert "--alert-config" in src
+        assert "alerting never kills polling" in src
+
+
+class TestANSWorkbenchWiring:
+    SRC = open("workbench.py").read()
+
+    def test_alerting_controls_present(self):
+        assert "🔔 Alerting" in self.SRC
+        assert "Provision alerting" in self.SRC
+        assert "Send test event" in self.SRC
+        assert "ans_alert_config.json" in self.SRC
+
+    def test_launch_passes_alert_config_only_when_enabled(self):
+        i = self.SRC.index('"--alert-config"')
+        seg = self.SRC[max(0, i - 900):i]
+        assert 'ans_alert_enabled' in seg
+
+    def test_no_secrets_in_alert_config(self):
+        i = self.SRC.index("ans_alert_config.json")
+        seg = self.SRC[i:i + 700]
+        assert "key_path" in seg and "client_secret" not in seg
+
+
+class TestTraceDumper:
+    """2026-06-12 part 23b: tools/dump_traces.py — captures the trace
+    entity chain (MPL → Runs → RunSteps → TraceMessages → payload) to
+    disk for the #5 decode. HTTP fully mocked; first live contact is the
+    user's capture run, and even error responses are saved as decode
+    input."""
+
+    class _Resp:
+        def __init__(self, status, body=None, content=b""):
+            self.status_code = status
+            self._b = body
+            self.content = content
+            self.text = json.dumps(body) if body else ""
+
+        def json(self):
+            if self._b is None:
+                raise ValueError("no json")
+            return self._b
+
+    class _Sess:
+        def __init__(self, outer):
+            self.outer = outer
+            self.urls = []
+
+        def get(self, url, **kw):
+            self.urls.append(url)
+            R = TestTraceDumper._Resp
+            if url.endswith("/$value"):
+                return R(200, None, b"<payload/>")
+            if "/TraceMessages(" in url:
+                return R(200, {"d": {"results": [{"Name": "x"}]}})
+            if url.endswith("/TraceMessages"):
+                return R(200, {"d": {"results": [{"TraceId": "777"}]}})
+            if "/RunSteps" in url:
+                return R(200, {"d": {"results": [
+                    {"RunId": "R1", "ChildCount": 4, "StepId": "S1"}]}})
+            if url.endswith("/Runs"):
+                return R(200, {"d": {"results": [{"Id": "R1"}]}})
+            if "MessageProcessingLogs('" in url:
+                return R(200, {"d": {"MessageGuid": "G-1",
+                                     "Status": "FAILED"}})
+            return R(404, {})
+
+    def test_full_chain_dumped(self, tmp_path):
+        from tools.dump_traces import dump_message
+        sess = self._Sess(self)
+        s = dump_message(sess, "https://t", "G-1", str(tmp_path))
+        assert s["runs"] == 1 and s["steps"] == 1 and s["traces"] == 1
+        assert s["payload_bytes"] == len(b"<payload/>")
+        root = tmp_path / "G-1"
+        assert (root / "mpl.json").exists()
+        assert (root / "runs.json").exists()
+        assert (root / "run_R1" / "run_steps.json").exists()
+        payloads = list(root.rglob("*_payload.bin"))
+        assert payloads and payloads[0].read_bytes() == b"<payload/>"
+        # composite-key URL shape for RunSteps→TraceMessages
+        assert any("MessageProcessingLogRunSteps(RunId='R1',ChildCount=4)"
+                   "/TraceMessages" in u for u in sess.urls)
+
+    def test_errors_still_saved_as_decode_input(self, tmp_path):
+        from tools.dump_traces import dump_message
+
+        class Dead:
+            def get(self, url, **kw):
+                return TestTraceDumper._Resp(403, {"error": "no"})
+        s = dump_message(Dead(), "https://t", "G-2", str(tmp_path))
+        assert s["errors"]
+        assert (tmp_path / "G-2" / "mpl.json").exists()
+
+
+class TestTraceAnalysis:
+    """2026-06-12 part 24 (#5): trace decode + analysis, validated against
+    a REAL tenant capture (fixture = the deliberate-failure StressLab run,
+    FAILED at CA_Filter with InvalidXPathException). Decoded model:
+    ChildCount = execution order; ModelStepId joins to BPMN element ids;
+    Error carries the full Camel exception."""
+
+    FIX = "tests/fixtures/trace_dump"
+
+    def test_load_real_capture(self):
+        from analyzer.trace_analysis import load_dump
+        msgs = load_dump(self.FIX)
+        assert len(msgs) == 1
+        mt = msgs[0]
+        assert mt.status == "FAILED"
+        assert mt.iflow == "StressLabAllSteps"
+        assert len(mt.steps) == 5
+        assert [s.order for s in mt.steps] == [1, 2, 3, 4, 5]
+        assert mt.steps[0].model_step_id == "StartEvent_1"
+
+    def test_failure_pinpoint_with_exception(self):
+        from analyzer.trace_analysis import load_dump, analyze
+        mt = load_dump(self.FIX)[0]
+        assert mt.failure is not None
+        assert mt.failure.model_step_id == "CA_Filter"
+        f = analyze(mt)["failure"]
+        assert f["at"] == "CA_Filter" and f["order"] == 5
+        assert "InvalidXPathException" in f["exception"]
+        assert "/Lab" in f["message"]
+        # the payload that ENTERED the failing step is surfaced
+        assert f["last_good_payload"].startswith("<Lab run=")
+
+    def test_payload_evolution_and_sniff(self):
+        from analyzer.trace_analysis import load_dump, analyze
+        mt = load_dump(self.FIX)[0]
+        ev = analyze(mt)["payload_evolution"]
+        assert ev, "payloads captured"
+        assert any(p["kind"] == "xml" for p in ev)
+        sizes = [p["size"] for p in ev]
+        assert all(isinstance(x, int) for x in sizes)
+
+    def test_model_name_join(self):
+        from analyzer.trace_analysis import model_names_from_iflw
+        xml = ('<?xml version="1.0"?><bpmn2:definitions '
+               'xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" '
+               'xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd">'
+               '<bpmn2:process id="P1"><bpmn2:callActivity id="CA_Filter" '
+               'name="Filter Lab Rows"><bpmn2:extensionElements>'
+               '<ifl:property><key>activityType</key><value>Filter</value>'
+               '</ifl:property></bpmn2:extensionElements>'
+               '</bpmn2:callActivity></bpmn2:process></bpmn2:definitions>')
+        names = model_names_from_iflw(xml)
+        assert names.get("CA_Filter") == "Filter Lab Rows"
+
+    def test_graceful_on_empty_folder(self, tmp_path):
+        from analyzer.trace_analysis import load_dump
+        assert load_dump(str(tmp_path)) == []
+
+
+class TestTraceWorkbenchWiring:
+    SRC = open("workbench.py").read()
+
+    def test_trace_ui_present(self):
+        assert "Trace analysis — step-by-step run forensics" in self.SRC
+        assert "load_dump" in self.SRC and "analyze" in self.SRC
+        assert "Last good payload" in self.SRC

@@ -85,6 +85,16 @@ def detect_domain(interface_name: str, description: str = "") -> str:
     return "Integration"
 
 
+_WORD_SEP = "_"
+
+
+def set_word_separator(sep: str) -> None:
+    """Client naming preference for GENERATED names (space | _ | -). Applies
+    to iFlow and package names; CPI ids stay sanitized separately."""
+    global _WORD_SEP
+    _WORD_SEP = sep if sep in (" ", "_", "-") else "_"
+
+
 def generate_package_display_name(
     sender_system: str,
     receiver_system: str,
@@ -141,7 +151,7 @@ def generate_package_name(
         _clean(receiver_system or "TGT"),
         _clean(domain or "Integration") if not _url_token(domain) else _clean(_url_token(domain)),
     ]
-    name = "_".join(p for p in parts if p)
+    name = _WORD_SEP.join(p for p in parts if p)
     return name[:60]
 
 
@@ -204,7 +214,7 @@ def generate_iflow_name(
     ]
     if action:
         parts.append(_clean(action))
-    name = "_".join(parts)
+    name = _WORD_SEP.join(parts)
     return name[:80]  # CPI iFlow name limit
 
 

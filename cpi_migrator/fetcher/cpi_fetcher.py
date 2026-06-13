@@ -126,6 +126,17 @@ class CPIFetcher:
 
     # ── Download ─────────────────────────────────────────────────────
 
+    def download_package_zip(self, package_id: str) -> bytes:
+        """Export a WHOLE package as the tenant's own export zip
+        (GET /api/v1/IntegrationPackages('{id}')/$value) — the exact format
+        the upload intake already understands, which makes source-tenant →
+        workbench → target-tenant round trips one call per package."""
+        url = (f"{self.base_url}/api/v1/IntegrationPackages"
+               f"('{package_id}')/$value")
+        r = self.session.get(url, timeout=300)
+        r.raise_for_status()
+        return r.content
+
     def download_artifact(self, artifact: CPIArtifact) -> Path:
         """Download a .zip from CPI and unpack to templates/{pkg_id}/{art_id}/."""
         dest = self.cache_dir / artifact.package_id / artifact.id

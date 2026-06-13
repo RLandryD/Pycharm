@@ -136,9 +136,12 @@ def _split_dst_bricks(transformation: str):
     """Yield each top-level Dst brick segment from the transformation body."""
     # top-level Dst bricks start with <brick gid="0" path="/...Target..." type="Dst">
     # find their spans by locating each Dst start and slicing to the next one.
+    # Attribute order varies by authoring tool: CPI's editor writes
+    # gid/path/type; PI-authored exports (observed in Figaf's PI content,
+    # CRLF pretty-printed) write type/gid/path. Match order-agnostically.
     starts = [m.start() for m in re.finditer(
-        r'<brick\s+gid="0"\s+path="[^"]*"\s+type="Dst"\s*>', transformation,
-        re.S)]
+        r'<brick\b(?=[^>]*\btype="Dst")(?=[^>]*\bgid="0")[^>]*>',
+        transformation, re.S)]
     # also include Dst bricks that may be nested-target parents; we take all
     # top-level by tracking only those not inside another (approx: all at the
     # positions found, sliced consecutively — adequate for flat field lists).
@@ -152,8 +155,8 @@ def parse_mmap(text: str) -> ParsedMmap:
     # schema bindings
     for role in ("SOURCE_IFR_MESS", "TARGET_IFR_MESS"):
         m = re.search(
-            rf'role="{role}"><lnk[^>]*><key typeID="([^"]+)"[^>]*>(.*?)</key>',
-            text, re.S)
+            rf'role="{role}">\s*<lnk[^>]*>\s*<key typeID="([^"]+)"[^>]*>'
+            rf'(.*?)</key>', text, re.S)
         if not m:
             continue
         stype = m.group(1)
@@ -170,8 +173,8 @@ def parse_mmap(text: str) -> ParsedMmap:
             if len(elems) >= 4:
                 pm.target_namespace = elems[3]
     # namespace prefix
-    nm = re.search(r'<namespaces><properties><property name="([^"]+)">'
-                   r'(\w+)</property>', text)
+    nm = re.search(r'<namespaces>\s*<properties>\s*<property '
+                   r'name="([^"]+)">\s*(\w+)\s*</property>', text)
     if nm:
         pm.namespace_prefix_uri = nm.group(1)
     # transformation body

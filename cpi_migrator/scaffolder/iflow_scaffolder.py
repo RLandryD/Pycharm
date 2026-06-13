@@ -27,9 +27,36 @@ def _slugify(text: str) -> str:
 class IFlowScaffolder:
 
     def __init__(self, output_dir: str, templates_dir: str = None,
-                 resources_dir: str = None):
+                 resources_dir: str = None, extra_resources: dict = None,
+                 passthrough: dict = None,
+                 gold_error_handling: str = None,
+                 gold_eh_replace: bool = False,
+                 gold_eh_notify: bool = False,
+                 gold_eh_sftp: bool = False,
+                 gold_eh_company: str = ""):
         self.output_dir = Path(output_dir) / "iflows"
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        # Resources ingested from the UPLOADED source zips themselves
+        # (container-qualified, same scheme as the corpus walk). Merged with
+        # TOP precedence at regeneration time: the uploaded source is the
+        # ground truth for its own flows, beating any same-named corpus file.
+        self.extra_resources = extra_resources or {}
+        self.passthrough = passthrough or {}
+        # opt-in: inject the gold-standard exception subprocess (variant name
+        # from scaffolder.error_handling.VARIANTS) into regenerated flows that
+        # lack one; None (default) keeps pure fidelity.
+        self.gold_error_handling = gold_error_handling
+        # replace policy: when True, existing main-process exception
+        # subprocesses are swapped for the chosen gold variant (client opts
+        # to standardize); when False (default) flows that already handle
+        # errors are untouched.
+        self.gold_eh_replace = gold_eh_replace
+        # when True, the injected subprocess also mails an alert (Mail
+        # receiver with externalized {{ALERT_MAIL_*}} connection params —
+        # pattern decoded from RCI093's production LIP3_Exception_Alert)
+        self.gold_eh_notify = gold_eh_notify
+        self.gold_eh_sftp = gold_eh_sftp
+        self.gold_eh_company = gold_eh_company
         # Original package exports (pinned Packages dir). When set, regenerated
         # bundles ship the REAL scripts/mappings each step references instead of
         # synthetic stubs. Loaded once, lazily; failure degrades gracefully.
@@ -78,8 +105,66 @@ class IFlowScaffolder:
             except Exception as exc:                       # pragma: no cover
                 logger.warning("Resource corpus unavailable (%s); bundles will "
                                "use synthetic stubs", exc)
+        # Merge the distilled library (additive, content-hash-deduped) as a
+        # second resource source — this is what makes raw package folders
+        # deletable once library coverage is complete. Library keys use the
+        # same '<container>/<path>' scheme, so resolver scoping is unchanged.
+        try:
+            from fetcher.user_settings import get_setting as _lib_gs
+            _lib_dir = _lib_gs("library_dir", "")
+            if _lib_dir:
+                import os as _os
+                if _os.path.isdir(_lib_dir):
+                    from library_builder.library_store import LibraryStore
+                    _lib_corpus = LibraryStore(_lib_dir).as_corpus()
+                    for _k, _v in _lib_corpus.items():
+                        self._corpus_cache.setdefault(_k, _v)
+                    if _lib_corpus:
+                        logger.info("Merged %d library files into the "
+                                    "resource corpus", len(_lib_corpus))
+        except Exception as exc:                           # pragma: no cover
+            logger.warning("library corpus merge skipped: %s", exc)
         IFlowScaffolder._CORPUS_BY_DIR[self.resources_dir] = self._corpus_cache
         return self._corpus_cache
+
+    # package names already topped up this session (per resources dir) — a
+    # targeted walk per *new* name only, not per flow.
+    _TOPPED_UP: dict = {}
+
+    def _top_up_corpus(self, resources: dict, iface) -> None:
+        """Guarantee the flow's OWN package is in the resource corpus even when
+        the bulk walk capped out before reaching it (seen live: 'corpus walk
+        hit the safety cap' → 0 resolved, stub scripts, empty parameters).
+        Scans only zip names under the pinned dir and ingests just the matching
+        package(s); merges into the shared cached dict so every later flow of
+        the same package benefits. Graceful: never raises."""
+        if not self.resources_dir:
+            return
+        names = [n for n in (getattr(iface, "package", None),
+                             getattr(iface, "name", None)) if n]
+        done = IFlowScaffolder._TOPPED_UP.setdefault(self.resources_dir, set())
+        todo = [n for n in names if n not in done]
+        if not todo:
+            return
+        done.update(todo)
+        try:
+            from library_builder.corpus_pipeline import (walk_corpus_for_names,
+                                                          WIRING_EXTS)
+            extra = walk_corpus_for_names(self.resources_dir, todo,
+                                          exts=WIRING_EXTS)
+            added = 0
+            for k, v in extra.items():
+                if k not in resources:
+                    resources[k] = v
+                    added += 1
+            if added:
+                logger.info("Targeted corpus top-up for %s: +%d files (bulk "
+                            "walk had capped before this package)",
+                            " / ".join(todo), added)
+        except Exception as exc:                            # pragma: no cover
+            logger.warning("Targeted corpus top-up failed for %s (%s); "
+                           "falling back to the bulk corpus only",
+                           " / ".join(todo), exc)
 
     def scaffold(
         self,
@@ -110,10 +195,19 @@ class IFlowScaffolder:
                 src_xml = (getattr(iface, "source_iflow_xml", "") or "").strip()
                 if src_xml and shape != "minimal":
                     from scaffolder.regenerate import regenerate_iflow_xml
+                    resources = self._resource_corpus()
+                    self._top_up_corpus(resources, iface)
+                    if self.extra_resources:
+                        resources = {**resources, **self.extra_resources}
                     regen = regenerate_iflow_xml(
                         src_xml, iface.name,
-                        resources=self._resource_corpus(),
-                        package=getattr(iface, "package", None))
+                        resources=resources,
+                        package=getattr(iface, "package", None),
+                        gold_error_handling=self.gold_error_handling,
+                        gold_eh_replace=self.gold_eh_replace,
+                        gold_eh_notify=self.gold_eh_notify,
+                        gold_eh_sftp=self.gold_eh_sftp,
+                        gold_eh_company=self.gold_eh_company)
                     rep = getattr(regen.result, "resource_report", None) \
                         if regen.result else None
                     if rep is not None and (rep.resolved or rep.unresolved):
@@ -129,6 +223,14 @@ class IFlowScaffolder:
                                 iface.name, sid, ref, kind)
                     if regen.reproduced and regen.result is not None:
                         result = regen.result
+                        # Re-attach non-wiring cargo (lib jars, certs,
+                        # deployment descriptors) collected at ingest.
+                        try:
+                            from scaffolder.passthrough import inject_cargo
+                            inject_cargo(result, src_xml, self.passthrough)
+                        except Exception as _pterr:
+                            logger.warning("passthrough injection skipped: "
+                                           "%s", _pterr)
                         logger.info(
                             "Regenerated iFlow from real source structure "
                             "(%d steps) → %s", regen.n_steps, iface.name)
@@ -180,16 +282,22 @@ class IFlowScaffolder:
         out_path = self.output_dir / f"{result.iflow_id}.iflw"
         out_path.write_text(result.iflw_xml, encoding="utf-8")
         meta_dir = self.output_dir / f"{result.iflow_id}__meta"
+        # stale staged resources from a PREVIOUS generation must not ride
+        # along (the packager auto-includes everything under meta) — the set
+        # on disk must equal exactly THIS generation's files.
+        _stale = meta_dir / "src"
+        if _stale.is_dir():
+            import shutil as _sh
+            _sh.rmtree(_stale, ignore_errors=True)
         meta_dir.mkdir(parents=True, exist_ok=True)
         (meta_dir / "MANIFEST.MF").write_text(result.manifest, encoding="utf-8")
         (meta_dir / ".project").write_text(result.project_xml, encoding="utf-8")
         for rel_path, content in (getattr(result, "files", {}) or {}).items():
-            if not rel_path.startswith("src/main/resources/"):
+            from scaffolder.passthrough import is_passthrough
+            if (not rel_path.startswith("src/main/resources/")
+                    and not is_passthrough(rel_path)):
                 continue
             if rel_path.startswith("src/main/resources/scenarioflows/"):
-                continue
-            if rel_path in ("src/main/resources/parameters.prop",
-                            "src/main/resources/parameters.propdef"):
                 continue
             dest = meta_dir / rel_path
             dest.parent.mkdir(parents=True, exist_ok=True)
@@ -209,7 +317,80 @@ class IFlowScaffolder:
         router / split / gather / orchestrate). All are the same proven
         Content-Modifier element, so the accepted bundle structure is unchanged."""
         steps = []
-        if getattr(iface, "mapping_program", ""):
+        # MA-mode: the export names WHICH rules fired — render each as a
+        # representative named step so the skeleton's size and step names
+        # narrate the actual blockers (an all-rules ultra monster LOOKS like
+        # one). Real-source regeneration never enters this builder.
+        _ma_rules = (getattr(iface, "raw", None) or {}).get("sap_ma_rules") \
+            or []
+        _RULE_STEPS = {
+            "Axis_Framework_Extension": [
+                ("script", "Axis Framework Handler (custom module)")],
+            "Java_Mapping_Detected": [
+                ("script", "Java Mapping (port to Groovy)")],
+            "Multi_Mapping_Split_Context": [
+                ("splitter", "Split Records"),
+                ("gather", "Gather Responses")],
+            "PGP_Encryption_Topology_Shift": [
+                ("content_modifier", "PGP Encrypt (Security Material)")],
+            "File_Content_Conversion_Required": [
+                ("content_modifier", "FCC: Flat to XML Conversion")],
+            "Dynamic_Routing_Condition": [
+                ("content_modifier", "Route by XPath Condition")],
+            "Hardcoded_Deprecated_Security_Library": [
+                ("script", "Replace Deprecated Crypto Library")],
+            "Obsolete_Native_Conversion_Bean": [
+                ("content_modifier", "Replace Native Conversion Bean")],
+        }
+        # Engine-scanned exports carry PIMAS rule ids with asset context
+        # (e.g. 'xslt=7') — render those with human labels + real counts,
+        # and DON'T render adapter-type rules as pipeline steps (they are
+        # endpoint facts, not flow work).
+        _assets = dict()
+        _asset_pairs = (getattr(iface, "raw", None) or {}).get(
+            "sap_ma_rule_assets") or []
+
+        def _count(asset):
+            try:
+                return int(str(asset).split("=", 1)[1])
+            except (IndexError, ValueError):
+                return None
+
+        _ENGINE_LABELS = {
+            "GMMCustomUDFUsageCount": ("script", "Groovy Mappings"),
+            "XSLTDependenciesCount":  ("mapping", "XSLT Transform Chain"),
+            "OMStepCount":            ("content_modifier",
+                                       "Operation Mapping Steps"),
+            "OMParametersCount":      ("content_modifier",
+                                       "OM Parameterization"),
+            "ICOOperationCount":      ("content_modifier",
+                                       "Multiple ICO Operations"),
+            "ICOReceivers":           ("content_modifier",
+                                       "Multiple Receivers"),
+        }
+        _SKIP_RULES = {"SenderAdapterType", "ReceiverAdapterType"}
+        _pairs = _asset_pairs or [[r, ""] for r in _ma_rules]
+        _seen_pairs = set()
+        for _r, _asset in _pairs:
+            if _r in _SKIP_RULES or (_r, _asset) in _seen_pairs:
+                continue
+            _seen_pairs.add((_r, _asset))
+            if _r in _ENGINE_LABELS:
+                kind, base = _ENGINE_LABELS[_r]
+                n = _count(_asset)
+                steps.append({"kind": kind,
+                              "name": f"{base} (x{n})" if n else base})
+            elif _r == "MappingType":
+                val = (str(_asset).split("=", 1)[1]
+                       if "=" in str(_asset) else str(_asset))
+                steps.append({"kind": "mapping",
+                              "name": f"Mapping: {val}" if val
+                              else "Mapping"})
+            else:
+                for kind, label in _RULE_STEPS.get(
+                        _r, [("content_modifier", _r.replace("_", " "))]):
+                    steps.append({"kind": kind, "name": label})
+        if getattr(iface, "mapping_program", "") and not _ma_rules:
             steps.append({"kind": "mapping", "name": "Map Fields"})
         if getattr(iface, "has_multi_mapping", False):
             steps.append({"kind": "mapping", "name": "Apply Operation Mappings"})
@@ -233,7 +414,7 @@ class IFlowScaffolder:
                 steps.append({"kind": kind, "name": label})
                 have.add(label)
         ch = max(int(getattr(iface, "channel_count", 1) or 1), 1)
-        if ch > 1:
+        if ch > 1 and not any(st["kind"] == "splitter" for st in steps):
             steps.append({"kind": "splitter", "name": "Split Records"})
             steps.append({"kind": "gather", "name": "Gather Responses"})
         if getattr(iface, "has_bpm", False):
